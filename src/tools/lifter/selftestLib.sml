@@ -26,10 +26,17 @@ end;
 
 *)
   local
+
     open HolKernel Parse;
     open testutils;
     open PPBackEnd;
     open bir_inst_liftingLib;
+
+  val sty_OK     = [FG Green];
+  val sty_CACHE  = [FG Yellow];
+  val sty_FAIL   = [FG OrangeRed];
+  val sty_HEADER = [Bold, Underline];
+
   in
   (* Error at this point is only due to REPL not knowing difference between struct and module *)
   open MD;

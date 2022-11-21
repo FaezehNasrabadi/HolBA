@@ -1,12 +1,12 @@
 # includes
 # ----------------------------------
-DEPENDENCIES   = ../IML ../PreProcess ../SAPICplus
+DEPENDENCIES   =
 
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../binaries/HolBATools_SymbExec_ExampleBinaries-heap
-NEWHOLHEAP     = HolBATools_SymbExec_ExampleLibload-heap
+HOLHEAP        = ../../HolBATools_SymbExec-heap
+NEWHOLHEAP     = HolBATools_SapicPlus-heap
 
 HEAPINC_EXTRA  =
 

@@ -142,7 +142,7 @@ datatype 'a SapicAction_t =
                  | Delete of ('a SapicNTerm_t)
                  | Lock   of ('a SapicNTerm_t)
                  | Unlock of ('a SapicNTerm_t)
-                 | Event  of ('a SapicNTerm_t)
+                 | Event  of ('a SapicNFact_t)
                  | MSR    of {
 		  iPrems : ('a SapicNFact_t list),
 		  iActs :  ('a SapicNFact_t list),
@@ -185,6 +185,60 @@ fun Name_to_string (Name (FreshName , n)) = "~'" ^ n ^ "'"
   | Name_to_string (Name (PubName , n))   = "'" ^ n ^ "'"
   | Name_to_string (Name (NodeName , n))  = "#'" ^ n ^ "'";
 
+
+
+fun ACSym_to_string tag = case tag of
+      Mult  => "*"
+    | Union => "+"
+    | Xor   => "⊕";
+
+fun FunSym_to_string tag = case tag of
+              (NoEq (bs , _)) => bs
+            | (AC Op)         => (ACSym_to_string Op)
+            | (C Op)          => "EMap"
+            | List            => "List";
+	 
+fun SapicNTerm_to_string tag = case tag of
+       Con n        => (Name_to_string n)
+   |   Var v        => v
+   |   FAPP (f,[t]) => (FunSym_to_string f) ^ "(" ^ (SapicNTerm_to_string t)^ ")"
+   |   FAPP (f,n)   => (FunSym_to_string f) ^ "(" ^((SapicNTerm_to_string (hd n))^(List.foldr (fn (x,s) => s ^","^ (SapicNTerm_to_string x) ^ "") "" (tl n)) ^ "")^ ")";
+
+    
+    
+(*
+val b = FAPP(List,[Var "v",Var "n"]);
+
+SapicNTerm_to_string b
+ *)
+
+
+fun FactTag_to_string tag = case tag of
+     KUFact            => "KU"
+ |   KDFact            => "KD"
+ |   DedFact           => "Ded"
+ |   InFact            => "In"
+ |   OutFact           => "Out"
+ |   FreshFact         => "Fr"
+ |   TermFact          => "Term"
+ |  (ProtoFact (_ , n , _)) => n;
+    
+
+fun Multiplicity_to_string tag = case tag of
+     Consume            => ""
+ |   ReadOnly           => "!";
+
+
+fun FactAnnotation_to_string tag = case tag of
+      SolveFirst     => "+"
+    | SolveLast      => "-"
+    | NoSources      => "no_precomp";
+
+
+fun Fact_to_string (Fact tag) =
+    (FactTag_to_string (#factTag tag)) ^ "(" ^
+    ((SapicNTerm_to_string (hd (#factTerms tag)))^
+    (List.foldr (fn (x,s) => s ^","^ (SapicNTerm_to_string x) ^ "") "" (tl (#factTerms tag))) ^ "")^ ")";
 
 
 

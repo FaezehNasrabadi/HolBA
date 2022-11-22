@@ -11,165 +11,154 @@ in
 
 (* Names *)
 
-val _ = Datatype `NameTag = FreshName | PubName | NodeName`;
+datatype NameTag = FreshName | PubName | NodeName;
     
-val _ = Datatype `Name_t = Name NameTag string`;
+datatype Name_t =
+	 Name of ( NameTag * string);
+
 
 
 (* Variables *)
     
-val _ = Datatype `LSort =
+datatype LSort =
 	 LSortPub
        | LSortFresh
        | LSortMsg
-       | LSortNode`;
+       | LSortNode;
     
-val _ = Datatype `LVar_t = LVar string LSort int`;    
+datatype LVar_t = LVar of (string * LSort * int);    
 
 
   
 (* Function symbols *)
     
-val _ = Datatype `ACSym_t = Union | Mult | Xor`;
+datatype ACSym_t = Union | Mult | Xor;
 
 
-val _ = Datatype `Privacy_t = Private | Public`;
+datatype Privacy_t = Private | Public;
 
     
-val _ = Datatype `Constructability_t = Constructor | Destructor`;
+datatype Constructability_t = Constructor | Destructor;
+   
+
+type NoEqSym_t = (string * (int * Privacy_t * Constructability_t));
 
 
-val _ = Datatype `ipc_t = <| arity:int; privacy:Privacy_t; Constructability:Constructability_t |>`;
-    
-
-val _ = Datatype `NoEqSym_t = <|Funname:string; Funsig:ipc_t |>`;
-
-
-val _ = Datatype `CSym_t = EMap`;
+datatype CSym_t = EMap;
     
   
-val _ = Datatype `FunSym_t =
-              NoEq  NoEqSym_t
-            | AC    ACSym_t
-            | C     CSym_t
-            | List`;
+datatype FunSym_t =
+              NoEq  of NoEqSym_t
+            | AC    of ACSym_t
+            | C     of CSym_t
+            | List;
 
 
 (* Terms *)
 	      
-val _ = Datatype `Term_t =
-	      Con Name_t
-	    | Var LVar_t
-	    | FAPP FunSym_t (Term_t list)`;
+datatype Term_t =
+	      Con  of Name_t
+	    | Var  of LVar_t
+	    | FAPP of (FunSym_t * (Term_t list));
 
 
-
-val _ = Datatype `SapicNTerm_t =
-	      Con Name_t
-	    | Var 'a
-	    | FAPP FunSym_t (SapicNTerm_t list)`;
+datatype 'a SapicNTerm_t =
+	      Con  of Name_t
+	    | Var  of 'a
+	    | FAPP of (FunSym_t * ('a SapicNTerm_t list));
     
 (* Facts *)
     
-val _ = Datatype `Multiplicity_t = ReadOnly | Consume`;
+datatype Multiplicity_t = ReadOnly | Consume;
 
     
-val _ = Datatype `FactTag_t =
-	       ProtoFact Multiplicity_t string int
+datatype FactTag_t =
+	       ProtoFact of (Multiplicity_t * string * int)
              | FreshFact
 	     | OutFact
              | InFact
              | KUFact
              | KDFact
              | DedFact
-             | TermFact`;
+             | TermFact;
 
 
-val _ = Datatype `FactAnnotation_t = SolveFirst | SolveLast | NoSources`;
+datatype FactAnnotation_t = SolveFirst | SolveLast | NoSources;
 
     
-val _ = Datatype `Fact_t = 
-    <| factTag         : FactTag_t;
-       factAnnotations : (FactAnnotation_t set);
-       factTerms       : (Term_t list)|>`;
+datatype Fact_t =
+	 Fact of {
+       factTag         : FactTag_t,
+       factAnnotations : (FactAnnotation_t set),
+       factTerms       : (Term_t list)
+};
 
 
-val _ = Datatype `LNFact_t = Fact Fact_t`;
 
-
-val _ = Datatype `NFact_t = 
-    <| factTag         : FactTag_t;
-       factAnnotations : (FactAnnotation_t set);
-       factTerms       : ('a SapicNTerm_t list)|>`;
-
-
-val _ = Datatype `SapicNFact_t = Fact ('a NFact_t)`;
+datatype 'a SapicNFact_t =
+	 Fact of {
+       factTag         : FactTag_t,
+       factAnnotations : (FactAnnotation_t set),
+       factTerms       : ('a SapicNTerm_t list)};
     
 
 (* Atoms *)
 
 
-val _ = Datatype `SyntacticSugar_t = Pred ('a SapicNFact_t)`;
+datatype 'a SyntacticSugar_t = Pred of ('a SapicNFact_t);
 
 
 
-val _ = Datatype `ProtoAtom_t = Action ('a SapicNTerm_t) ('a SapicNFact_t)
-                 | EqE  ('a SapicNTerm_t) ('a SapicNTerm_t)
-                 | Less ('a SapicNTerm_t) ('a SapicNTerm_t)
-                 | Last ('a SapicNTerm_t)
-                 | Syntactic ('a SyntacticSugar_t)`;
+datatype 'a ProtoAtom_t = Action of ('a SapicNTerm_t)*('a SapicNFact_t)
+                 | EqE  of ('a SapicNTerm_t)*('a SapicNTerm_t)
+                 | Less of ('a SapicNTerm_t)*('a SapicNTerm_t)
+                 | Last of ('a SapicNTerm_t)
+                 | Syntactic of ('a SyntacticSugar_t);
 		  
   
 (* Formulas *)
     
-val _ = Datatype `Connective_t = And | Or | Imp | Iff`;
+datatype Connective_t = And | Or | Imp | Iff;
 		  
-val _ = Datatype `Quantifier_t = All | Ex`;
+datatype Quantifier_t = All | Ex;
 
 
-val _ = Datatype `Quetuple_t = <|Qname:string; Qsig:LSort |>`;
-
-val _ = Datatype `SapicNFormula_t  = Ato ('a ProtoAtom_t)
-                   | TF bool
-                   | Not SapicNFormula_t
-                   | Conn Connective_t SapicNFormula_t SapicNFormula_t
-                   | Qua Quantifier_t Quetuple_t SapicNFormula_t`;
+datatype 'a SapicNFormula_t  = Ato of ('a ProtoAtom_t)
+                   | TF of bool
+                   | Not of ('a SapicNFormula_t)
+                   | Conn of Connective_t * ('a SapicNFormula_t) * ('a SapicNFormula_t)
+                   | Qua of Quantifier_t * (string * LSort) * ('a SapicNFormula_t);
 
 
 (* Action *)
 
-val _ = Datatype `intuple_t = <|inChan: ('a SapicNTerm_t) option; inMsg: ('a SapicNTerm_t); inMatch: ('a set)|>`;
-
-val _ = Datatype `MSRtuple_t = <|
-		  iPrems : ('a SapicNFact_t list);
-		  iActs :  ('a SapicNFact_t list);
-		  iConcs : ('a SapicNFact_t list);
-                  iRest :  ('a SapicNFormula_t list);
-                  iMatch : ('a set)|>`;
     
-val _ = Datatype `SapicAction_t =
+datatype 'a SapicAction_t =
                    Rep
-                 | New    'a
-                 | ChIn   ('a intuple_t)
-                 | ChOut  (('a SapicNTerm_t) option) ('a SapicNTerm_t)
-                 | Insert ('a SapicNTerm_t) ('a SapicNTerm_t)
-                 | Delete ('a SapicNTerm_t)
-                 | Lock   ('a SapicNTerm_t)
-                 | Unlock ('a SapicNTerm_t)
-                 | Event  ('a SapicNTerm_t)
-                 | MSR    ('a MSRtuple_t)`;   
+                 | New    of 'a
+                 | ChIn   of { inChan: ('a SapicNTerm_t) option, inMsg: ('a SapicNTerm_t), inMatch: ('a set)}
+                 | ChOut  of (('a SapicNTerm_t) option) * ('a SapicNTerm_t)
+                 | Insert of ('a SapicNTerm_t) * ('a SapicNTerm_t)
+                 | Delete of ('a SapicNTerm_t)
+                 | Lock   of ('a SapicNTerm_t)
+                 | Unlock of ('a SapicNTerm_t)
+                 | Event  of ('a SapicNTerm_t)
+                 | MSR    of {
+		  iPrems : ('a SapicNFact_t list),
+		  iActs :  ('a SapicNFact_t list),
+		  iConcs : ('a SapicNFact_t list),
+                  iRest :  ('a SapicNFormula_t list),
+                  iMatch : ('a set)};   
 
 (* Processes *)
 
-val _ = Datatype `lettuple_t = <|letLeft: ('a SapicNTerm_t); letRight: ('a SapicNTerm_t); letMatch: ('a set)|>`;
-
     
-val _ = Datatype `ProcessCombinator_t =
-		   Parallel | NDC | Cond ('a SapicNFormula_t)
-		 | CondEq ('a SapicNTerm_t) ('a SapicNTerm_t)
-		 | Lookup ('a SapicNTerm_t) 'a
-		 | Let    ('a lettuple_t)
-		 | ProcessCall string ('a SapicNTerm_t list)`;
+datatype 'a ProcessCombinator_t =
+		   Parallel | NDC | Cond of ('a SapicNFormula_t)
+		 | CondEq of ('a SapicNTerm_t) * ('a SapicNTerm_t)
+		 | Lookup of ('a SapicNTerm_t) * 'a
+		 | Let    of {letLeft: ('a SapicNTerm_t), letRight: ('a SapicNTerm_t), letMatch: ('a set)}
+		 | ProcessCall of string * ('a SapicNTerm_t list);
 
 (* Process with annotations
 
@@ -182,17 +171,19 @@ val _ = Datatype `Process_t =
 
 (* Process without annotations *)
     
-val _ = Datatype `Process_t =
+datatype 'a Process_t =
         ProcessNull
-    |   ProcessComb ('a ProcessCombinator_t) (Process_t) (Process_t)
-    |   ProcessAction ('a SapicAction_t) (Process_t)`;    
+    |   ProcessComb   of ('a ProcessCombinator_t) * ('a Process_t) * ('a Process_t)
+    |   ProcessAction of ('a SapicAction_t) * ('a Process_t);    
 
 
 
 
+(* Translate to string by show functions *)
 
-
-
+fun Name_to_string (Name (FreshName , n)) = "~'" ^ n ^ "'"
+  | Name_to_string (Name (PubName , n))   = "'" ^ n ^ "'"
+  | Name_to_string (Name (NodeName , n))  = "#'" ^ n ^ "'";
 
 
 

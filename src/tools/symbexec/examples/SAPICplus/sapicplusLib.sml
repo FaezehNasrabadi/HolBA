@@ -280,7 +280,10 @@ val b = FAPP(NoEq("pair",(2,Public,Constructor)),[Var "v",Var "n"]);
 
 SapicAction_to_string (Lock b)
  *)
-
+fun ProtoAtom_to_string tag =
+    case tag of
+	(EqE (t1,t2)) => ((SapicNTerm_to_string t1)^"=_E"^(SapicNTerm_to_string t2))
+      |_ => "";
 
 fun Connective_to_string tag =
     case tag of
@@ -301,6 +304,7 @@ fun SapicNFormula_to_string  tag =
       | (TF F)  => "⊥"
       | (Not f) => "¬"^(SapicNFormula_to_string f)
       | (Conn (Op,p,q)) => ((SapicNFormula_to_string p)^(Connective_to_string Op)^(SapicNFormula_to_string q))
+      | (Ato t) => (ProtoAtom_to_string t)
       | _ => "";
 
 
@@ -329,7 +333,12 @@ fun Process_to_string tag =
     case tag of
 	ProcessNull => "0"
       | (ProcessComb ((ProcessCall (v,ts)), _ , _)) => (ProcessCombinator_to_string (ProcessCall (v,ts))) 
-      | (ProcessComb (c,pl,pr)) =>  ((Process_to_string pl)^(ProcessCombinator_to_string c)^(Process_to_string pr))
+      | (ProcessComb (Parallel,pl,pr)) =>  ((Process_to_string pl)^(ProcessCombinator_to_string Parallel)^(Process_to_string pr))
+      | (ProcessComb (NDC,pl,pr)) =>  ((Process_to_string pl)^(ProcessCombinator_to_string NDC)^(Process_to_string pr))
+      | (ProcessComb ((Cond f),pl,pr)) =>  ((ProcessCombinator_to_string (Cond f))^" then "^(Process_to_string pl)^" else "^(Process_to_string pr))
+      | (ProcessComb ((CondEq (t1,t2)),pl,pr)) =>  ((ProcessCombinator_to_string (CondEq (t1,t2)))^" then "^(Process_to_string pl)^" else "^(Process_to_string pr))
+      | (ProcessComb ((Let p),pl,pr)) =>  ((ProcessCombinator_to_string (Let p))^" in "^(Process_to_string pl)^" else "^(Process_to_string pr))
+      | (ProcessComb ((Lookup (t,v)),pl,pr)) =>  ((ProcessCombinator_to_string (Lookup (t,v)))^" in "^(Process_to_string pl)^" else "^(Process_to_string pr))
       | (ProcessAction (Rep,p)) => ((SapicAction_to_string Rep)^(Process_to_string p))
       | (ProcessAction (a,ProcessNull)) => (SapicAction_to_string a)
       | (ProcessAction (a,p)) => ((SapicAction_to_string a)^(Process_to_string p));
@@ -347,7 +356,13 @@ Process_to_string (ProcessAction ((Delete c),ProcessNull))
 Process_to_string (ProcessComb ((Parallel),(ProcessAction ((Delete c),ProcessNull)),(ProcessAction ((Lock c),ProcessNull))))
  *)
 
-	 
+fun SAPIC_to_file str =
+    let
+	val SFile = TextIO.openAppend "SAIC_Translation.txt";
+	    
+    in
+	(TextIO.output (SFile, str); TextIO.flushOut SFile)
+    end;	 
     
 end (* local *)
 end (* struct *)

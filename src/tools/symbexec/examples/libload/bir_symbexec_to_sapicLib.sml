@@ -25,7 +25,7 @@ local
     open  bir_symbexec_funcLib;
     open stringSyntax;
 	 open bslSyntax;
-    val ERR = Feedback.mk_HOL_ERR "bir_symbexec_treeLib"
+    val ERR = Feedback.mk_HOL_ERR "bir_symbexec_to_sapicLib"
 
 in
 

@@ -452,7 +452,7 @@ fun find_be_val vals_list bv =
 	(snd o Option.valOf) find_val
     end;
 
-(*Find the latest library output*)
+(*Find the latest library output
 fun find_latest_T refine_preds exec_sts preds =
     let
 	
@@ -552,12 +552,12 @@ fun D_to_In  vals_list exec_sts pred =
 	
     in
 	(I_In [(rev_name pred_name)])
-    end;
+    end;*)
     
 (*Translate fresh to IML new*)
 fun Fr_to_New pred_name = (New (rev_name pred_name));    
 
-(*Translate branch true to IML True*)
+(*Translate branch true to IML True
 fun Br_True pred_name = (I_True (Var pred_name));
 
 (*Translate assume to IML event*)
@@ -578,7 +578,7 @@ fun IML_event event_names pred =
     in
 	((to_string o I_Event) pred_name)
     end;
-
+*)
 (*Translate XOR to IML   
 fun Xor_to_IML vals_list pred =
     let
@@ -597,7 +597,7 @@ fun Xor_to_IML vals_list pred =
     end;
 *) 
 (*Translate Let to IML*)
-   (* val be = ``hash (BExp_Const (Imm8 2w)) (BVar "1_iv" (BType_Imm Bit64))``;*)
+   (* val be = ``hash (BExp_Const (Imm8 2w)) (BVar "1_iv" (BType_Imm Bit64))``;
 fun Let_to_IML vals_list pred =
     let
 	
@@ -623,7 +623,7 @@ fun Let_to_IML vals_list pred =
     in
 	(to_string (I_Let ((rev_name pred), (Var (fun_str)))))
 
-    end;    
+    end;    *)
 (*Translate BIR expressions to IML expressions*)
 (*
 val pred_be = “BExp_Const (Imm64 2840w)”; val result = "2840";
@@ -655,7 +655,7 @@ val pred_be = ``BExp_BinExp BIExp_And
 (BExp_Const (Imm64 3489660928w))))``;
 (Name (PubName , n)) 
 *)
-
+(*
 fun BExp_to_IMLExp vals_list exec_sts pred_be =
     let
 	(*val _ = print ((term_to_string pred_be)^"\n");*)
@@ -775,7 +775,7 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
     in
 	result
     end;
-
+*)
 (*Extract BIR expressions from pred name*)
 (*
 val pred_be = `` (BExp_Store
@@ -789,7 +789,7 @@ val pred = "165_assert_true_cnd";
 val pred_term = “BVar "23_cjmp_true_cnd" BType_Bool”;
 val pred_be = “BExp_Den (BVar "22_ProcState_Z" BType_Bool)”;
 *)
-(*val _ = let val IFile = TextIO.openAppend "Symbolic Execution Preds Vals.txt"; in TextIO.output (IFile, (term_to_string pred_be) ^ "\n ----------------- \n" ); TextIO.flushOut IFile end;*)
+(*val _ = let val IFile = TextIO.openAppend "Symbolic Execution Preds Vals.txt"; in TextIO.output (IFile, (term_to_string pred_be) ^ "\n ----------------- \n" ); TextIO.flushOut IFile end;
     
 fun IMLExp_from_pred vals_list exec_sts pred =
     let
@@ -804,7 +804,7 @@ fun IMLExp_from_pred vals_list exec_sts pred =
 
     in
 	pred_IML_Exp
-    end;
+    end;*)
     
 (*Translate paths to IML*)
 (*
@@ -817,7 +817,7 @@ val Act = new 37_Key: 64;
 val pred = "60_Adv";
 val preds = ["61_K"];
 val Act = in(c, 60_Adv);
- *)
+
 
 fun assert_false_string event_names vals_list exec_sts pred =
     let
@@ -826,7 +826,7 @@ fun assert_false_string event_names vals_list exec_sts pred =
 	val assert_else = (to_string (I_False ()));
     in
 	(assert_if^assert_event^assert_else)
-    end;
+    end; *)
     
 	
 fun path_to_process event_names vals_list refine_preds exec_sts [] =
@@ -835,28 +835,21 @@ fun path_to_process event_names vals_list refine_preds exec_sts [] =
     let
 	(*val _ = print ((pred)^"\n");*)
 
-	val processes = if (String.isSuffix "assert_true_cnd" pred) then ""
-		  else if ((String.isSuffix "cjmp_true_cnd" pred) orelse (String.isSuffix "comp_true_cnd" pred)) then (if (String.isSuffix "0" (IMLExp_from_pred vals_list exec_sts pred))
-	then ""
-	     else (to_string o Br_True) (IMLExp_from_pred vals_list exec_sts pred))
-		  else if (String.isSuffix "assert_false_cnd" pred) then (assert_false_string event_names vals_list exec_sts pred)
-		  else if ((String.isSuffix "cjmp_false_cnd" pred) orelse (String.isSuffix "comp_false_cnd" pred)) then ""
-		  else if ((String.isSuffix "Key" pred) orelse (String.isSuffix "iv" pred) orelse (String.isSuffix "pkP" pred) orelse (String.isSuffix "skS" pred) orelse (String.isSuffix "RAND_NUM" pred) orelse (String.isSuffix "OTP" pred) orelse (String.isSuffix "SKey" pred)) then (ProcessAction ((Fr_to_New pred),(path_to_process event_names vals_list refine_preds exec_sts preds))
-		  else if (String.isSuffix "K" pred) then (K_to_Out vals_list refine_preds exec_sts pred preds)
-		  else if (String.isSuffix "Kr" pred) then (Kr_to_Out vals_list pred)
-		  else if (String.isSuffix "Adv" pred) then (to_string (D_to_In  vals_list exec_sts pred))
-		  else if ((String.isSuffix "Dec" pred) orelse (String.isSuffix "signature" pred) orelse (String.isSuffix "Ver" pred) orelse (String.isSuffix "Enc" pred) orelse (String.isSuffix "kS" pred) orelse (String.isSuffix "kAB" pred)  orelse (String.isSuffix "kSP" pred) orelse (String.isSuffix "kPS" pred) orelse (String.isSuffix "concat" pred) orelse (String.isSuffix "HMAC" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Conc2" pred) orelse (String.isSuffix "Conc3" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred)  orelse (String.isSuffix "XOR" pred) orelse (String.isSuffix "sk" pred)) then (Let_to_IML vals_list pred)
+	val processes = if (String.isSuffix "assert_true_cnd" pred) then ProcessNull
+		  else if ((String.isSuffix "cjmp_true_cnd" pred) orelse (String.isSuffix "comp_true_cnd" pred)) then ProcessNull
+		  else if (String.isSuffix "assert_false_cnd" pred) then ProcessNull
+		  else if ((String.isSuffix "cjmp_false_cnd" pred) orelse (String.isSuffix "comp_false_cnd" pred)) then ProcessNull
+		  else if ((String.isSuffix "Key" pred) orelse (String.isSuffix "iv" pred) orelse (String.isSuffix "pkP" pred) orelse (String.isSuffix "skS" pred) orelse (String.isSuffix "RAND_NUM" pred) orelse (String.isSuffix "OTP" pred) orelse (String.isSuffix "SKey" pred)) then (ProcessAction ((Fr_to_New pred),(path_to_process event_names vals_list refine_preds exec_sts preds)))
+		  else if (String.isSuffix "K" pred) then ProcessNull
+		  else if (String.isSuffix "Kr" pred) then ProcessNull
+		  else if (String.isSuffix "Adv" pred) then ProcessNull
+		  else if ((String.isSuffix "Dec" pred) orelse (String.isSuffix "signature" pred) orelse (String.isSuffix "Ver" pred) orelse (String.isSuffix "Enc" pred) orelse (String.isSuffix "kS" pred) orelse (String.isSuffix "kAB" pred)  orelse (String.isSuffix "kSP" pred) orelse (String.isSuffix "kPS" pred) orelse (String.isSuffix "concat" pred) orelse (String.isSuffix "HMAC" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Conc2" pred) orelse (String.isSuffix "Conc3" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred)  orelse (String.isSuffix "XOR" pred) orelse (String.isSuffix "sk" pred)) then ProcessNull
 		  else if ((String.isSuffix "event_true_cnd" pred) orelse (String.isSuffix "event1" pred) orelse (String.isSuffix "event2" pred) orelse (String.isSuffix "event3" pred) orelse (String.isSuffix "event_false_cnd" pred))
-		  then (IML_event event_names pred)
+		  then ProcessNull
 		  else ProcessNull; 
 	    
     in
-	(*if (String.isSuffix "cjmp_false_cnd" pred andalso ((not o List.null) preds))
-	  then (path_to_process event_names vals_list refine_preds exec_sts (tl preds) str)
-	  else*)
-	(if (String.isSuffix "cjmp_true_cnd" pred andalso (List.length preds = 2))
-	then ((path_to_process event_names vals_list refine_preds exec_sts [((hd o tl) preds)] str)^(to_string (I_False ())))
-	else (path_to_process event_names vals_list refine_preds exec_sts preds str))
+	processes
     end;
 
 

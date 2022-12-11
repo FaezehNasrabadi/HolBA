@@ -35,6 +35,21 @@ in
 	 raise ERR "querysmt_raw" "unknown output from z3")
     end;
 
+  fun querysmt_raw_model q =
+      let
+	  val tempfile = get_tempfile "smtquery_model" "nil";
+	  val _ = write_to_file tempfile q;
+
+	  val out = get_exec_output ("z3 " ^ tempfile);
+
+	  val outputfile = get_tempfile "exec_output" ".txt";
+	  val res = (implode o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o explode) out
+	  val _ = write_to_file outputfile res;
+      in
+	  (SmtLib_Parser.parse_file outputfile)
+	  
+      end;  
+
   (* https://rise4fun.com/z3/tutorial *)
   (*
   val q = "(declare-const a Int)\n" ^
@@ -89,7 +104,7 @@ in
 	) ^ "\n") "" vars;
 
   fun querysmt prelude vars asserts =
-    if List.exists (fn (_,qt) => qt <> SMTTY_Bool) asserts then
+      if List.exists (fn (_,qt) => qt <> SMTTY_Bool) asserts then
       raise ERR "querysmt" "don't know how to handle expression type in assert"
     else
       let
@@ -104,6 +119,24 @@ in
 		      asserts_str ^ "\n" ^
 		      "(check-sat)\n")
       end;
+
+   fun querysmt_model prelude vars asserts =
+      if List.exists (fn (_,qt) => qt <> SMTTY_Bool) asserts then
+      raise ERR "querysmt_model" "don't know how to handle expression type in assert"
+    else
+      let
+	val decls = smt_vars_to_smtlib vars;
+	val asserts_str =
+	  List.foldr (fn ((q,_), str) => str ^ (
+	    "(assert " ^ q ^ ")\n"
+	  )) "" asserts;
+      in
+	querysmt_raw_model (prelude     ^ "\n" ^
+		      decls       ^ "\n" ^
+		      asserts_str ^ "\n" ^
+		      "(check-sat)\n(get-model)\n")
+      end;
+    
 
   fun smtlib_vars_compare ((an, aty),(bn, bty)) =
     if an = bn then
@@ -533,13 +566,14 @@ BExp_Store (BExp_Den (BVar "fr_269_MEM" (BType_Mem Bit32 Bit8)))
           val szi = styv_bvt;
 
           (* current restrictions *)
-          val _ = if szadi = 32 then () else
+          val _ = if szadi = 32 orelse szadi = 64 then () else
                     problem exp "address type other than 32bits cannot be handled currently: ";
           val _ = if szci  =  8 then () else
                     problem exp "cell types other than 8bits cannot be handled currently: ";
           val _ = if szi   =  8 orelse
-                     szi   = 32 then () else
-                    problem exp "load types other than 8 and 32bits cannot be handled currently: ";
+                     szi   = 32 orelse
+                     szi   = 64 then () else
+                    problem exp "load types other than 8 and 32 and 64bits cannot be handled currently: ";
 
           val z3funname = "storefun_" ^ (Int.toString szadi) ^
                                  "_" ^ (Int.toString szci) ^

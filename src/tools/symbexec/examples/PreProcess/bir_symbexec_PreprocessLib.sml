@@ -35,6 +35,8 @@ val n = valOf (peek (n_dict, “BL_Address (Imm64 268437120w)”));
     CFGN_lbl_tm = “BL_Address (Imm64 4235844w)”, CFGN_targets =
     [“BL_Address (Imm64 4235848w)”], CFGN_type = CFGNT_Jump}: cfg_node
 
+val descr = "D63F0000 (blr x0)";
+
 *)
 (* (List.length lbl_tgt) = 0
 		       then
@@ -50,6 +52,12 @@ fun fun_address_dict (n:cfg_node) =
 	val name_adr = if ((isPrefix "(bl " (implode instrDes)) orelse (isPrefix "(b " (implode instrDes)))
 		       then let
 			       val fname = (implode o fst o (list_split_pred #">") o snd o (list_split_pred #"<")) instrDes;
+			   in
+			       (lbl_tm, fname)
+			   end
+		       else if (isPrefix "(blr " (implode instrDes))
+		       then let
+			       val fname = (implode o fst o (list_split_pred #")") o snd o (list_split_pred #" ")) instrDes;
 			   in
 			       (lbl_tm, fname)
 			   end

@@ -144,7 +144,7 @@ local
 
 
       val be_tgt  = (fst o hd) vs;
-	  
+(*	  
       open bir_countw_simplificationLib;
 	   
       val bvalo = eval_exp_in_syst be_tgt syst
@@ -156,12 +156,17 @@ local
       open optionSyntax;
       val tgt = (mk_BL_Address o dest_BVal_Imm o dest_some) bvalo
                 handle _ => (
-                  (*print ("state_exec_try_jmp_exp_var::no const: " ^
+                  print ("state_exec_try_jmp_exp_var::no const: " ^
                          (term_to_string bvalo) ^ " ;; \n" ^ 
                          (term_to_string be_tgt) ^ " ;; \n" ^ 
-                         (term_to_string (SYST_get_pc syst)) ^ "\n");*)
-                  raise state_exec_try_jmp_exp_var_exn);(*ERR "state_exec_try_jmp_exp_var"
-                    ("target value is no const: " ^ (term_to_string bvalo));*)
+                         (term_to_string (SYST_get_pc syst)) ^ "\n");
+                  raise state_exec_try_jmp_exp_var_exn); (*ERR "state_exec_try_jmp_exp_var"
+							       ("target value is no const: " ^ (term_to_string bvalo));*)*)
+val _ = if (check_feasible_exp be_tgt syst) then print "True\n"
+	else raise state_exec_try_jmp_exp_var_exn;
+
+
+    val tgt = ``BL_Address (Imm64 0w)``;
 
     in
       [SYST_update_pc tgt syst]
@@ -209,13 +214,13 @@ in (* local *)
        SOME systs => systs
      | NONE       => (
     (* try to match indirect jump *)
-    (*case state_exec_try_jmp_exp_var est syst of
+    case state_exec_try_jmp_exp_var est syst of
        SOME systs => systs
-     | NONE       => ( *)
+     | NONE       => (
     (* no match, then we have some indirection and need to rely on cfg (or it's another end statement) *)
        state_exec_try_jmp_exp_var_no_const syst
        (*state_exec_from_cfg n_dict lbl_tm syst*)
-    )))
+    ))))
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;;
 end (* local *)
@@ -359,7 +364,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 			 else syst
 		     else syst;
 		 
-	     val debugOn = false;
+	     val debugOn = true;
 	     val _ = if not debugOn then () else
 		     (print_term bl; print "\n ==================== \n\n");
 
@@ -367,21 +372,6 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	     (* generate list of states from end statement *)
 
 	    val systs =  List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2);
-		 
- 	   (*     val systs = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
-			 then
-			     if ((not o List.null o fst o listSyntax.dest_list) stmts)
-			     then
-				  List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2)
-			     else		
-				 List.concat(List.map (state_exec_try_jmp_exp_var_no_const systs2))
-			 else
-			      List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2);
-
-
-	  val systs = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
-			 then (List.map (fn x => bir_symbexec_funcLib.update_pc x) systs)
-			 else systs;*)
 		 
 
 	     val systs_processed = abpfun systs;

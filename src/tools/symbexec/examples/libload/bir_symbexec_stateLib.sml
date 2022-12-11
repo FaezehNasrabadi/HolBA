@@ -458,6 +458,68 @@ in (* local *)
     in
       resultvalue
     end;
+
+fun check_feasible_exp be syst =
+    let
+      val vals  = SYST_get_vals syst;
+      val pred_bvl = SYST_get_pred syst;
+
+      val (pred_conjs, pred_deps) =
+        List.foldr (collect_pred_expsdeps vals) ([], symbvalbe_dep_empty) pred_bvl;
+
+      val pred_depsl_ = Redblackset.listItems pred_deps;
+      val pred_depsl  = List.filter (is_bvar_bound vals) pred_depsl_;
+
+      val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible" vals bv))
+                           pred_depsl;
+      val vals_eql =
+        List.map symbval_eq_to_bexp valsl;
+
+      (* memory accesses should not end up here (actually only SymbValBE should be relevant),
+         ignore this detail for now *)
+
+      (* start with no variable and no assertions *)
+      val vars    = Redblackset.empty smtlib_vars_compare;
+      val asserts = [];
+
+      val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+      val pred_conj = ``(BExp_BinExp BIExp_And
+				     (BExp_BinPred BIExp_Equal
+				      ^tgt
+				      ^be)
+			 ^(hd pred_conjs)
+			)``;   
+      (* process the predicate conjuncts *)
+      val (vars, asserts) = proc_preds (vars, asserts) (pred_conj::(tl pred_conjs));
+
+      (* process the symbolic values *)
+      val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
+
+      val result = querysmt bir_smtLib_z3_prelude vars asserts;
+
+      val _ = if result = BirSmtSat orelse result = BirSmtUnsat then () else
+              raise ERR "check_feasible" "smt solver couldn't determine feasibility"
+
+      val resultvalue = result <> BirSmtUnsat;
+
+      val _ = if resultvalue then () else
+              if true then () else
+              print "FOUND AN INFEASIBLE PATH...\n";
+
+      val _ = if resultvalue then
+		  let
+		      val (_,_,_,ts) = querysmt_model bir_smtLib_z3_prelude vars asserts;
+		      val t = (hd ts);
+		  in
+		      print ((term_to_string t)^"\n")
+		  end
+ 		  else ();
+    in
+      resultvalue
+    end;
+     
+    
 end (* local *)
 
 end (* outermost local *)

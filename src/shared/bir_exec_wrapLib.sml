@@ -22,7 +22,7 @@ in
 
       val s = read_from_file outputfile;
 
-      val _ = OS.Process.system ("rm " ^ outputfile);
+      (*val _ = OS.Process.system ("rm " ^ outputfile);*)
     in
       s
     end;

@@ -1,0 +1,36 @@
+20_MEM
+(FUN_FMAP (K ((0x0w: 8 word))) (UNIV) : 64 word |-> 8 word)
+24_R0
+(0x0w: 64 word)
+29_MEM
+(FUN_FMAP (K ((0x0w: 8 word))) (UNIV) : 64 word |-> 8 word)
+32_R0
+(0x0w: 64 word)
+33_R0
+(0x0w: 64 word)
+34_R1
+(0x7FFFFFFFFFFFFFF8w: 64 word)
+5_tmp_SP_EL0
+(0x7FFFFFFFFFFFFFD8w: 64 word)
+sy_SP_EL0
+(0x8000000000000008w: 64 word)
+target
+(0x0w: 64 word)
+20_MEM
+(FUN_FMAP (K ((0x0w: 8 word))) (UNIV) : 64 word |-> 8 word)
+24_R0
+(0x0w: 64 word)
+29_MEM
+(FUN_FMAP (K ((0x0w: 8 word))) (UNIV) : 64 word |-> 8 word)
+32_R0
+(0x0w: 64 word)
+33_R0
+(0x0w: 64 word)
+34_R1
+(0x7FFFFFFFFFFFFFF8w: 64 word)
+5_tmp_SP_EL0
+(0x7FFFFFFFFFFFFFD8w: 64 word)
+sy_SP_EL0
+(0x8000000000000008w: 64 word)
+target
+(0x0w: 64 word)

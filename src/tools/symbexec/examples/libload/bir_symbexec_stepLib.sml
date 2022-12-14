@@ -135,45 +135,26 @@ local
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var est syst =
-    SOME (
-    let
-      val (vs, _) = hol88Lib.match jmp_exp_var_match_tm est
-                    handle _ => (
-                      print ("couldn't match end statement: " ^ (term_to_string est) ^ "\n");
-                      raise ERR "couldn't match" (term_to_string est));
+      SOME (
+      let
+	  val (vs, _) = hol88Lib.match jmp_exp_var_match_tm est
+              handle _ => (
+                     print ("couldn't match end statement: " ^ (term_to_string est) ^ "\n");
+                     raise ERR "couldn't match" (term_to_string est));
 
 
-      val be_tgt  = (fst o hd) vs;
-(*	  
-      open bir_countw_simplificationLib;
-	   
-      val bvalo = eval_exp_in_syst be_tgt syst
-                  handle e => (
-                    print ("ooops, something went wrong in evaluation: " ^ (term_to_string be_tgt) ^ "\n");
-                    raise wrap_exn ("ooops, something went wrong in evaluation: " ^ (term_to_string be_tgt)) e);
-
-      open bir_valuesSyntax;
-      open optionSyntax;
-      val tgt = (mk_BL_Address o dest_BVal_Imm o dest_some) bvalo
-                handle _ => (
-                  print ("state_exec_try_jmp_exp_var::no const: " ^
-                         (term_to_string bvalo) ^ " ;; \n" ^ 
-                         (term_to_string be_tgt) ^ " ;; \n" ^ 
-                         (term_to_string (SYST_get_pc syst)) ^ "\n");
-                  raise state_exec_try_jmp_exp_var_exn); (*ERR "state_exec_try_jmp_exp_var"
-							       ("target value is no const: " ^ (term_to_string bvalo));*)*)
-val _ = if (check_feasible_exp be_tgt syst) then print "True\n"
-	else raise state_exec_try_jmp_exp_var_exn;
-
-
-    val tgt = ``BL_Address (Imm64 0w)``;
-
-    in
-      [SYST_update_pc tgt syst]
-    end
-    )
-    handle state_exec_try_jmp_exp_var_exn => NONE
-         | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;
+	  val be_tgt  = (fst o hd) vs;
+	      
+	  val tgts = (check_feasible_exp be_tgt syst);
+	      
+	  val _ = if (List.null tgts) then raise state_exec_try_jmp_exp_var_exn
+		    else ();
+      in
+	  List.map (fn t => SYST_update_pc t syst) tgts
+      end
+      )
+      handle state_exec_try_jmp_exp_var_exn => NONE
+           | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;
 
   
 

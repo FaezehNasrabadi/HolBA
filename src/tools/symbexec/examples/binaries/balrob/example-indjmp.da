@@ -17,445 +17,449 @@ Disassembly of section .text:
  384:	d65f03c0 	ret
 
 0000000000000388 <main>:
- 388:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+ 388:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
  38c:	910003fd 	mov	x29, sp
- 390:	b0000080 	adrp	x0, 11000 <foo+0x10c90>
- 394:	91000000 	add	x0, x0, #0x0
- 398:	910063e2 	add	x2, sp, #0x18
- 39c:	aa0003e3 	mov	x3, x0
- 3a0:	a9400460 	ldp	x0, x1, [x3]
- 3a4:	a9000440 	stp	x0, x1, [x2]
- 3a8:	f9400860 	ldr	x0, [x3, #16]
- 3ac:	f9000840 	str	x0, [x2, #16]
- 3b0:	f9400fe0 	ldr	x0, [sp, #24]
- 3b4:	d63f0000 	blr	x0
- 3b8:	52800000 	mov	w0, #0x0                   	// #0
- 3bc:	a8c37bfd 	ldp	x29, x30, [sp], #48
- 3c0:	d65f03c0 	ret
+ 390:	b9001fe0 	str	w0, [sp, #28]
+ 394:	b0000080 	adrp	x0, 11000 <foo+0x10c90>
+ 398:	91000000 	add	x0, x0, #0x0
+ 39c:	9100a3e2 	add	x2, sp, #0x28
+ 3a0:	aa0003e3 	mov	x3, x0
+ 3a4:	a9400460 	ldp	x0, x1, [x3]
+ 3a8:	a9000440 	stp	x0, x1, [x2]
+ 3ac:	f9400860 	ldr	x0, [x3, #16]
+ 3b0:	f9000840 	str	x0, [x2, #16]
+ 3b4:	b9801fe0 	ldrsw	x0, [sp, #28]
+ 3b8:	d37df000 	lsl	x0, x0, #3
+ 3bc:	9100a3e1 	add	x1, sp, #0x28
+ 3c0:	f8606820 	ldr	x0, [x1, x0]
+ 3c4:	d63f0000 	blr	x0
+ 3c8:	52800000 	mov	w0, #0x0                   	// #0
+ 3cc:	a8c47bfd 	ldp	x29, x30, [sp], #64
+ 3d0:	d65f03c0 	ret
 
-00000000000003c4 <SystemCoreClockUpdate>:
- 3c4:	d10043ff 	sub	sp, sp, #0x10
- 3c8:	b9000fff 	str	wzr, [sp, #12]
- 3cc:	d2900000 	mov	x0, #0x8000                	// #32768
- 3d0:	f2a80080 	movk	x0, #0x4004, lsl #16
- 3d4:	b9402400 	ldr	w0, [x0, #36]
- 3d8:	53057c00 	lsr	w0, w0, #5
- 3dc:	12000c00 	and	w0, w0, #0xf
- 3e0:	71003c1f 	cmp	w0, #0xf
- 3e4:	54000f00 	b.eq	5c4 <SystemCoreClockUpdate+0x200>  // b.none
- 3e8:	71003c1f 	cmp	w0, #0xf
- 3ec:	54000f48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 3f0:	7100381f 	cmp	w0, #0xe
- 3f4:	54000e00 	b.eq	5b4 <SystemCoreClockUpdate+0x1f0>  // b.none
- 3f8:	7100381f 	cmp	w0, #0xe
- 3fc:	54000ec8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 400:	7100341f 	cmp	w0, #0xd
- 404:	54000d00 	b.eq	5a4 <SystemCoreClockUpdate+0x1e0>  // b.none
- 408:	7100341f 	cmp	w0, #0xd
- 40c:	54000e48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 410:	7100301f 	cmp	w0, #0xc
- 414:	54000c00 	b.eq	594 <SystemCoreClockUpdate+0x1d0>  // b.none
- 418:	7100301f 	cmp	w0, #0xc
- 41c:	54000dc8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 420:	71002c1f 	cmp	w0, #0xb
- 424:	54000b00 	b.eq	584 <SystemCoreClockUpdate+0x1c0>  // b.none
- 428:	71002c1f 	cmp	w0, #0xb
- 42c:	54000d48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 430:	7100281f 	cmp	w0, #0xa
- 434:	54000a00 	b.eq	574 <SystemCoreClockUpdate+0x1b0>  // b.none
- 438:	7100281f 	cmp	w0, #0xa
- 43c:	54000cc8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 440:	7100241f 	cmp	w0, #0x9
- 444:	54000900 	b.eq	564 <SystemCoreClockUpdate+0x1a0>  // b.none
- 448:	7100241f 	cmp	w0, #0x9
- 44c:	54000c48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 450:	7100201f 	cmp	w0, #0x8
- 454:	54000800 	b.eq	554 <SystemCoreClockUpdate+0x190>  // b.none
- 458:	7100201f 	cmp	w0, #0x8
- 45c:	54000bc8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 460:	71001c1f 	cmp	w0, #0x7
- 464:	54000700 	b.eq	544 <SystemCoreClockUpdate+0x180>  // b.none
- 468:	71001c1f 	cmp	w0, #0x7
- 46c:	54000b48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 470:	7100181f 	cmp	w0, #0x6
- 474:	54000600 	b.eq	534 <SystemCoreClockUpdate+0x170>  // b.none
- 478:	7100181f 	cmp	w0, #0x6
- 47c:	54000ac8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 480:	7100141f 	cmp	w0, #0x5
- 484:	54000500 	b.eq	524 <SystemCoreClockUpdate+0x160>  // b.none
- 488:	7100141f 	cmp	w0, #0x5
- 48c:	54000a48 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 490:	7100101f 	cmp	w0, #0x4
- 494:	54000400 	b.eq	514 <SystemCoreClockUpdate+0x150>  // b.none
- 498:	7100101f 	cmp	w0, #0x4
- 49c:	540009c8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 4a0:	71000c1f 	cmp	w0, #0x3
- 4a4:	54000300 	b.eq	504 <SystemCoreClockUpdate+0x140>  // b.none
- 4a8:	71000c1f 	cmp	w0, #0x3
- 4ac:	54000948 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 4b0:	7100081f 	cmp	w0, #0x2
- 4b4:	54000200 	b.eq	4f4 <SystemCoreClockUpdate+0x130>  // b.none
- 4b8:	7100081f 	cmp	w0, #0x2
- 4bc:	540008c8 	b.hi	5d4 <SystemCoreClockUpdate+0x210>  // b.pmore
- 4c0:	7100001f 	cmp	w0, #0x0
- 4c4:	54000080 	b.eq	4d4 <SystemCoreClockUpdate+0x110>  // b.none
- 4c8:	7100041f 	cmp	w0, #0x1
- 4cc:	540000c0 	b.eq	4e4 <SystemCoreClockUpdate+0x120>  // b.none
- 4d0:	14000041 	b	5d4 <SystemCoreClockUpdate+0x210>
- 4d4:	52835000 	mov	w0, #0x1a80                	// #6784
- 4d8:	72a000c0 	movk	w0, #0x6, lsl #16
- 4dc:	b9000fe0 	str	w0, [sp, #12]
- 4e0:	1400003d 	b	5d4 <SystemCoreClockUpdate+0x210>
- 4e4:	52942400 	mov	w0, #0xa120                	// #41248
- 4e8:	72a000e0 	movk	w0, #0x7, lsl #16
+00000000000003d4 <SystemCoreClockUpdate>:
+ 3d4:	d10043ff 	sub	sp, sp, #0x10
+ 3d8:	b9000fff 	str	wzr, [sp, #12]
+ 3dc:	d2900000 	mov	x0, #0x8000                	// #32768
+ 3e0:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 3e4:	b9402400 	ldr	w0, [x0, #36]
+ 3e8:	53057c00 	lsr	w0, w0, #5
+ 3ec:	12000c00 	and	w0, w0, #0xf
+ 3f0:	71003c1f 	cmp	w0, #0xf
+ 3f4:	54000f00 	b.eq	5d4 <SystemCoreClockUpdate+0x200>  // b.none
+ 3f8:	71003c1f 	cmp	w0, #0xf
+ 3fc:	54000f48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 400:	7100381f 	cmp	w0, #0xe
+ 404:	54000e00 	b.eq	5c4 <SystemCoreClockUpdate+0x1f0>  // b.none
+ 408:	7100381f 	cmp	w0, #0xe
+ 40c:	54000ec8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 410:	7100341f 	cmp	w0, #0xd
+ 414:	54000d00 	b.eq	5b4 <SystemCoreClockUpdate+0x1e0>  // b.none
+ 418:	7100341f 	cmp	w0, #0xd
+ 41c:	54000e48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 420:	7100301f 	cmp	w0, #0xc
+ 424:	54000c00 	b.eq	5a4 <SystemCoreClockUpdate+0x1d0>  // b.none
+ 428:	7100301f 	cmp	w0, #0xc
+ 42c:	54000dc8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 430:	71002c1f 	cmp	w0, #0xb
+ 434:	54000b00 	b.eq	594 <SystemCoreClockUpdate+0x1c0>  // b.none
+ 438:	71002c1f 	cmp	w0, #0xb
+ 43c:	54000d48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 440:	7100281f 	cmp	w0, #0xa
+ 444:	54000a00 	b.eq	584 <SystemCoreClockUpdate+0x1b0>  // b.none
+ 448:	7100281f 	cmp	w0, #0xa
+ 44c:	54000cc8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 450:	7100241f 	cmp	w0, #0x9
+ 454:	54000900 	b.eq	574 <SystemCoreClockUpdate+0x1a0>  // b.none
+ 458:	7100241f 	cmp	w0, #0x9
+ 45c:	54000c48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 460:	7100201f 	cmp	w0, #0x8
+ 464:	54000800 	b.eq	564 <SystemCoreClockUpdate+0x190>  // b.none
+ 468:	7100201f 	cmp	w0, #0x8
+ 46c:	54000bc8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 470:	71001c1f 	cmp	w0, #0x7
+ 474:	54000700 	b.eq	554 <SystemCoreClockUpdate+0x180>  // b.none
+ 478:	71001c1f 	cmp	w0, #0x7
+ 47c:	54000b48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 480:	7100181f 	cmp	w0, #0x6
+ 484:	54000600 	b.eq	544 <SystemCoreClockUpdate+0x170>  // b.none
+ 488:	7100181f 	cmp	w0, #0x6
+ 48c:	54000ac8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 490:	7100141f 	cmp	w0, #0x5
+ 494:	54000500 	b.eq	534 <SystemCoreClockUpdate+0x160>  // b.none
+ 498:	7100141f 	cmp	w0, #0x5
+ 49c:	54000a48 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 4a0:	7100101f 	cmp	w0, #0x4
+ 4a4:	54000400 	b.eq	524 <SystemCoreClockUpdate+0x150>  // b.none
+ 4a8:	7100101f 	cmp	w0, #0x4
+ 4ac:	540009c8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 4b0:	71000c1f 	cmp	w0, #0x3
+ 4b4:	54000300 	b.eq	514 <SystemCoreClockUpdate+0x140>  // b.none
+ 4b8:	71000c1f 	cmp	w0, #0x3
+ 4bc:	54000948 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 4c0:	7100081f 	cmp	w0, #0x2
+ 4c4:	54000200 	b.eq	504 <SystemCoreClockUpdate+0x130>  // b.none
+ 4c8:	7100081f 	cmp	w0, #0x2
+ 4cc:	540008c8 	b.hi	5e4 <SystemCoreClockUpdate+0x210>  // b.pmore
+ 4d0:	7100001f 	cmp	w0, #0x0
+ 4d4:	54000080 	b.eq	4e4 <SystemCoreClockUpdate+0x110>  // b.none
+ 4d8:	7100041f 	cmp	w0, #0x1
+ 4dc:	540000c0 	b.eq	4f4 <SystemCoreClockUpdate+0x120>  // b.none
+ 4e0:	14000041 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 4e4:	52835000 	mov	w0, #0x1a80                	// #6784
+ 4e8:	72a000c0 	movk	w0, #0x6, lsl #16
  4ec:	b9000fe0 	str	w0, [sp, #12]
- 4f0:	14000039 	b	5d4 <SystemCoreClockUpdate+0x210>
- 4f4:	5286a000 	mov	w0, #0x3500                	// #13568
- 4f8:	72a00180 	movk	w0, #0xc, lsl #16
+ 4f0:	1400003d 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 4f4:	52942400 	mov	w0, #0xa120                	// #41248
+ 4f8:	72a000e0 	movk	w0, #0x7, lsl #16
  4fc:	b9000fe0 	str	w0, [sp, #12]
- 500:	14000035 	b	5d4 <SystemCoreClockUpdate+0x210>
- 504:	52991c00 	mov	w0, #0xc8e0                	// #51424
- 508:	72a00200 	movk	w0, #0x10, lsl #16
+ 500:	14000039 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 504:	5286a000 	mov	w0, #0x3500                	// #13568
+ 508:	72a00180 	movk	w0, #0xc, lsl #16
  50c:	b9000fe0 	str	w0, [sp, #12]
- 510:	14000031 	b	5d4 <SystemCoreClockUpdate+0x210>
- 514:	528b9800 	mov	w0, #0x5cc0                	// #23744
- 518:	72a002a0 	movk	w0, #0x15, lsl #16
+ 510:	14000035 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 514:	52991c00 	mov	w0, #0xc8e0                	// #51424
+ 518:	72a00200 	movk	w0, #0x10, lsl #16
  51c:	b9000fe0 	str	w0, [sp, #12]
- 520:	1400002d 	b	5d4 <SystemCoreClockUpdate+0x210>
- 524:	528d4000 	mov	w0, #0x6a00                	// #27136
- 528:	72a00300 	movk	w0, #0x18, lsl #16
+ 520:	14000031 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 524:	528b9800 	mov	w0, #0x5cc0                	// #23744
+ 528:	72a002a0 	movk	w0, #0x15, lsl #16
  52c:	b9000fe0 	str	w0, [sp, #12]
- 530:	14000029 	b	5d4 <SystemCoreClockUpdate+0x210>
- 534:	528ee800 	mov	w0, #0x7740                	// #30528
- 538:	72a00360 	movk	w0, #0x1b, lsl #16
+ 530:	1400002d 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 534:	528d4000 	mov	w0, #0x6a00                	// #27136
+ 538:	72a00300 	movk	w0, #0x18, lsl #16
  53c:	b9000fe0 	str	w0, [sp, #12]
- 540:	14000025 	b	5d4 <SystemCoreClockUpdate+0x210>
- 544:	52909000 	mov	w0, #0x8480                	// #33920
- 548:	72a003c0 	movk	w0, #0x1e, lsl #16
+ 540:	14000029 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 544:	528ee800 	mov	w0, #0x7740                	// #30528
+ 548:	72a00360 	movk	w0, #0x1b, lsl #16
  54c:	b9000fe0 	str	w0, [sp, #12]
- 550:	14000021 	b	5d4 <SystemCoreClockUpdate+0x210>
- 554:	52923800 	mov	w0, #0x91c0                	// #37312
- 558:	72a00420 	movk	w0, #0x21, lsl #16
+ 550:	14000025 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 554:	52909000 	mov	w0, #0x8480                	// #33920
+ 558:	72a003c0 	movk	w0, #0x1e, lsl #16
  55c:	b9000fe0 	str	w0, [sp, #12]
- 560:	1400001d 	b	5d4 <SystemCoreClockUpdate+0x210>
- 564:	5293e000 	mov	w0, #0x9f00                	// #40704
- 568:	72a00480 	movk	w0, #0x24, lsl #16
+ 560:	14000021 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 564:	52923800 	mov	w0, #0x91c0                	// #37312
+ 568:	72a00420 	movk	w0, #0x21, lsl #16
  56c:	b9000fe0 	str	w0, [sp, #12]
- 570:	14000019 	b	5d4 <SystemCoreClockUpdate+0x210>
- 574:	52958800 	mov	w0, #0xac40                	// #44096
- 578:	72a004e0 	movk	w0, #0x27, lsl #16
+ 570:	1400001d 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 574:	5293e000 	mov	w0, #0x9f00                	// #40704
+ 578:	72a00480 	movk	w0, #0x24, lsl #16
  57c:	b9000fe0 	str	w0, [sp, #12]
- 580:	14000015 	b	5d4 <SystemCoreClockUpdate+0x210>
- 584:	52865c00 	mov	w0, #0x32e0                	// #13024
- 588:	72a00520 	movk	w0, #0x29, lsl #16
+ 580:	14000019 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 584:	52958800 	mov	w0, #0xac40                	// #44096
+ 588:	72a004e0 	movk	w0, #0x27, lsl #16
  58c:	b9000fe0 	str	w0, [sp, #12]
- 590:	14000011 	b	5d4 <SystemCoreClockUpdate+0x210>
- 594:	52880400 	mov	w0, #0x4020                	// #16416
- 598:	72a00580 	movk	w0, #0x2c, lsl #16
+ 590:	14000015 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 594:	52865c00 	mov	w0, #0x32e0                	// #13024
+ 598:	72a00520 	movk	w0, #0x29, lsl #16
  59c:	b9000fe0 	str	w0, [sp, #12]
- 5a0:	1400000d 	b	5d4 <SystemCoreClockUpdate+0x210>
- 5a4:	5289ac00 	mov	w0, #0x4d60                	// #19808
- 5a8:	72a005e0 	movk	w0, #0x2f, lsl #16
+ 5a0:	14000011 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 5a4:	52880400 	mov	w0, #0x4020                	// #16416
+ 5a8:	72a00580 	movk	w0, #0x2c, lsl #16
  5ac:	b9000fe0 	str	w0, [sp, #12]
- 5b0:	14000009 	b	5d4 <SystemCoreClockUpdate+0x210>
- 5b4:	529a8000 	mov	w0, #0xd400                	// #54272
- 5b8:	72a00600 	movk	w0, #0x30, lsl #16
+ 5b0:	1400000d 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 5b4:	5289ac00 	mov	w0, #0x4d60                	// #19808
+ 5b8:	72a005e0 	movk	w0, #0x2f, lsl #16
  5bc:	b9000fe0 	str	w0, [sp, #12]
- 5c0:	14000005 	b	5d4 <SystemCoreClockUpdate+0x210>
- 5c4:	529c2800 	mov	w0, #0xe140                	// #57664
- 5c8:	72a00660 	movk	w0, #0x33, lsl #16
+ 5c0:	14000009 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 5c4:	529a8000 	mov	w0, #0xd400                	// #54272
+ 5c8:	72a00600 	movk	w0, #0x30, lsl #16
  5cc:	b9000fe0 	str	w0, [sp, #12]
- 5d0:	d503201f 	nop
- 5d4:	d2900000 	mov	x0, #0x8000                	// #32768
- 5d8:	f2a80080 	movk	x0, #0x4004, lsl #16
- 5dc:	b9402400 	ldr	w0, [x0, #36]
- 5e0:	0b000000 	add	w0, w0, w0
- 5e4:	121f1000 	and	w0, w0, #0x3e
- 5e8:	11000800 	add	w0, w0, #0x2
- 5ec:	b9400fe1 	ldr	w1, [sp, #12]
- 5f0:	1ac00820 	udiv	w0, w1, w0
- 5f4:	b9000fe0 	str	w0, [sp, #12]
- 5f8:	d2900000 	mov	x0, #0x8000                	// #32768
- 5fc:	f2a80080 	movk	x0, #0x4004, lsl #16
- 600:	b9407000 	ldr	w0, [x0, #112]
- 604:	12000400 	and	w0, w0, #0x3
- 608:	71000c1f 	cmp	w0, #0x3
- 60c:	540007c0 	b.eq	704 <SystemCoreClockUpdate+0x340>  // b.none
- 610:	71000c1f 	cmp	w0, #0x3
- 614:	54001368 	b.hi	880 <SystemCoreClockUpdate+0x4bc>  // b.pmore
- 618:	7100081f 	cmp	w0, #0x2
- 61c:	540006a0 	b.eq	6f0 <SystemCoreClockUpdate+0x32c>  // b.none
- 620:	7100081f 	cmp	w0, #0x2
- 624:	540012e8 	b.hi	880 <SystemCoreClockUpdate+0x4bc>  // b.pmore
- 628:	7100001f 	cmp	w0, #0x0
- 62c:	54000080 	b.eq	63c <SystemCoreClockUpdate+0x278>  // b.none
- 630:	7100041f 	cmp	w0, #0x1
- 634:	54000100 	b.eq	654 <SystemCoreClockUpdate+0x290>  // b.none
- 638:	14000092 	b	880 <SystemCoreClockUpdate+0x4bc>
- 63c:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 640:	f947f000 	ldr	x0, [x0, #4064]
- 644:	52836001 	mov	w1, #0x1b00                	// #6912
- 648:	72a016e1 	movk	w1, #0xb7, lsl #16
- 64c:	b9000001 	str	w1, [x0]
- 650:	1400008c 	b	880 <SystemCoreClockUpdate+0x4bc>
- 654:	d2900000 	mov	x0, #0x8000                	// #32768
- 658:	f2a80080 	movk	x0, #0x4004, lsl #16
- 65c:	b9404000 	ldr	w0, [x0, #64]
- 660:	12000400 	and	w0, w0, #0x3
- 664:	71000c1f 	cmp	w0, #0x3
- 668:	540003a0 	b.eq	6dc <SystemCoreClockUpdate+0x318>  // b.none
- 66c:	71000c1f 	cmp	w0, #0x3
- 670:	54001028 	b.hi	874 <SystemCoreClockUpdate+0x4b0>  // b.pmore
- 674:	7100081f 	cmp	w0, #0x2
- 678:	54000280 	b.eq	6c8 <SystemCoreClockUpdate+0x304>  // b.none
- 67c:	7100081f 	cmp	w0, #0x2
- 680:	54000fa8 	b.hi	874 <SystemCoreClockUpdate+0x4b0>  // b.pmore
- 684:	7100001f 	cmp	w0, #0x0
- 688:	54000080 	b.eq	698 <SystemCoreClockUpdate+0x2d4>  // b.none
- 68c:	7100041f 	cmp	w0, #0x1
- 690:	54000100 	b.eq	6b0 <SystemCoreClockUpdate+0x2ec>  // b.none
- 694:	14000078 	b	874 <SystemCoreClockUpdate+0x4b0>
- 698:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 69c:	f947f000 	ldr	x0, [x0, #4064]
- 6a0:	52836001 	mov	w1, #0x1b00                	// #6912
- 6a4:	72a016e1 	movk	w1, #0xb7, lsl #16
- 6a8:	b9000001 	str	w1, [x0]
- 6ac:	14000010 	b	6ec <SystemCoreClockUpdate+0x328>
- 6b0:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 6b4:	f947f000 	ldr	x0, [x0, #4064]
- 6b8:	52836001 	mov	w1, #0x1b00                	// #6912
- 6bc:	72a016e1 	movk	w1, #0xb7, lsl #16
- 6c0:	b9000001 	str	w1, [x0]
- 6c4:	1400000a 	b	6ec <SystemCoreClockUpdate+0x328>
- 6c8:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 6cc:	f947f000 	ldr	x0, [x0, #4064]
- 6d0:	b9400fe1 	ldr	w1, [sp, #12]
- 6d4:	b9000001 	str	w1, [x0]
- 6d8:	14000005 	b	6ec <SystemCoreClockUpdate+0x328>
- 6dc:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 6e0:	f947f000 	ldr	x0, [x0, #4064]
- 6e4:	b900001f 	str	wzr, [x0]
- 6e8:	d503201f 	nop
- 6ec:	14000062 	b	874 <SystemCoreClockUpdate+0x4b0>
- 6f0:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 6f4:	f947f000 	ldr	x0, [x0, #4064]
- 6f8:	b9400fe1 	ldr	w1, [sp, #12]
- 6fc:	b9000001 	str	w1, [x0]
- 700:	14000060 	b	880 <SystemCoreClockUpdate+0x4bc>
- 704:	d2900000 	mov	x0, #0x8000                	// #32768
- 708:	f2a80080 	movk	x0, #0x4004, lsl #16
- 70c:	b9404000 	ldr	w0, [x0, #64]
- 710:	12000400 	and	w0, w0, #0x3
- 714:	71000c1f 	cmp	w0, #0x3
- 718:	54000a40 	b.eq	860 <SystemCoreClockUpdate+0x49c>  // b.none
- 71c:	71000c1f 	cmp	w0, #0x3
- 720:	54000ae8 	b.hi	87c <SystemCoreClockUpdate+0x4b8>  // b.pmore
- 724:	7100081f 	cmp	w0, #0x2
- 728:	54000700 	b.eq	808 <SystemCoreClockUpdate+0x444>  // b.none
- 72c:	7100081f 	cmp	w0, #0x2
- 730:	54000a68 	b.hi	87c <SystemCoreClockUpdate+0x4b8>  // b.pmore
- 734:	7100001f 	cmp	w0, #0x0
- 738:	54000080 	b.eq	748 <SystemCoreClockUpdate+0x384>  // b.none
- 73c:	7100041f 	cmp	w0, #0x1
- 740:	54000340 	b.eq	7a8 <SystemCoreClockUpdate+0x3e4>  // b.none
- 744:	1400004e 	b	87c <SystemCoreClockUpdate+0x4b8>
- 748:	d2900000 	mov	x0, #0x8000                	// #32768
- 74c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 750:	b9400800 	ldr	w0, [x0, #8]
- 754:	12190400 	and	w0, w0, #0x180
- 758:	7100001f 	cmp	w0, #0x0
- 75c:	540000e0 	b.eq	778 <SystemCoreClockUpdate+0x3b4>  // b.none
- 760:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 764:	f947f000 	ldr	x0, [x0, #4064]
- 768:	52836001 	mov	w1, #0x1b00                	// #6912
- 76c:	72a016e1 	movk	w1, #0xb7, lsl #16
- 770:	b9000001 	str	w1, [x0]
- 774:	1400003f 	b	870 <SystemCoreClockUpdate+0x4ac>
- 778:	d2900000 	mov	x0, #0x8000                	// #32768
- 77c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 780:	b9400800 	ldr	w0, [x0, #8]
- 784:	12001000 	and	w0, w0, #0x1f
- 788:	11000401 	add	w1, w0, #0x1
- 78c:	52836000 	mov	w0, #0x1b00                	// #6912
- 790:	72a016e0 	movk	w0, #0xb7, lsl #16
- 794:	1b007c21 	mul	w1, w1, w0
- 798:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 79c:	f947f000 	ldr	x0, [x0, #4064]
- 7a0:	b9000001 	str	w1, [x0]
- 7a4:	14000033 	b	870 <SystemCoreClockUpdate+0x4ac>
- 7a8:	d2900000 	mov	x0, #0x8000                	// #32768
- 7ac:	f2a80080 	movk	x0, #0x4004, lsl #16
- 7b0:	b9400800 	ldr	w0, [x0, #8]
- 7b4:	12190400 	and	w0, w0, #0x180
- 7b8:	7100001f 	cmp	w0, #0x0
- 7bc:	540000e0 	b.eq	7d8 <SystemCoreClockUpdate+0x414>  // b.none
- 7c0:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 7c4:	f947f000 	ldr	x0, [x0, #4064]
- 7c8:	52836001 	mov	w1, #0x1b00                	// #6912
- 7cc:	72a016e1 	movk	w1, #0xb7, lsl #16
- 7d0:	b9000001 	str	w1, [x0]
- 7d4:	14000027 	b	870 <SystemCoreClockUpdate+0x4ac>
- 7d8:	d2900000 	mov	x0, #0x8000                	// #32768
- 7dc:	f2a80080 	movk	x0, #0x4004, lsl #16
- 7e0:	b9400800 	ldr	w0, [x0, #8]
- 7e4:	12001000 	and	w0, w0, #0x1f
- 7e8:	11000401 	add	w1, w0, #0x1
- 7ec:	52836000 	mov	w0, #0x1b00                	// #6912
- 7f0:	72a016e0 	movk	w0, #0xb7, lsl #16
- 7f4:	1b007c21 	mul	w1, w1, w0
- 7f8:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 7fc:	f947f000 	ldr	x0, [x0, #4064]
- 800:	b9000001 	str	w1, [x0]
- 804:	1400001b 	b	870 <SystemCoreClockUpdate+0x4ac>
- 808:	d2900000 	mov	x0, #0x8000                	// #32768
- 80c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 810:	b9400800 	ldr	w0, [x0, #8]
- 814:	12190400 	and	w0, w0, #0x180
- 818:	7100001f 	cmp	w0, #0x0
- 81c:	540000c0 	b.eq	834 <SystemCoreClockUpdate+0x470>  // b.none
- 820:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 824:	f947f000 	ldr	x0, [x0, #4064]
- 828:	b9400fe1 	ldr	w1, [sp, #12]
- 82c:	b9000001 	str	w1, [x0]
- 830:	14000010 	b	870 <SystemCoreClockUpdate+0x4ac>
- 834:	d2900000 	mov	x0, #0x8000                	// #32768
- 838:	f2a80080 	movk	x0, #0x4004, lsl #16
- 83c:	b9400800 	ldr	w0, [x0, #8]
- 840:	12001000 	and	w0, w0, #0x1f
- 844:	11000401 	add	w1, w0, #0x1
- 848:	b9400fe0 	ldr	w0, [sp, #12]
- 84c:	1b007c21 	mul	w1, w1, w0
- 850:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 854:	f947f000 	ldr	x0, [x0, #4064]
- 858:	b9000001 	str	w1, [x0]
- 85c:	14000005 	b	870 <SystemCoreClockUpdate+0x4ac>
- 860:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
+ 5d0:	14000005 	b	5e4 <SystemCoreClockUpdate+0x210>
+ 5d4:	529c2800 	mov	w0, #0xe140                	// #57664
+ 5d8:	72a00660 	movk	w0, #0x33, lsl #16
+ 5dc:	b9000fe0 	str	w0, [sp, #12]
+ 5e0:	d503201f 	nop
+ 5e4:	d2900000 	mov	x0, #0x8000                	// #32768
+ 5e8:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 5ec:	b9402400 	ldr	w0, [x0, #36]
+ 5f0:	0b000000 	add	w0, w0, w0
+ 5f4:	121f1000 	and	w0, w0, #0x3e
+ 5f8:	11000800 	add	w0, w0, #0x2
+ 5fc:	b9400fe1 	ldr	w1, [sp, #12]
+ 600:	1ac00820 	udiv	w0, w1, w0
+ 604:	b9000fe0 	str	w0, [sp, #12]
+ 608:	d2900000 	mov	x0, #0x8000                	// #32768
+ 60c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 610:	b9407000 	ldr	w0, [x0, #112]
+ 614:	12000400 	and	w0, w0, #0x3
+ 618:	71000c1f 	cmp	w0, #0x3
+ 61c:	540007c0 	b.eq	714 <SystemCoreClockUpdate+0x340>  // b.none
+ 620:	71000c1f 	cmp	w0, #0x3
+ 624:	54001368 	b.hi	890 <SystemCoreClockUpdate+0x4bc>  // b.pmore
+ 628:	7100081f 	cmp	w0, #0x2
+ 62c:	540006a0 	b.eq	700 <SystemCoreClockUpdate+0x32c>  // b.none
+ 630:	7100081f 	cmp	w0, #0x2
+ 634:	540012e8 	b.hi	890 <SystemCoreClockUpdate+0x4bc>  // b.pmore
+ 638:	7100001f 	cmp	w0, #0x0
+ 63c:	54000080 	b.eq	64c <SystemCoreClockUpdate+0x278>  // b.none
+ 640:	7100041f 	cmp	w0, #0x1
+ 644:	54000100 	b.eq	664 <SystemCoreClockUpdate+0x290>  // b.none
+ 648:	14000092 	b	890 <SystemCoreClockUpdate+0x4bc>
+ 64c:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 650:	f947f000 	ldr	x0, [x0, #4064]
+ 654:	52836001 	mov	w1, #0x1b00                	// #6912
+ 658:	72a016e1 	movk	w1, #0xb7, lsl #16
+ 65c:	b9000001 	str	w1, [x0]
+ 660:	1400008c 	b	890 <SystemCoreClockUpdate+0x4bc>
+ 664:	d2900000 	mov	x0, #0x8000                	// #32768
+ 668:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 66c:	b9404000 	ldr	w0, [x0, #64]
+ 670:	12000400 	and	w0, w0, #0x3
+ 674:	71000c1f 	cmp	w0, #0x3
+ 678:	540003a0 	b.eq	6ec <SystemCoreClockUpdate+0x318>  // b.none
+ 67c:	71000c1f 	cmp	w0, #0x3
+ 680:	54001028 	b.hi	884 <SystemCoreClockUpdate+0x4b0>  // b.pmore
+ 684:	7100081f 	cmp	w0, #0x2
+ 688:	54000280 	b.eq	6d8 <SystemCoreClockUpdate+0x304>  // b.none
+ 68c:	7100081f 	cmp	w0, #0x2
+ 690:	54000fa8 	b.hi	884 <SystemCoreClockUpdate+0x4b0>  // b.pmore
+ 694:	7100001f 	cmp	w0, #0x0
+ 698:	54000080 	b.eq	6a8 <SystemCoreClockUpdate+0x2d4>  // b.none
+ 69c:	7100041f 	cmp	w0, #0x1
+ 6a0:	54000100 	b.eq	6c0 <SystemCoreClockUpdate+0x2ec>  // b.none
+ 6a4:	14000078 	b	884 <SystemCoreClockUpdate+0x4b0>
+ 6a8:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 6ac:	f947f000 	ldr	x0, [x0, #4064]
+ 6b0:	52836001 	mov	w1, #0x1b00                	// #6912
+ 6b4:	72a016e1 	movk	w1, #0xb7, lsl #16
+ 6b8:	b9000001 	str	w1, [x0]
+ 6bc:	14000010 	b	6fc <SystemCoreClockUpdate+0x328>
+ 6c0:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 6c4:	f947f000 	ldr	x0, [x0, #4064]
+ 6c8:	52836001 	mov	w1, #0x1b00                	// #6912
+ 6cc:	72a016e1 	movk	w1, #0xb7, lsl #16
+ 6d0:	b9000001 	str	w1, [x0]
+ 6d4:	1400000a 	b	6fc <SystemCoreClockUpdate+0x328>
+ 6d8:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 6dc:	f947f000 	ldr	x0, [x0, #4064]
+ 6e0:	b9400fe1 	ldr	w1, [sp, #12]
+ 6e4:	b9000001 	str	w1, [x0]
+ 6e8:	14000005 	b	6fc <SystemCoreClockUpdate+0x328>
+ 6ec:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 6f0:	f947f000 	ldr	x0, [x0, #4064]
+ 6f4:	b900001f 	str	wzr, [x0]
+ 6f8:	d503201f 	nop
+ 6fc:	14000062 	b	884 <SystemCoreClockUpdate+0x4b0>
+ 700:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 704:	f947f000 	ldr	x0, [x0, #4064]
+ 708:	b9400fe1 	ldr	w1, [sp, #12]
+ 70c:	b9000001 	str	w1, [x0]
+ 710:	14000060 	b	890 <SystemCoreClockUpdate+0x4bc>
+ 714:	d2900000 	mov	x0, #0x8000                	// #32768
+ 718:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 71c:	b9404000 	ldr	w0, [x0, #64]
+ 720:	12000400 	and	w0, w0, #0x3
+ 724:	71000c1f 	cmp	w0, #0x3
+ 728:	54000a40 	b.eq	870 <SystemCoreClockUpdate+0x49c>  // b.none
+ 72c:	71000c1f 	cmp	w0, #0x3
+ 730:	54000ae8 	b.hi	88c <SystemCoreClockUpdate+0x4b8>  // b.pmore
+ 734:	7100081f 	cmp	w0, #0x2
+ 738:	54000700 	b.eq	818 <SystemCoreClockUpdate+0x444>  // b.none
+ 73c:	7100081f 	cmp	w0, #0x2
+ 740:	54000a68 	b.hi	88c <SystemCoreClockUpdate+0x4b8>  // b.pmore
+ 744:	7100001f 	cmp	w0, #0x0
+ 748:	54000080 	b.eq	758 <SystemCoreClockUpdate+0x384>  // b.none
+ 74c:	7100041f 	cmp	w0, #0x1
+ 750:	54000340 	b.eq	7b8 <SystemCoreClockUpdate+0x3e4>  // b.none
+ 754:	1400004e 	b	88c <SystemCoreClockUpdate+0x4b8>
+ 758:	d2900000 	mov	x0, #0x8000                	// #32768
+ 75c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 760:	b9400800 	ldr	w0, [x0, #8]
+ 764:	12190400 	and	w0, w0, #0x180
+ 768:	7100001f 	cmp	w0, #0x0
+ 76c:	540000e0 	b.eq	788 <SystemCoreClockUpdate+0x3b4>  // b.none
+ 770:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 774:	f947f000 	ldr	x0, [x0, #4064]
+ 778:	52836001 	mov	w1, #0x1b00                	// #6912
+ 77c:	72a016e1 	movk	w1, #0xb7, lsl #16
+ 780:	b9000001 	str	w1, [x0]
+ 784:	1400003f 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 788:	d2900000 	mov	x0, #0x8000                	// #32768
+ 78c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 790:	b9400800 	ldr	w0, [x0, #8]
+ 794:	12001000 	and	w0, w0, #0x1f
+ 798:	11000401 	add	w1, w0, #0x1
+ 79c:	52836000 	mov	w0, #0x1b00                	// #6912
+ 7a0:	72a016e0 	movk	w0, #0xb7, lsl #16
+ 7a4:	1b007c21 	mul	w1, w1, w0
+ 7a8:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 7ac:	f947f000 	ldr	x0, [x0, #4064]
+ 7b0:	b9000001 	str	w1, [x0]
+ 7b4:	14000033 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 7b8:	d2900000 	mov	x0, #0x8000                	// #32768
+ 7bc:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 7c0:	b9400800 	ldr	w0, [x0, #8]
+ 7c4:	12190400 	and	w0, w0, #0x180
+ 7c8:	7100001f 	cmp	w0, #0x0
+ 7cc:	540000e0 	b.eq	7e8 <SystemCoreClockUpdate+0x414>  // b.none
+ 7d0:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 7d4:	f947f000 	ldr	x0, [x0, #4064]
+ 7d8:	52836001 	mov	w1, #0x1b00                	// #6912
+ 7dc:	72a016e1 	movk	w1, #0xb7, lsl #16
+ 7e0:	b9000001 	str	w1, [x0]
+ 7e4:	14000027 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 7e8:	d2900000 	mov	x0, #0x8000                	// #32768
+ 7ec:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 7f0:	b9400800 	ldr	w0, [x0, #8]
+ 7f4:	12001000 	and	w0, w0, #0x1f
+ 7f8:	11000401 	add	w1, w0, #0x1
+ 7fc:	52836000 	mov	w0, #0x1b00                	// #6912
+ 800:	72a016e0 	movk	w0, #0xb7, lsl #16
+ 804:	1b007c21 	mul	w1, w1, w0
+ 808:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 80c:	f947f000 	ldr	x0, [x0, #4064]
+ 810:	b9000001 	str	w1, [x0]
+ 814:	1400001b 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 818:	d2900000 	mov	x0, #0x8000                	// #32768
+ 81c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 820:	b9400800 	ldr	w0, [x0, #8]
+ 824:	12190400 	and	w0, w0, #0x180
+ 828:	7100001f 	cmp	w0, #0x0
+ 82c:	540000c0 	b.eq	844 <SystemCoreClockUpdate+0x470>  // b.none
+ 830:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 834:	f947f000 	ldr	x0, [x0, #4064]
+ 838:	b9400fe1 	ldr	w1, [sp, #12]
+ 83c:	b9000001 	str	w1, [x0]
+ 840:	14000010 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 844:	d2900000 	mov	x0, #0x8000                	// #32768
+ 848:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 84c:	b9400800 	ldr	w0, [x0, #8]
+ 850:	12001000 	and	w0, w0, #0x1f
+ 854:	11000401 	add	w1, w0, #0x1
+ 858:	b9400fe0 	ldr	w0, [sp, #12]
+ 85c:	1b007c21 	mul	w1, w1, w0
+ 860:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
  864:	f947f000 	ldr	x0, [x0, #4064]
- 868:	b900001f 	str	wzr, [x0]
- 86c:	d503201f 	nop
- 870:	14000003 	b	87c <SystemCoreClockUpdate+0x4b8>
- 874:	d503201f 	nop
- 878:	14000002 	b	880 <SystemCoreClockUpdate+0x4bc>
+ 868:	b9000001 	str	w1, [x0]
+ 86c:	14000005 	b	880 <SystemCoreClockUpdate+0x4ac>
+ 870:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 874:	f947f000 	ldr	x0, [x0, #4064]
+ 878:	b900001f 	str	wzr, [x0]
  87c:	d503201f 	nop
- 880:	d2900000 	mov	x0, #0x8000                	// #32768
- 884:	f2a80080 	movk	x0, #0x4004, lsl #16
- 888:	b9407800 	ldr	w0, [x0, #120]
- 88c:	90000081 	adrp	x1, 10000 <SystemInit+0xf74c>
- 890:	f947f021 	ldr	x1, [x1, #4064]
- 894:	b9400021 	ldr	w1, [x1]
- 898:	1ac00821 	udiv	w1, w1, w0
- 89c:	90000080 	adrp	x0, 10000 <SystemInit+0xf74c>
- 8a0:	f947f000 	ldr	x0, [x0, #4064]
- 8a4:	b9000001 	str	w1, [x0]
- 8a8:	d503201f 	nop
- 8ac:	910043ff 	add	sp, sp, #0x10
- 8b0:	d65f03c0 	ret
+ 880:	14000003 	b	88c <SystemCoreClockUpdate+0x4b8>
+ 884:	d503201f 	nop
+ 888:	14000002 	b	890 <SystemCoreClockUpdate+0x4bc>
+ 88c:	d503201f 	nop
+ 890:	d2900000 	mov	x0, #0x8000                	// #32768
+ 894:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 898:	b9407800 	ldr	w0, [x0, #120]
+ 89c:	90000081 	adrp	x1, 10000 <SystemInit+0xf73c>
+ 8a0:	f947f021 	ldr	x1, [x1, #4064]
+ 8a4:	b9400021 	ldr	w1, [x1]
+ 8a8:	1ac00821 	udiv	w1, w1, w0
+ 8ac:	90000080 	adrp	x0, 10000 <SystemInit+0xf73c>
+ 8b0:	f947f000 	ldr	x0, [x0, #4064]
+ 8b4:	b9000001 	str	w1, [x0]
+ 8b8:	d503201f 	nop
+ 8bc:	910043ff 	add	sp, sp, #0x10
+ 8c0:	d65f03c0 	ret
 
-00000000000008b4 <SystemInit>:
- 8b4:	d10043ff 	sub	sp, sp, #0x10
- 8b8:	d2900000 	mov	x0, #0x8000                	// #32768
- 8bc:	f2a80080 	movk	x0, #0x4004, lsl #16
- 8c0:	b9423801 	ldr	w1, [x0, #568]
- 8c4:	d2900000 	mov	x0, #0x8000                	// #32768
- 8c8:	f2a80080 	movk	x0, #0x4004, lsl #16
- 8cc:	121a7821 	and	w1, w1, #0xffffffdf
- 8d0:	b9023801 	str	w1, [x0, #568]
+00000000000008c4 <SystemInit>:
+ 8c4:	d10043ff 	sub	sp, sp, #0x10
+ 8c8:	d2900000 	mov	x0, #0x8000                	// #32768
+ 8cc:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 8d0:	b9423801 	ldr	w1, [x0, #568]
  8d4:	d2900000 	mov	x0, #0x8000                	// #32768
  8d8:	f2a80080 	movk	x0, #0x4004, lsl #16
- 8dc:	b900201f 	str	wzr, [x0, #32]
- 8e0:	b9000fff 	str	wzr, [sp, #12]
- 8e4:	14000006 	b	8fc <SystemInit+0x48>
- 8e8:	d503201f 	nop
- 8ec:	d503201f 	nop
- 8f0:	b9400fe0 	ldr	w0, [sp, #12]
- 8f4:	11000400 	add	w0, w0, #0x1
- 8f8:	b9000fe0 	str	w0, [sp, #12]
- 8fc:	b9400fe0 	ldr	w0, [sp, #12]
- 900:	71031c1f 	cmp	w0, #0xc7
- 904:	54ffff29 	b.ls	8e8 <SystemInit+0x34>  // b.plast
- 908:	d2900000 	mov	x0, #0x8000                	// #32768
- 90c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 910:	52800021 	mov	w1, #0x1                   	// #1
- 914:	b9004001 	str	w1, [x0, #64]
+ 8dc:	121a7821 	and	w1, w1, #0xffffffdf
+ 8e0:	b9023801 	str	w1, [x0, #568]
+ 8e4:	d2900000 	mov	x0, #0x8000                	// #32768
+ 8e8:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 8ec:	b900201f 	str	wzr, [x0, #32]
+ 8f0:	b9000fff 	str	wzr, [sp, #12]
+ 8f4:	14000006 	b	90c <SystemInit+0x48>
+ 8f8:	d503201f 	nop
+ 8fc:	d503201f 	nop
+ 900:	b9400fe0 	ldr	w0, [sp, #12]
+ 904:	11000400 	add	w0, w0, #0x1
+ 908:	b9000fe0 	str	w0, [sp, #12]
+ 90c:	b9400fe0 	ldr	w0, [sp, #12]
+ 910:	71031c1f 	cmp	w0, #0xc7
+ 914:	54ffff29 	b.ls	8f8 <SystemInit+0x34>  // b.plast
  918:	d2900000 	mov	x0, #0x8000                	// #32768
  91c:	f2a80080 	movk	x0, #0x4004, lsl #16
  920:	52800021 	mov	w1, #0x1                   	// #1
- 924:	b9004401 	str	w1, [x0, #68]
+ 924:	b9004001 	str	w1, [x0, #64]
  928:	d2900000 	mov	x0, #0x8000                	// #32768
  92c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 930:	b900441f 	str	wzr, [x0, #68]
- 934:	d2900000 	mov	x0, #0x8000                	// #32768
- 938:	f2a80080 	movk	x0, #0x4004, lsl #16
- 93c:	52800021 	mov	w1, #0x1                   	// #1
- 940:	b9004401 	str	w1, [x0, #68]
- 944:	d503201f 	nop
- 948:	d2900000 	mov	x0, #0x8000                	// #32768
- 94c:	f2a80080 	movk	x0, #0x4004, lsl #16
- 950:	b9404400 	ldr	w0, [x0, #68]
- 954:	12000000 	and	w0, w0, #0x1
- 958:	7100001f 	cmp	w0, #0x0
- 95c:	54ffff60 	b.eq	948 <SystemInit+0x94>  // b.none
- 960:	d2900000 	mov	x0, #0x8000                	// #32768
- 964:	f2a80080 	movk	x0, #0x4004, lsl #16
- 968:	52800461 	mov	w1, #0x23                  	// #35
- 96c:	b9000801 	str	w1, [x0, #8]
+ 930:	52800021 	mov	w1, #0x1                   	// #1
+ 934:	b9004401 	str	w1, [x0, #68]
+ 938:	d2900000 	mov	x0, #0x8000                	// #32768
+ 93c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 940:	b900441f 	str	wzr, [x0, #68]
+ 944:	d2900000 	mov	x0, #0x8000                	// #32768
+ 948:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 94c:	52800021 	mov	w1, #0x1                   	// #1
+ 950:	b9004401 	str	w1, [x0, #68]
+ 954:	d503201f 	nop
+ 958:	d2900000 	mov	x0, #0x8000                	// #32768
+ 95c:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 960:	b9404400 	ldr	w0, [x0, #68]
+ 964:	12000000 	and	w0, w0, #0x1
+ 968:	7100001f 	cmp	w0, #0x0
+ 96c:	54ffff60 	b.eq	958 <SystemInit+0x94>  // b.none
  970:	d2900000 	mov	x0, #0x8000                	// #32768
  974:	f2a80080 	movk	x0, #0x4004, lsl #16
- 978:	b9423801 	ldr	w1, [x0, #568]
- 97c:	d2900000 	mov	x0, #0x8000                	// #32768
- 980:	f2a80080 	movk	x0, #0x4004, lsl #16
- 984:	12187821 	and	w1, w1, #0xffffff7f
- 988:	b9023801 	str	w1, [x0, #568]
- 98c:	d503201f 	nop
- 990:	d2900000 	mov	x0, #0x8000                	// #32768
- 994:	f2a80080 	movk	x0, #0x4004, lsl #16
- 998:	b9400c00 	ldr	w0, [x0, #12]
- 99c:	12000000 	and	w0, w0, #0x1
- 9a0:	7100001f 	cmp	w0, #0x0
- 9a4:	54ffff60 	b.eq	990 <SystemInit+0xdc>  // b.none
- 9a8:	d2900000 	mov	x0, #0x8000                	// #32768
- 9ac:	f2a80080 	movk	x0, #0x4004, lsl #16
- 9b0:	52800061 	mov	w1, #0x3                   	// #3
- 9b4:	b9007001 	str	w1, [x0, #112]
+ 978:	52800461 	mov	w1, #0x23                  	// #35
+ 97c:	b9000801 	str	w1, [x0, #8]
+ 980:	d2900000 	mov	x0, #0x8000                	// #32768
+ 984:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 988:	b9423801 	ldr	w1, [x0, #568]
+ 98c:	d2900000 	mov	x0, #0x8000                	// #32768
+ 990:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 994:	12187821 	and	w1, w1, #0xffffff7f
+ 998:	b9023801 	str	w1, [x0, #568]
+ 99c:	d503201f 	nop
+ 9a0:	d2900000 	mov	x0, #0x8000                	// #32768
+ 9a4:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 9a8:	b9400c00 	ldr	w0, [x0, #12]
+ 9ac:	12000000 	and	w0, w0, #0x1
+ 9b0:	7100001f 	cmp	w0, #0x0
+ 9b4:	54ffff60 	b.eq	9a0 <SystemInit+0xdc>  // b.none
  9b8:	d2900000 	mov	x0, #0x8000                	// #32768
  9bc:	f2a80080 	movk	x0, #0x4004, lsl #16
- 9c0:	52800021 	mov	w1, #0x1                   	// #1
- 9c4:	b9007401 	str	w1, [x0, #116]
+ 9c0:	52800061 	mov	w1, #0x3                   	// #3
+ 9c4:	b9007001 	str	w1, [x0, #112]
  9c8:	d2900000 	mov	x0, #0x8000                	// #32768
  9cc:	f2a80080 	movk	x0, #0x4004, lsl #16
- 9d0:	b900741f 	str	wzr, [x0, #116]
- 9d4:	d2900000 	mov	x0, #0x8000                	// #32768
- 9d8:	f2a80080 	movk	x0, #0x4004, lsl #16
- 9dc:	52800021 	mov	w1, #0x1                   	// #1
- 9e0:	b9007401 	str	w1, [x0, #116]
- 9e4:	d503201f 	nop
- 9e8:	d2900000 	mov	x0, #0x8000                	// #32768
- 9ec:	f2a80080 	movk	x0, #0x4004, lsl #16
- 9f0:	b9407400 	ldr	w0, [x0, #116]
- 9f4:	12000000 	and	w0, w0, #0x1
- 9f8:	7100001f 	cmp	w0, #0x0
- 9fc:	54ffff60 	b.eq	9e8 <SystemInit+0x134>  // b.none
- a00:	d2900000 	mov	x0, #0x8000                	// #32768
- a04:	f2a80080 	movk	x0, #0x4004, lsl #16
- a08:	52800021 	mov	w1, #0x1                   	// #1
- a0c:	b9007801 	str	w1, [x0, #120]
+ 9d0:	52800021 	mov	w1, #0x1                   	// #1
+ 9d4:	b9007401 	str	w1, [x0, #116]
+ 9d8:	d2900000 	mov	x0, #0x8000                	// #32768
+ 9dc:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 9e0:	b900741f 	str	wzr, [x0, #116]
+ 9e4:	d2900000 	mov	x0, #0x8000                	// #32768
+ 9e8:	f2a80080 	movk	x0, #0x4004, lsl #16
+ 9ec:	52800021 	mov	w1, #0x1                   	// #1
+ 9f0:	b9007401 	str	w1, [x0, #116]
+ 9f4:	d503201f 	nop
+ 9f8:	d2900000 	mov	x0, #0x8000                	// #32768
+ 9fc:	f2a80080 	movk	x0, #0x4004, lsl #16
+ a00:	b9407400 	ldr	w0, [x0, #116]
+ a04:	12000000 	and	w0, w0, #0x1
+ a08:	7100001f 	cmp	w0, #0x0
+ a0c:	54ffff60 	b.eq	9f8 <SystemInit+0x134>  // b.none
  a10:	d2900000 	mov	x0, #0x8000                	// #32768
  a14:	f2a80080 	movk	x0, #0x4004, lsl #16
- a18:	52800be1 	mov	w1, #0x5f                  	// #95
- a1c:	72a00021 	movk	w1, #0x1, lsl #16
- a20:	b9008001 	str	w1, [x0, #128]
- a24:	d2900000 	mov	x0, #0x8000                	// #32768
- a28:	f2a80080 	movk	x0, #0x4004, lsl #16
- a2c:	52800021 	mov	w1, #0x1                   	// #1
- a30:	b9009401 	str	w1, [x0, #148]
+ a18:	52800021 	mov	w1, #0x1                   	// #1
+ a1c:	b9007801 	str	w1, [x0, #120]
+ a20:	d2900000 	mov	x0, #0x8000                	// #32768
+ a24:	f2a80080 	movk	x0, #0x4004, lsl #16
+ a28:	52800be1 	mov	w1, #0x5f                  	// #95
+ a2c:	72a00021 	movk	w1, #0x1, lsl #16
+ a30:	b9008001 	str	w1, [x0, #128]
  a34:	d2900000 	mov	x0, #0x8000                	// #32768
  a38:	f2a80080 	movk	x0, #0x4004, lsl #16
  a3c:	52800021 	mov	w1, #0x1                   	// #1
- a40:	b9009801 	str	w1, [x0, #152]
+ a40:	b9009401 	str	w1, [x0, #148]
  a44:	d2900000 	mov	x0, #0x8000                	// #32768
  a48:	f2a80080 	movk	x0, #0x4004, lsl #16
  a4c:	52800021 	mov	w1, #0x1                   	// #1
- a50:	b9009c01 	str	w1, [x0, #156]
- a54:	d503201f 	nop
- a58:	910043ff 	add	sp, sp, #0x10
- a5c:	d65f03c0 	ret
+ a50:	b9009801 	str	w1, [x0, #152]
+ a54:	d2900000 	mov	x0, #0x8000                	// #32768
+ a58:	f2a80080 	movk	x0, #0x4004, lsl #16
+ a5c:	52800021 	mov	w1, #0x1                   	// #1
+ a60:	b9009c01 	str	w1, [x0, #156]
+ a64:	d503201f 	nop
+ a68:	910043ff 	add	sp, sp, #0x10
+ a6c:	d65f03c0 	ret

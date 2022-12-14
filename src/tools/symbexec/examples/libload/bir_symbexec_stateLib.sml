@@ -416,49 +416,165 @@ local
     end;
 
 in (* local *)
-  fun check_feasible syst =
+fun check_feasible syst =
     let
-      val vals  = SYST_get_vals syst;
-      val pred_bvl = SYST_get_pred syst;
+	val vals  = SYST_get_vals syst;
+	val pred_bvl = SYST_get_pred syst;
 
-      val (pred_conjs, pred_deps) =
-        List.foldr (collect_pred_expsdeps vals) ([], symbvalbe_dep_empty) pred_bvl;
+	val (pred_conjs, pred_deps) =
+            List.foldr (collect_pred_expsdeps vals) ([], symbvalbe_dep_empty) pred_bvl;
 
-      val pred_depsl_ = Redblackset.listItems pred_deps;
-      val pred_depsl  = List.filter (is_bvar_bound vals) pred_depsl_;
+	val pred_depsl_ = Redblackset.listItems pred_deps;
+	val pred_depsl  = List.filter (is_bvar_bound vals) pred_depsl_;
 
-      val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible" vals bv))
-                           pred_depsl;
-      val vals_eql =
-        List.map symbval_eq_to_bexp valsl;
+	val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible" vals bv))
+                             pred_depsl;
+	val vals_eql =
+            List.map symbval_eq_to_bexp valsl;
 
-      (* memory accesses should not end up here (actually only SymbValBE should be relevant),
-         ignore this detail for now *)
+	(* memory accesses should not end up here (actually only SymbValBE should be relevant),
+    ignore this detail for now *)
 
-      (* start with no variable and no assertions *)
-      val vars    = Redblackset.empty smtlib_vars_compare;
-      val asserts = [];
+	(* start with no variable and no assertions *)
+	val vars    = Redblackset.empty smtlib_vars_compare;
+	val asserts = [];
 
-      (* process the predicate conjuncts *)
-      val (vars, asserts) = proc_preds (vars, asserts) pred_conjs;
+	(* process the predicate conjuncts *)
+	val (vars, asserts) = proc_preds (vars, asserts) pred_conjs;
 
-      (* process the symbolic values *)
-      val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
+	(* process the symbolic values *)
+	val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
 
-      val result = querysmt bir_smtLib_z3_prelude vars asserts;
+	val result = querysmt bir_smtLib_z3_prelude vars asserts;
 
-      val _ = if result = BirSmtSat orelse result = BirSmtUnsat then () else
-              raise ERR "check_feasible" "smt solver couldn't determine feasibility"
+	val _ = if result = BirSmtSat orelse result = BirSmtUnsat then () else
+		raise ERR "check_feasible" "smt solver couldn't determine feasibility"
 
-      val resultvalue = result <> BirSmtUnsat;
+	val resultvalue = result <> BirSmtUnsat;
 
-      val _ = if resultvalue then () else
-              if true then () else
-              print "FOUND AN INFEASIBLE PATH...\n";
+	val _ = if resultvalue then () else
+		if true then () else
+		print "FOUND AN INFEASIBLE PATH...\n";
     in
-      resultvalue
+	resultvalue
     end;
 
+(*
+fun add_pred be pred =
+    let      
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinExp BIExp_Or
+						    (BExp_BinPred BIExp_Equal
+								  (BExp_Const (Imm64 0w))
+						     ^be)
+						    (BExp_BinPred BIExp_Equal
+								  (BExp_Const (Imm64 10w))
+						     ^be))
+			   ^(pred)
+			  )``;
+    in
+	pred_conj
+    end;
+*)       
+
+fun add_pred_eq be pred =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinPred BIExp_Equal
+					^tgt
+					^be)
+			   
+			   ^(pred)
+			  )``;   
+
+    in
+	pred_conj
+    end;
+
+
+    
+fun add_pred_neq be pred =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinPred BIExp_NotEqual
+					^tgt
+					^be)
+			   
+			   ^(pred)
+			  )``;   
+
+    in
+	pred_conj
+    end;
+(*open Option;
+open bir_immSyntax;
+open bir_exp_to_wordsLib;
+val model =
+   [("target", “10w”), ("SP_EL0", “0x800000000000010w”),
+    ("tmp_SP_EL0", “0x7FFFFFFFFFFFFE0w”), ("R0", “10w”),
+    ("R1", “0x800000000000000w”), ("R0", “0w”), ("R0", “0w”),
+    ("MEM", “FUN_FMAP (K 0w) 𝕌(:word64)”), ("R0", “0w”),
+    ("MEM", “FUN_FMAP (K 0w) 𝕌(:word64)”)];*)
+fun possible_target pred_conjs_be vars asserts vals_eql tgts =
+    let
+	
+	(* process the predicate conjuncts *)
+	val (vars, asserts) = proc_preds (vars, asserts) (pred_conjs_be);
+
+	(* process the symbolic values *)
+	val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
+
+	val result = querysmt bir_smtLib_z3_prelude vars asserts;
+
+	val targets =  if result = BirSmtSat then
+			   let
+			       val model = querysmt_model bir_smtLib_z3_prelude vars asserts;
+			       (*val word_relation = (List.map (fn x => bir_exp_to_wordsLib.bir2bool x) pred_conjs_be);
+
+			       val _ = print_term  (word_relation);
+			       val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;*)
+				   
+			       (*val tgt_val = if (isSome model)
+					       then (List.find (fn (x,y) => x = "target") (valOf model))
+					       else raise ERR "possible_target" "cannot find model";*)
+				   val _ = (List.map (fn (x,y) => (print (x^"\n"))) model);
+			       val tgt_val = (List.find (fn (x,y) => x = "target") model);   
+			       val t = if (isSome tgt_val)
+				       then (bir_expSyntax.mk_BExp_Const o bir_immSyntax.mk_Imm64 o snd o valOf) tgt_val
+				       else raise ERR "possible_target" "cannot find target value";
+				   
+			       val tgts = t::tgts;
+				   
+			       val pred_conjs_be = (List.map (fn x => (add_pred_neq (t)) x) pred_conjs_be);
+			   in
+			       (possible_target pred_conjs_be vars asserts vals_eql tgts)
+			   end
+		       else
+			   tgts;
+	    
+    in
+	targets
+	
+    end;
+    
+
+    
+fun symbval_get_bexp symbv =
+    let
+	val bexp =
+	    case symbv of
+		SymbValBE (exp,_) => exp
+              | SymbValInterval ((exp1,exp2), _) => exp1 (* we need to fix it later*)
+              | SymbValMem (exp, _, _, _) => exp (* we need to fix it later*)
+	      | _ => raise ERR "symbval_bexp" "cannot handle symbolic value type";
+    in
+	bexp
+    end;
+      
 fun check_feasible_exp be syst =
     let
       val vals  = SYST_get_vals syst;
@@ -470,51 +586,24 @@ fun check_feasible_exp be syst =
       val pred_depsl_ = Redblackset.listItems pred_deps;
       val pred_depsl  = List.filter (is_bvar_bound vals) pred_depsl_;
 
-      val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible" vals bv))
+      val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible_eq" vals bv))
                            pred_depsl;
       val vals_eql =
         List.map symbval_eq_to_bexp valsl;
-
-      (* memory accesses should not end up here (actually only SymbValBE should be relevant),
-         ignore this detail for now *)
 
       (* start with no variable and no assertions *)
       val vars    = Redblackset.empty smtlib_vars_compare;
       val asserts = [];
 
-      val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+      val env  = (SYST_get_env  syst);
 
-      val pred_conj = ``(BExp_BinExp BIExp_And
-				     (BExp_BinPred BIExp_Equal
-				      ^tgt
-				      ^be)
-			 ^(hd pred_conjs)
-			)``;   
-      (* process the predicate conjuncts *)
-      val (vars, asserts) = proc_preds (vars, asserts) (pred_conj::(tl pred_conjs));
+      val bv_fr = find_bv_val "check_feasible_exp" env  (dest_BExp_Den be);
 
-      (* process the symbolic values *)
-      val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
+      val symbv = find_bv_val "check_feasible_exp" vals bv_fr;	  
 
-      val result = querysmt bir_smtLib_z3_prelude vars asserts;
-
-      val _ = if result = BirSmtSat orelse result = BirSmtUnsat then () else
-              raise ERR "check_feasible" "smt solver couldn't determine feasibility"
-
-      val resultvalue = result <> BirSmtUnsat;
-
-      val _ = if resultvalue then () else
-              if true then () else
-              print "FOUND AN INFEASIBLE PATH...\n";
-
-      val _ = if resultvalue then
-		  let
-		      val (_,_,_,ts) = querysmt_model bir_smtLib_z3_prelude vars asserts;
-		      val t = (hd ts);
-		  in
-		      print ((term_to_string t)^"\n")
-		  end
- 		  else ();
+      val pred_conjs_be = (List.map (fn x => (add_pred_eq (symbval_get_bexp symbv)) x) pred_conjs);
+	  
+      val resultvalue = possible_target pred_conjs_be vars asserts vals_eql [];
     in
       resultvalue
     end;

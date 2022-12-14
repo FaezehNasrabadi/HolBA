@@ -496,7 +496,7 @@ val configs              = [ ("example",
 			   )];*)
     
 val configs              = [ ("example-indjmp",
-                              ("example-indjmp.da", "balrob/example-indjmp.da.plus", "balrob/example-indjmp.mem"),
+                              ("example-indirect.da", "balrob/example-indirect.da.plus", "balrob/example-indirect.mem"),
                               "exampleindjmp_THM",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 

@@ -34,19 +34,83 @@ in
 	 print "\n============================\n";
 	 raise ERR "querysmt_raw" "unknown output from z3")
     end;
+ (*     
+(* Copied from Z3_SAT_modelLib*)
+  fun is_sat_stream instream =
+      case Option.map (String.tokens Char.isSpace) (TextIO.inputLine instream) of
+	  NONE => raise ERR "is_sat_stream" "The Z3 wrapper didn't print anything on stdout"
+	| SOME ["unknown"] => NONE
+	| SOME ["unsat"] => NONE
+	| SOME ["sat"] =>
+	  let
+              fun parse_tm_list instream acc =
+		  let
+ 		      val line1 = TextIO.inputLine instream;
+		      val line2 = TextIO.inputLine instream;
+		      val name = Option.map (fn line => String.substring (line, 0, String.size (line) - 1)) line1;
+		      val term = Option.map (fn line => Parse.Term [QUOTE line]) line2;
+		  in
+		      case (name, term) of
+			  (SOME name, SOME term) => parse_tm_list instream ((name, term)::acc)
+			| _ => acc
+		  end
+              val model = parse_tm_list instream [];
+	  in
+              if List.null model then
+		   NONE
+              else
+		   (SOME model)
+	  end
+	| _ => raise ERR "is_sat_stream" "Malformed Z3 output: first line not recognized"
+		     
+  fun is_sat_file path =
+      let
+	  val instream = TextIO.openIn path
+      in
+	  is_sat_stream instream
+          before TextIO.closeIn instream
+      end*)
 
+  fun parse_tm_list instream acc =
+    let
+        val line1 = TextIO.inputLine instream;
+        val line2 = TextIO.inputLine instream;
+        val name = Option.map (fn line => String.substring (line, 0, String.size (line) - 1)) line1;
+        val term = Option.map (fn line => Parse.Term [QUOTE line]) line2;
+    in
+        case (name, term) of
+            (SOME name, SOME term) => parse_tm_list instream ((name, term)::acc)
+          | _ => acc
+    end;    
+		     
   fun querysmt_raw_model q =
       let
 	  val tempfile = get_tempfile "smtquery_model" "nil";
 	  val _ = write_to_file tempfile q;
 
-	  val out = get_exec_output ("z3 " ^ tempfile);
+	  val wrp = if (isSome ( OS.Process.getEnv "HOL4_Z3_WRAPPED_EXECUTABLE")) then (valOf (OS.Process.getEnv "HOL4_Z3_WRAPPED_EXECUTABLE"))
+		    else raise ERR "querysmt_raw_model" "Z3_with_model not configured: set the HOL4_Z3_WRAPPED_EXECUTABLE environment variable to point to the Python Z3 wrapper."
 
-	  val outputfile = get_tempfile "exec_output" ".txt";
-	  val res = (implode o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o explode) out
+	  val out = bir_exec_wrapLib.get_exec_output ("python3 "^ wrp ^ " " ^ tempfile);
+
+	  val outputfile = get_tempfile "exec_output_model" ".txt";
+
+	  val res = (implode o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o explode) out;
+
 	  val _ = write_to_file outputfile res;
+
+	  val instream = TextIO.openIn outputfile;
+	  val model = parse_tm_list instream [];
+	      
+	 (* val output = bir_exec_wrapLib.get_exec_output ("../z3_wrapper.py " ^ outputfile);
+
+	  val res = (implode o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o Lib.snd o (bir_auxiliaryLib.list_split_pred #"\n") o explode) out
+	  *)
       in
-	  (SmtLib_Parser.parse_file outputfile)
+      (* (SmtLib_Parser.parse_file outputfile)
+(write_to_file outputfile output)
+(is_sat_file outputfile)*)
+	  model
 	  
       end;  
 

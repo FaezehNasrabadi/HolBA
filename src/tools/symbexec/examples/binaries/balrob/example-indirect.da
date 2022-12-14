@@ -1,0 +1,36 @@
+
+example.o:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+0000000000000000 <foo>:
+   0:	52800000 	mov	w0, #0x0                   	// #0
+   4:	d65f03c0 	ret
+
+0000000000000008 <bar>:
+   8:	52800020 	mov	w0, #0x1                   	// #1
+   c:	d65f03c0 	ret
+
+0000000000000010 <baz>:
+  10:	52800040 	mov	w0, #0x2                   	// #2
+  14:	d65f03c0 	ret
+
+0000000000000018 <main>:
+  18:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+  1c:	910003fd 	mov	x29, sp
+  20:	b9001fe0 	str	w0, [sp, #28]
+  24:	90000000 	adrp	x0, 0 <foo>
+  28:	f9400000 	ldr	x0, [x0]
+  2c:	f90013e0 	str	x0, [sp, #32]
+  30:	90000000 	adrp	x0, 10 <baz>
+  34:	f9400000 	ldr	x0, [x0]
+  38:	f90017e0 	str	x0, [sp, #40]
+  3c:	b9801fe0 	ldrsw	x0, [sp, #28]
+  40:	d37df000 	lsl	x0, x0, #3
+  44:	910083e1 	add	x1, sp, #0x20
+  48:	f8606820 	ldr	x0, [x1, x0]
+  4c:	d63f0000 	blr	x0
+  50:	52800000 	mov	w0, #0x0                   	// #0
+  54:	a8c37bfd 	ldp	x29, x30, [sp], #48
+  58:	d65f03c0 	ret

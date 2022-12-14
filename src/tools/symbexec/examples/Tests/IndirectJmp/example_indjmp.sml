@@ -1,3 +1,4 @@
+HOL_Interactive.toggle_quietdec();
 open HolKernel Parse
 
 open binariesLib;
@@ -21,10 +22,11 @@ open bir_cfg_m0Lib;
 open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
+     HOL_Interactive.toggle_quietdec();
 
-val lbl_tm = ``BL_Address (Imm64 904w)``;
+val lbl_tm = ``BL_Address (Imm64 24w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 960w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 80w)``];
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
@@ -57,5 +59,5 @@ val _ = print "\n\n";
 
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
 
-    val b =listItems( SYST_get_env syst);
- val b =listItems( SYST_get_vals (hd systs));
+    val b =listItems( SYST_get_env ((hd o rev) systs));
+ val b =listItems( SYST_get_vals ((hd o rev) systs));

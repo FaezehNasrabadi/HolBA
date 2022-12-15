@@ -475,7 +475,7 @@ fun add_pred be pred =
     in
 	pred_conj
     end;
-*)       
+      
 
 fun add_pred_eq be pred =
     let
@@ -509,8 +509,141 @@ fun add_pred_neq be pred =
 
     in
 	pred_conj
+    end;*)
+
+fun add_pred pred =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+	    
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinExp BIExp_Or
+						    (BExp_BinPred BIExp_Equal
+								  (BExp_Const (Imm64 0w))
+						     ^tgt)
+						    (BExp_BinPred BIExp_Equal
+								  (BExp_Const (Imm64 10w))
+						     ^tgt))
+			   ^(pred)
+			  )``;
+    in
+	pred_conj
     end;
-(*open Option;
+    
+fun conj_preds_exps tms exp =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val exps = ``(BExp_BinExp BIExp_And
+		      ^exp
+		      ^(hd tms)
+		     )``;   
+
+    in
+	if (List.null (tl tms))
+	     then  exps
+	else (conj_preds_exps (tl tms) exps)
+    end;
+    
+fun add_pred_eq be =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val pred = ``(BExp_BinPred BIExp_Equal
+		      ^tgt
+		      ^be)
+		     ``;   
+
+    in
+	pred
+    end;
+
+
+fun add_pred_neq be  =
+    let
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val pred = ``(BExp_BinPred BIExp_NotEqual
+					^tgt
+					^be)``;   
+
+    in
+	pred
+    end;
+                       
+fun subset_mem_exp vals_eql exp =
+    let
+	val (bop, subexp1, subexp2) = (dest_BExp_BinPred (hd vals_eql));
+	val ref_exp =  subst[subexp1 |-> subexp2] exp;
+
+    in
+	if (List.null (tl vals_eql))
+	then  ref_exp
+	else (subset_mem_exp (tl vals_eql) ref_exp)
+    end;
+
+(*
+
+fun subset_mem_exp exp =
+    let
+
+	val pred = if (bir_expSyntax.is_BExp_BinExp exp) then
+		       let
+			   val (bop1, subexp1, subexp2) = (dest_BExp_BinExp) exp;
+			   val b = if (bir_expSyntax.is_BExp_BinExp subexp1)
+				   then (subset_mem_exp subexp1)
+				   else if (bir_expSyntax.is_BExp_BinExp subexp2)
+				   then (subset_mem_exp subexp2)
+				   else if (bir_expSyntax.is_BExp_BinPred subexp1)
+				   then
+				       let
+					   val (bop11, subexp11, subexp22) = (dest_BExp_BinPred) subexp1;
+					   val res = if identical bop11 bir_exp_immSyntax.BIExp_Equal_tm then
+							 let
+							     val name = (fst o dest_BVar_string o dest_BExp_Den) subexp11;
+							     val tm = if (String.isSuffix "MEM" name)
+								      then subst[subexp11 |-> subexp22] exp
+								      else exp;
+							 in
+							     tm
+							 end
+						     else exp;
+
+				       in
+					   res
+				       end
+				   else if (bir_expSyntax.is_BExp_BinPred subexp2)
+				   then
+				       let
+					   val (bop11, subexp11, subexp22) = (dest_BExp_BinPred) subexp2;
+					   val res = if identical bop11 bir_exp_immSyntax.BIExp_Equal_tm then
+							 let
+							     val name = (fst o dest_BVar_string o dest_BExp_Den) subexp11;
+							     val tm = if (String.isSuffix "MEM" name)
+								      then subst [subexp11 |-> subexp22] exp
+								      else exp;
+							 in
+							     tm
+							 end
+						     else exp;
+
+				       in
+					   res
+				       end
+				   else exp;
+
+		       in
+			   b
+		       end
+		       else exp;
+
+    in
+	pred
+    end;
+					   
+					   
+					     
+
+open Option;
 open bir_immSyntax;
 open bir_exp_to_wordsLib;
 val model =
@@ -519,7 +652,17 @@ val model =
     ("R1", “0x800000000000000w”), ("R0", “0w”), ("R0", “0w”),
     ("MEM", “FUN_FMAP (K 0w) 𝕌(:word64)”), ("R0", “0w”),
     ("MEM", “FUN_FMAP (K 0w) 𝕌(:word64)”)];*)
-fun possible_target pred_conjs_be vars asserts vals_eql tgts =
+ (*val word_relation = (List.map (fn x => bir_exp_to_wordsLib.bir2bool x) pred_conjs_be);
+
+			       val _ = print_term  (word_relation);
+			       val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;*)
+				   
+			       (*val tgt_val = if (isSome model)
+					       then (List.find (fn (x,y) => x = "target") (valOf model))
+					       else raise ERR "possible_target" "cannot find model";*)
+
+    
+fun possible_target exps pred_conjs_be vars asserts vals_eql tgts =
     let
 	
 	(* process the predicate conjuncts *)
@@ -530,28 +673,30 @@ fun possible_target pred_conjs_be vars asserts vals_eql tgts =
 
 	val result = querysmt bir_smtLib_z3_prelude vars asserts;
 
-	val targets =  if result = BirSmtSat then
+	val targets =  if (result = BirSmtSat) then
 			   let
-			       val model = querysmt_model bir_smtLib_z3_prelude vars asserts;
-			       (*val word_relation = (List.map (fn x => bir_exp_to_wordsLib.bir2bool x) pred_conjs_be);
+			       (* val model = querysmt_model bir_smtLib_z3_prelude vars asserts; *)
+			       
+			       (* val _ = print_term  (exps); *)
 
-			       val _ = print_term  (word_relation);
-			       val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;*)
+			       val word_relation = bir_exp_to_wordsLib.bir2bool exps;
+
+			       (* val _ = print_term  (word_relation); *)
 				   
-			       (*val tgt_val = if (isSome model)
-					       then (List.find (fn (x,y) => x = "target") (valOf model))
-					       else raise ERR "possible_target" "cannot find model";*)
-				   val _ = (List.map (fn (x,y) => (print (x^"\n"))) model);
+			       val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
+
+			       val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model);
+
 			       val tgt_val = (List.find (fn (x,y) => x = "target") model);   
 			       val t = if (isSome tgt_val)
 				       then (bir_expSyntax.mk_BExp_Const o bir_immSyntax.mk_Imm64 o snd o valOf) tgt_val
 				       else raise ERR "possible_target" "cannot find target value";
 				   
 			       val tgts = t::tgts;
-				   
-			       val pred_conjs_be = (List.map (fn x => (add_pred_neq (t)) x) pred_conjs_be);
+			       val pred = add_pred_neq t;
+			       val exps1 = conj_preds_exps [exps] pred; 
 			   in
-			       (possible_target pred_conjs_be vars asserts vals_eql tgts)
+			       (possible_target exps1 (pred::pred_conjs_be) vars asserts vals_eql tgts)
 			   end
 		       else
 			   tgts;
@@ -601,9 +746,17 @@ fun check_feasible_exp be syst =
 
       val symbv = find_bv_val "check_feasible_exp" vals bv_fr;	  
 
-      val pred_conjs_be = (List.map (fn x => (add_pred_eq (symbval_get_bexp symbv)) x) pred_conjs);
+      val pred = add_pred_eq (symbval_get_bexp symbv);
+
+      val preds = add_pred pred;
+
+	  val _ = print_term  (preds); 
+
+      val exp = conj_preds_exps pred_conjs preds;
+
+      val ref_exps = subset_mem_exp vals_eql exp;
 	  
-      val resultvalue = possible_target pred_conjs_be vars asserts vals_eql [];
+      val resultvalue = possible_target ref_exps (pred::pred_conjs) vars asserts vals_eql [];
     in
       resultvalue
     end;

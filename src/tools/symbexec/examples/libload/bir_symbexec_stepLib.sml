@@ -148,9 +148,11 @@ local
 	  val tgts = (check_feasible_exp be_tgt syst);
 	      
 	  val _ = if (List.null tgts) then raise state_exec_try_jmp_exp_var_exn
-		    else ();
+		  else ();
+
+	  val targets =  List.map (fn t => mk_BLE_Label t) tgts;
       in
-	  List.map (fn t => SYST_update_pc t syst) tgts
+	  List.map (fn t => SYST_update_pc t syst) targets
       end
       )
       handle state_exec_try_jmp_exp_var_exn => NONE

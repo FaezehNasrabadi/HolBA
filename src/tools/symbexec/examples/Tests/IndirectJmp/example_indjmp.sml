@@ -60,4 +60,4 @@ val _ = print "\n\n";
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
 
     val b =listItems( SYST_get_env ((hd o rev) systs));
- val b =listItems( SYST_get_vals ((hd o rev) systs));
+    val b =listItems( SYST_get_vals ((hd o rev) systs));

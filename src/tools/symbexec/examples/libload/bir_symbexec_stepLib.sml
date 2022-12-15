@@ -134,7 +134,7 @@ local
 
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
-  fun state_exec_try_jmp_exp_var est syst =
+  fun state_exec_try_jmp_exp_var n_dict lbl_tm est syst =
       SOME (
       let
 	  val (vs, _) = hol88Lib.match jmp_exp_var_match_tm est
@@ -142,7 +142,9 @@ local
                      print ("couldn't match end statement: " ^ (term_to_string est) ^ "\n");
                      raise ERR "couldn't match" (term_to_string est));
 
-
+	  val _ = if not (bir_symbexec_oracleLib.is_indirect_jmp n_dict lbl_tm) then raise state_exec_try_jmp_exp_var_exn
+		  else ();
+    
 	  val be_tgt  = (fst o hd) vs;
 	      
 	  val tgts = (check_feasible_exp be_tgt syst);
@@ -150,7 +152,7 @@ local
 	  val _ = if (List.null tgts) then raise state_exec_try_jmp_exp_var_exn
 		  else ();
 
-	  val targets =  List.map (fn t => mk_BLE_Label t) tgts;
+	  val targets =  List.map (fn t => (mk_BL_Address o bir_expSyntax.dest_BExp_Const) t) tgts;
       in
 	  List.map (fn t => SYST_update_pc t syst) targets
       end
@@ -197,7 +199,7 @@ in (* local *)
        SOME systs => systs
      | NONE       => (
     (* try to match indirect jump *)
-    case state_exec_try_jmp_exp_var est syst of
+    case state_exec_try_jmp_exp_var n_dict lbl_tm est syst of
        SOME systs => systs
      | NONE       => (
     (* no match, then we have some indirection and need to rely on cfg (or it's another end statement) *)

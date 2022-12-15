@@ -521,7 +521,7 @@ fun add_pred pred =
 								  (BExp_Const (Imm64 0w))
 						     ^tgt)
 						    (BExp_BinPred BIExp_Equal
-								  (BExp_Const (Imm64 10w))
+								  (BExp_Const (Imm64 16w))
 						     ^tgt))
 			   ^(pred)
 			  )``;
@@ -660,7 +660,7 @@ val model =
 			       (*val tgt_val = if (isSome model)
 					       then (List.find (fn (x,y) => x = "target") (valOf model))
 					       else raise ERR "possible_target" "cannot find model";*)
-
+(*
     
 fun possible_target exps pred_conjs_be vars asserts vals_eql tgts =
     let
@@ -704,9 +704,34 @@ fun possible_target exps pred_conjs_be vars asserts vals_eql tgts =
     in
 	targets
 	
-    end;
+    end;*)
     
 
+fun possible_target exps tgts =
+    (let
+	(* val _ = print_term  (exps); *)
+
+	val word_relation = bir_exp_to_wordsLib.bir2bool exps;
+
+	(* val _ = print_term  (word_relation); *)
+	    
+	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
+
+	val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model);
+
+	val tgt_val = (List.find (fn (x,y) => x = "target") model);   
+	val t = if (isSome tgt_val)
+		then (bir_expSyntax.mk_BExp_Const o bir_immSyntax.mk_Imm64 o snd o valOf) tgt_val
+		else raise ERR "possible_target" "cannot find target value";
+	    
+	val targets = t::tgts;
+	val pred = add_pred_neq t;
+	val exps1 = conj_preds_exps [exps] pred; 
+    in
+	(possible_target exps1 targets)
+     end
+    ) handle HOL_ERR _ => tgts;	
+      
     
 fun symbval_get_bexp symbv =
     let
@@ -736,10 +761,6 @@ fun check_feasible_exp be syst =
       val vals_eql =
         List.map symbval_eq_to_bexp valsl;
 
-      (* start with no variable and no assertions *)
-      val vars    = Redblackset.empty smtlib_vars_compare;
-      val asserts = [];
-
       val env  = (SYST_get_env  syst);
 
       val bv_fr = find_bv_val "check_feasible_exp" env  (dest_BExp_Den be);
@@ -750,13 +771,13 @@ fun check_feasible_exp be syst =
 
       val preds = add_pred pred;
 
-	  val _ = print_term  (preds); 
+      val _ = print_term  (preds); 
 
       val exp = conj_preds_exps pred_conjs preds;
 
       val ref_exps = subset_mem_exp vals_eql exp;
 	  
-      val resultvalue = possible_target ref_exps (pred::pred_conjs) vars asserts vals_eql [];
+      val resultvalue = possible_target ref_exps [];
     in
       resultvalue
     end;

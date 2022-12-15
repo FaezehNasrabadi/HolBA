@@ -4,6 +4,7 @@ struct
 local
   open bir_symbexec_stateLib;
   open bir_symbexec_coreLib;
+  open binariesLib;
 
   val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_stepLib"
   val wrap_exn = Feedback.wrap_exn   "bir_symbexec_stepLib"
@@ -130,7 +131,18 @@ local
          syst
     end
     )
-    handle HOL_ERR _ => NONE;
+      handle HOL_ERR _ => NONE;
+
+  fun exist_in_prog tgts ex_tgts =
+      let
+	  val res = if (List.exists (fn x => identical (hd tgts) x) prog_lbl_tms_)
+		    then (hd tgts)::ex_tgts
+		    else ex_tgts;
+      in
+	  if (List.null (tl tgts))
+	  then  res
+	  else (exist_in_prog (tl tgts) res)
+      end;
 
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
@@ -147,14 +159,16 @@ local
     
 	  val be_tgt  = (fst o hd) vs;
 	      
-	  val tgts = (check_feasible_exp be_tgt syst);
+	  val tgts = (check_feasible_exp be_tgt syst);	   
 	      
 	  val _ = if (List.null tgts) then raise state_exec_try_jmp_exp_var_exn
 		  else ();
 
 	  val targets =  List.map (fn t => (mk_BL_Address o bir_expSyntax.dest_BExp_Const) t) tgts;
+
+	  val ts =  exist_in_prog targets [];
       in
-	  List.map (fn t => SYST_update_pc t syst) targets
+	  List.map (fn t => SYST_update_pc t syst) ts
       end
       )
       handle state_exec_try_jmp_exp_var_exn => NONE

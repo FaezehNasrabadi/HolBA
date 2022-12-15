@@ -559,7 +559,7 @@ fun possible_target exps tgts =
 	    
 	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
 
-	(* val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model); *)
+	val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model);
 
 	val tgt_val = (List.find (fn (x,y) => x = "target") model);   
 	val t = if (isSome tgt_val)
@@ -614,11 +614,11 @@ fun check_feasible_exp be syst =
 
       val pred = add_pred_eq (symbval_get_bexp symbv);
 
-      val preds = add_pred pred;
+      (*val preds = add_pred pred;
 
-      (* val _ = print_term  (preds);  *)
+      val _ = print_term  (preds);*)
 
-      val exp = conj_preds_exps pred_conjs preds;
+      val exp = conj_preds_exps pred_conjs pred;
 
       val ref_exps = subset_mem_exp vals_eql exp;
 	  

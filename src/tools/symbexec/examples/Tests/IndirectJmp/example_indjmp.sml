@@ -23,9 +23,9 @@ open Redblackmap;
 open bir_symbexec_oracleLib;
 HOL_Interactive.toggle_quietdec();
 
-val lbl_tm = ``BL_Address (Imm64 524304w)``;
+val lbl_tm = ``BL_Address (Imm64 524296w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 524400w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 524416w)``];
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 

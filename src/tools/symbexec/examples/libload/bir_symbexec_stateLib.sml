@@ -465,7 +465,7 @@ fun check_feasible syst =
 (* add additional constrain *)
 fun add_pred pred =
     let
-	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+	val tgt = ``BExp_Den (BVar "sy_R0" (BType_Imm Bit64))``;
 	    
 	val pred_conj = ``(BExp_BinExp BIExp_And
 				       (BExp_BinExp BIExp_Or
@@ -473,28 +473,15 @@ fun add_pred pred =
 								  (BExp_Const (Imm64 0w))
 						     ^tgt)
 						    (BExp_BinPred BIExp_Equal
-								  (BExp_Const (Imm64 16w))
+								  (BExp_Const (Imm64 1w))
 						     ^tgt))
 			   ^(pred)
 			  )``;
     in
 	pred_conj
     end;
-
-fun add_pred_sy_sp pred =
-    let
-	    
-	val pred_conj = ``(BExp_BinExp BIExp_And
-				       (BExp_BinPred BIExp_Equal
-						     (BExp_Const (Imm64 48w))
-						     (BExp_Den (BVar "sy_SP_EL0" (BType_Imm Bit64))))
-						    
-			   ^(pred)
-			  )``;
-    in
-	pred_conj
-    end;    
- 
+  
+ (* conjunction of two terms *)
 fun conj_two_preds b1 b2 =
     let
 
@@ -521,22 +508,7 @@ fun conj_preds_exps tms exp =
 	if (List.null (tl tms))
 	     then  exps
 	else (conj_preds_exps (tl tms) exps)
-    end;
-
-(* add term for target equality *)    
-fun add_tgt_eq be =
-    let
-	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
-
-	val pred = ``(BExp_BinPred BIExp_Equal
-		      ^tgt
-		      ^be)
-		     ``;   
-
-    in
-	pred
-    end;
-
+    end;   
 
 
 fun add_pred_neq be tgt =
@@ -646,10 +618,7 @@ fun possible_target exps tgts =
 	    
 	(* val _ =  (print (((fst o valOf) tgt_val)^" : "^(term_to_string ((snd o valOf) tgt_val)) ^"\n"))  *)
 	val targets = t::tgts;
-	(*val pred1 = add_pred_neq be t;
-	val pred2 = add_tgt_neq t; 
-	val exps1 = conj_two_preds pred1 exps;
-	val exps2 = conj_two_preds pred2 exps1; *)
+
 
 	val pred1 = add_tgt_neq t; 
 	val exps1 = conj_two_preds pred1 exps;
@@ -689,29 +658,14 @@ fun check_feasible_exp be syst =
 
       val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible_eq" vals bv))
                            pred_depsl;
+	  
       val sort_vals = bir_symbexec_sortLib.refine_symb_val_list valsl;
 	  
       val vals_eql =
         List.map symbval_eq_to_bexp sort_vals;
-(*
-      val env  = (SYST_get_env  syst);
 
-      val bv_fr = find_bv_val "check_feasible_exp" env  (dest_BExp_Den be);
 
-      val symbv = find_bv_val "check_feasible_exp" vals bv_fr;
-
-      val symb_be = (symbval_get_bexp symbv);
-      (* val symb_be = ``BExp_Den (BVar "sy_R0" (BType_Imm Bit64))``;  *)
-
-      val pred = add_tgt_eq symb_be;
-
-	  (* val pred = add_tgt_eq (mk_BExp_Den bv_fr); *)
-
-      (* val preds =  tgt_bounds pred; *)
-
-	  (* val _ = print_term  (preds); *)
-
-      (* val pred1 = add_pred pred; *)*)
+      (* val pr = add_pred (hd pred_conjs);  *)
 
       val exp = conj_preds_exps (tl pred_conjs) (hd pred_conjs);
 

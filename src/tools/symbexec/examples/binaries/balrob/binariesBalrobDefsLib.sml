@@ -514,10 +514,11 @@ val configs              = [ ("example-indjmp",
     | _       => (K false);*)
 
 val symb_filter_lift = fn secname =>
-  case secname of
-      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-|		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-|				".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-    | _       => (K false);
+			  case secname of
+			      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    |		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    |				".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    |				".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    | _       => (K false);
 
 end (* struct *)

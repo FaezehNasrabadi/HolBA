@@ -143,6 +143,8 @@ local
 	  then  res
 	  else (exist_in_prog (tl tgts) res)
       end;
+
+(* add term for target equality *)       
 fun add_tgt_equ tgt be =
     let
 

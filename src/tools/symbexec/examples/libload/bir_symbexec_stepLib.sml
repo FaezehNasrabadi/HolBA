@@ -143,7 +143,17 @@ local
 	  then  res
 	  else (exist_in_prog (tl tgts) res)
       end;
+fun add_tgt_equ tgt be =
+    let
 
+	val pred = ``(BExp_BinPred BIExp_Equal
+		      ^tgt
+		      ^be)
+		     ``;   
+
+    in
+	pred
+    end;
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var n_dict lbl_tm est syst =
@@ -158,6 +168,16 @@ local
 		  else ();
     
 	  val be_tgt  = (fst o hd) vs;
+
+	      
+	  val tgt = ``BVar "target" (BType_Imm Bit64)``;
+	  val sy_tgt = get_bvar_init tgt;
+	  val env  = (SYST_get_env syst);
+	  val new_env = Redblackmap.insert (env,tgt,sy_tgt);
+	  val syst = SYST_update_env new_env syst;
+	      
+	  val cnd = add_tgt_equ (bir_expSyntax.mk_BExp_Den tgt) be_tgt;
+	  val syst = bir_symbexec_coreLib.state_add_pred "assert_true_cnd" cnd syst;
 	      
 	  val tgts = (check_feasible_exp be_tgt syst);	   
 	      
@@ -363,7 +383,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 			 else syst
 		     else syst;
 		 
-	     val debugOn = true;
+	     val debugOn = false;
 	     val _ = if not debugOn then () else
 		     (print_term bl; print "\n ==================== \n\n");
 
@@ -386,7 +406,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	    let
 		val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		val _ = if true then () else
+		val _ = if false then () else
 			print_term (lbl_tm);
 		val _ = if true then () else
 			print ("pc_type: " ^ (pc_type) ^ "\n");

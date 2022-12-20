@@ -385,23 +385,26 @@ local
         | SymbValInterval ((exp1, exp2), _) =>
             band (ble (exp1, bv_exp), ble (bv_exp, exp2))
         | _ => raise ERR "symbval_eq_to_bexp" "cannot handle symbolic value type";
-      (*
-      val _ = print (term_to_string bv);
-      val _ = print "\n";
-      *)
+      
+      (* val _ = print (term_to_string bv); *)
+      (* val _ = print "\n"; *)
+      (* val _ = print (term_to_string bexp); *)
+      (* val _ = print "\n"; *)
     in
-      bexp
+	bexp
     end;
 
   fun collect_pred_expsdeps vals (bv, (exps, deps)) =
-    let
+      let
+	  (*  val _ = print (term_to_string bv); *)
+      (* val _ = print "\n"; *)
       val symbv = find_bv_val "collect_pred_expsdeps" vals bv;
       val _ = if true then () else
               print ("pred: " ^ (symbv_to_string symbv) ^ "\n");
 
       val deps_delta = deps_of_symbval "collect_pred_expsdeps" symbv;
       val _ = if true then () else
-              print ("pred_deps: " ^ (List.foldr (fn (x,s) => s ^ "; " ^ (term_to_string x)) "" (Redblackset.listItems deps_delta)) ^ "\n");
+              print ("pred_deps: " ^ (List.foldr (fn (x,s) => s ^ "; " ^ (term_to_string x)) "" (Redblackset.listItems deps_delta)) ^ "\n \n");
 
       val exp =
        case symbv of
@@ -409,8 +412,8 @@ local
         | _ => raise ERR "collect_pred_expsdeps" "cannot handle symbolic value type";
       (*
       val _ = print (term_to_string exp);
-      val _ = print "\n";
-      *)
+      val _ = print "\n";*)
+      
     in
       (exp::exps, Redblackset.union(deps_delta, deps))
     end;
@@ -478,6 +481,32 @@ fun add_pred pred =
 	pred_conj
     end;
 
+fun add_pred_sy_sp pred =
+    let
+	    
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinPred BIExp_Equal
+						     (BExp_Const (Imm64 48w))
+						     (BExp_Den (BVar "sy_SP_EL0" (BType_Imm Bit64))))
+						    
+			   ^(pred)
+			  )``;
+    in
+	pred_conj
+    end;    
+ 
+fun conj_two_preds b1 b2 =
+    let
+
+	val exps = ``(BExp_BinExp BIExp_And
+		      ^b1
+		      ^b2
+		     )``;   
+
+    in
+	exps
+    end;
+    
 (* conjunction of term predicates *)    
 fun conj_preds_exps tms exp =
     let
@@ -495,7 +524,7 @@ fun conj_preds_exps tms exp =
     end;
 
 (* add term for target equality *)    
-fun add_pred_eq be =
+fun add_tgt_eq be =
     let
 	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
 
@@ -508,10 +537,24 @@ fun add_pred_eq be =
 	pred
     end;
 
-(* add term for non equality of target *)
-fun add_pred_neq be  =
+
+
+fun add_pred_neq be tgt =
     let
-	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+
+	val pred = ``(BExp_BinPred BIExp_NotEqual
+		      ^tgt
+		      ^be)
+		     ``;   
+
+    in
+	pred
+    end;
+
+(* add term for non equality of target *)
+fun add_tgt_neq be  =
+    let
+	val tgt = ``BExp_Den (BVar "sy_target" (BType_Imm Bit64))``;
 
 	val pred = ``(BExp_BinPred BIExp_NotEqual
 					^tgt
@@ -520,12 +563,46 @@ fun add_pred_neq be  =
     in
 	pred
     end;
+  
+fun tgt_bounds pred =
+    let
+	open binariesLib;
+	open bir_symbexec_sortLib;
+	val A = Array.fromList prog_lbl_tms_;
+	val _ = qsort_m A;
+	val sort_tms = arrayToList_m A;
+	val min = (bir_expSyntax.mk_BExp_Const o dest_BL_Address o hd) sort_tms;
+	val max = (bir_expSyntax.mk_BExp_Const o dest_BL_Address o hd o rev) sort_tms;
 
+	val tgt = ``BExp_Den (BVar "target" (BType_Imm Bit64))``;
+	    
+	val pred_conj = ``(BExp_BinExp BIExp_And
+				       (BExp_BinExp BIExp_And
+						    (BExp_BinPred BIExp_LessOrEqual
+						     ^min
+						     ^tgt)
+						    (BExp_BinPred BIExp_LessOrEqual
+						     ^tgt
+						     ^max))
+			   ^(pred)
+			  )``;
+    in
+	pred_conj
+    end;
+
+
+
+	    
+    
 (* replace symbolic variables with their symbolic values *)    
 fun subset_mem_exp vals_eql exp =
     let
 	val (bop, subexp1, subexp2) = (dest_BExp_BinPred (hd vals_eql));
 	val ref_exp =  subst[subexp1 |-> subexp2] exp;
+	    (* val _ = print (term_to_string subexp1); *)
+      (* val _ = print "\n"; *)
+      (* val _ = print (term_to_string subexp2); *)
+      (* val _ = print "\n \n"; *)
 
     in
 	if (List.null (tl vals_eql))
@@ -559,20 +636,28 @@ fun possible_target exps tgts =
 	    
 	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
 
-	val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model);
+	(* val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model); *)
 
-	val tgt_val = (List.find (fn (x,y) => x = "target") model);   
+	val tgt_val = (List.find (fn (x,y) => x = "sy_target") model);
+	    
 	val t = if (isSome tgt_val)
 		then (bir_expSyntax.mk_BExp_Const o bir_immSyntax.mk_Imm64 o snd o valOf) tgt_val
 		else raise ERR "possible_target" "cannot find target value";
 	    
+	(* val _ =  (print (((fst o valOf) tgt_val)^" : "^(term_to_string ((snd o valOf) tgt_val)) ^"\n"))  *)
 	val targets = t::tgts;
-	val pred = add_pred_neq t;
-	val exps1 = conj_preds_exps [exps] pred; 
+	(*val pred1 = add_pred_neq be t;
+	val pred2 = add_tgt_neq t; 
+	val exps1 = conj_two_preds pred1 exps;
+	val exps2 = conj_two_preds pred2 exps1; *)
+
+	val pred1 = add_tgt_neq t; 
+	val exps1 = conj_two_preds pred1 exps;
+	
     in
 	(possible_target exps1 targets)
      end
-    ) handle HOL_ERR _ => tgts;	
+   ) handle HOL_ERR _ => tgts;	
       
  (* get bir exp of symbolic value *)   
 fun symbval_get_bexp symbv =
@@ -590,6 +675,7 @@ fun symbval_get_bexp symbv =
 (* check feasibility of indirect jump *)    
 fun check_feasible_exp be syst =
     let
+    
       val vals  = SYST_get_vals syst;
       val pred_bvl = SYST_get_pred syst;
 
@@ -603,24 +689,33 @@ fun check_feasible_exp be syst =
 
       val valsl = List.map (fn bv => (bv, find_bv_val "check_feasible_eq" vals bv))
                            pred_depsl;
+      val sort_vals = bir_symbexec_sortLib.refine_symb_val_list valsl;
+	  
       val vals_eql =
-        List.map symbval_eq_to_bexp valsl;
-
+        List.map symbval_eq_to_bexp sort_vals;
+(*
       val env  = (SYST_get_env  syst);
 
       val bv_fr = find_bv_val "check_feasible_exp" env  (dest_BExp_Den be);
 
-      val symbv = find_bv_val "check_feasible_exp" vals bv_fr;	  
+      val symbv = find_bv_val "check_feasible_exp" vals bv_fr;
 
-      val pred = add_pred_eq (symbval_get_bexp symbv);
+      val symb_be = (symbval_get_bexp symbv);
+      (* val symb_be = ``BExp_Den (BVar "sy_R0" (BType_Imm Bit64))``;  *)
 
-      (*val preds = add_pred pred;
+      val pred = add_tgt_eq symb_be;
 
-      val _ = print_term  (preds);*)
+	  (* val pred = add_tgt_eq (mk_BExp_Den bv_fr); *)
 
-      val exp = conj_preds_exps pred_conjs pred;
+      (* val preds =  tgt_bounds pred; *)
 
-      val ref_exps = subset_mem_exp vals_eql exp;
+	  (* val _ = print_term  (preds); *)
+
+      (* val pred1 = add_pred pred; *)*)
+
+      val exp = conj_preds_exps (tl pred_conjs) (hd pred_conjs);
+
+      val ref_exps = subset_mem_exp (rev vals_eql) exp;
 	  
       val resultvalue = possible_target ref_exps [];
     in

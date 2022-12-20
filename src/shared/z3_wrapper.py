@@ -4,12 +4,6 @@ import string
 import sys
 from z3 import *
 
-def write_to_file(msg):
-    f = open('output.txt','a')
-    f.write(msg)
-    f.write('\n')
-    f.close()
-
 def model_compress_string():
     major,minor,build,rev = z3.get_version()
     result = ""
@@ -20,7 +14,7 @@ def model_compress_string():
     return result
 
 # turn z3 model compression/compacting off
-#z3.set_param(model_compress_string(), False)
+z3.set_param(model_compress_string(), False)
 
 """ Z3 wrapper for HOL4.
 
@@ -142,6 +136,10 @@ def z3_ast_to_HolTerm(exp):
                 sz_arg = exp.domain().size()
                 sz_vlu = child.size()
                 return "(FUN_FMAP (K ({})) (UNIV) : {} word |-> {} word)".format(z3_ast_to_HolTerm(child), sz_arg, sz_vlu)
+            
+        if is_quantifier(exp):
+            if (is_lambda(exp)):
+                return "LAMBDA"
 
     raise NotImplementedError("Not handled: {} as {}".format(type(exp), exp))
 
@@ -265,7 +263,7 @@ def main():
         exit(0)
     else:
         print("sat")
-        #print(s.model(), file=sys.stderr)
+        print(s.model(), file=sys.stderr)
 
     model = s.model()
     hol_list = model_to_list(model)

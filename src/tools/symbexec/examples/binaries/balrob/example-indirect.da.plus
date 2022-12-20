@@ -1,36 +1,36 @@
 
-example.o:     file format elf64-littleaarch64
+out:     file format elf64-littleaarch64
 
 
 Disassembly of section .text:
 
-0000000000000000 <foo>:
-   0:	52800000 	mov	w0, #0x0                   	// #0
-   4:	d65f03c0 	ret
+0000000000080008 <bar>:
+   80008:	d503201f 	nop
+   8000c:	d65f03c0 	ret
 
-0000000000000008 <bar>:
-   8:	52800020 	mov	w0, #0x1                   	// #1
-   c:	d65f03c0 	ret
-
-0000000000000010 <baz>:
-  10:	52800040 	mov	w0, #0x2                   	// #2
-  14:	d65f03c0 	ret
-
-0000000000000018 <main>:
-  18:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
-  1c:	910003fd 	mov	x29, sp
-  20:	b9001fe0 	str	w0, [sp, #28]
-  24:	90000000 	adrp	x0, 0 <foo>
-  28:	f9400000 	ldr	x0, [x0]
-  2c:	f90013e0 	str	x0, [sp, #32]
-  30:	90000000 	adrp	x0, 10 <baz>
-  34:	f9400000 	ldr	x0, [x0]
-  38:	f90017e0 	str	x0, [sp, #40]
-  3c:	b9801fe0 	ldrsw	x0, [sp, #28]
-  40:	d37df000 	lsl	x0, x0, #3
-  44:	910083e1 	add	x1, sp, #0x20
-  48:	f8606820 	ldr	x0, [x1, x0]
-  4c:	d63f0000 	blr	x0
-  50:	52800000 	mov	w0, #0x0                   	// #0
-  54:	a8c37bfd 	ldp	x29, x30, [sp], #48
-  58:	d65f03c0 	ret
+0000000000080010 <main>:
+   80010:	a9bd7bfd 	stp	x29, x30, [sp, #-48]!
+   80014:	910003fd 	mov	x29, sp
+   80018:	b9001fe0 	str	w0, [sp, #28]
+   8001c:	90fffc80 	adrp	x0, 10000 <foo>
+   80020:	91000000 	add	x0, x0, #0x0
+   80024:	f90013e0 	str	x0, [sp, #32]
+   80028:	90000000 	adrp	x0, 80000 <baz>
+   8002c:	91000000 	add	x0, x0, #0x0
+   80030:	f90017e0 	str	x0, [sp, #40]
+   80034:	b9401fe0 	ldr	w0, [sp, #28]
+   80038:	7100001f 	cmp	w0, #0x0
+   8003c:	54000080 	b.eq	8004c <main+0x3c>  // b.none
+   80040:	b9401fe0 	ldr	w0, [sp, #28]
+   80044:	7100041f 	cmp	w0, #0x1
+   80048:	54000101 	b.ne	80068 <main+0x58>  // b.any
+   8004c:	b9801fe0 	ldrsw	x0, [sp, #28]
+   80050:	d37df000 	lsl	x0, x0, #3
+   80054:	910083e1 	add	x1, sp, #0x20
+   80058:	f8606820 	ldr	x0, [x1, x0]
+   8005c:	d63f0000 	blr	x0
+   80060:	52800020 	mov	w0, #0x1                   	// #1
+   80064:	14000002 	b	8006c <main+0x5c>
+   80068:	52800000 	mov	w0, #0x0                   	// #0
+   8006c:	a8c37bfd 	ldp	x29, x30, [sp], #48
+   80070:	d65f03c0 	ret

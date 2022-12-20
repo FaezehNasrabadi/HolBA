@@ -354,8 +354,8 @@ val symbs_sec_text = [
     "event_send",
     "event_receive",
     "event_bad"
-];    *)
-
+];    
+*)
 val symbs_sec_text = [
     "baz",
     "send",
@@ -363,7 +363,12 @@ val symbs_sec_text = [
     "foo",
     "main"
 ];
-
+(* val symbs_sec_text = [ *)
+(*     "addOne", *)
+(*     "addTwo", *)
+(*     "addThree", *)
+(*     "comp" *)
+(* ]; *)
     
 val arch_str         = "arm8";
 val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));
@@ -511,6 +516,8 @@ val configs              = [ ("example-indjmp",
 val symb_filter_lift = fn secname =>
   case secname of
       ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+|		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+|				".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
     | _       => (K false);
 
 end (* struct *)

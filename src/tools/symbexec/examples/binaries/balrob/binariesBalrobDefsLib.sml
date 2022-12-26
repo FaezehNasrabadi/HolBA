@@ -267,7 +267,7 @@ val symbs_sec_text = [
     "__stack_chk_fail",
     "memcmp_proxy",
     "main"
-];
+];*)
 
 val symbs_sec_text = [
     "main",
@@ -341,7 +341,7 @@ val symbs_sec_text = [
 "die_usage@plt",
 "open_pipe@plt"
 ];
-
+(*
 val symbs_sec_text = [
     "main",
     "client",
@@ -355,7 +355,8 @@ val symbs_sec_text = [
     "event_receive",
     "event_bad"
 ];    
-*)
+
+
 val symbs_sec_text = [
     "baz",
     "send",
@@ -363,12 +364,17 @@ val symbs_sec_text = [
     "foo",
     "main"
 ];
-(* val symbs_sec_text = [ *)
-(*     "addOne", *)
-(*     "addTwo", *)
-(*     "addThree", *)
-(*     "comp" *)
-(* ]; *)
+val symbs_sec_text = [
+    "addOne",
+    "addTwo",
+    "addThree",
+    "comp"
+];
+
+val symbs_sec_text = [
+    "foo",
+    "main"
+];    *)
     
 val arch_str         = "arm8";
 val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));
@@ -481,14 +487,14 @@ val configs              = [ ("client",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-				    )];
+				    )];*)
 val configs              = [ ("tinyssh",
                               ("tinysshd.da", "balrob/tinysshd.da.plus", "balrob/tinysshd.mem"),
                               "tinyssh_THM",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-			    )];
+			    )];(*
 
 
 
@@ -498,8 +504,8 @@ val configs              = [ ("example",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-			   )];*)
-    
+			   )];
+
 val configs              = [ ("example-indjmp",
                               ("example-indirect.da", "balrob/example-indirect.da.plus", "balrob/example-indirect.mem"),
                               "exampleindjmp_THM",
@@ -507,6 +513,15 @@ val configs              = [ ("example-indjmp",
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 				    )];
+
+    
+val configs              = [ ("example-loop",
+                              ("example-loop.da", "balrob/example-loop.da.plus", "balrob/example-loop.mem"),
+                              "exampleloop_THM",
+			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
+                               (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
+                               (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
+				    )];*)
     
  (*val symb_filter_lift = fn secname =>
   case secname of
@@ -516,9 +531,9 @@ val configs              = [ ("example-indjmp",
 val symb_filter_lift = fn secname =>
 			  case secname of
 			      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    |		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			  (*  |		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
 			    |				".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    |				".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    |				".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)*)
 			    | _       => (K false);
 
 end (* struct *)

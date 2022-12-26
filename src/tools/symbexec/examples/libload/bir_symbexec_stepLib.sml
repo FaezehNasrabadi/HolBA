@@ -167,7 +167,7 @@ fun add_tgt_equ tgt be =
                      raise ERR "couldn't match" (term_to_string est));
 
 	  val _ = if not (bir_symbexec_oracleLib.is_indirect_jmp n_dict lbl_tm) then raise state_exec_try_jmp_exp_var_exn
-		  else ();
+		  else raise state_exec_try_jmp_exp_var_exn;
     
 	  val be_tgt  = (fst o hd) vs;
 
@@ -243,7 +243,7 @@ in (* local *)
        (*state_exec_from_cfg n_dict lbl_tm syst*)
     ))))
    handle e =>
-     raise wrap_exn (term_to_string lbl_tm) e;;
+     raise wrap_exn (term_to_string lbl_tm) e;
 end (* local *)
 
 local
@@ -290,6 +290,46 @@ fun symb_exec_adversary_block abpfun n_dict bl_dict syst =
 	    end
 	    handle e => raise wrap_exn ("symb_exec_adversary_block::" ^ term_to_string lbl_tm) e end;
 
+(* handle loop block  *)
+fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
+    let val lbl_tm = SYST_get_pc syst; in
+	let
+
+	    val bv_rep = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Rep", “BType_Imm Bit64”)); (* generate a fresh variable *)
+
+	    val syst =  bir_symbexec_funcLib.update_path bv_rep syst;
+
+	    val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
+
+	    val syst =  update_envvar “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)” av syst; (* update environment *) 
+
+	    val Fn_av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("a", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	    val syst = bir_symbexec_funcLib.store_advmem Fn_av av syst;
+
+	    val be_adv = bir_expSyntax.mk_BExp_Den (Fn_av);
+
+	    val cnd = ``(BExp_BinPred BIExp_Equal
+				      (BExp_Const (Imm64 0w))
+			 ^be_adv)``;
+
+	    val systs1 = ((SYST_update_pc  ``BL_Address (Imm64 4212552w)``) o (bir_symbexec_funcLib.state_add_path "assert_false_cnd" cnd) o bir_symbexec_funcLib.state_add_path "cjmp_true_cnd" cnd) syst;
+	    val systs2 = ((SYST_update_pc  ``BL_Address (Imm64 4210980w)``) o bir_symbexec_funcLib.state_add_path "cjmp_false_cnd" (bslSyntax.bnot cnd)) syst;
+
+		      
+	    (*val systs =  state_branch_simp
+			     "cjmp"
+			     (cnd)
+			     (SYST_update_status BST_AssertionViolated_tm)
+			     (SYST_update_pc  ``BL_Address (Imm64 4210980w)``)
+			     syst;*)
+
+		
+	    val systs_processed = abpfun ([systs1]@[systs2]); 
+	in
+	    systs_processed
+	end
+	handle e => raise wrap_exn ("symb_exec_loop_block::" ^ term_to_string lbl_tm) e end;
 (* handle library code *)
 fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
@@ -316,7 +356,7 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 			   else if (lib_type = "Encryption") then [bir_symbexec_funcLib.Encryption syst]
 			   else if (lib_type = "Decryption") then [bir_symbexec_funcLib.Decryption syst]
 			   else if (lib_type = "Signature") then [bir_symbexec_funcLib.Signature syst]
-			   else if (lib_type = "Verify") then [bir_symbexec_funcLib.Verify syst]
+			   else if (lib_type = "Verify") then bir_symbexec_funcLib.Verify syst
 			   else if (lib_type = "MEMcpy") then [bir_symbexec_funcLib.New_memcpy syst]
 			   else if (lib_type = "LoadFile") then [bir_symbexec_funcLib.Load_file syst]
 			   else if (lib_type = "OTP") then [bir_symbexec_funcLib.One_Time_Pad syst]
@@ -351,7 +391,7 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 		systs_processed
 	    end
 	    handle e => raise wrap_exn ("symb_exec_library_block::" ^ term_to_string lbl_tm) e end;
-
+    
 (* function for run a normal symbolic execution block *)
 fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	let val lbl_tm = SYST_get_pc syst; in
@@ -408,13 +448,14 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	    let
 		val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		val _ = if false then () else
+		val _ = if true then () else
 			print_term (lbl_tm);
 		val _ = if true then () else
 			print ("pc_type: " ^ (pc_type) ^ "\n");
 	    in
 		if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst
 		else if (pc_type = "Library") then symb_exec_library_block abpfun n_dict bl_dict adr_dict syst
+		else if (identical lbl_tm  ``BL_Address (Imm64 4210932w)``) then symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst
 		else symb_exec_normal_block abpfun n_dict bl_dict syst
 	    end
 	    handle e => raise wrap_exn ("symb_exec_block::" ^ term_to_string lbl_tm) e end;

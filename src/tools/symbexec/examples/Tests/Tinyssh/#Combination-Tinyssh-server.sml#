@@ -1,4 +1,4 @@
-(* HOL_Interactive.toggle_quietdec(); *)
+HOL_Interactive.toggle_quietdec();
 open HolKernel Parse
 
 open binariesLib;
@@ -22,7 +22,7 @@ open bir_cfg_m0Lib;
 open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
-(* HOL_Interactive.toggle_quietdec(); *)
+HOL_Interactive.toggle_quietdec();
 
 (******Start******)
 (*

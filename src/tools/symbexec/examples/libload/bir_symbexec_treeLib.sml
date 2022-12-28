@@ -144,7 +144,7 @@ fun find_fun_arg b =
 
 fun Fun_1 str_be =
     let
-	val _ = print str_be;
+	(* val _ = print str_be; *)
 	val (a,b) = ((bir_auxiliaryLib.list_split_pred #" ") o explode) str_be;
 
 	val f = find_fun_arg b;
@@ -732,12 +732,12 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 			 let 
 			     val (bop, subexp1, subexp2) = (dest_BExp_BinPred) pred_be;
 			     val res = if identical bop BIExp_Equal_tm then (" = ")
-				       else if identical bop BIExp_NotEqual_tm then ("≠")
-				       else if ((identical bop BIExp_LessThan_tm) orelse (identical bop BIExp_SignedLessThan_tm)) then ("<")
-				       else if ((identical bop BIExp_LessOrEqual_tm) orelse (identical bop BIExp_SignedLessOrEqual_tm)) then ("<=")
+				       else if identical bop BIExp_NotEqual_tm then (" ≠ ")
+				       else if ((identical bop BIExp_LessThan_tm) orelse (identical bop BIExp_SignedLessThan_tm)) then (" < ")
+				       else if ((identical bop BIExp_LessOrEqual_tm) orelse (identical bop BIExp_SignedLessOrEqual_tm)) then (" <= ")
 				       else raise ERR "BExp_BinPred:BExp_to_IMLExp" "this should not happen" 
 			 in
-			     ("("^(BExp_to_IMLExp vals_list exec_sts subexp1)^res^(BExp_to_IMLExp vals_list exec_sts subexp2)^")")
+			     (""^(BExp_to_IMLExp vals_list exec_sts subexp1)^res^(BExp_to_IMLExp vals_list exec_sts subexp2)^"")
 			 end
 		     else if (is_BExp_Load pred_be) then
 			 let
@@ -821,7 +821,7 @@ val Act = in(c, 60_Adv);
 fun assert_false_string event_names vals_list exec_sts pred =
     let
 	val assert_if = ""(* ((to_string o Br_True) (IMLExp_from_pred vals_list exec_sts pred)); *)
-	val assert_event = ((to_string o assume_to_event) ("bad\n)"^" "^(hd(event_names))));
+	val assert_event = ((to_string o assume_to_event) ("bad"^" "^(hd(event_names))));
 	val assert_else = ""(* (to_string (I_False ())) *);
     in
 	(assert_if^assert_event^assert_else)
@@ -844,6 +844,7 @@ fun path_of_tree event_names vals_list refine_preds exec_sts [] str =
 		  else if (String.isSuffix "K" pred) then (K_to_Out vals_list refine_preds exec_sts pred preds)
 		  else if (String.isSuffix "Kr" pred) then (Kr_to_Out vals_list pred)
 		  else if (String.isSuffix "Rep" pred) then "!(\n"
+		  else if (String.isSuffix "RepEnd" pred) then ")\n"
 		  else if (String.isSuffix "Adv" pred) then (to_string (D_to_In  vals_list exec_sts pred))
 		  else if ((String.isSuffix "Dec" pred) orelse (String.isSuffix "signature" pred) orelse (String.isSuffix "Ver" pred) orelse (String.isSuffix "Enc" pred) orelse (String.isSuffix "kS" pred) orelse (String.isSuffix "kAB" pred)  orelse (String.isSuffix "kSP" pred) orelse (String.isSuffix "kPS" pred) orelse (String.isSuffix "concat" pred) orelse (String.isSuffix "HMAC" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Conc2" pred) orelse (String.isSuffix "Conc3" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred)  orelse (String.isSuffix "XOR" pred) orelse (String.isSuffix "sk" pred)) then (Let_to_IML vals_list pred)
 		  else if ((String.isSuffix "event_true_cnd" pred) orelse (String.isSuffix "event1" pred) orelse (String.isSuffix "event2" pred) orelse (String.isSuffix "event3" pred) orelse (String.isSuffix "event_false_cnd" pred))

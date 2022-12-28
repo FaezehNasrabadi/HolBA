@@ -66,8 +66,8 @@ val _ = print "\n\n";
 *)  
  (*************)
   
-val lbl_tm = ``BL_Address (Imm64 4209936w)``;
-val stop_lbl_tms = [``BL_Address (Imm64 4212596w)``];
+val lbl_tm = ``BL_Address (Imm64 4209952w)``;
+val stop_lbl_tms = [``BL_Address (Imm64 4212628w)``];
 
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
@@ -97,13 +97,21 @@ val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (l
 val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
-
-(************)(*
+    (*
+val b = [];
+val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs_noassertfailed;
+val _ =  List.map (fn s => print_term (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) (concat systs);
+    open List;*)
+(************)
 val lbl_tm = ``BL_Address (Imm64 4204336w)``;
-val stop_lbl_tms = [``BL_Address (Imm64 4206928w)``];
-val syst = SYST_update_pred [] (SYST_update_status BST_Running_tm (SYST_update_pc lbl_tm ((hd o rev)systs)));
-val syst = state_add_preds "init_pred" pred_conjs syst;    
-val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ systs  stop_lbl_tms adr_dict systs;
+val stop_lbl_tms = [``BL_Address (Imm64 4206916w)``];
+val b = [];
+val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
+val systs = [((hd o rev)(List.concat systs))];
+val systs =  List.map (fn s => SYST_update_pc lbl_tm s) systs;
+(* val syst = SYST_update_pred [] (SYST_update_status BST_Running_tm (SYST_update_pc lbl_tm ((hd o rev)systs))); *)
+(* val syst = state_add_preds "init_pred" pred_conjs syst;  *)   
+val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_  systs stop_lbl_tms adr_dict systs;
 val _ = print "\n\n";
 val _ = print "finished exploration of all paths.\n\n";
 val _ = print ("number of paths found: " ^ (Int.toString (length systs)));
@@ -115,7 +123,7 @@ val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (l
 val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
-*)
+
    
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
 (*

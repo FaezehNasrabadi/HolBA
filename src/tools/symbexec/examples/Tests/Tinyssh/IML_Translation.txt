@@ -1,206 +1,61 @@
-if (R1_51 = c_0) then
-if (R2_54 = c_0) then
 in c, a_63 
-if (R1_sy = c_0) then
-if (R3_70 = R2_73) then
-if (R3_105 = c_30) then
-if (R5_128 = R4_125) then
-if (R0_161 = c_0) then
-if (R15_264 = c_0) then
-if (R0_279 = c_0) then
-if (R3_293 = R2_296) then
-if (R2_sy = c_0) then
-if (R3_365 = R2_368) then
+if R5_140 = R4_137 then
 !(
-in c, a_393 
-if (c_0 = a_393) then
-event bad
-)  
-if (R3_401 = R2_404) then
-new SKey_653 fixed_64 
-let sk_655 = kgen(g,SKey_653) in
-out c, sk_655 
-let kAB_657 = kgen(a_393,SKey_653) in
-let HMAC_663 = hash3(a_393,sk_655,pkS) in
+in c, a_429 
+if c_0 = a_429 then
+event bad  
+)
+new SKey_661 fixed_64 
+let sk_663 = kgen(g,SKey_661) in
+out c, sk_663 
+let kAB_665 = kgen(a_429,SKey_661) in
+let HMAC_671 = hash3(a_429,sk_663,pkS) in
 event AcceptS pkS pkP 
-let signature_669 = sign(inputs,skS) in
+let signature_677 = sign(inputs,skS) in
 out c, sign(inputs,skS) 
-let kPS_673 = kdfPtoS(kAB_657,HMAC_663) in
-let kSP_677 = kdfStoP(kAB_657,HMAC_663) in
-in c, a_681 
-let Dec_682 = dec(a_681,skB) in
-let Enc_685 = enc(Dec_682,kSP_677) in
-out c, Enc_685 
-in c, a_916 
-let Dec_917 = dec(a_916,skB) in
-let Ver_921 = verify(Dec_917,pkP) in
-if (Ver_921 = c_1) then
-event AcceptS2 pkS pkP 
-if (R3_950 = R2_953) then
-if (R0_994 = c_0) then
-if (R3_1008 = R2_1011) then
-if (R2_sy = c_0) then
-if (R3_1080 = R2_1083) then
+let kPS_681 = kdfPtoS(kAB_665,HMAC_671) in
+let kSP_685 = kdfStoP(kAB_665,HMAC_671) in
+let Dec_688 = dec(a_429,kPS_681) in
+let Enc_691 = enc(Dec_688,kSP_685) in
+out c, Enc_691 
+if R3_943 = R2_946 then
+in c, a_5062 
+if R1_5075 = c_5 then
+if R3_5141 = R2_5144 then
 !(
-in c, a_1108 
-if (c_0 = a_1108) then
-event bad
-)  
-if (R3_1116 = R2_1119) then
-new SKey_1368 fixed_64 
-let sk_1370 = kgen(g,SKey_1368) in
-out c, sk_1370 
-let kAB_1372 = kgen(a_1108,SKey_1368) in
-let HMAC_1378 = hash3(a_1108,(BVar "1370_sk" (BType_Imm Bit64)), pkS) in
-event AcceptS pkS pkP 
-let signature_1384 = sign(inputs,skS) in
-out c, sign(inputs,skS) 
-let kPS_1388 = kdfPtoS(kAB_1372,HMAC_1378) in
-let kSP_1392 = kdfStoP(kAB_1372,HMAC_1378) in
-in c, a_1396 
-let Dec_1397 = dec(a_1396,skB) in
-let Enc_1400 = enc(Dec_1397,kSP_1392) in
-out c, Enc_1400 
-in c, a_1631 
-let Dec_1632 = dec(a_1631,skB) in
-let Ver_1636 = verify(Dec_1632,pkP) in
-if (Ver_1636 = c_1) then
+in c, a_5161 
+if c_0 = a_5161 then
+event bad  
+let Pars1_5165 = pars1(a_5161) in
+if c_50 ≠ Pars1_5165 then
+event bad  
+let Pars2_5171 = pars2(a_5161) in
+if c_256 <= Pars2_5171 then
+event bad  
+)
+if R3_5283 = R2_5286 then
+if R3_5325 = R2_5328 then
+if R3_5485 = R2_5488 then
+if R3_5608 = R2_5611 then
+if R3_5650 = R2_5653 then
+if R3_5720 = R2_5723 then
+if R3_5762 = R2_5765 then
+if (¬(R23_5941-R8_5938) < c_0 = (R23_5941-R8_5938) < c_0 = R8_5938 <= R23_5941∨R23_5941 = R8_5938) then
+if R3_6054 = R2_6057 then
+if R3_6096 = R2_6099 then
+let Dec_6147 = dec(a_5161,kPS_681) in
+let Ver_6151 = verify(Dec_6147,pkP) in
+if Ver_6151 = c_1 then
 event AcceptS2 pkS pkP 
-if (R3_1665 = R2_1668) then
-in c, a_1699 
-if (R1_sy = c_0) then
-in c, a_1708 
-if (R1_sy = c_0) then
-if (R3_1715 = R2_1718) then
-if (R3_1750 = c_30) then
-if (R5_1773 = R4_1770) then
-if (R0_1806 = c_0) then
-if (R15_1909 = c_0) then
-if (R0_1924 = c_0) then
-if (R3_1938 = R2_1941) then
-if (R2_sy = c_0) then
-if (R3_2010 = R2_2013) then
-!(
-in c, a_2038 
-if (c_0 = a_2038) then
-event bad
-)  
-if (R3_2046 = R2_2049) then
-new SKey_2298 fixed_64 
-let sk_2300 = kgen(g,SKey_2298) in
-out c, sk_2300 
-let kAB_2302 = kgen(a_2038,SKey_2298) in
-let HMAC_2308 = hash3(a_2038,(BVar "2300_sk" (BType_Imm Bit64)), pkS) in
-event AcceptS pkS pkP 
-let signature_2314 = sign(inputs,skS) in
-out c, sign(inputs,skS) 
-let kPS_2318 = kdfPtoS(kAB_2302,HMAC_2308) in
-let kSP_2322 = kdfStoP(kAB_2302,HMAC_2308) in
-in c, a_2326 
-let Dec_2327 = dec(a_2326,skB) in
-let Enc_2330 = enc(Dec_2327,kSP_2322) in
-out c, Enc_2330 
-in c, a_2561 
-let Dec_2562 = dec(a_2561,skB) in
-let Ver_2566 = verify(Dec_2562,pkP) in
-if (Ver_2566 = c_1) then
+if R3_6176 = R2_6179 then
+if R3_6199 = R2_6202 then
+if R3_6218 = R2_6221 then
+if (¬(R23_6336-R8_6333) < c_0 = (R23_6336-R8_6333) < c_0 = R8_6333 <= R23_6336∨R23_6336 = R8_6333) then
+if R3_6449 = R2_6452 then
+if R3_6491 = R2_6494 then
+let Dec_6542 = dec(a_5161,kPS_681) in
+let Ver_6546 = verify(Dec_6542,pkP) in
+if Ver_6546 = c_1 then
 event AcceptS2 pkS pkP 
-if (R3_2595 = R2_2598) then
-if (R0_2639 = c_0) then
-if (R3_2653 = R2_2656) then
-if (R2_sy = c_0) then
-if (R3_2725 = R2_2728) then
-!(
-in c, a_2753 
-if (c_0 = a_2753) then
-event bad
-)  
-if (R3_2761 = R2_2764) then
-new SKey_3013 fixed_64 
-let sk_3015 = kgen(g,SKey_3013) in
-out c, sk_3015 
-let kAB_3017 = kgen(a_2753,SKey_3013) in
-let HMAC_3023 = hash3(a_2753,(BVar "3015_sk" (BType_Imm Bit64)), pkS) in
-event AcceptS pkS pkP 
-let signature_3029 = sign(inputs,skS) in
-out c, sign(inputs,skS) 
-let kPS_3033 = kdfPtoS(kAB_3017,HMAC_3023) in
-let kSP_3037 = kdfStoP(kAB_3017,HMAC_3023) in
-in c, a_3041 
-let Dec_3042 = dec(a_3041,skB) in
-let Enc_3045 = enc(Dec_3042,kSP_3037) in
-out c, Enc_3045 
-in c, a_3276 
-let Dec_3277 = dec(a_3276,skB) in
-let Ver_3281 = verify(Dec_3277,pkP) in
-if (Ver_3281 = c_1) then
-event AcceptS2 pkS pkP 
-if (R3_3310 = R2_3313) then
-if (R3_3342 = R2_3345) then
-in c, a_3373 
-if (R1_sy = c_0) then
-if (R3_3380 = R2_3383) then
-if (R3_3415 = c_30) then
-if (R5_3438 = R4_3435) then
-if (R0_3471 = c_0) then
-if (R15_3574 = c_0) then
-if (R0_3589 = c_0) then
-if (R3_3603 = R2_3606) then
-if (R2_sy = c_0) then
-if (R3_3675 = R2_3678) then
-!(
-in c, a_3703 
-if (c_0 = a_3703) then
-event bad
-)  
-if (R3_3711 = R2_3714) then
-new SKey_3963 fixed_64 
-let sk_3965 = kgen(g,SKey_3963) in
-out c, sk_3965 
-let kAB_3967 = kgen(a_3703,SKey_3963) in
-let HMAC_3973 = hash3(a_3703,(BVar "3965_sk" (BType_Imm Bit64)), pkS) in
-event AcceptS pkS pkP 
-let signature_3979 = sign(inputs,skS) in
-out c, sign(inputs,skS) 
-let kPS_3983 = kdfPtoS(kAB_3967,HMAC_3973) in
-let kSP_3987 = kdfStoP(kAB_3967,HMAC_3973) in
-in c, a_3991 
-let Dec_3992 = dec(a_3991,skB) in
-let Enc_3995 = enc(Dec_3992,kSP_3987) in
-out c, Enc_3995 
-in c, a_4226 
-let Dec_4227 = dec(a_4226,skB) in
-let Ver_4231 = verify(Dec_4227,pkP) in
-if (Ver_4231 = c_1) then
-event AcceptS2 pkS pkP 
-if (R3_4260 = R2_4263) then
-if (R0_4304 = c_0) then
-if (R3_4318 = R2_4321) then
-if (R2_sy = c_0) then
-if (R3_4390 = R2_4393) then
-!(
-in c, a_4418 
-if (c_0 = a_4418) then
-event bad
-)  
-if (R3_4426 = R2_4429) then
-new SKey_4678 fixed_64 
-let sk_4680 = kgen(g,SKey_4678) in
-out c, sk_4680 
-let kAB_4682 = kgen(a_4418,SKey_4678) in
-let HMAC_4688 = hash3(a_4418,(BVar "4680_sk" (BType_Imm Bit64)), pkS) in
-event AcceptS pkS pkP 
-let signature_4694 = sign(inputs,skS) in
-out c, sign(inputs,skS) 
-let kPS_4698 = kdfPtoS(kAB_4682,HMAC_4688) in
-let kSP_4702 = kdfStoP(kAB_4682,HMAC_4688) in
-in c, a_4706 
-let Dec_4707 = dec(a_4706,skB) in
-let Enc_4710 = enc(Dec_4707,kSP_4702) in
-out c, Enc_4710 
-in c, a_4941 
-let Dec_4942 = dec(a_4941,skB) in
-let Ver_4946 = verify(Dec_4942,pkP) in
-if (Ver_4946 = c_1) then
-event AcceptS2 pkS pkP 
-if (R3_4975 = R2_4978) then
+if R3_6571 = R2_6574 then
+if R3_6594 = R2_6597 then

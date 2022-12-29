@@ -31,6 +31,7 @@ datatype IML_Stmt =
        | I_Out      of (IExp list)
        | I_New      of (string * ITerm)
        | I_Event    of (string)
+       | I_Rep      of (string)
        | I_Let      of (string * IExp);  
 
 fun ITerm_to_string (N t)    = (int_to_string t)
@@ -52,6 +53,7 @@ fun to_string (I_In [v])        = "in c, " ^ v ^ " \n"
   | to_string (I_Out es)        = "out c, " ^ ((IExp_to_string (hd es))^(List.foldr (fn (x,s) => s ^"("^ (IExp_to_string x) ^ ")") "(" (tl es)) ^ ")") ^ " \n"
   | to_string (I_New (v, t))    = "new " ^ v ^ " fixed_" ^ (ITerm_to_string t) ^ " \n"
   | to_string (I_Event v)       = "event " ^ v ^ " \n"
+  | to_string (I_Rep v)         = "!" ^ v ^ "(\n"
   | to_string (I_Let (v, e))    = "let " ^ v ^ " = " ^ (IExp_to_string e) ^ " in\n";
 
 

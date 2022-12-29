@@ -1679,9 +1679,9 @@ fun new_key syst =
 
 fun Decryption syst =
     let
-	(*val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
+	val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
 
-	val syst = Adv av syst;*)
+	val syst = Adv av syst;
 
 	val key = (symbval_bexp o get_state_symbv "Dec::bv in env not found"  ``BVar "key" (BType_Imm Bit64)``) syst; 
 

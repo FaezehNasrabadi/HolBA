@@ -1,3 +1,4 @@
+(* HOL_Interactive.toggle_quietdec(); *)
 open HolKernel Parse
 
 open binariesLib;
@@ -22,21 +23,23 @@ open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
 open bir_symbexec_oracleLib;
+(* HOL_Interactive.toggle_quietdec(); *)
 
 
-(*Client*)     (*
-val lbl_tm = ``BL_Address (Imm64 4198500w)``;
+val lbl_tm = ``BL_Address (Imm64 2416w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 4209796w)``]; 
-(*Server*)    *) 
-val lbl_tm = ``BL_Address (Imm64 4198460w)``;
-
-val stop_lbl_tms = [``BL_Address (Imm64 4210224w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 3164w)``];
 
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+(* val ns = List.map (fn x => snd x)(listItems n_dict); *)
+(* val _ =  bir_cfg_vizLib.cfg_display_graph_ns ns; *)
 
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+(* val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
+       listItems adr_dict
+   val n = valOf (peek (n_dict, “BL_Address (Imm64 4235844w)”));*)
+    
 val syst = init_state lbl_tm prog_vars;
 
 val pred_conjs = [``bir_exp_true``];

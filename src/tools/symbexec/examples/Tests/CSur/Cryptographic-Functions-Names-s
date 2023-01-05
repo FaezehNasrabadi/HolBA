@@ -1,22 +1,19 @@
 The cryptographic functions names are as follows:
 
-encrypt_proxy
-decrypt_proxy
+write@plt
+my_decypher@plt
 
 
-memcpy_proxy
-
-
-fail
-__stack_chk_fail
+memcpy@plt
 
 
 
 
-exit_proxy
 
 
 
+
+exit@plt
 
 
 
@@ -28,8 +25,11 @@ exit_proxy
 
 
 
-nonce_proxy
 
-lookup_xkey
-wait_close_proxy
+
+
+my_cypher@plt
+
+RAND_bytes@plt
+strncmp@plt
 

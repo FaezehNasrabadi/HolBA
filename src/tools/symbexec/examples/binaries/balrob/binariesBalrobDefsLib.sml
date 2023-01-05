@@ -524,7 +524,17 @@ val configs              = [ ("example-loop",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-			   )];*)
+			   )];
+
+val configs              = [ ("CSur-alice",
+                              ("CSur_alice.da", "balrob/CSur_alice.da.plus", "balrob/CSur_alice.mem"),
+                              "CSuralice_THM",
+			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
+                               (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
+                               (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
+			   )];
+    
+*)
     
     
  (*val symb_filter_lift = fn secname =>
@@ -533,9 +543,9 @@ val configs              = [ ("example-loop",
     | _       => (K false);*)
 
     
-val configs              = [ ("CSur-alice",
-                              ("CSur_alice.da", "balrob/CSur_alice.da.plus", "balrob/CSur_alice.mem"),
-                              "CSuralice_THM",
+val configs              = [ ("CSur-bob",
+                              ("CSur_bob.da", "balrob/CSur_bob.da.plus", "balrob/CSur_bob.mem"),
+                              "CSurbob_THM",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))

@@ -167,7 +167,7 @@ fun add_tgt_equ tgt be =
                      raise ERR "couldn't match" (term_to_string est));
 
 	  val _ = if not (bir_symbexec_oracleLib.is_indirect_jmp n_dict lbl_tm) then raise state_exec_try_jmp_exp_var_exn
-		  else raise state_exec_try_jmp_exp_var_exn;
+		  else ();
     
 	  val be_tgt  = (fst o hd) vs;
 

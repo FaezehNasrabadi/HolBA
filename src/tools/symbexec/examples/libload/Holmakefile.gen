@@ -2,7 +2,6 @@
 # ----------------------------------
 DEPENDENCIES   = ../IML ../PreProcess ../SAPICplus
 
-
 # configuration
 # ----------------------------------
 HOLHEAP        = ../binaries/HolBATools_SymbExec_ExampleBinaries-heap

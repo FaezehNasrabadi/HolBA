@@ -2047,7 +2047,6 @@ fun Load_file syst =
 	syst
     end;
     
- 
     
 end(*local*)
 

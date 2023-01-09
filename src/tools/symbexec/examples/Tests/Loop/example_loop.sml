@@ -23,43 +23,106 @@ open Redblackmap;
 open bir_symbexec_oracleLib;
 HOL_Interactive.toggle_quietdec();
 
-val lbl_tm = ``BL_Address (Imm64 65664w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 65732w)``];
-    
+fun mk_key_from_address64 i addr = (mk_BL_Address o bir_immSyntax.mk_Imm64 o wordsSyntax.mk_word) (addr, Arbnum.fromInt i);
+(* build the cfg and update the basic blocks *)
+val _ = print "Building node dict.\n";
+open bir_cfgLib;
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
+val entries = [mk_key_from_address64 64 (Arbnum.fromHexString "10080")];
+val _ = print "Building cfg.\n";
+val g1 = cfg_create "toy" entries n_dict bl_dict_;
 
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-(* val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
-    listItems adr_dict
-    val n = valOf (peek (n_dict, “BL_Address (Imm64 948w)”));*)
-val syst = init_state lbl_tm prog_vars;
+ (* display the cfg *)
+val _ = print "Display cfg.\n";
+open bir_cfg_vizLib;
+val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1);
+val _ = cfg_display_graph_ns ns;
 
-val pred_conjs = [];
+
+
+fun print_list lst =
+    List.map (fn x => print_term x) lst;
+
+
+(* val loop_pattern = "CFGNT_Jump"^"CFGNT_Basic"^"CFGNT_Basic"^"CFGNT_CondJump"; *)
+val node_type =  ref ([]: (string * term) list);
+val loop_pattern = ["CFGNT_Jump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
+
+fun detect_loop (g:cfg_graph) entry visited =
+  let
+    val n = lookup_block_dict_value (#CFGG_node_dict g) entry "traverse_graph" "n";
+    val targets = #CFGN_targets n;
+    val n_type  = #CFGN_type n;
+    val s_type = bir_cfgLib.toString n_type
+    val _ = node_type:= !node_type@[(s_type, (#CFGN_lbl_tm n))];
     
-val syst = state_add_preds "init_pred" pred_conjs syst;
+    val targets_to_visit = List.filter (fn x => List.all (fn y => not (identical x y)) visited) targets;
+    val result = List.foldr (fn (entry', visited') => detect_loop g entry' visited') (entry::visited) targets_to_visit;
+  in result end;
 
-val _ = print "initial state created.\n\n";
+val _ = node_type := [];
+val _ =  detect_loop  g1 (hd (#CFGG_entries g1)) [];
+!node_type;
 
-val cfb = false;
-val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [syst] stop_lbl_tms adr_dict [];
+fun get_range (trace1, pattern) =
+    let fun toChar t =
+	  case t of "CFGNT_Jump"     => "J"
+		  | "CFGNT_CondJump" => "C"
+		  | "CFGNT_Halt"     => "H"
+		  | "CFGNT_Basic"    => "B"
+		  | "CFGNT_Call"     => "L"
+		  | "CFGNT_Return"   => "R"
 
-val _ = print "\n\n";
-val _ = print "finished exploration of all paths.\n\n";
-val _ = print ("number of paths found: " ^ (Int.toString (length systs)));
-val _ = print "\n\n";
+	fun index (str: string, substr: string) : int option =
+	    let
+		fun loop  (i: int) =
+		    let val subt = ((String.size str) - (String.size substr))
+		    in
+			if (i > subt) then
+			    NONE
+			else if String.isSubstring (String.substring(str, i, (String.size substr))) substr then
+			    SOME i
+			else
+			    loop (i + 1)
+		    end
+	    in
+		loop 0
+	    end
+	val tc = List.foldr (fn (x, y) => x^y ) "" (List.map (fn x => toChar (fst x)) trace1)
+	val _ = print tc
+	val _ = print "\n"
+	val pc = List.foldr (fn (x, y) => x^y ) "" (List.map (fn x => toChar x) pattern)
+	val _ = print pc
+	val _ = print "\n"
+    in
+	index(tc, pc)
+    end
+(*
+val str = "BBBBBBBBBBBBBBBBBBBBBJBBBCBBBBBBCBBBBBBBBCBBJBJ";
+val substr = "JBBBC";
+val i = 21;*)
+    
+val in_loop = get_range(!node_type, loop_pattern);    
 
-val (systs_noassertfailed, systs_assertfailed) =
-  List.partition (fn syst => not (identical (SYST_get_status syst) BST_AssertionViolated_tm)) systs;
-val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
-val _ = print "\n\n";
-val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
-val _ = print "\n\n";
+val entry_adr = snd (List.nth (!node_type, ((valOf in_loop)+((List.length loop_pattern)-1))));
 
-val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
+fun next_pc lbl_tm =
+    let
+	val wpc = (bir_immSyntax.dest_Imm64 o dest_BL_Address) lbl_tm;
+	val incpc = (rhs o concl o EVAL o wordsSyntax.mk_word_add) (wpc,``4w:word64``);
+	val tgt = (mk_BL_Address o bir_immSyntax.mk_Imm64) incpc;
+    in
+	tgt
+    end;
 
-val a =listItems( SYST_get_env ((hd o rev) systs));
-val b =listItems( SYST_get_vals (List.nth (systs, 6)));
-val c = List.map (fn x => ( snd) x) b;
-val d = List.map (fn SymbValBE(x,y) => (Redblackset.listItems y)) c;
-	     
+val exit_adr = next_pc entry_adr;
+    
+val _ = print "Address of entry node to loop :\n"    
+
+val _ = print_term entry_adr;   
+
+val _ = print "Address of exit node from loop :\n"    
+
+val _ = print_term exit_adr;      
+    

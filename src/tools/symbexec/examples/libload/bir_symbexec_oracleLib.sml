@@ -173,6 +173,8 @@ fun exist_in_dict fun_name file_name =
 
 fun fun_oracle_type_label adr_dict label =
     let
+	open String;
+	     
 	val exist_dict = Redblackmap.peek(adr_dict, label);
 	    
 	val lbl = 
@@ -188,6 +190,12 @@ fun fun_oracle_type_label adr_dict label =
 		       | NONE => false)
 	    then
 		"Library"
+	    (*part of memory that loops exist*)
+	    else if (case exist_dict of
+		    SOME x => ((x >= "loop") andalso (x <= "loop"))
+		  | NONE => false)
+	    then
+		"Loop"
 	    (*jump to other part of memory is normal*)
 	    else 
 		"Normal";

@@ -1,11 +1,11 @@
 # includes
 # ----------------------------------
-DEPENDENCIES   = ../IML ../PreProcess
+DEPENDENCIES   = ../../IML ../../PreProcess
 
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../libload/HolBATools_SymbExec_ExampleLibload-heap
+HOLHEAP        = ../../libload/HolBATools_SymbExec_ExampleLibload-heap
 NEWHOLHEAP     = 
 
 HEAPINC_EXTRA  = 
@@ -13,4 +13,4 @@ HEAPINC_EXTRA  =
 
 # included lines follow
 # ----------------------------------
-include ../../../../Holmakefile.inc
+include ../../../../../Holmakefile.inc

@@ -714,11 +714,11 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 					    else if identical bop BIExp_Xor_tm then ("Bitwise_Xor")
 					    else raise ERR "BExp_BinExp:Bitwise:BExp_to_IMLExp" ((term_to_string bop)^" this should not happen"))
 				       else
-					   (if identical bop BIExp_And_tm then ("∧")
-					    else if identical bop BIExp_Or_tm then ("∨")
-					    else if identical bop BIExp_Plus_tm then ("+")
-					    else if identical bop BIExp_Minus_tm then ("-")
-					    else if identical bop BIExp_Mult_tm then ("*")
+					   (if identical bop BIExp_And_tm then (" ∧ ")
+					    else if identical bop BIExp_Or_tm then (" ∨ ")
+					    else if identical bop BIExp_Plus_tm then (" + ")
+					    else if identical bop BIExp_Minus_tm then (" - ")
+					    else if identical bop BIExp_Mult_tm then (" * ")
 					    else raise ERR "BExp_BinExp:Logical:BExp_to_IMLExp" ((term_to_string bop)^" this should not happen"));
 
 			 in
@@ -737,7 +737,7 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 				       else if ((identical bop BIExp_LessOrEqual_tm) orelse (identical bop BIExp_SignedLessOrEqual_tm)) then (" <= ")
 				       else raise ERR "BExp_BinPred:BExp_to_IMLExp" "this should not happen" 
 			 in
-			     (""^(BExp_to_IMLExp vals_list exec_sts subexp1)^res^(BExp_to_IMLExp vals_list exec_sts subexp2)^"")
+			     ("("^(BExp_to_IMLExp vals_list exec_sts subexp1)^res^(BExp_to_IMLExp vals_list exec_sts subexp2)^")")
 			 end
 		     else if (is_BExp_Load pred_be) then
 			 let

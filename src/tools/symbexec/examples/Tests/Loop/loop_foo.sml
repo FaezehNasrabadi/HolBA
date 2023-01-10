@@ -69,9 +69,9 @@ val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (l
 val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
-
-val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
 (*
+val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
+
 val a =listItems( SYST_get_env ((hd o rev) systs));
 val b =listItems( SYST_get_vals (List.nth (systs, 6)));
 val c = List.map (fn x => ( snd) x) b;

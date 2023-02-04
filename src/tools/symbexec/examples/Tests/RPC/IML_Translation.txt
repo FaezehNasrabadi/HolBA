@@ -1,8 +1,0 @@
-in c, a_334 
-if ((c_2000 <= R0_437) ∧ ¬(R0_437 = c_2000)) then
-if (R0_725 = c_0) then
-if (R0_951 = c_0) then
-in c, a_96 
-if ((c_2000 <= R0_199) ∧ ¬(R0_199 = c_2000)) then
-if (R0_690 = c_0) then
-if (R0_1119 = c_0) then

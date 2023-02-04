@@ -27,8 +27,8 @@ open bir_symbexec_oracleLib;
 (*Client*)     (*
 val lbl_tm = ``BL_Address (Imm64 4198500w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 4209796w)``]; 
-(*Server*)    *) 
+val stop_lbl_tms = [``BL_Address (Imm64 4209796w)``]; *)
+(*Server*)    
 val lbl_tm = ``BL_Address (Imm64 4198460w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 4210224w)``];

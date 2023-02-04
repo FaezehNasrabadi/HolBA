@@ -21,12 +21,12 @@ open bir_cfg_m0Lib;
 open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
-
-(*client*)(*
+(*
+(*client*)
 val lbl_tm = ``BL_Address (Imm64 4228268w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 4230700w)``]; 
-(*server*)*)
+val stop_lbl_tms = [``BL_Address (Imm64 4230700w)``]; *)
+(*server*)
 val lbl_tm = ``BL_Address (Imm64 4230704w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 4233012w)``];

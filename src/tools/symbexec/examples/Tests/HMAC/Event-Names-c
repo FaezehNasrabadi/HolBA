@@ -1,4 +1,4 @@
 The event name is as follows:
 
-server_recv payload
+client_send payload
 

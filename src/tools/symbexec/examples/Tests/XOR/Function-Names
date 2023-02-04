@@ -3,6 +3,7 @@ __libc_malloc
 memcpy
 otp
 xor
-socket_connect
-send
-RAND_bytes
+socket_listen
+consume
+wait_close
+recv

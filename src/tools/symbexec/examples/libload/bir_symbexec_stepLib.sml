@@ -9,7 +9,7 @@ local
   val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_stepLib"
   val wrap_exn = Feedback.wrap_exn   "bir_symbexec_stepLib"
 		 
-  (* val loop_flag =  ref (false: bool); *)
+  val loop_flag =  ref (false: bool);
 in (* outermost local *)
 
 (* execution of a basic statement *)
@@ -292,7 +292,7 @@ fun symb_exec_adversary_block abpfun n_dict bl_dict syst =
 	    end
 	    handle e => raise wrap_exn ("symb_exec_adversary_block::" ^ term_to_string lbl_tm) e end;
 
-(* handle loop block  *)
+(* handle loop block  *)(*
 fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
 	let
@@ -351,7 +351,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 	    systs_processed
 	end
 	handle e => raise wrap_exn ("symb_exec_loop_block::" ^ term_to_string lbl_tm) e end;
-    
+ *)   
 fun symb_exec_loop1_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
 	let
@@ -557,7 +557,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 		systs_processed
 	    end
     handle e => raise wrap_exn ("symb_exec_normal_block::" ^ term_to_string lbl_tm) e end;
-(*
+
 fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
 	let
@@ -568,11 +568,13 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val syst = SYST_update_pc exit_adr syst;
 
 			       val systs_processed = abpfun ([syst]);
+				   val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
 			   in
 			       systs_processed
 			   end
 		       else
 			   let
+			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
 
 			       val _ = loop_flag := true;
 			       val systs_processed = symb_exec_normal_block abpfun n_dict bl_dict syst;
@@ -584,7 +586,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 	    systs_processed
 	end
 	handle e => raise wrap_exn ("symb_exec_loop_block::" ^ term_to_string lbl_tm) e end;
- *)   
+    
 (* execution of a whole block *)
     fun symb_exec_block abpfun n_dict bl_dict adr_dict syst =
 	let val lbl_tm = SYST_get_pc syst; in

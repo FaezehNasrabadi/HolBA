@@ -174,6 +174,7 @@ end (* local *)
                     SymbValBE (x, _) => SOME x
                   | _ => NONE;
 
+      (* check if symbolic state is inside a loop. if so change bir_bin_exp_t applying to constant into applying to fresh variable "t" *)   
 
       val use_expo_var =
             isSome expo andalso

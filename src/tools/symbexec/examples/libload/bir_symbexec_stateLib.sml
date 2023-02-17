@@ -77,7 +77,9 @@ val BST_Running_tm =
 val BST_AssertionViolated_tm =
   ``BST_AssertionViolated``;
 val BST_AssumptionViolated_tm =
-  ``BST_AssumptionViolated``;
+    ``BST_AssumptionViolated``;
+val BST_InLoop_tm =
+  ``BST_InLoop``;    
 
 fun SYST_get_pc     (SymbState systr) =
   #SYST_pc systr;

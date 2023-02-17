@@ -567,8 +567,10 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 				   
 			       val syst = SYST_update_pc exit_adr syst;
 
+			       val syst = SYST_update_status BST_Running_tm syst;
+
 			       val systs_processed = abpfun ([syst]);
-				   val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
+			       val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
 			   in
 			       systs_processed
 			   end
@@ -577,6 +579,9 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
 
 			       val _ = loop_flag := true;
+				   
+			       val syst = SYST_update_status BST_InLoop_tm syst;
+				   
 			       val systs_processed = symb_exec_normal_block abpfun n_dict bl_dict syst;
 			   in
 			       systs_processed

@@ -198,13 +198,14 @@ fun abstract_exp_in_loop exp =
           (mk_BExp_BinExp (bop, exp1_rw, exp2_rw))
         end
       else if is_BExp_BinPred exp then
-        let
+	  exp
+        (*let
           val (bpredop, exp1, exp2) = (dest_BExp_BinPred) exp;
           val exp1_rw = abstract_exp_in_loop exp1;
           val exp2_rw = abstract_exp_in_loop exp2;
         in
           (mk_BExp_BinPred (bpredop, exp1_rw, exp2_rw))
-        end
+        end*)
 
       else if is_BExp_IfThenElse exp then
         let
@@ -217,23 +218,25 @@ fun abstract_exp_in_loop exp =
         end
 
       else if is_BExp_Load exp then
-        let
+	  exp
+        (*let
           val (expm, expad, endi, sz) = (dest_BExp_Load) exp;
           val expm_rw = abstract_exp_in_loop expm;
           val expad_rw = abstract_exp_in_loop expad;
         in
           (mk_BExp_Load (expm_rw, expad_rw, endi, sz))
-        end
+        end*)
 
       else if is_BExp_Store exp then
-        let
+	  exp
+        (*let
           val (expm, expad, endi, expv) = (dest_BExp_Store) exp;
           val expm_rw = abstract_exp_in_loop expm;
           val expad_rw = abstract_exp_in_loop expad;
           val expv_rw = abstract_exp_in_loop expv;
         in
           (mk_BExp_Store (expm_rw, expad_rw, endi, expv_rw))
-        end
+        end*)
 
       else
         raise (ERR "abstract_exp_in_loop" ("don't know BIR expression: \"" ^ (term_to_string exp) ^ "\""));	
@@ -261,9 +264,9 @@ fun abstract_exp_in_loop exp =
 		 then (SOME o abstract_exp_in_loop o valOf) expo'
 		 else expo'; 
 
-     (* val _ = if ((is_state_inloop syst) andalso (isSome expo))
+      val _ = if ((is_state_inloop syst) andalso (isSome expo))
 	      then print (term_to_string (valOf expo) ^ "\n")
-		  else ();*)
+		  else ();
 	  
       val use_expo_var =
             isSome expo andalso
@@ -272,7 +275,11 @@ fun abstract_exp_in_loop exp =
       val bv_fr = if use_expo_var then
                     (bir_expSyntax.dest_BExp_Den o valOf) expo
                   else
-                    (get_bvar_fresh) bv;
+                      (get_bvar_fresh) bv;
+
+	  val _ = if (is_state_inloop syst)
+	      then print (term_to_string bv_fr ^ "\n\n")
+		  else ();
     in
       (update_envvar bv bv_fr o
        (if use_expo_var then

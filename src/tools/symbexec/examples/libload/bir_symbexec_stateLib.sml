@@ -164,7 +164,10 @@ fun SYST_update_vals vals' (SymbState systr) =
 
 
 fun state_is_running syst =
-  identical (SYST_get_status syst) BST_Running_tm;
+    identical (SYST_get_status syst) BST_Running_tm;
+
+fun is_state_inloop syst =
+  identical (SYST_get_status syst) BST_InLoop_tm;    
 (*val bv = ``BVar "sy_MEM" (BType_Mem Bit32 Bit8)``;*)
 (* fresh variables and initial state variables *)
 local

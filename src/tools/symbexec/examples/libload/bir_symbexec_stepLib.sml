@@ -83,8 +83,8 @@ local
   open bir_programSyntax;
 in (* local *)
   fun symb_exec_stmt (s, syst) =
-    (* no update if state is not running *)
-    if (not o state_is_running) syst then
+    (* no update if state is not running or in loop *)
+    if (not (state_is_running syst orelse is_state_inloop syst)) then
       [syst]
     (* assignment *)
     else if is_BStmt_Assign s then
@@ -226,8 +226,8 @@ open bir_cfgLib;
 *)      
 in (* local *)
   fun symb_exec_endstmt n_dict lbl_tm est syst = (
-    (* no update if state is not running *)
-    if (not o state_is_running) syst then [syst] else
+    (* no update if state is not running or in loop *)
+    if (not (state_is_running syst orelse is_state_inloop syst)) then [syst] else
     (* try to match direct jump *)
     case state_exec_try_jmp_label est syst of
        SOME systs => systs
@@ -570,6 +570,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val syst = SYST_update_status BST_Running_tm syst;
 
 			       val systs_processed = abpfun ([syst]);
+				   
 			       val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
 			   in
 			       systs_processed
@@ -585,7 +586,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val systs_processed = symb_exec_normal_block abpfun n_dict bl_dict syst;
 			   in
 			       systs_processed
-			       end;
+			   end;
 				   
 	in
 	    systs_processed
@@ -627,7 +628,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 
           fun is_state_stopped syst =
             (List.exists (fn x => identical (SYST_get_pc syst) x) stop_lbl_tms) orelse
-            (not o state_is_running) syst;
+            (not (state_is_running syst orelse is_state_inloop syst));
 	      
           val exec_stopped = is_state_stopped exec_st;
 

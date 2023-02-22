@@ -3,7 +3,7 @@ struct
 
 local
   open bir_symbexec_stateLib;
-
+  open bir_expSyntax;
   open bir_constpropLib;
   open bir_exp_helperLib;
 
@@ -13,7 +13,7 @@ in (* outermost local *)
 
 (* primitive for symbolic/abstract computation for expressions *)
 local
-  open bir_expSyntax;
+  
 
   fun subst_fun env vals (bev, (e, vars)) =
     let
@@ -157,6 +157,86 @@ in (* local *)
     end;
 
 end (* local *)
+(* update exp  *)
+
+(*
+val exp = ``(BExp_Cast BIExp_UnsignedCast
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Cast BIExp_LowCast
+                              (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                              Bit32) (BExp_Const (Imm32 1w))) Bit64)``;
+*)    
+fun abstract_exp_in_loop exp =
+      if is_BExp_Const exp then
+        (bir_expSyntax.mk_BExp_Den (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("t", ``BType_Imm Bit64``))))
+      else if is_BExp_MemConst exp then
+         exp
+      else if is_BExp_Den exp then
+         exp
+      else if is_BExp_Cast exp then
+        let
+          val (castt, exp1, sz) = (dest_BExp_Cast) exp;
+          val exp_rw = abstract_exp_in_loop exp1;
+        in
+          (mk_BExp_Cast (castt, exp_rw, sz))
+        end
+
+      else if is_BExp_UnaryExp exp then
+        let
+          val (uop, exp1) = (dest_BExp_UnaryExp) exp;
+          val exp_rw = abstract_exp_in_loop exp1;
+        in
+          (mk_BExp_UnaryExp (uop, exp_rw))
+        end
+
+      else if is_BExp_BinExp exp then
+        let
+          val (bop, exp1, exp2) = (dest_BExp_BinExp) exp;
+          val exp1_rw = abstract_exp_in_loop exp1;
+          val exp2_rw = abstract_exp_in_loop exp2;
+        in
+          (mk_BExp_BinExp (bop, exp1_rw, exp2_rw))
+        end
+      else if is_BExp_BinPred exp then
+        let
+          val (bpredop, exp1, exp2) = (dest_BExp_BinPred) exp;
+          val exp1_rw = abstract_exp_in_loop exp1;
+          val exp2_rw = abstract_exp_in_loop exp2;
+        in
+          (mk_BExp_BinPred (bpredop, exp1_rw, exp2_rw))
+        end
+
+      else if is_BExp_IfThenElse exp then
+        let
+          val (expc, expt, expf) = (dest_BExp_IfThenElse) exp;
+          val expc_rw = abstract_exp_in_loop expc;
+          val expt_rw = abstract_exp_in_loop expt;
+          val expf_rw = abstract_exp_in_loop expf;
+        in
+          (mk_BExp_IfThenElse (expc_rw, expt_rw, expf_rw))
+        end
+
+      else if is_BExp_Load exp then
+        let
+          val (expm, expad, endi, sz) = (dest_BExp_Load) exp;
+          val expm_rw = abstract_exp_in_loop expm;
+          val expad_rw = abstract_exp_in_loop expad;
+        in
+          (mk_BExp_Load (expm_rw, expad_rw, endi, sz))
+        end
+
+      else if is_BExp_Store exp then
+        let
+          val (expm, expad, endi, expv) = (dest_BExp_Store) exp;
+          val expm_rw = abstract_exp_in_loop expm;
+          val expad_rw = abstract_exp_in_loop expad;
+          val expv_rw = abstract_exp_in_loop expv;
+        in
+          (mk_BExp_Store (expm_rw, expad_rw, endi, expv_rw))
+        end
+
+      else
+        raise (ERR "abstract_exp_in_loop" ("don't know BIR expression: \"" ^ (term_to_string exp) ^ "\""));	
 
 
 (* primitive to compute expression and store result using fresh variable *)
@@ -170,12 +250,21 @@ end (* local *)
               (print "\n\n===============\nASSIGN: "; print_term bv; print_term be);
 
       val symbv = compute_valbe be syst;
-      val expo = case symbv of
+
+      
+	      
+      val expo' = case symbv of
                     SymbValBE (x, _) => SOME x
                   | _ => NONE;
 
-      (* check if symbolic state is inside a loop. if so change bir_bin_exp_t applying to constant into applying to fresh variable "t" *)   
+      val expo = if ((is_state_inloop syst) andalso (isSome expo'))
+		 then (SOME o abstract_exp_in_loop o valOf) expo'
+		 else expo'; 
 
+     (* val _ = if ((is_state_inloop syst) andalso (isSome expo))
+	      then print (term_to_string (valOf expo) ^ "\n")
+		  else ();*)
+	  
       val use_expo_var =
             isSome expo andalso
             (bir_expSyntax.is_BExp_Den o valOf) expo;

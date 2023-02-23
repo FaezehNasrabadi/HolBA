@@ -558,9 +558,30 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	    end
     handle e => raise wrap_exn ("symb_exec_normal_block::" ^ term_to_string lbl_tm) e end;
 
+fun state_exec_loop_true bl_dict syst =
+    let
+	val lbl_tm = SYST_get_pc syst;
+
+	val exit_adr = bir_symbexec_loopLib.next_pc lbl_tm;
+	    
+	val bl = (valOf o (lookup_block_dict bl_dict)) lbl_tm;
+
+	val (lbl_block_tm, stmts, est) = dest_bir_block bl;
+	    
+	val cjmp_label_match_tm = ``BStmt_CJmp xyzc (BLE_Label xyz1) (BLE_Label xyz2)``;
+	val (vs, _) = hol88Lib.match cjmp_label_match_tm est;
+	val cnd     = fst (List.nth (vs, 0));
+	val tgt1    = fst (List.nth (vs, 1));
+	val tgt2    = fst (List.nth (vs, 2));
+    in
+	if (identical tgt1 exit_adr)
+	then (SYST_update_pc tgt2 syst)
+	else (SYST_update_pc tgt1 syst)
+    end;
+    
 fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
-	let
+	let	
 	    val systs_processed = if !loop_flag then
 			   let
 			       val exit_adr = bir_symbexec_loopLib.next_pc lbl_tm;
@@ -580,6 +601,8 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
 
 			       val _ = loop_flag := true;
+
+			       val syst = state_exec_loop_true bl_dict syst;
 				   
 			       val syst = SYST_update_status BST_InLoop_tm syst;
 				   

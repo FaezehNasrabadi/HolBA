@@ -263,10 +263,6 @@ fun abstract_exp_in_loop exp =
       val expo = if ((is_state_inloop syst) andalso (isSome expo'))
 		 then (SOME o abstract_exp_in_loop o valOf) expo'
 		 else expo'; 
-
-      val _ = if ((is_state_inloop syst) andalso (isSome expo))
-	      then print (term_to_string (valOf expo) ^ "\n")
-		  else ();
 	  
       val use_expo_var =
             isSome expo andalso
@@ -277,9 +273,12 @@ fun abstract_exp_in_loop exp =
                   else
                       (get_bvar_fresh) bv;
 
-	  val _ = if (is_state_inloop syst)
-	      then print (term_to_string bv_fr ^ "\n\n")
-		  else ();
+      val _ = if (true)
+	      then print (term_to_string bv_fr ^ " = \n")
+	      else ();
+      val _ = if ( (isSome expo))
+	      then print (term_to_string (valOf expo) ^ "\n\n")
+	      else ();
     in
       (update_envvar bv bv_fr o
        (if use_expo_var then

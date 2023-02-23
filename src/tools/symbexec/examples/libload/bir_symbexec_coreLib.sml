@@ -273,10 +273,10 @@ fun abstract_exp_in_loop exp =
                   else
                       (get_bvar_fresh) bv;
 
-      val _ = if (true)
+      val _ = if (is_state_inloop syst)
 	      then print (term_to_string bv_fr ^ " = \n")
 	      else ();
-      val _ = if ( (isSome expo))
+      val _ = if ((is_state_inloop syst) andalso (isSome expo))
 	      then print (term_to_string (valOf expo) ^ "\n\n")
 	      else ();
     in

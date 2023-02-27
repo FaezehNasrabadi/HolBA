@@ -1,9 +1,9 @@
 open HolKernel Parse boolLib bossLib;
-
+open bagTheory;
 
 val _ = new_theory "sapicplus";
 
-(* sapicplus syntax *)
+(* Sapicplus Syntax *)
     
 (* Names *)
     
@@ -64,7 +64,7 @@ val _ = Datatype `SapicAction_t =
                  | New     Name_t
                  | ChIn    (SapicTerm_t option) SapicTerm_t
                  | ChOut   (SapicTerm_t option) SapicTerm_t
-                 | Event   SapicTerm_t
+                 | Event   SapicFact_t
                  | Insert  SapicTerm_t SapicTerm_t
 		 | Delete  SapicTerm_t
 		 | Lock    SapicTerm_t
@@ -89,14 +89,44 @@ val _ = Datatype `Process_t =
     |   ProcessAction  SapicAction_t Process_t`;        
 
 
-(* substitution function *)
+(* Substitution *)
     
 val _ = Datatype `sapic_substitution_t =
    Substitution (Var_t -> (SapicTerm_t option))
 `;    
 
 
+(* State *)
+    
+val _ = Datatype `sapic_state_t =
+   State (SapicTerm_t -> (SapicTerm_t option))
+`;       
       
 
+(* Configuration *)
+    
+val _ = Datatype `sapic_configuration_t =
+   Config ((Name_t set) # sapic_state_t # (Process_t bag) # SapicTerm_t)
+`;       
+      
 
+(*
+val test_def = Define `
+    test = (({||}: Process_t bag) + ({||}: Process_t bag)) : Process_t bag`;
+*)
+
+(* Labeled Transition System *)      
+
+val _ = Datatype `sapic_lts_t =
+   LTS (sapic_configuration_t -> (SapicFact_t option)  -> sapic_configuration_t)
+       `;
+
+        
+(* Multi Labeled Transition System *)      
+
+val _ = Datatype `sapic_mlts_t =
+   MLTS (sapic_configuration_t -> ((SapicFact_t option) list) -> sapic_configuration_t)
+       `;
+       
+   
 val _ = export_theory();

@@ -95,3 +95,5 @@ val _ = Datatype `sapic_substitution_t =
    Substitution (('a Var_t) -> ('a SapicTerm_t) option)
 `;    
     
+
+val _ = export_theory();

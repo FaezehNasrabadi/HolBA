@@ -31,11 +31,6 @@ val stop_lbl_tms = [``BL_Address (Imm64 796w)``];
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
-(* display the cfg 
-val _ = print "Display cfg.\n";
-open bir_cfg_vizLib;
-val ns = List.map (fn x => snd x)(listItems n_dict);
-val _ = cfg_display_graph_ns ns;*)
 	      
 val loop_pattern = ["CFGNT_Jump","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
 
@@ -44,15 +39,6 @@ val enter = find_loop n_dict [lbl_tm] loop_pattern;
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
-(*    
-val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
-val b = Redblackmap.find(n_dict,“BL_Address (Imm64 708w)”); 
-    listItems adr_dict
-    val n = valOf (peek (n_dict, “BL_Address (Imm64 948w)”));
-
-
-open String
-*)
     
 val syst = init_state lbl_tm prog_vars;
 
@@ -79,8 +65,8 @@ val _ = print "\n\n";
 (*
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML [(List.nth (systs_noassertfailed, 1))];
 
-val a =listItems( SYST_get_env (List.nth (systs_noassertfailed, 1)));
-val b =listItems( SYST_get_vals (List.nth (systs_noassertfailed, 1)));
+val a =listItems( SYST_get_env (List.nth (systs_noassertfailed, 0)));
+val b =listItems( SYST_get_vals (List.nth (systs_noassertfailed, 0)));
 val c = List.map (fn x => ( snd) x) b;
 val d = List.map (fn SymbValBE(x,y) => (Redblackset.listItems y)) c;    
 

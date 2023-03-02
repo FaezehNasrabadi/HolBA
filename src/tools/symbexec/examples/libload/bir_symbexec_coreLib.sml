@@ -256,13 +256,18 @@ fun abstract_exp_in_loop exp =
 
       
 	      
-      val expo' = case symbv of
+      val expo = case symbv of
                     SymbValBE (x, _) => SOME x
                   | _ => NONE;
 
-      val expo = if ((is_state_inloop syst) andalso (isSome expo'))
-		 then (SOME o abstract_exp_in_loop o valOf) expo'
-		 else expo'; 
+
+      val symbv' = case symbv of
+                     SymbValBE (x, t) => (if (is_state_inloop syst) then SymbValBE ((abstract_exp_in_loop x), t) else SymbValBE (x, t))
+                   | _ => symbv;
+					  
+      (* val symbv = if ((is_state_inloop syst) andalso (isSome expo)) *)
+      (* 		 then (SOME o abstract_exp_in_loop o valOf) expo *)
+      (* 		 else expo';  *)
 	  
       val use_expo_var =
             isSome expo andalso
@@ -276,15 +281,20 @@ fun abstract_exp_in_loop exp =
       val _ = if (is_state_inloop syst)
 	      then print (term_to_string bv_fr ^ " = \n")
 	      else ();
-      val _ = if ((is_state_inloop syst) andalso (isSome expo))
-	      then print (term_to_string (valOf expo) ^ "\n\n")
-	      else ();
+
+      val _ = case symbv' of
+                  SymbValBE (x, t) => (if (is_state_inloop syst) then print (term_to_string x ^ "\n\n") else ())
+                | _ => ();
+	  
+      (* val _ = if ((is_state_inloop syst) andalso (isSome expo)) *)
+      (* 	      then print (term_to_string (valOf expo) ^ "\n\n") *)
+      (* 	      else (); *)
     in
       (update_envvar bv bv_fr o
        (if use_expo_var then
           I
         else
-          insert_symbval bv_fr symbv)
+          insert_symbval bv_fr symbv')
       ) syst
     end;
 

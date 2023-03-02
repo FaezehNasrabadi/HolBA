@@ -374,10 +374,17 @@ val symbs_sec_text = [
 val symbs_sec_text = [
     "main"
 ];
-*) 
+
 val symbs_sec_text = [
     "foo",
     "main"
+]; 
+*) 
+val symbs_sec_text = [
+    "base64_cleanup",
+    "base64_decode",
+    "build_decoding_table",
+    "base64_encode"
 ];    
    
 val arch_str         = "arm8";
@@ -516,10 +523,18 @@ val configs              = [ ("example-indjmp",
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 				    )];
 
-*)    
 val configs              = [ ("example-loop",
                               ("example-loop.da", "balrob/example-loop.da.plus", "balrob/example-loop.mem"),
                               "exampleloop_THM",
+			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
+                               (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
+                               (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
+			   )];
+
+*)    
+val configs              = [ ("b64",
+                              ("b64.da", "balrob/b64.da.plus", "balrob/b64.mem"),
+                              "exampleb64_THM",
 			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))

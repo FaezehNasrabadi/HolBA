@@ -94,14 +94,12 @@ fun next_pc lbl_tm =
 fun find_loop n_dict entries loop_pattern =
     let
 	val g1 = cfg_create "toy" entries n_dict bl_dict_;
-
 	val _ = node_type := [];
 	val _ =  detect_loop  g1 (hd (#CFGG_entries g1)) [];
-
 	val in_loop = get_range(!node_type, loop_pattern);    
-
-	val entry_adr = snd (List.nth (!node_type, ((valOf in_loop)+((List.length loop_pattern)-1))));
-
+	val entry_adr = if (isSome in_loop)    
+			then snd (List.nth (!node_type, ((valOf in_loop)+((List.length loop_pattern)-1))))
+			else raise ERR "find_loop:get_range" "in_loop is NONE";
 	(* val exit_adr = next_pc entry_adr; *)
     in
 	entry_adr

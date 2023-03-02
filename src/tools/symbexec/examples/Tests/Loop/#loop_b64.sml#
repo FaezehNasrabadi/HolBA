@@ -70,6 +70,45 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 (*
+
+open listSyntax;
+val prog_def = Define `
+prog
+BirProgram
+             [<|bb_label :=
+                  BL_Address_HC (Imm64 65624w)
+                    "97FFFFEA (bl 10000 <malloc>)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R30" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 65628w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65536w)))|>]`; 
+
+val (first_block_label_tm, stmt, bbes) = (dest_bir_block o hd o fst o listSyntax.dest_list o dest_BirProgram o snd o dest_comb o concl) prog_def;
+
+
+
+
+
+
+
+
+
+
+
+val stmt =``[BStmt_Assign (BVar "R30" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 65628w))]``;
+val bbes = “BStmt_Jmp (BLE_Label (BL_Address (Imm64 65536w)))”;
+if (identical ((fst o dest_BStmt_Assign o hd) stmt) “BVar "R30" (BType_Imm Bit64)”)
+		   then (CFGNT_Call [((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o hd) stmt)],(((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o hd) stmt)::(cfg_BLEs_to_targets [dest_BStmt_Jmp bbes])))
+		   else (CFGNT_Basic,cfg_BLEs_to_targets [dest_BStmt_Jmp bbes])
+val target = (dest_BStmt_Assign o hd) t;
+if (identical ((fst o dest_BStmt_Assign o hd) t) “BVar "R30" (BType_Imm Bit64)”)
+then ((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o hd) t)::[“BL_Address (Imm64 65536w)”]
+val t = “[]”;
+val (l,r) = dest_comb stmt;
+(snd o dest_comb o concl) stmt
+(snd o dest_eq o (concl o fst o dest_comb) stmt
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML [(List.nth (systs_noassertfailed, 1))];
 
 val a =listItems( SYST_get_env (List.nth (systs_noassertfailed, 0)));

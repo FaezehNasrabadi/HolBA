@@ -505,7 +505,477 @@ val lifted_prog =
        <|bb_label := BL_Address_HC (Imm64 152w) "D65F03C0 (ret)";
          bb_statements := [];
          bb_last_statement :=
-           BStmt_Jmp (BLE_Exp (BExp_Den (BVar "R30" (BType_Imm Bit64))))|>]”;    
+         BStmt_Jmp (BLE_Exp (BExp_Den (BVar "R30" (BType_Imm Bit64))))|>]”;
+(*   val lifted_prog =
+   “BirProgram
+   [
+<|bb_label :=
+                  BL_Address_HC (Imm64 65536w)
+                    "D10043FF (sub sp, sp, #0x10)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "SP_EL0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Minus
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 16w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65540w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 65540w)
+                    "F90007E0 (str x0, [sp, #8])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 3
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 8w))) 8);
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 8w))) BEnd_LittleEndian
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64))))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65544w)))|>;
+              <|bb_label := BL_Address_HC (Imm64 65544w) "D503201F (nop)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65548w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 65548w)
+                    "910043FF (add sp, sp, #0x10)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "SP_EL0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 16w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65552w)))|>;
+              <|bb_label := BL_Address_HC (Imm64 65552w) "D65F03C0 (ret)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp
+                      (BLE_Exp (BExp_Den (BVar "R30" (BType_Imm Bit64))))|>;
+		<|bb_label :=
+                  BL_Address_HC (Imm64 66228w)
+                    "A9BE7BFD (stp x29, x30, [sp, #-32]!)";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 3
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295
+                        (BExp_BinExp BIExp_Minus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 32w))) 16);
+                   BStmt_Assign (BVar "tmp_SP_EL0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Minus
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 32w)));
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Store
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Minus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 32w))) BEnd_LittleEndian
+                           (BExp_Den (BVar "R29" (BType_Imm Bit64))))
+                        (BExp_BinExp BIExp_Minus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 24w))) BEnd_LittleEndian
+                        (BExp_Den (BVar "R30" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "SP_EL0" (BType_Imm Bit64))
+                     (BExp_Den (BVar "tmp_SP_EL0" (BType_Imm Bit64)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66232w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66232w) "910003FD (mov x29, sp)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R29" (BType_Imm Bit64))
+                     (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66236w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66236w)
+                    "D2802000 (mov x0, #0x100                  // #256)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 256w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66240w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66240w)
+                    "97FFFF50 (bl 10000 <malloc>)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R30" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 66244w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 65536w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66244w) "AA0003E1 (mov x1, x0)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R1" (BType_Imm Bit64))
+                     (BExp_Den (BVar "R0" (BType_Imm Bit64)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66248w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66248w)
+                    "90000000 (adrp x0, 10000 <malloc>)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 65536w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66252w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66252w)
+                    "911E4000 (add x0, x0, #0x790)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 1936w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66256w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66256w) "F9000001 (str x1, [x0])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 3
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64))));
+                   BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295 (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        8);
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        BEnd_LittleEndian
+                        (BExp_Den (BVar "R1" (BType_Imm Bit64))))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66260w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66260w)
+                    "B9001FFF (str wzr, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 28w))) 4);
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                        (BExp_Const (Imm32 0w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66264w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66264w)
+                    "14000010 (b 10318 <build_decoding_table+0x64>)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66328w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66268w)
+                    "90000000 (adrp x0, 10000 <malloc>)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 65536w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66272w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66272w)
+                    "911E4000 (add x0, x0, #0x790)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 1936w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66276w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66276w) "F9400001 (ldr x1, [x0])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 3
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R1" (BType_Imm Bit64))
+                     (BExp_Load
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        BEnd_LittleEndian Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66280w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66280w)
+                    "90000000 (adrp x0, 10000 <malloc>)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Const (Imm64 65536w))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66284w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66284w)
+                    "911D0002 (add x2, x0, #0x740)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R2" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 1856w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66288w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66288w)
+                    "B9801FE0 (ldrsw x0, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_SignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                           Bit32) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66292w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66292w)
+                    "38606840 (ldrb w0, [x2, x0])";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                              (BExp_Den (BVar "R2" (BType_Imm Bit64))))
+                           BEnd_LittleEndian Bit8) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66296w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66296w)
+                    "92401C00 (and x0, x0, #0xff)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_And (BExp_Const (Imm64 255w))
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64))))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66300w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66300w) "8B000020 (add x0, x1, x0)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        (BExp_Den (BVar "R1" (BType_Imm Bit64))))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66304w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66304w)
+                    "B9401FE1 (ldr w1, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R1" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                           Bit32) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66308w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66308w)
+                    "12001C21 (and w1, w1, #0xff)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R1" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_BinExp BIExp_And (BExp_Const (Imm32 255w))
+                           (BExp_Cast BIExp_LowCast
+                              (BExp_Den (BVar "R1" (BType_Imm Bit64)))
+                              Bit32)) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66312w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66312w) "39000001 (strb w1, [x0])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295 (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        1);
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                        BEnd_LittleEndian
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R1" (BType_Imm Bit64))) Bit8))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66316w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66316w)
+                    "B9401FE0 (ldr w0, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                           Bit32) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66320w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66320w)
+                    "11000400 (add w0, w0, #0x1)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Cast BIExp_LowCast
+                              (BExp_Den (BVar "R0" (BType_Imm Bit64)))
+                              Bit32) (BExp_Const (Imm32 1w))) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66324w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66324w)
+                    "B9001FE0 (str w0, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assert
+                     (BExp_unchanged_mem_interval_distinct Bit64 0
+                        4294967295
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 28w))) 4);
+                   BStmt_Assign (BVar "MEM" (BType_Mem Bit64 Bit8))
+                     (BExp_Store
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R0" (BType_Imm Bit64))) Bit32))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66328w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66328w)
+                    "B9401FE0 (ldr w0, [sp, #28])";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 28w))) BEnd_LittleEndian
+                           Bit32) Bit64)];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66332w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66332w) "7100FC1F (cmp w0, #0x3f)";
+                bb_statements :=
+                  [BStmt_Assign (BVar "ProcState_C" BType_Bool)
+                     (BExp_nzcv_SUB_C
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R0" (BType_Imm Bit64))) Bit32)
+                        (BExp_Const (Imm32 63w)));
+                   BStmt_Assign (BVar "ProcState_N" BType_Bool)
+                     (BExp_nzcv_SUB_N Bit32
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R0" (BType_Imm Bit64))) Bit32)
+                        (BExp_Const (Imm32 63w)));
+                   BStmt_Assign (BVar "ProcState_V" BType_Bool)
+                     (BExp_nzcv_SUB_V Bit32
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R0" (BType_Imm Bit64))) Bit32)
+                        (BExp_Const (Imm32 63w)));
+                   BStmt_Assign (BVar "ProcState_Z" BType_Bool)
+                     (BExp_nzcv_SUB_Z
+                        (BExp_Cast BIExp_LowCast
+                           (BExp_Den (BVar "R0" (BType_Imm Bit64))) Bit32)
+                        (BExp_Const (Imm32 63w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66336w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66336w)
+                    "54FFFDED (b.le 102dc <build_decoding_table+0x28>)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_CJmp
+                    (BExp_BinExp BIExp_And
+                       (BExp_BinPred BIExp_Equal
+                          (BExp_Den (BVar "ProcState_N" BType_Bool))
+                          (BExp_Den (BVar "ProcState_V" BType_Bool)))
+                       (BExp_UnaryExp BIExp_Not
+                          (BExp_Den (BVar "ProcState_Z" BType_Bool))))
+                    (BLE_Label (BL_Address (Imm64 66340w)))
+                    (BLE_Label (BL_Address (Imm64 66268w)))|>;
+              <|bb_label := BL_Address_HC (Imm64 66340w) "D503201F (nop)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66344w)))|>;
+              <|bb_label := BL_Address_HC (Imm64 66344w) "D503201F (nop)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66348w)))|>;
+              <|bb_label :=
+                  BL_Address_HC (Imm64 66348w)
+                    "A8C27BFD (ldp x29, x30, [sp], #32)";
+                bb_statements :=
+                  [BStmt_Assert
+                     (BExp_Aligned Bit64 3
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R29" (BType_Imm Bit64))
+                     (BExp_Load
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                        BEnd_LittleEndian Bit64);
+                   BStmt_Assign (BVar "R30" (BType_Imm Bit64))
+                     (BExp_Load
+                        (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                        (BExp_BinExp BIExp_Plus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 8w))) BEnd_LittleEndian Bit64);
+                   BStmt_Assign (BVar "SP_EL0" (BType_Imm Bit64))
+                     (BExp_BinExp BIExp_Plus
+                        (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                        (BExp_Const (Imm64 32w)))];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 66352w)))|>;
+              <|bb_label := BL_Address_HC (Imm64 66352w) "D65F03C0 (ret)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp
+                    (BLE_Exp (BExp_Den (BVar "R30" (BType_Imm Bit64))))|>;
+    ]”;*)
 (* build the dictionaries using the library under test *)
 val _ = print "Building dictionaries.\n";
 open bir_block_collectionLib;
@@ -516,6 +986,7 @@ val lbl_tms = get_block_dict_keys bl_dict;
 val _ = print "Building node dict.\n";
 open bir_cfgLib;
 val n_dict = cfg_build_node_dict bl_dict lbl_tms;
+ (* val entries = [``BL_Address (Imm64 66228w)``];   *) 
 val entries = [mk_key_from_address64 64 (Arbnum.fromHexString "0")];
 val _ = print "Building cfg.\n";
 val g1 = cfg_create "toy" entries n_dict bl_dict;

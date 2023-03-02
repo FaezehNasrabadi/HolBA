@@ -381,7 +381,7 @@ val symbs_sec_text = [
 ]; 
 *) 
 val symbs_sec_text = [
-    "base64_cleanup",
+    "malloc",
     "base64_decode",
     "build_decoding_table",
     "base64_encode"

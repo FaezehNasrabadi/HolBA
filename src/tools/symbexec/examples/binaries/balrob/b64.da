@@ -1,444 +1,442 @@
 
-b64.o:     file format elf64-littleaarch64
+out:     file format elf64-littleaarch64
 
+
+Disassembly of section .page1:
+
+0000000000010000 <malloc>:
+   10000:	d10043ff 	sub	sp, sp, #0x10
+   10004:	f90007e0 	str	x0, [sp, #8]
+   10008:	d503201f 	nop
+   1000c:	910043ff 	add	sp, sp, #0x10
+   10010:	d65f03c0 	ret
 
 Disassembly of section .text:
 
-0000000000000000 <base64_encode>:
-   0:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
-   4:	910003fd 	mov	x29, sp
-   8:	f90017e0 	str	x0, [sp, #40]
-   c:	f90013e1 	str	x1, [sp, #32]
-  10:	f9000fe2 	str	x2, [sp, #24]
-  14:	f94013e0 	ldr	x0, [sp, #32]
-  18:	91000801 	add	x1, x0, #0x2
-  1c:	b201f3e0 	mov	x0, #0xaaaaaaaaaaaaaaaa    	// #-6148914691236517206
-  20:	f2955560 	movk	x0, #0xaaab
-  24:	9bc07c20 	umulh	x0, x1, x0
-  28:	d341fc00 	lsr	x0, x0, #1
-  2c:	d37ef401 	lsl	x1, x0, #2
-  30:	f9400fe0 	ldr	x0, [sp, #24]
-  34:	f9000001 	str	x1, [x0]
-  38:	f9400fe0 	ldr	x0, [sp, #24]
-  3c:	f9400000 	ldr	x0, [x0]
-  40:	91002800 	add	x0, x0, #0xa
-  44:	94000000 	bl	0 <malloc>
-  48:	f90027e0 	str	x0, [sp, #72]
-  4c:	f94027e0 	ldr	x0, [sp, #72]
-  50:	f100001f 	cmp	x0, #0x0
-  54:	54000061 	b.ne	60 <base64_encode+0x60>  // b.any
-  58:	d2800000 	mov	x0, #0x0                   	// #0
-  5c:	1400008f 	b	298 <base64_encode+0x298>
-  60:	b9005fff 	str	wzr, [sp, #92]
-  64:	b9005bff 	str	wzr, [sp, #88]
-  68:	1400006a 	b	210 <base64_encode+0x210>
-  6c:	b9805fe0 	ldrsw	x0, [sp, #92]
-  70:	f94013e1 	ldr	x1, [sp, #32]
-  74:	eb00003f 	cmp	x1, x0
-  78:	54000129 	b.ls	9c <base64_encode+0x9c>  // b.plast
-  7c:	b9405fe0 	ldr	w0, [sp, #92]
-  80:	11000401 	add	w1, w0, #0x1
-  84:	b9005fe1 	str	w1, [sp, #92]
-  88:	93407c00 	sxtw	x0, w0
-  8c:	f94017e1 	ldr	x1, [sp, #40]
-  90:	8b000020 	add	x0, x1, x0
-  94:	39400000 	ldrb	w0, [x0]
-  98:	14000002 	b	a0 <base64_encode+0xa0>
-  9c:	52800000 	mov	w0, #0x0                   	// #0
-  a0:	b90047e0 	str	w0, [sp, #68]
-  a4:	b9805fe0 	ldrsw	x0, [sp, #92]
-  a8:	f94013e1 	ldr	x1, [sp, #32]
-  ac:	eb00003f 	cmp	x1, x0
-  b0:	54000129 	b.ls	d4 <base64_encode+0xd4>  // b.plast
-  b4:	b9405fe0 	ldr	w0, [sp, #92]
-  b8:	11000401 	add	w1, w0, #0x1
-  bc:	b9005fe1 	str	w1, [sp, #92]
-  c0:	93407c00 	sxtw	x0, w0
-  c4:	f94017e1 	ldr	x1, [sp, #40]
-  c8:	8b000020 	add	x0, x1, x0
-  cc:	39400000 	ldrb	w0, [x0]
-  d0:	14000002 	b	d8 <base64_encode+0xd8>
-  d4:	52800000 	mov	w0, #0x0                   	// #0
-  d8:	b90043e0 	str	w0, [sp, #64]
-  dc:	b9805fe0 	ldrsw	x0, [sp, #92]
-  e0:	f94013e1 	ldr	x1, [sp, #32]
-  e4:	eb00003f 	cmp	x1, x0
-  e8:	54000129 	b.ls	10c <base64_encode+0x10c>  // b.plast
-  ec:	b9405fe0 	ldr	w0, [sp, #92]
-  f0:	11000401 	add	w1, w0, #0x1
-  f4:	b9005fe1 	str	w1, [sp, #92]
-  f8:	93407c00 	sxtw	x0, w0
-  fc:	f94017e1 	ldr	x1, [sp, #40]
- 100:	8b000020 	add	x0, x1, x0
- 104:	39400000 	ldrb	w0, [x0]
- 108:	14000002 	b	110 <base64_encode+0x110>
- 10c:	52800000 	mov	w0, #0x0                   	// #0
- 110:	b9003fe0 	str	w0, [sp, #60]
- 114:	b94047e0 	ldr	w0, [sp, #68]
- 118:	53103c01 	lsl	w1, w0, #16
- 11c:	b94043e0 	ldr	w0, [sp, #64]
- 120:	53185c00 	lsl	w0, w0, #8
- 124:	0b000020 	add	w0, w1, w0
- 128:	b9403fe1 	ldr	w1, [sp, #60]
- 12c:	0b000020 	add	w0, w1, w0
- 130:	b9003be0 	str	w0, [sp, #56]
- 134:	b9403be0 	ldr	w0, [sp, #56]
- 138:	53127c00 	lsr	w0, w0, #18
- 13c:	12001403 	and	w3, w0, #0x3f
- 140:	b9405be0 	ldr	w0, [sp, #88]
- 144:	11000401 	add	w1, w0, #0x1
- 148:	b9005be1 	str	w1, [sp, #88]
- 14c:	93407c00 	sxtw	x0, w0
- 150:	f94027e1 	ldr	x1, [sp, #72]
- 154:	8b000020 	add	x0, x1, x0
- 158:	90000001 	adrp	x1, 0 <base64_encode>
- 15c:	91000022 	add	x2, x1, #0x0
- 160:	2a0303e1 	mov	w1, w3
- 164:	38616841 	ldrb	w1, [x2, x1]
- 168:	39000001 	strb	w1, [x0]
- 16c:	b9403be0 	ldr	w0, [sp, #56]
- 170:	530c7c00 	lsr	w0, w0, #12
- 174:	12001403 	and	w3, w0, #0x3f
- 178:	b9405be0 	ldr	w0, [sp, #88]
- 17c:	11000401 	add	w1, w0, #0x1
- 180:	b9005be1 	str	w1, [sp, #88]
- 184:	93407c00 	sxtw	x0, w0
- 188:	f94027e1 	ldr	x1, [sp, #72]
- 18c:	8b000020 	add	x0, x1, x0
- 190:	90000001 	adrp	x1, 0 <base64_encode>
- 194:	91000022 	add	x2, x1, #0x0
- 198:	2a0303e1 	mov	w1, w3
- 19c:	38616841 	ldrb	w1, [x2, x1]
- 1a0:	39000001 	strb	w1, [x0]
- 1a4:	b9403be0 	ldr	w0, [sp, #56]
- 1a8:	53067c00 	lsr	w0, w0, #6
- 1ac:	12001403 	and	w3, w0, #0x3f
- 1b0:	b9405be0 	ldr	w0, [sp, #88]
- 1b4:	11000401 	add	w1, w0, #0x1
- 1b8:	b9005be1 	str	w1, [sp, #88]
- 1bc:	93407c00 	sxtw	x0, w0
- 1c0:	f94027e1 	ldr	x1, [sp, #72]
- 1c4:	8b000020 	add	x0, x1, x0
- 1c8:	90000001 	adrp	x1, 0 <base64_encode>
- 1cc:	91000022 	add	x2, x1, #0x0
- 1d0:	2a0303e1 	mov	w1, w3
- 1d4:	38616841 	ldrb	w1, [x2, x1]
- 1d8:	39000001 	strb	w1, [x0]
- 1dc:	b9403be0 	ldr	w0, [sp, #56]
- 1e0:	12001403 	and	w3, w0, #0x3f
- 1e4:	b9405be0 	ldr	w0, [sp, #88]
- 1e8:	11000401 	add	w1, w0, #0x1
- 1ec:	b9005be1 	str	w1, [sp, #88]
- 1f0:	93407c00 	sxtw	x0, w0
- 1f4:	f94027e1 	ldr	x1, [sp, #72]
- 1f8:	8b000020 	add	x0, x1, x0
- 1fc:	90000001 	adrp	x1, 0 <base64_encode>
- 200:	91000022 	add	x2, x1, #0x0
- 204:	2a0303e1 	mov	w1, w3
- 208:	38616841 	ldrb	w1, [x2, x1]
- 20c:	39000001 	strb	w1, [x0]
- 210:	b9805fe0 	ldrsw	x0, [sp, #92]
- 214:	f94013e1 	ldr	x1, [sp, #32]
- 218:	eb00003f 	cmp	x1, x0
- 21c:	54fff288 	b.hi	6c <base64_encode+0x6c>  // b.pmore
- 220:	b90057ff 	str	wzr, [sp, #84]
- 224:	1400000d 	b	258 <base64_encode+0x258>
- 228:	f9400fe0 	ldr	x0, [sp, #24]
- 22c:	f9400001 	ldr	x1, [x0]
- 230:	b98057e0 	ldrsw	x0, [sp, #84]
- 234:	cb000020 	sub	x0, x1, x0
- 238:	d1000400 	sub	x0, x0, #0x1
- 23c:	f94027e1 	ldr	x1, [sp, #72]
- 240:	8b000020 	add	x0, x1, x0
- 244:	528007a1 	mov	w1, #0x3d                  	// #61
- 248:	39000001 	strb	w1, [x0]
- 24c:	b94057e0 	ldr	w0, [sp, #84]
- 250:	11000400 	add	w0, w0, #0x1
- 254:	b90057e0 	str	w0, [sp, #84]
- 258:	f94013e2 	ldr	x2, [sp, #32]
- 25c:	b201f3e0 	mov	x0, #0xaaaaaaaaaaaaaaaa    	// #-6148914691236517206
- 260:	f2955560 	movk	x0, #0xaaab
- 264:	9bc07c40 	umulh	x0, x2, x0
- 268:	d341fc01 	lsr	x1, x0, #1
- 26c:	aa0103e0 	mov	x0, x1
- 270:	8b000000 	add	x0, x0, x0
- 274:	8b010000 	add	x0, x0, x1
- 278:	cb000041 	sub	x1, x2, x0
- 27c:	90000000 	adrp	x0, 0 <base64_encode>
- 280:	91000000 	add	x0, x0, #0x0
- 284:	b8617800 	ldr	w0, [x0, x1, lsl #2]
- 288:	b94057e1 	ldr	w1, [sp, #84]
- 28c:	6b00003f 	cmp	w1, w0
- 290:	54fffccb 	b.lt	228 <base64_encode+0x228>  // b.tstop
- 294:	f94027e0 	ldr	x0, [sp, #72]
- 298:	a8c67bfd 	ldp	x29, x30, [sp], #96
- 29c:	d65f03c0 	ret
+0000000000010014 <base64_encode>:
+   10014:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
+   10018:	910003fd 	mov	x29, sp
+   1001c:	f90017e0 	str	x0, [sp, #40]
+   10020:	f90013e1 	str	x1, [sp, #32]
+   10024:	f9000fe2 	str	x2, [sp, #24]
+   10028:	f94013e0 	ldr	x0, [sp, #32]
+   1002c:	91000801 	add	x1, x0, #0x2
+   10030:	b201f3e0 	mov	x0, #0xaaaaaaaaaaaaaaaa    	// #-6148914691236517206
+   10034:	f2955560 	movk	x0, #0xaaab
+   10038:	9bc07c20 	umulh	x0, x1, x0
+   1003c:	d341fc00 	lsr	x0, x0, #1
+   10040:	d37ef401 	lsl	x1, x0, #2
+   10044:	f9400fe0 	ldr	x0, [sp, #24]
+   10048:	f9000001 	str	x1, [x0]
+   1004c:	f9400fe0 	ldr	x0, [sp, #24]
+   10050:	f9400000 	ldr	x0, [x0]
+   10054:	91002800 	add	x0, x0, #0xa
+   10058:	97ffffea 	bl	10000 <malloc>
+   1005c:	f90027e0 	str	x0, [sp, #72]
+   10060:	f94027e0 	ldr	x0, [sp, #72]
+   10064:	f100001f 	cmp	x0, #0x0
+   10068:	54000061 	b.ne	10074 <base64_encode+0x60>  // b.any
+   1006c:	d2800000 	mov	x0, #0x0                   	// #0
+   10070:	1400008f 	b	102ac <base64_encode+0x298>
+   10074:	b9005fff 	str	wzr, [sp, #92]
+   10078:	b9005bff 	str	wzr, [sp, #88]
+   1007c:	1400006a 	b	10224 <base64_encode+0x210>
+   10080:	b9805fe0 	ldrsw	x0, [sp, #92]
+   10084:	f94013e1 	ldr	x1, [sp, #32]
+   10088:	eb00003f 	cmp	x1, x0
+   1008c:	54000129 	b.ls	100b0 <base64_encode+0x9c>  // b.plast
+   10090:	b9405fe0 	ldr	w0, [sp, #92]
+   10094:	11000401 	add	w1, w0, #0x1
+   10098:	b9005fe1 	str	w1, [sp, #92]
+   1009c:	93407c00 	sxtw	x0, w0
+   100a0:	f94017e1 	ldr	x1, [sp, #40]
+   100a4:	8b000020 	add	x0, x1, x0
+   100a8:	39400000 	ldrb	w0, [x0]
+   100ac:	14000002 	b	100b4 <base64_encode+0xa0>
+   100b0:	52800000 	mov	w0, #0x0                   	// #0
+   100b4:	b90047e0 	str	w0, [sp, #68]
+   100b8:	b9805fe0 	ldrsw	x0, [sp, #92]
+   100bc:	f94013e1 	ldr	x1, [sp, #32]
+   100c0:	eb00003f 	cmp	x1, x0
+   100c4:	54000129 	b.ls	100e8 <base64_encode+0xd4>  // b.plast
+   100c8:	b9405fe0 	ldr	w0, [sp, #92]
+   100cc:	11000401 	add	w1, w0, #0x1
+   100d0:	b9005fe1 	str	w1, [sp, #92]
+   100d4:	93407c00 	sxtw	x0, w0
+   100d8:	f94017e1 	ldr	x1, [sp, #40]
+   100dc:	8b000020 	add	x0, x1, x0
+   100e0:	39400000 	ldrb	w0, [x0]
+   100e4:	14000002 	b	100ec <base64_encode+0xd8>
+   100e8:	52800000 	mov	w0, #0x0                   	// #0
+   100ec:	b90043e0 	str	w0, [sp, #64]
+   100f0:	b9805fe0 	ldrsw	x0, [sp, #92]
+   100f4:	f94013e1 	ldr	x1, [sp, #32]
+   100f8:	eb00003f 	cmp	x1, x0
+   100fc:	54000129 	b.ls	10120 <base64_encode+0x10c>  // b.plast
+   10100:	b9405fe0 	ldr	w0, [sp, #92]
+   10104:	11000401 	add	w1, w0, #0x1
+   10108:	b9005fe1 	str	w1, [sp, #92]
+   1010c:	93407c00 	sxtw	x0, w0
+   10110:	f94017e1 	ldr	x1, [sp, #40]
+   10114:	8b000020 	add	x0, x1, x0
+   10118:	39400000 	ldrb	w0, [x0]
+   1011c:	14000002 	b	10124 <base64_encode+0x110>
+   10120:	52800000 	mov	w0, #0x0                   	// #0
+   10124:	b9003fe0 	str	w0, [sp, #60]
+   10128:	b94047e0 	ldr	w0, [sp, #68]
+   1012c:	53103c01 	lsl	w1, w0, #16
+   10130:	b94043e0 	ldr	w0, [sp, #64]
+   10134:	53185c00 	lsl	w0, w0, #8
+   10138:	0b000020 	add	w0, w1, w0
+   1013c:	b9403fe1 	ldr	w1, [sp, #60]
+   10140:	0b000020 	add	w0, w1, w0
+   10144:	b9003be0 	str	w0, [sp, #56]
+   10148:	b9403be0 	ldr	w0, [sp, #56]
+   1014c:	53127c00 	lsr	w0, w0, #18
+   10150:	12001403 	and	w3, w0, #0x3f
+   10154:	b9405be0 	ldr	w0, [sp, #88]
+   10158:	11000401 	add	w1, w0, #0x1
+   1015c:	b9005be1 	str	w1, [sp, #88]
+   10160:	93407c00 	sxtw	x0, w0
+   10164:	f94027e1 	ldr	x1, [sp, #72]
+   10168:	8b000020 	add	x0, x1, x0
+   1016c:	90000001 	adrp	x1, 10000 <malloc>
+   10170:	911d0022 	add	x2, x1, #0x740
+   10174:	2a0303e1 	mov	w1, w3
+   10178:	38616841 	ldrb	w1, [x2, x1]
+   1017c:	39000001 	strb	w1, [x0]
+   10180:	b9403be0 	ldr	w0, [sp, #56]
+   10184:	530c7c00 	lsr	w0, w0, #12
+   10188:	12001403 	and	w3, w0, #0x3f
+   1018c:	b9405be0 	ldr	w0, [sp, #88]
+   10190:	11000401 	add	w1, w0, #0x1
+   10194:	b9005be1 	str	w1, [sp, #88]
+   10198:	93407c00 	sxtw	x0, w0
+   1019c:	f94027e1 	ldr	x1, [sp, #72]
+   101a0:	8b000020 	add	x0, x1, x0
+   101a4:	90000001 	adrp	x1, 10000 <malloc>
+   101a8:	911d0022 	add	x2, x1, #0x740
+   101ac:	2a0303e1 	mov	w1, w3
+   101b0:	38616841 	ldrb	w1, [x2, x1]
+   101b4:	39000001 	strb	w1, [x0]
+   101b8:	b9403be0 	ldr	w0, [sp, #56]
+   101bc:	53067c00 	lsr	w0, w0, #6
+   101c0:	12001403 	and	w3, w0, #0x3f
+   101c4:	b9405be0 	ldr	w0, [sp, #88]
+   101c8:	11000401 	add	w1, w0, #0x1
+   101cc:	b9005be1 	str	w1, [sp, #88]
+   101d0:	93407c00 	sxtw	x0, w0
+   101d4:	f94027e1 	ldr	x1, [sp, #72]
+   101d8:	8b000020 	add	x0, x1, x0
+   101dc:	90000001 	adrp	x1, 10000 <malloc>
+   101e0:	911d0022 	add	x2, x1, #0x740
+   101e4:	2a0303e1 	mov	w1, w3
+   101e8:	38616841 	ldrb	w1, [x2, x1]
+   101ec:	39000001 	strb	w1, [x0]
+   101f0:	b9403be0 	ldr	w0, [sp, #56]
+   101f4:	12001403 	and	w3, w0, #0x3f
+   101f8:	b9405be0 	ldr	w0, [sp, #88]
+   101fc:	11000401 	add	w1, w0, #0x1
+   10200:	b9005be1 	str	w1, [sp, #88]
+   10204:	93407c00 	sxtw	x0, w0
+   10208:	f94027e1 	ldr	x1, [sp, #72]
+   1020c:	8b000020 	add	x0, x1, x0
+   10210:	90000001 	adrp	x1, 10000 <malloc>
+   10214:	911d0022 	add	x2, x1, #0x740
+   10218:	2a0303e1 	mov	w1, w3
+   1021c:	38616841 	ldrb	w1, [x2, x1]
+   10220:	39000001 	strb	w1, [x0]
+   10224:	b9805fe0 	ldrsw	x0, [sp, #92]
+   10228:	f94013e1 	ldr	x1, [sp, #32]
+   1022c:	eb00003f 	cmp	x1, x0
+   10230:	54fff288 	b.hi	10080 <base64_encode+0x6c>  // b.pmore
+   10234:	b90057ff 	str	wzr, [sp, #84]
+   10238:	1400000d 	b	1026c <base64_encode+0x258>
+   1023c:	f9400fe0 	ldr	x0, [sp, #24]
+   10240:	f9400001 	ldr	x1, [x0]
+   10244:	b98057e0 	ldrsw	x0, [sp, #84]
+   10248:	cb000020 	sub	x0, x1, x0
+   1024c:	d1000400 	sub	x0, x0, #0x1
+   10250:	f94027e1 	ldr	x1, [sp, #72]
+   10254:	8b000020 	add	x0, x1, x0
+   10258:	528007a1 	mov	w1, #0x3d                  	// #61
+   1025c:	39000001 	strb	w1, [x0]
+   10260:	b94057e0 	ldr	w0, [sp, #84]
+   10264:	11000400 	add	w0, w0, #0x1
+   10268:	b90057e0 	str	w0, [sp, #84]
+   1026c:	f94013e2 	ldr	x2, [sp, #32]
+   10270:	b201f3e0 	mov	x0, #0xaaaaaaaaaaaaaaaa    	// #-6148914691236517206
+   10274:	f2955560 	movk	x0, #0xaaab
+   10278:	9bc07c40 	umulh	x0, x2, x0
+   1027c:	d341fc01 	lsr	x1, x0, #1
+   10280:	aa0103e0 	mov	x0, x1
+   10284:	d37ff800 	lsl	x0, x0, #1
+   10288:	8b010000 	add	x0, x0, x1
+   1028c:	cb000041 	sub	x1, x2, x0
+   10290:	90000000 	adrp	x0, 10000 <malloc>
+   10294:	911e0000 	add	x0, x0, #0x780
+   10298:	b8617800 	ldr	w0, [x0, x1, lsl #2]
+   1029c:	b94057e1 	ldr	w1, [sp, #84]
+   102a0:	6b00003f 	cmp	w1, w0
+   102a4:	54fffccb 	b.lt	1023c <base64_encode+0x228>  // b.tstop
+   102a8:	f94027e0 	ldr	x0, [sp, #72]
+   102ac:	a8c67bfd 	ldp	x29, x30, [sp], #96
+   102b0:	d65f03c0 	ret
 
-00000000000002a0 <build_decoding_table>:
- 2a0:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
- 2a4:	910003fd 	mov	x29, sp
- 2a8:	d2802000 	mov	x0, #0x100                 	// #256
- 2ac:	94000000 	bl	0 <malloc>
- 2b0:	aa0003e1 	mov	x1, x0
- 2b4:	90000000 	adrp	x0, 0 <base64_encode>
- 2b8:	91000000 	add	x0, x0, #0x0
- 2bc:	f9000001 	str	x1, [x0]
- 2c0:	b9001fff 	str	wzr, [sp, #28]
- 2c4:	14000010 	b	304 <build_decoding_table+0x64>
- 2c8:	90000000 	adrp	x0, 0 <base64_encode>
- 2cc:	91000000 	add	x0, x0, #0x0
- 2d0:	f9400001 	ldr	x1, [x0]
- 2d4:	90000000 	adrp	x0, 0 <base64_encode>
- 2d8:	91000002 	add	x2, x0, #0x0
- 2dc:	b9801fe0 	ldrsw	x0, [sp, #28]
- 2e0:	38606840 	ldrb	w0, [x2, x0]
- 2e4:	92401c00 	and	x0, x0, #0xff
- 2e8:	8b000020 	add	x0, x1, x0
- 2ec:	b9401fe1 	ldr	w1, [sp, #28]
- 2f0:	12001c21 	and	w1, w1, #0xff
- 2f4:	39000001 	strb	w1, [x0]
- 2f8:	b9401fe0 	ldr	w0, [sp, #28]
- 2fc:	11000400 	add	w0, w0, #0x1
- 300:	b9001fe0 	str	w0, [sp, #28]
- 304:	b9401fe0 	ldr	w0, [sp, #28]
- 308:	7100fc1f 	cmp	w0, #0x3f
- 30c:	54fffded 	b.le	2c8 <build_decoding_table+0x28>
- 310:	d503201f 	nop
- 314:	d503201f 	nop
- 318:	a8c27bfd 	ldp	x29, x30, [sp], #32
- 31c:	d65f03c0 	ret
+00000000000102b4 <build_decoding_table>:
+   102b4:	a9be7bfd 	stp	x29, x30, [sp, #-32]!
+   102b8:	910003fd 	mov	x29, sp
+   102bc:	d2802000 	mov	x0, #0x100                 	// #256
+   102c0:	97ffff50 	bl	10000 <malloc>
+   102c4:	aa0003e1 	mov	x1, x0
+   102c8:	90000000 	adrp	x0, 10000 <malloc>
+   102cc:	911e4000 	add	x0, x0, #0x790
+   102d0:	f9000001 	str	x1, [x0]
+   102d4:	b9001fff 	str	wzr, [sp, #28]
+   102d8:	14000010 	b	10318 <build_decoding_table+0x64>
+   102dc:	90000000 	adrp	x0, 10000 <malloc>
+   102e0:	911e4000 	add	x0, x0, #0x790
+   102e4:	f9400001 	ldr	x1, [x0]
+   102e8:	90000000 	adrp	x0, 10000 <malloc>
+   102ec:	911d0002 	add	x2, x0, #0x740
+   102f0:	b9801fe0 	ldrsw	x0, [sp, #28]
+   102f4:	38606840 	ldrb	w0, [x2, x0]
+   102f8:	92401c00 	and	x0, x0, #0xff
+   102fc:	8b000020 	add	x0, x1, x0
+   10300:	b9401fe1 	ldr	w1, [sp, #28]
+   10304:	12001c21 	and	w1, w1, #0xff
+   10308:	39000001 	strb	w1, [x0]
+   1030c:	b9401fe0 	ldr	w0, [sp, #28]
+   10310:	11000400 	add	w0, w0, #0x1
+   10314:	b9001fe0 	str	w0, [sp, #28]
+   10318:	b9401fe0 	ldr	w0, [sp, #28]
+   1031c:	7100fc1f 	cmp	w0, #0x3f
+   10320:	54fffded 	b.le	102dc <build_decoding_table+0x28>
+   10324:	d503201f 	nop
+   10328:	d503201f 	nop
+   1032c:	a8c27bfd 	ldp	x29, x30, [sp], #32
+   10330:	d65f03c0 	ret
 
-0000000000000320 <base64_decode>:
- 320:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
- 324:	910003fd 	mov	x29, sp
- 328:	f90017e0 	str	x0, [sp, #40]
- 32c:	f90013e1 	str	x1, [sp, #32]
- 330:	f9000fe2 	str	x2, [sp, #24]
- 334:	90000000 	adrp	x0, 0 <base64_encode>
- 338:	91000000 	add	x0, x0, #0x0
- 33c:	f9400000 	ldr	x0, [x0]
- 340:	f100001f 	cmp	x0, #0x0
- 344:	54000041 	b.ne	34c <base64_decode+0x2c>  // b.any
- 348:	94000000 	bl	2a0 <build_decoding_table>
- 34c:	f94013e0 	ldr	x0, [sp, #32]
- 350:	92400400 	and	x0, x0, #0x3
- 354:	f100001f 	cmp	x0, #0x0
- 358:	54000060 	b.eq	364 <base64_decode+0x44>  // b.none
- 35c:	d2800000 	mov	x0, #0x0                   	// #0
- 360:	140000cc 	b	690 <base64_decode+0x370>
- 364:	f94013e0 	ldr	x0, [sp, #32]
- 368:	d342fc01 	lsr	x1, x0, #2
- 36c:	aa0103e0 	mov	x0, x1
- 370:	8b000000 	add	x0, x0, x0
- 374:	8b010001 	add	x1, x0, x1
- 378:	f9400fe0 	ldr	x0, [sp, #24]
- 37c:	f9000001 	str	x1, [x0]
- 380:	f94013e0 	ldr	x0, [sp, #32]
- 384:	d1000400 	sub	x0, x0, #0x1
- 388:	f94017e1 	ldr	x1, [sp, #40]
- 38c:	8b000020 	add	x0, x1, x0
- 390:	39400000 	ldrb	w0, [x0]
- 394:	7100f41f 	cmp	w0, #0x3d
- 398:	540000c1 	b.ne	3b0 <base64_decode+0x90>  // b.any
- 39c:	f9400fe0 	ldr	x0, [sp, #24]
- 3a0:	f9400000 	ldr	x0, [x0]
- 3a4:	d1000401 	sub	x1, x0, #0x1
- 3a8:	f9400fe0 	ldr	x0, [sp, #24]
- 3ac:	f9000001 	str	x1, [x0]
- 3b0:	f94013e0 	ldr	x0, [sp, #32]
- 3b4:	d1000800 	sub	x0, x0, #0x2
- 3b8:	f94017e1 	ldr	x1, [sp, #40]
- 3bc:	8b000020 	add	x0, x1, x0
- 3c0:	39400000 	ldrb	w0, [x0]
- 3c4:	7100f41f 	cmp	w0, #0x3d
- 3c8:	540000c1 	b.ne	3e0 <base64_decode+0xc0>  // b.any
- 3cc:	f9400fe0 	ldr	x0, [sp, #24]
- 3d0:	f9400000 	ldr	x0, [x0]
- 3d4:	d1000401 	sub	x1, x0, #0x1
- 3d8:	f9400fe0 	ldr	x0, [sp, #24]
- 3dc:	f9000001 	str	x1, [x0]
- 3e0:	f9400fe0 	ldr	x0, [sp, #24]
- 3e4:	f9400000 	ldr	x0, [x0]
- 3e8:	94000000 	bl	0 <malloc>
- 3ec:	f9002be0 	str	x0, [sp, #80]
- 3f0:	f9402be0 	ldr	x0, [sp, #80]
- 3f4:	f100001f 	cmp	x0, #0x0
- 3f8:	54000061 	b.ne	404 <base64_decode+0xe4>  // b.any
- 3fc:	d2800000 	mov	x0, #0x0                   	// #0
- 400:	140000a4 	b	690 <base64_decode+0x370>
- 404:	b9005fff 	str	wzr, [sp, #92]
- 408:	b9005bff 	str	wzr, [sp, #88]
- 40c:	1400009c 	b	67c <base64_decode+0x35c>
- 410:	b9805fe0 	ldrsw	x0, [sp, #92]
- 414:	f94017e1 	ldr	x1, [sp, #40]
- 418:	8b000020 	add	x0, x1, x0
- 41c:	39400000 	ldrb	w0, [x0]
- 420:	7100f41f 	cmp	w0, #0x3d
- 424:	540000c1 	b.ne	43c <base64_decode+0x11c>  // b.any
- 428:	b9405fe0 	ldr	w0, [sp, #92]
- 42c:	11000400 	add	w0, w0, #0x1
- 430:	b9005fe0 	str	w0, [sp, #92]
- 434:	52800000 	mov	w0, #0x0                   	// #0
- 438:	1400000e 	b	470 <base64_decode+0x150>
- 43c:	90000000 	adrp	x0, 0 <base64_encode>
- 440:	91000000 	add	x0, x0, #0x0
- 444:	f9400001 	ldr	x1, [x0]
- 448:	b9405fe0 	ldr	w0, [sp, #92]
- 44c:	11000402 	add	w2, w0, #0x1
- 450:	b9005fe2 	str	w2, [sp, #92]
- 454:	93407c00 	sxtw	x0, w0
- 458:	f94017e2 	ldr	x2, [sp, #40]
- 45c:	8b000040 	add	x0, x2, x0
- 460:	39400000 	ldrb	w0, [x0]
- 464:	92401c00 	and	x0, x0, #0xff
- 468:	8b000020 	add	x0, x1, x0
- 46c:	39400000 	ldrb	w0, [x0]
- 470:	b9004fe0 	str	w0, [sp, #76]
- 474:	b9805fe0 	ldrsw	x0, [sp, #92]
- 478:	f94017e1 	ldr	x1, [sp, #40]
- 47c:	8b000020 	add	x0, x1, x0
- 480:	39400000 	ldrb	w0, [x0]
- 484:	7100f41f 	cmp	w0, #0x3d
- 488:	540000c1 	b.ne	4a0 <base64_decode+0x180>  // b.any
- 48c:	b9405fe0 	ldr	w0, [sp, #92]
- 490:	11000400 	add	w0, w0, #0x1
- 494:	b9005fe0 	str	w0, [sp, #92]
- 498:	52800000 	mov	w0, #0x0                   	// #0
- 49c:	1400000e 	b	4d4 <base64_decode+0x1b4>
- 4a0:	90000000 	adrp	x0, 0 <base64_encode>
- 4a4:	91000000 	add	x0, x0, #0x0
- 4a8:	f9400001 	ldr	x1, [x0]
- 4ac:	b9405fe0 	ldr	w0, [sp, #92]
- 4b0:	11000402 	add	w2, w0, #0x1
- 4b4:	b9005fe2 	str	w2, [sp, #92]
- 4b8:	93407c00 	sxtw	x0, w0
- 4bc:	f94017e2 	ldr	x2, [sp, #40]
- 4c0:	8b000040 	add	x0, x2, x0
- 4c4:	39400000 	ldrb	w0, [x0]
- 4c8:	92401c00 	and	x0, x0, #0xff
- 4cc:	8b000020 	add	x0, x1, x0
- 4d0:	39400000 	ldrb	w0, [x0]
- 4d4:	b9004be0 	str	w0, [sp, #72]
- 4d8:	b9805fe0 	ldrsw	x0, [sp, #92]
- 4dc:	f94017e1 	ldr	x1, [sp, #40]
- 4e0:	8b000020 	add	x0, x1, x0
- 4e4:	39400000 	ldrb	w0, [x0]
- 4e8:	7100f41f 	cmp	w0, #0x3d
- 4ec:	540000c1 	b.ne	504 <base64_decode+0x1e4>  // b.any
- 4f0:	b9405fe0 	ldr	w0, [sp, #92]
- 4f4:	11000400 	add	w0, w0, #0x1
- 4f8:	b9005fe0 	str	w0, [sp, #92]
- 4fc:	52800000 	mov	w0, #0x0                   	// #0
- 500:	1400000e 	b	538 <base64_decode+0x218>
- 504:	90000000 	adrp	x0, 0 <base64_encode>
- 508:	91000000 	add	x0, x0, #0x0
- 50c:	f9400001 	ldr	x1, [x0]
- 510:	b9405fe0 	ldr	w0, [sp, #92]
- 514:	11000402 	add	w2, w0, #0x1
- 518:	b9005fe2 	str	w2, [sp, #92]
- 51c:	93407c00 	sxtw	x0, w0
- 520:	f94017e2 	ldr	x2, [sp, #40]
- 524:	8b000040 	add	x0, x2, x0
- 528:	39400000 	ldrb	w0, [x0]
- 52c:	92401c00 	and	x0, x0, #0xff
- 530:	8b000020 	add	x0, x1, x0
- 534:	39400000 	ldrb	w0, [x0]
- 538:	b90047e0 	str	w0, [sp, #68]
- 53c:	b9805fe0 	ldrsw	x0, [sp, #92]
- 540:	f94017e1 	ldr	x1, [sp, #40]
- 544:	8b000020 	add	x0, x1, x0
- 548:	39400000 	ldrb	w0, [x0]
- 54c:	7100f41f 	cmp	w0, #0x3d
- 550:	540000c1 	b.ne	568 <base64_decode+0x248>  // b.any
- 554:	b9405fe0 	ldr	w0, [sp, #92]
- 558:	11000400 	add	w0, w0, #0x1
- 55c:	b9005fe0 	str	w0, [sp, #92]
- 560:	52800000 	mov	w0, #0x0                   	// #0
- 564:	1400000e 	b	59c <base64_decode+0x27c>
- 568:	90000000 	adrp	x0, 0 <base64_encode>
- 56c:	91000000 	add	x0, x0, #0x0
- 570:	f9400001 	ldr	x1, [x0]
- 574:	b9405fe0 	ldr	w0, [sp, #92]
- 578:	11000402 	add	w2, w0, #0x1
- 57c:	b9005fe2 	str	w2, [sp, #92]
- 580:	93407c00 	sxtw	x0, w0
- 584:	f94017e2 	ldr	x2, [sp, #40]
- 588:	8b000040 	add	x0, x2, x0
- 58c:	39400000 	ldrb	w0, [x0]
- 590:	92401c00 	and	x0, x0, #0xff
- 594:	8b000020 	add	x0, x1, x0
- 598:	39400000 	ldrb	w0, [x0]
- 59c:	b90043e0 	str	w0, [sp, #64]
- 5a0:	b9404fe0 	ldr	w0, [sp, #76]
- 5a4:	530e3401 	lsl	w1, w0, #18
- 5a8:	b9404be0 	ldr	w0, [sp, #72]
- 5ac:	53144c00 	lsl	w0, w0, #12
- 5b0:	0b000021 	add	w1, w1, w0
- 5b4:	b94047e0 	ldr	w0, [sp, #68]
- 5b8:	531a6400 	lsl	w0, w0, #6
- 5bc:	0b000020 	add	w0, w1, w0
- 5c0:	b94043e1 	ldr	w1, [sp, #64]
- 5c4:	0b000020 	add	w0, w1, w0
- 5c8:	b9003fe0 	str	w0, [sp, #60]
- 5cc:	b9805be1 	ldrsw	x1, [sp, #88]
- 5d0:	f9400fe0 	ldr	x0, [sp, #24]
- 5d4:	f9400000 	ldr	x0, [x0]
- 5d8:	eb00003f 	cmp	x1, x0
- 5dc:	54000162 	b.cs	608 <base64_decode+0x2e8>  // b.hs, b.nlast
- 5e0:	b9403fe0 	ldr	w0, [sp, #60]
- 5e4:	53107c02 	lsr	w2, w0, #16
- 5e8:	b9405be0 	ldr	w0, [sp, #88]
- 5ec:	11000401 	add	w1, w0, #0x1
- 5f0:	b9005be1 	str	w1, [sp, #88]
- 5f4:	93407c00 	sxtw	x0, w0
- 5f8:	f9402be1 	ldr	x1, [sp, #80]
- 5fc:	8b000020 	add	x0, x1, x0
- 600:	12001c41 	and	w1, w2, #0xff
- 604:	39000001 	strb	w1, [x0]
- 608:	b9805be1 	ldrsw	x1, [sp, #88]
- 60c:	f9400fe0 	ldr	x0, [sp, #24]
- 610:	f9400000 	ldr	x0, [x0]
- 614:	eb00003f 	cmp	x1, x0
- 618:	54000162 	b.cs	644 <base64_decode+0x324>  // b.hs, b.nlast
- 61c:	b9403fe0 	ldr	w0, [sp, #60]
- 620:	53087c02 	lsr	w2, w0, #8
- 624:	b9405be0 	ldr	w0, [sp, #88]
- 628:	11000401 	add	w1, w0, #0x1
- 62c:	b9005be1 	str	w1, [sp, #88]
- 630:	93407c00 	sxtw	x0, w0
- 634:	f9402be1 	ldr	x1, [sp, #80]
- 638:	8b000020 	add	x0, x1, x0
- 63c:	12001c41 	and	w1, w2, #0xff
- 640:	39000001 	strb	w1, [x0]
- 644:	b9805be1 	ldrsw	x1, [sp, #88]
- 648:	f9400fe0 	ldr	x0, [sp, #24]
- 64c:	f9400000 	ldr	x0, [x0]
- 650:	eb00003f 	cmp	x1, x0
- 654:	54000142 	b.cs	67c <base64_decode+0x35c>  // b.hs, b.nlast
- 658:	b9405be0 	ldr	w0, [sp, #88]
- 65c:	11000401 	add	w1, w0, #0x1
- 660:	b9005be1 	str	w1, [sp, #88]
- 664:	93407c00 	sxtw	x0, w0
- 668:	f9402be1 	ldr	x1, [sp, #80]
- 66c:	8b000020 	add	x0, x1, x0
- 670:	b9403fe1 	ldr	w1, [sp, #60]
- 674:	12001c21 	and	w1, w1, #0xff
- 678:	39000001 	strb	w1, [x0]
- 67c:	b9805fe0 	ldrsw	x0, [sp, #92]
- 680:	f94013e1 	ldr	x1, [sp, #32]
- 684:	eb00003f 	cmp	x1, x0
- 688:	54ffec48 	b.hi	410 <base64_decode+0xf0>  // b.pmore
- 68c:	f9402be0 	ldr	x0, [sp, #80]
- 690:	a8c67bfd 	ldp	x29, x30, [sp], #96
- 694:	d65f03c0 	ret
-
-0000000000000698 <base64_cleanup>:
- 698:	a9bf7bfd 	stp	x29, x30, [sp, #-16]!
- 69c:	910003fd 	mov	x29, sp
- 6a0:	90000000 	adrp	x0, 0 <base64_encode>
- 6a4:	91000000 	add	x0, x0, #0x0
- 6a8:	f9400000 	ldr	x0, [x0]
- 6ac:	94000000 	bl	0 <free>
- 6b0:	d503201f 	nop
- 6b4:	a8c17bfd 	ldp	x29, x30, [sp], #16
- 6b8:	d65f03c0 	ret
+0000000000010334 <base64_decode>:
+   10334:	a9ba7bfd 	stp	x29, x30, [sp, #-96]!
+   10338:	910003fd 	mov	x29, sp
+   1033c:	f90017e0 	str	x0, [sp, #40]
+   10340:	f90013e1 	str	x1, [sp, #32]
+   10344:	f9000fe2 	str	x2, [sp, #24]
+   10348:	90000000 	adrp	x0, 10000 <malloc>
+   1034c:	911e4000 	add	x0, x0, #0x790
+   10350:	f9400000 	ldr	x0, [x0]
+   10354:	f100001f 	cmp	x0, #0x0
+   10358:	54000041 	b.ne	10360 <base64_decode+0x2c>  // b.any
+   1035c:	97ffffd6 	bl	102b4 <build_decoding_table>
+   10360:	f94013e0 	ldr	x0, [sp, #32]
+   10364:	92400400 	and	x0, x0, #0x3
+   10368:	f100001f 	cmp	x0, #0x0
+   1036c:	54000060 	b.eq	10378 <base64_decode+0x44>  // b.none
+   10370:	d2800000 	mov	x0, #0x0                   	// #0
+   10374:	140000cc 	b	106a4 <base64_decode+0x370>
+   10378:	f94013e0 	ldr	x0, [sp, #32]
+   1037c:	d342fc01 	lsr	x1, x0, #2
+   10380:	aa0103e0 	mov	x0, x1
+   10384:	d37ff800 	lsl	x0, x0, #1
+   10388:	8b010001 	add	x1, x0, x1
+   1038c:	f9400fe0 	ldr	x0, [sp, #24]
+   10390:	f9000001 	str	x1, [x0]
+   10394:	f94013e0 	ldr	x0, [sp, #32]
+   10398:	d1000400 	sub	x0, x0, #0x1
+   1039c:	f94017e1 	ldr	x1, [sp, #40]
+   103a0:	8b000020 	add	x0, x1, x0
+   103a4:	39400000 	ldrb	w0, [x0]
+   103a8:	7100f41f 	cmp	w0, #0x3d
+   103ac:	540000c1 	b.ne	103c4 <base64_decode+0x90>  // b.any
+   103b0:	f9400fe0 	ldr	x0, [sp, #24]
+   103b4:	f9400000 	ldr	x0, [x0]
+   103b8:	d1000401 	sub	x1, x0, #0x1
+   103bc:	f9400fe0 	ldr	x0, [sp, #24]
+   103c0:	f9000001 	str	x1, [x0]
+   103c4:	f94013e0 	ldr	x0, [sp, #32]
+   103c8:	d1000800 	sub	x0, x0, #0x2
+   103cc:	f94017e1 	ldr	x1, [sp, #40]
+   103d0:	8b000020 	add	x0, x1, x0
+   103d4:	39400000 	ldrb	w0, [x0]
+   103d8:	7100f41f 	cmp	w0, #0x3d
+   103dc:	540000c1 	b.ne	103f4 <base64_decode+0xc0>  // b.any
+   103e0:	f9400fe0 	ldr	x0, [sp, #24]
+   103e4:	f9400000 	ldr	x0, [x0]
+   103e8:	d1000401 	sub	x1, x0, #0x1
+   103ec:	f9400fe0 	ldr	x0, [sp, #24]
+   103f0:	f9000001 	str	x1, [x0]
+   103f4:	f9400fe0 	ldr	x0, [sp, #24]
+   103f8:	f9400000 	ldr	x0, [x0]
+   103fc:	97ffff01 	bl	10000 <malloc>
+   10400:	f9002be0 	str	x0, [sp, #80]
+   10404:	f9402be0 	ldr	x0, [sp, #80]
+   10408:	f100001f 	cmp	x0, #0x0
+   1040c:	54000061 	b.ne	10418 <base64_decode+0xe4>  // b.any
+   10410:	d2800000 	mov	x0, #0x0                   	// #0
+   10414:	140000a4 	b	106a4 <base64_decode+0x370>
+   10418:	b9005fff 	str	wzr, [sp, #92]
+   1041c:	b9005bff 	str	wzr, [sp, #88]
+   10420:	1400009c 	b	10690 <base64_decode+0x35c>
+   10424:	b9805fe0 	ldrsw	x0, [sp, #92]
+   10428:	f94017e1 	ldr	x1, [sp, #40]
+   1042c:	8b000020 	add	x0, x1, x0
+   10430:	39400000 	ldrb	w0, [x0]
+   10434:	7100f41f 	cmp	w0, #0x3d
+   10438:	540000c1 	b.ne	10450 <base64_decode+0x11c>  // b.any
+   1043c:	b9405fe0 	ldr	w0, [sp, #92]
+   10440:	11000400 	add	w0, w0, #0x1
+   10444:	b9005fe0 	str	w0, [sp, #92]
+   10448:	52800000 	mov	w0, #0x0                   	// #0
+   1044c:	1400000e 	b	10484 <base64_decode+0x150>
+   10450:	90000000 	adrp	x0, 10000 <malloc>
+   10454:	911e4000 	add	x0, x0, #0x790
+   10458:	f9400001 	ldr	x1, [x0]
+   1045c:	b9405fe0 	ldr	w0, [sp, #92]
+   10460:	11000402 	add	w2, w0, #0x1
+   10464:	b9005fe2 	str	w2, [sp, #92]
+   10468:	93407c00 	sxtw	x0, w0
+   1046c:	f94017e2 	ldr	x2, [sp, #40]
+   10470:	8b000040 	add	x0, x2, x0
+   10474:	39400000 	ldrb	w0, [x0]
+   10478:	92401c00 	and	x0, x0, #0xff
+   1047c:	8b000020 	add	x0, x1, x0
+   10480:	39400000 	ldrb	w0, [x0]
+   10484:	b9004fe0 	str	w0, [sp, #76]
+   10488:	b9805fe0 	ldrsw	x0, [sp, #92]
+   1048c:	f94017e1 	ldr	x1, [sp, #40]
+   10490:	8b000020 	add	x0, x1, x0
+   10494:	39400000 	ldrb	w0, [x0]
+   10498:	7100f41f 	cmp	w0, #0x3d
+   1049c:	540000c1 	b.ne	104b4 <base64_decode+0x180>  // b.any
+   104a0:	b9405fe0 	ldr	w0, [sp, #92]
+   104a4:	11000400 	add	w0, w0, #0x1
+   104a8:	b9005fe0 	str	w0, [sp, #92]
+   104ac:	52800000 	mov	w0, #0x0                   	// #0
+   104b0:	1400000e 	b	104e8 <base64_decode+0x1b4>
+   104b4:	90000000 	adrp	x0, 10000 <malloc>
+   104b8:	911e4000 	add	x0, x0, #0x790
+   104bc:	f9400001 	ldr	x1, [x0]
+   104c0:	b9405fe0 	ldr	w0, [sp, #92]
+   104c4:	11000402 	add	w2, w0, #0x1
+   104c8:	b9005fe2 	str	w2, [sp, #92]
+   104cc:	93407c00 	sxtw	x0, w0
+   104d0:	f94017e2 	ldr	x2, [sp, #40]
+   104d4:	8b000040 	add	x0, x2, x0
+   104d8:	39400000 	ldrb	w0, [x0]
+   104dc:	92401c00 	and	x0, x0, #0xff
+   104e0:	8b000020 	add	x0, x1, x0
+   104e4:	39400000 	ldrb	w0, [x0]
+   104e8:	b9004be0 	str	w0, [sp, #72]
+   104ec:	b9805fe0 	ldrsw	x0, [sp, #92]
+   104f0:	f94017e1 	ldr	x1, [sp, #40]
+   104f4:	8b000020 	add	x0, x1, x0
+   104f8:	39400000 	ldrb	w0, [x0]
+   104fc:	7100f41f 	cmp	w0, #0x3d
+   10500:	540000c1 	b.ne	10518 <base64_decode+0x1e4>  // b.any
+   10504:	b9405fe0 	ldr	w0, [sp, #92]
+   10508:	11000400 	add	w0, w0, #0x1
+   1050c:	b9005fe0 	str	w0, [sp, #92]
+   10510:	52800000 	mov	w0, #0x0                   	// #0
+   10514:	1400000e 	b	1054c <base64_decode+0x218>
+   10518:	90000000 	adrp	x0, 10000 <malloc>
+   1051c:	911e4000 	add	x0, x0, #0x790
+   10520:	f9400001 	ldr	x1, [x0]
+   10524:	b9405fe0 	ldr	w0, [sp, #92]
+   10528:	11000402 	add	w2, w0, #0x1
+   1052c:	b9005fe2 	str	w2, [sp, #92]
+   10530:	93407c00 	sxtw	x0, w0
+   10534:	f94017e2 	ldr	x2, [sp, #40]
+   10538:	8b000040 	add	x0, x2, x0
+   1053c:	39400000 	ldrb	w0, [x0]
+   10540:	92401c00 	and	x0, x0, #0xff
+   10544:	8b000020 	add	x0, x1, x0
+   10548:	39400000 	ldrb	w0, [x0]
+   1054c:	b90047e0 	str	w0, [sp, #68]
+   10550:	b9805fe0 	ldrsw	x0, [sp, #92]
+   10554:	f94017e1 	ldr	x1, [sp, #40]
+   10558:	8b000020 	add	x0, x1, x0
+   1055c:	39400000 	ldrb	w0, [x0]
+   10560:	7100f41f 	cmp	w0, #0x3d
+   10564:	540000c1 	b.ne	1057c <base64_decode+0x248>  // b.any
+   10568:	b9405fe0 	ldr	w0, [sp, #92]
+   1056c:	11000400 	add	w0, w0, #0x1
+   10570:	b9005fe0 	str	w0, [sp, #92]
+   10574:	52800000 	mov	w0, #0x0                   	// #0
+   10578:	1400000e 	b	105b0 <base64_decode+0x27c>
+   1057c:	90000000 	adrp	x0, 10000 <malloc>
+   10580:	911e4000 	add	x0, x0, #0x790
+   10584:	f9400001 	ldr	x1, [x0]
+   10588:	b9405fe0 	ldr	w0, [sp, #92]
+   1058c:	11000402 	add	w2, w0, #0x1
+   10590:	b9005fe2 	str	w2, [sp, #92]
+   10594:	93407c00 	sxtw	x0, w0
+   10598:	f94017e2 	ldr	x2, [sp, #40]
+   1059c:	8b000040 	add	x0, x2, x0
+   105a0:	39400000 	ldrb	w0, [x0]
+   105a4:	92401c00 	and	x0, x0, #0xff
+   105a8:	8b000020 	add	x0, x1, x0
+   105ac:	39400000 	ldrb	w0, [x0]
+   105b0:	b90043e0 	str	w0, [sp, #64]
+   105b4:	b9404fe0 	ldr	w0, [sp, #76]
+   105b8:	530e3401 	lsl	w1, w0, #18
+   105bc:	b9404be0 	ldr	w0, [sp, #72]
+   105c0:	53144c00 	lsl	w0, w0, #12
+   105c4:	0b000021 	add	w1, w1, w0
+   105c8:	b94047e0 	ldr	w0, [sp, #68]
+   105cc:	531a6400 	lsl	w0, w0, #6
+   105d0:	0b000020 	add	w0, w1, w0
+   105d4:	b94043e1 	ldr	w1, [sp, #64]
+   105d8:	0b000020 	add	w0, w1, w0
+   105dc:	b9003fe0 	str	w0, [sp, #60]
+   105e0:	b9805be1 	ldrsw	x1, [sp, #88]
+   105e4:	f9400fe0 	ldr	x0, [sp, #24]
+   105e8:	f9400000 	ldr	x0, [x0]
+   105ec:	eb00003f 	cmp	x1, x0
+   105f0:	54000162 	b.cs	1061c <base64_decode+0x2e8>  // b.hs, b.nlast
+   105f4:	b9403fe0 	ldr	w0, [sp, #60]
+   105f8:	53107c02 	lsr	w2, w0, #16
+   105fc:	b9405be0 	ldr	w0, [sp, #88]
+   10600:	11000401 	add	w1, w0, #0x1
+   10604:	b9005be1 	str	w1, [sp, #88]
+   10608:	93407c00 	sxtw	x0, w0
+   1060c:	f9402be1 	ldr	x1, [sp, #80]
+   10610:	8b000020 	add	x0, x1, x0
+   10614:	12001c41 	and	w1, w2, #0xff
+   10618:	39000001 	strb	w1, [x0]
+   1061c:	b9805be1 	ldrsw	x1, [sp, #88]
+   10620:	f9400fe0 	ldr	x0, [sp, #24]
+   10624:	f9400000 	ldr	x0, [x0]
+   10628:	eb00003f 	cmp	x1, x0
+   1062c:	54000162 	b.cs	10658 <base64_decode+0x324>  // b.hs, b.nlast
+   10630:	b9403fe0 	ldr	w0, [sp, #60]
+   10634:	53087c02 	lsr	w2, w0, #8
+   10638:	b9405be0 	ldr	w0, [sp, #88]
+   1063c:	11000401 	add	w1, w0, #0x1
+   10640:	b9005be1 	str	w1, [sp, #88]
+   10644:	93407c00 	sxtw	x0, w0
+   10648:	f9402be1 	ldr	x1, [sp, #80]
+   1064c:	8b000020 	add	x0, x1, x0
+   10650:	12001c41 	and	w1, w2, #0xff
+   10654:	39000001 	strb	w1, [x0]
+   10658:	b9805be1 	ldrsw	x1, [sp, #88]
+   1065c:	f9400fe0 	ldr	x0, [sp, #24]
+   10660:	f9400000 	ldr	x0, [x0]
+   10664:	eb00003f 	cmp	x1, x0
+   10668:	54000142 	b.cs	10690 <base64_decode+0x35c>  // b.hs, b.nlast
+   1066c:	b9405be0 	ldr	w0, [sp, #88]
+   10670:	11000401 	add	w1, w0, #0x1
+   10674:	b9005be1 	str	w1, [sp, #88]
+   10678:	93407c00 	sxtw	x0, w0
+   1067c:	f9402be1 	ldr	x1, [sp, #80]
+   10680:	8b000020 	add	x0, x1, x0
+   10684:	b9403fe1 	ldr	w1, [sp, #60]
+   10688:	12001c21 	and	w1, w1, #0xff
+   1068c:	39000001 	strb	w1, [x0]
+   10690:	b9805fe0 	ldrsw	x0, [sp, #92]
+   10694:	f94013e1 	ldr	x1, [sp, #32]
+   10698:	eb00003f 	cmp	x1, x0
+   1069c:	54ffec48 	b.hi	10424 <base64_decode+0xf0>  // b.pmore
+   106a0:	f9402be0 	ldr	x0, [sp, #80]
+   106a4:	a8c67bfd 	ldp	x29, x30, [sp], #96
+   106a8:	d65f03c0 	ret

@@ -116,21 +116,23 @@ in
 
       val (cfgn_type, cfg_t_l) =
           if is_BStmt_Jmp bbes then
-	      if (can dest_comb) stmt then
-		  (CFGNT_Basic,
-		   cfg_BLEs_to_targets [dest_BStmt_Jmp bbes])
-	      else
-		  (CFGNT_Jump,
-		   cfg_BLEs_to_targets [dest_BStmt_Jmp bbes])
+	      (if (can dest_comb) stmt then
+		   (if (identical ((fst o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt) ``BVar "R30" (BType_Imm Bit32)``) then
+			(CFGNT_Call [((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt)],[((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt)]@(cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
+		    else
+			(CFGNT_Basic,cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
+	       else
+		   (CFGNT_Jump,
+		    cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
           else if is_BStmt_CJmp bbes then
-            (CFGNT_CondJump,
-             cfg_BLEs_to_targets ((fn (_, a, b) => [a, b]) (dest_BStmt_CJmp bbes)))
+              (CFGNT_CondJump,
+               cfg_BLEs_to_targets ((fn (_, a, b) => [a, b]) (dest_BStmt_CJmp bbes)))
           else if is_BStmt_Halt bbes then
-            (CFGNT_Halt, [])
+              (CFGNT_Halt, [])
           else
-            raise ERR "cfg_block_to_node"
-                      ("unknown BStmt end stmt type: " ^
-                       (term_to_string bbes))
+              raise ERR "cfg_block_to_node"
+			("unknown BStmt end stmt type: " ^
+			 (term_to_string bbes))
 
       val n = { CFGN_lbl_tm   = lbl_tm,
 		CFGN_hc_descr = descr,

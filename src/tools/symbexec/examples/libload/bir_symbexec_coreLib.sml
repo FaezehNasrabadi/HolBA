@@ -219,7 +219,7 @@ fun abstract_exp_in_loop exp =
 (* primitive to carry out assignment *)
   fun state_assign_bv bv be syst =
     let
-      val _ = if not debugAssignments then () else
+      val _ = if false then () else
               (print "\n\n===============\nASSIGN: "; print_term bv; print_term be);
 
       val symbv = compute_valbe be syst;
@@ -245,12 +245,12 @@ fun abstract_exp_in_loop exp =
                   else
                       (get_bvar_fresh) bv;
 
-      val _ = if ((is_state_inloop syst) andalso false)
+      val _ = if ((is_state_inloop syst) andalso true)
 	      then print (term_to_string bv_fr ^ " = \n")
 	      else ();
 
       val _ = case symbv' of
-                  SymbValBE (x, t) => (if ((is_state_inloop syst) andalso false) then print (term_to_string x ^ "\n\n") else ())
+                  SymbValBE (x, t) => (if ((is_state_inloop syst) andalso true) then print (term_to_string x ^ "\n\n") else ())
                 | _ => ();
 	  
     in

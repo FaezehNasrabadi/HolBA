@@ -6,6 +6,7 @@ local
   open bir_expSyntax;
   open bir_constpropLib;
   open bir_exp_helperLib;
+  open binariesLib;
 
   val debugAssignments = false;
   val debugPaths = false;
@@ -165,7 +166,106 @@ val exp = ``(BExp_Cast BIExp_UnsignedCast
                            (BExp_Cast BIExp_LowCast
                               (BExp_Den (BVar "R0" (BType_Imm Bit64)))
                               Bit32) (BExp_Const (Imm32 1w))) Bit64)``;
-*)    
+ *)
+(*
+fun is_adrp syst =
+    let
+	val lbl_tm = SYST_get_pc syst;
+	val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
+	val n_op = Redblackmap.peek(n_dict, lbl_tm);
+	val exist = if is_none n_op
+		    then false
+		    else
+			let
+			    val n = valOf n_op;
+			    val descr  = (valOf o #CFGN_hc_descr) n;
+			    val instrDes = (snd o (bir_auxiliaryLib.list_split_pred #" ") o explode) descr;
+			in
+			    if (String.isPrefix "(adrp " (implode instrDes))
+			    then true
+			    else false
+			  end;
+    in
+	exist
+    end;
+    
+fun abstract_exp_in_loop syst exp =
+    if is_BExp_Const exp then
+	if (is_adrp syst)
+	then exp
+	else (bir_expSyntax.mk_BExp_Den (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("t", ``BType_Imm Bit64``))))
+    else if is_BExp_MemConst exp then
+         exp
+      else if is_BExp_Den exp then
+         exp
+      else if is_BExp_Cast exp then
+        let
+          val (castt, exp1, sz) = (dest_BExp_Cast) exp;
+          val exp_rw = abstract_exp_in_loop syst exp1;
+        in
+          (mk_BExp_Cast (castt, exp_rw, sz))
+        end
+
+      else if is_BExp_UnaryExp exp then
+        let
+          val (uop, exp1) = (dest_BExp_UnaryExp) exp;
+          val exp_rw = abstract_exp_in_loop syst exp1;
+        in
+          (mk_BExp_UnaryExp (uop, exp_rw))
+        end
+
+      else if is_BExp_BinExp exp then
+        let
+          val (bop, exp1, exp2) = (dest_BExp_BinExp) exp;
+          val exp1_rw = abstract_exp_in_loop syst exp1;
+          val exp2_rw = abstract_exp_in_loop syst exp2;
+        in
+          (mk_BExp_BinExp (bop, exp1_rw, exp2_rw))
+        end
+      else if is_BExp_BinPred exp then
+	  exp
+        (*let
+          val (bpredop, exp1, exp2) = (dest_BExp_BinPred) exp;
+          val exp1_rw = abstract_exp_in_loop syst exp1;
+          val exp2_rw = abstract_exp_in_loop syst exp2;
+        in
+          (mk_BExp_BinPred (bpredop, exp1_rw, exp2_rw))
+        end*)
+
+      else if is_BExp_IfThenElse exp then
+        let
+          val (expc, expt, expf) = (dest_BExp_IfThenElse) exp;
+          val expc_rw = abstract_exp_in_loop syst expc;
+          val expt_rw = abstract_exp_in_loop syst expt;
+          val expf_rw = abstract_exp_in_loop syst expf;
+        in
+          (mk_BExp_IfThenElse (expc_rw, expt_rw, expf_rw))
+        end
+
+      else if is_BExp_Load exp then
+	  exp
+        (*let
+          val (expm, expad, endi, sz) = (dest_BExp_Load) exp;
+          val expm_rw = abstract_exp_in_loop syst expm;
+          val expad_rw = abstract_exp_in_loop syst expad;
+        in
+          (mk_BExp_Load (expm_rw, expad_rw, endi, sz))
+        end*)
+
+      else if is_BExp_Store exp then
+	  exp
+        (*let
+          val (expm, expad, endi, expv) = (dest_BExp_Store) exp;
+          val expm_rw = abstract_exp_in_loop syst expm;
+          val expad_rw = abstract_exp_in_loop syst expad;
+          val expv_rw = abstract_exp_in_loop syst expv;
+        in
+          (mk_BExp_Store (expm_rw, expad_rw, endi, expv_rw))
+        end*)
+
+      else
+        raise (ERR "abstract_exp_in_loop" ("don't know BIR expression: \"" ^ (term_to_string exp) ^ "\""));	
+*)
 fun abstract_exp_in_loop exp =
       if is_BExp_Const exp then
         (bir_expSyntax.mk_BExp_Den (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("t", ``BType_Imm Bit64``))))
@@ -262,7 +362,7 @@ fun abstract_exp_in_loop exp =
 
 
       val symbv' = case symbv of
-                     SymbValBE (x, t) => (if (is_state_inloop syst) then SymbValBE ((abstract_exp_in_loop x), t) else SymbValBE (x, t))
+                     SymbValBE (x, t) => (if ((is_state_inloop syst) andalso ((not o is_BExp_Const) x)) then SymbValBE ((abstract_exp_in_loop x), t) else SymbValBE (x, t))
                    | _ => symbv;
 					  
       (* val symbv = if ((is_state_inloop syst) andalso (isSome expo)) *)

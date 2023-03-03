@@ -105,7 +105,7 @@ in
 
   fun cfg_block_to_node bl =
     let
-      val (lbl, stmt, bbes) = dest_bir_block bl;
+	val (lbl, stmt, bbes) = dest_bir_block bl;
 
       val lbl_tm = (snd o dest_eq o concl o EVAL) lbl;
 
@@ -117,8 +117,8 @@ in
       val (cfgn_type, cfg_t_l) =
           if is_BStmt_Jmp bbes then
 	      (if (can dest_comb) stmt then
-		   (if (identical ((fst o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt) ``BVar "R30" (BType_Imm Bit32)``) then
-			(CFGNT_Call [((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt)],[((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o fst o fst o listSyntax.dest_list) stmt)]@(cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
+		   (if (((is_BStmt_Assign  o hd o fst o listSyntax.dest_list) stmt) andalso (identical ((fst o dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt) “BVar "R30" (BType_Imm Bit64)”)) then
+			(CFGNT_Call [((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt)],[((mk_BL_Address o bir_expSyntax.dest_BExp_Const o snd o dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt)]@(cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
 		    else
 			(CFGNT_Basic,cfg_BLEs_to_targets [dest_BStmt_Jmp bbes]))
 	       else

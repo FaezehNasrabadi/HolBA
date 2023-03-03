@@ -27,7 +27,7 @@ open bir_symbexec_loopLib;
 void build_decoding_table(){}
  *)
      
-val lbl_tm = ``BL_Address (Imm64 66244w)``;
+val lbl_tm = ``BL_Address (Imm64 66228w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 66352w)``];
 
@@ -89,10 +89,17 @@ val (first_block_label_tm, stmt, bbes) = (dest_bir_block o hd o fst o listSyntax
 
 
 
+val stmt = “[BStmt_Assign (BVar "R30" (BType_Imm Bit64)) (BExp_Const (Imm64 66400w))]”;
+
+((dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt
 
 
 
 
+
+
+
+(fst o dest_comb) stmt
 
 
 

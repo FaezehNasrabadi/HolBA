@@ -106,7 +106,7 @@ val _ = Datatype `sapic_state_t =
 (* Configuration *)
     
 val _ = Datatype `sapic_configuration_t =
-   Config ((Name_t set) # sapic_state_t # (Process_t multiset) # sapic_substitution_t # SapicTerm_t)
+   Config ((Name_t set) # sapic_state_t # (Process_t multiset) # sapic_substitution_t # (SapicTerm_t set))
 `;       
       
 
@@ -181,18 +181,133 @@ val sapic_event_transition_def = Define `
    (St = St') /\
    (Sb = Sb') /\
    (Al = Al'))`;
-                
-                                        
 
+                
+(* Conditional true rule *)
+
+val sapic_conditional_true_transition_def = Define `
+                                  sapic_conditional_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessComb (CondEq t1 t2) P Q|})) /\
+   (t1 = t2) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+                                
+
+(* Conditional false rule *)
+
+val sapic_conditional_false_transition_def = Define `
+                                  sapic_conditional_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessComb (CondEq t1 t2) P Q|})) /\
+   (t1 ≠ t2) /\
+   (Pnew = (BAG_UNION Ps {|Q|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;                                        
+
+
+(* Delete rule *)
+
+val sapic_delete_transition_def = Define `
+                                  sapic_delete_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P S t.
+   (Pold = (BAG_UNION Ps {|ProcessAction (Delete t) P|})) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = State S) /\
+   (St' = State ((t =+ NONE) S)) /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+
+                
+(* Insert rule *)
+
+val sapic_insert_transition_def = Define `
+                                  sapic_insert_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P S t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessAction (Insert t1 t2) P|})) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = State S) /\
+   (St' = State ((t1 =+ SOME t2) S)) /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+
+
+(* Lock rule *)
+
+val sapic_lock_transition_def = Define `
+                                  sapic_lock_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P t.
+   (Pold = (BAG_UNION Ps {|ProcessAction (Lock t) P|})) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (t NOTIN Al) /\
+   (Al' = (t INSERT Al) ))`;
+
+
+
+(* Unlock rule *)
+
+val sapic_unlock_transition_def = Define `
+                                  sapic_unlock_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∀t'.∃Ps P t.
+   (Pold = (BAG_UNION Ps {|ProcessAction (Unlock t) P|})) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (t = t') ∧
+   (Al' = (Al DELETE t') ))`;                                
+
+
+
+(* Lookup false rule *)
+
+val sapic_lookup_false_transition_def = Define `
+                                  sapic_lookup_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∀t'.∃Ps P Q S t x.
+   (Pold = (BAG_UNION Ps {|ProcessComb (Lookup t x) P Q|})) /\
+   (Pnew = (BAG_UNION Ps {|Q|})) /\
+   (Ev = NONE) /\
+   (Ns = Ns') /\
+   (St = State S) ∧
+   (t = t') ∧
+   (S t' = NONE) ∧
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al' = Al))`;
+
+                                
 (* Transition relation *)
 
 val sapic_transition_def = Define `
                                   (sapic_transition C Ev C' = (
-                                                    (sapic_null_transition C Ev C') ∨
-                                                    (sapic_event_transition C Ev C') ∨
-                                                    (sapic_parallel_transition C Ev C') ∨
-                                                    (sapic_replication_transition C Ev C')
-                                                    ))`;
+                                    (sapic_null_transition C Ev C') ∨
+                                    (sapic_event_transition C Ev C') ∨
+                                    (sapic_parallel_transition C Ev C') ∨
+                                    (sapic_replication_transition C Ev C') ∨
+                                    (sapic_conditional_true_transition C Ev C') ∨
+                                    (sapic_conditional_false_transition C Ev C') ∨
+                                    (sapic_delete_transition C Ev C') ∨
+                                    (sapic_insert_transition C Ev C') ∨
+                                    (sapic_lock_transition C Ev C') ∨
+                                    (sapic_unlock_transition C Ev C') ∨
+                                    (sapic_lookup_false_transition C Ev C')
+                                    ))`;
                 
 (* Detect a silent transition *)
    

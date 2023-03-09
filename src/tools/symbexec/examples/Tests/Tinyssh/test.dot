@@ -1,0 +1,27 @@
+digraph L {
+
+  node [shape=record fontname=Arial];
+
+  n_4  [label="id: aaa\lCUTOUT: 1\l"]
+
+
+  n_3  [shape = circle, label="id: ???\l"]
+
+
+  n_2  [shape = point, label=""]
+
+
+  n_1  [label="id: def\llen: 22\l"]
+
+
+  n_0  [label="id: abc\llen: 12\l"]
+
+
+
+n_1 -> n_3
+n_1 -> n_1
+n_4 -> n_1
+n_0 -> n_4
+n_2 -> n_0
+
+}

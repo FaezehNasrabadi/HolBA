@@ -22,6 +22,7 @@ open bir_cfg_m0Lib;
 open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
+open bir_symbexec_loopLib;
 (* HOL_Interactive.toggle_quietdec(); *)
 
 (******Start******)
@@ -72,7 +73,25 @@ val stop_lbl_tms = [``BL_Address (Imm64 4212628w)``];
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-(* val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
+
+val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
+
+val enter = find_loop n_dict [lbl_tm] loop_pattern;
+
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+
+val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
+    
+(* 
+
+val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
+val _ = print "Display cfg.\n";
+open bir_cfg_vizLib;
+val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1);
+val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
+	      
+
+val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
     listItems adr_dict
     val n = valOf (peek (n_dict, “BL_Address (Imm64 4235844w)”));*)
 val syst = init_state lbl_tm prog_vars;
@@ -136,5 +155,34 @@ val be_r = (bir_symbexec_funcLib.symbval_bexp o get_state_symbv " vals not found
 open binariesCfgVizLib;
 open binariesDefsLib;
 val _ = show_cfg_fun false  bl_dict_ n_dict "packet_kexdh";
+
+val m = "D63F0060 (blr x3)"
+((((isPrefix "(bl ") o implode o snd o (list_split_pred #" ") o explode) m) orelse  (((isPrefix "(blr ") o implode o snd o (list_split_pred #" ") o explode) m)) 
+val n =  m
+    open bir_auxiliaryLib;
+open String;
+((isPrefix "(blr ") o implode o snd o (list_split_pred #" ") o explode) m 
+
+open graphVizLib;
+val nodes = [(0,node_shape_default,[("id","abc"),("len","12")]),
+             (1,node_shape_default,[("id","def"),("len","22")]),
+             (2,node_shape_point,[]),
+             (3,node_shape_circle,[("id","???")]),
+             (4,node_shape_default,[("id","aaa")]),
+             (5,node_shape_default,[("id","bbb")])];
+val edges = [(2,0),
+             (0,4),
+             (4,5),
+             (5,1),
+             (1,1),
+             (1,3)];
+
+
+val (nodes, edges) = simplify_graph (nodes, edges);
+
+val file = "test";
+val dot_str = gen_graph (nodes, edges);
+val _ = writeToFile dot_str (file ^ ".dot");
+val _ = convertAndView file;
 
 *)

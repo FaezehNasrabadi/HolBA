@@ -92,7 +92,7 @@ val (first_block_label_tm, stmt, bbes) = (dest_bir_block o hd o fst o listSyntax
 val stmt = “[BStmt_Assign (BVar "R30" (BType_Imm Bit64)) (BExp_Const (Imm64 66400w))]”;
 
 ((dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt
-(((is_BStmt_Assign  o hd o fst o listSyntax.dest_list) stmt) andalso (identical ((fst o dest_BStmt_Assign o hd o fst o listSyntax.dest_list) stmt) “BVar "R30" (BType_Imm Bit64)”))
+
 
 
 

@@ -76,14 +76,16 @@ val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_t
 
 val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
 
-val enter = find_loop n_dict [lbl_tm] loop_pattern;
-
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
 
 val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
     
 (* 
-
+List.foldr
+List.exists
+List.map
+List.filter
+::List.all
 val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
 val _ = print "Display cfg.\n";
 open bir_cfg_vizLib;

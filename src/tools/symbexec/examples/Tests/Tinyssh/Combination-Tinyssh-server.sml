@@ -74,13 +74,14 @@ val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
 
-val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
+val loop_pattern = ["CFGNT_Call","CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
 
 val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
 
 val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
     
 (* 
+val exit_adr = bir_symbexec_loopLib.next_pc enter;
 List.foldr
 List.exists
 List.map
@@ -124,12 +125,20 @@ val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)``
 val _ =  List.map (fn s => print_term (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) (concat systs);
     open List;*)
 (************)
+    
 val lbl_tm = ``BL_Address (Imm64 4204336w)``;
 val stop_lbl_tms = [``BL_Address (Imm64 4206916w)``];
 val b = [];
 val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
 val systs = [((hd o rev)(List.concat systs))];
 val systs =  List.map (fn s => SYST_update_pc lbl_tm s) systs;
+(*we need to find the right pattern*)
+val loop_pattern = ["CFGNT_Call","CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
+
+val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
+
+val adr_dict = Redblackmap.insert(adr_dict,enter,"loop");
+    
 (* val syst = SYST_update_pred [] (SYST_update_status BST_Running_tm (SYST_update_pc lbl_tm ((hd o rev)systs))); *)
 (* val syst = state_add_preds "init_pred" pred_conjs syst;  *)   
 val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_  systs stop_lbl_tms adr_dict systs;

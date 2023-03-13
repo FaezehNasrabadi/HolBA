@@ -630,8 +630,8 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 		if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst
 		else if (pc_type = "Library") then symb_exec_library_block abpfun n_dict bl_dict adr_dict syst
 		else if (pc_type = "Loop") then symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst
-		else if (identical lbl_tm  ``BL_Address (Imm64 4210948w)``) then symb_exec_loop1_block abpfun n_dict bl_dict adr_dict syst
-		else if (identical lbl_tm  ``BL_Address (Imm64 4204792w)``) then symb_exec_loop2_block abpfun n_dict bl_dict adr_dict syst
+		(*else if (identical lbl_tm  ``BL_Address (Imm64 4210948w)``) then symb_exec_loop1_block abpfun n_dict bl_dict adr_dict syst
+		else if (identical lbl_tm  ``BL_Address (Imm64 4204792w)``) then symb_exec_loop2_block abpfun n_dict bl_dict adr_dict syst*)
 		else symb_exec_normal_block abpfun n_dict bl_dict syst
 	    end
 	    handle e => raise wrap_exn ("symb_exec_block::" ^ term_to_string lbl_tm) e end;

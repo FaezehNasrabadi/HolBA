@@ -123,6 +123,7 @@ val _ = print "\n\n";
 val b = [];
 val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs_noassertfailed;
 val _ =  List.map (fn s => print_term (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) (concat systs);
+val stop_lbl_tms = [``BL_Address (Imm64 4205292w)``];
     open List;*)
 (************)
     
@@ -132,8 +133,8 @@ val b = [];
 val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
 val systs = [((hd o rev)(List.concat systs))];
 val systs =  List.map (fn s => SYST_update_pc lbl_tm s) systs;
-(*we need to find the right pattern*)
-val loop_pattern = ["CFGNT_Call","CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
+
+val loop_pattern = ["CFGNT_Call","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Call","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
 
 val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
 

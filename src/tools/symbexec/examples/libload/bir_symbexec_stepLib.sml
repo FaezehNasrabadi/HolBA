@@ -590,6 +590,10 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 
 			       val syst = SYST_update_status BST_Running_tm syst;
 
+			       val bv_repend = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RepEnd", “BType_Imm Bit64”)); (* generate a fresh variable *)
+
+			       val syst =  bir_symbexec_funcLib.update_path bv_repend syst;
+
 			       val systs_processed = abpfun ([syst]);
 				   
 			       val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
@@ -601,6 +605,10 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
 
 			       val _ = loop_flag := true;
+
+			       val bv_rep = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Rep", “BType_Imm Bit64”)); (* generate a fresh variable *)
+
+			       val syst =  bir_symbexec_funcLib.update_path bv_rep syst;
 
 			       val syst = state_exec_loop_true bl_dict syst;
 				   

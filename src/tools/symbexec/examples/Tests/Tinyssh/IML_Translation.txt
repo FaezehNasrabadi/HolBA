@@ -1,0 +1,83 @@
+if (R1_51 = c_0) then
+if (R2_54 = c_0) then
+in c, a_63 
+if (R3_117 = c_30) then
+if (R5_140 = R4_137) then
+if (R0_173 = c_0) then
+if (R15_276 = c_0) then
+in c, a_432 
+!N(
+in c, a_491 
+)
+new SKey_773 fixed_64 
+let sk_775 = kgen(g,SKey_773) in
+out c, sk_775 
+let kAB_777 = kgen(a_491,SKey_773) in
+let HMAC_783 = hash3(a_491,sk_775,pkS) in
+event AcceptS pkS pkP 
+let signature_789 = sign(inputs,skS) in
+out c, sign(inputs,skS) 
+let kPS_793 = kdfPtoS(kAB_777,HMAC_783) in
+let kSP_797 = kdfStoP(kAB_777,HMAC_783) in
+in c, a_801 
+let Dec_802 = dec(a_801,kPS_793) in
+let Enc_805 = enc(Dec_802,kSP_797) in
+out c, Enc_805 
+if (R3_1057 = R2_1060) then
+in c, a_5746 
+if (R1_5759 = c_5) then
+if (R0_5796 = c_0) then
+if (R3_5825 = R2_5828) then
+in c, a_5851 
+if (R3_5858 = R2_5861) then
+if (R7_5881 = c_50) then
+if ((c_256 <= R11_5900) ∧ ¬(R11_5900 = c_256)) then
+if (R0_5957 = c_0) then
+!N(
+in c, a_5996 
+if (R3_6003 = R2_6006) then
+if (R7_6027 = c_50) then
+if ((c_256 <= R11_6047) ∧ ¬(R11_6047 = c_256)) then
+if (R0_6107 = c_0) then
+)
+if (R0_6185 = c_0) then
+if (R3_6244 = R2_6247) then
+if (R3_6286 = R2_6289) then
+if (R10_6332 = c_0) then
+if (¬(R0_6372 = c_0) <= (R15_6360 = c_0)) then
+if (R3_6446 = R2_6449) then
+if (R3_6488 = R2_6491) then
+if (¬(R26_6357 = c_0) <= (R1_6503 = c_0)) then
+if (R3_6569 = R2_6572) then
+if (R3_6611 = R2_6614) then
+if (R27_6361 = c_0) then
+if (R3_6681 = R2_6684) then
+if (R3_6723 = R2_6726) then
+if (R0_6769 = c_0) then
+if (R16_6773 = c_0) then
+if (R0_6825 = c_0) then
+if (¬(((R23_6902 - R8_6899) < c_0) = (((R23_6902 - R8_6899) < c_0) = (R8_6899 <= R23_6902))) ∨ (R23_6902 = R8_6899)) then
+if (R0_6917 = c_0) then
+if (R3_7015 = R2_7018) then
+if (R3_7057 = R2_7060) then
+in c, a_7109 
+let Dec_7110 = dec(a_7109,kPS_793) in
+let Ver_7114 = verify(Dec_7110,pkP) in
+if (Ver_7114 = c_1) then
+event AcceptS2 pkS pkP 
+if (R3_7139 = R2_7142) then
+if (R3_7162 = R2_7165) then
+if (R3_7181 = R2_7184) then
+if (R0_7222 = c_0) then
+if (¬(((R23_7299 - R8_7296) < c_0) = (((R23_7299 - R8_7296) < c_0) = (R8_7296 <= R23_7299))) ∨ (R23_7299 = R8_7296)) then
+if (R0_7314 = c_0) then
+if (R3_7412 = R2_7415) then
+if (R3_7454 = R2_7457) then
+in c, a_7506 
+let Dec_7507 = dec(a_7506,kPS_793) in
+let Ver_7511 = verify(Dec_7507,pkP) in
+if (Ver_7511 = c_1) then
+event AcceptS2 pkS pkP 
+if (R3_7536 = R2_7539) then
+if (R3_7559 = R2_7562) then
+if (R3_7586 = R2_7589) then

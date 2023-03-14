@@ -9,7 +9,7 @@ local
   val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_stepLib"
   val wrap_exn = Feedback.wrap_exn   "bir_symbexec_stepLib"
 		 
-  val loop_flag =  ref (false: bool);
+  (* val loop_flag =  ref (false: bool); *)
 in (* outermost local *)
 
 (* execution of a basic statement *)
@@ -578,11 +578,13 @@ fun state_exec_loop_true bl_dict syst =
 	then (SYST_update_pc tgt2 syst)
 	else (SYST_update_pc tgt1 syst)
     end;
-    
+
+exception state_exec_try_loop_exn;   
 fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
-	let	
-	    val systs_processed = if !loop_flag then
+	let
+		
+	    val systs_processed = if (is_state_inloop syst) then
 			   let
 			       val exit_adr = bir_symbexec_loopLib.next_pc lbl_tm;
 				   
@@ -600,11 +602,11 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			   in
 			       systs_processed
 			   end
-		       else
+		       else if (state_is_running syst) then
 			   let
 			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
 
-			       val _ = loop_flag := true;
+			       (* val _ = loop_flag := true; *)
 
 			       val bv_rep = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Rep", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
@@ -617,7 +619,8 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val systs_processed = symb_exec_normal_block abpfun n_dict bl_dict syst;
 			   in
 			       systs_processed
-			   end;
+			   end
+			   else raise state_exec_try_loop_exn;
 				   
 	in
 	    systs_processed

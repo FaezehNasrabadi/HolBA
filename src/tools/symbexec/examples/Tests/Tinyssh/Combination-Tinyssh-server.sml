@@ -94,7 +94,7 @@ val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_node
 val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
 	      
 
-val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4235844w)”); 
+val b = Redblackmap.find(adr_dict,“BL_Address (Imm64 4211720w)”); 
     listItems adr_dict
     val n = valOf (peek (n_dict, “BL_Address (Imm64 4235844w)”));*)
 val syst = init_state lbl_tm prog_vars;
@@ -197,4 +197,10 @@ val dot_str = gen_graph (nodes, edges);
 val _ = writeToFile dot_str (file ^ ".dot");
 val _ = convertAndView file;
 
+val b =listItems( SYST_get_vals (List.nth (systs, 30)));
+
+val a =listItems( SYST_get_env ((hd o rev) systs));
+val b =listItems( SYST_get_vals (List.nth (systs, 167)));
+val c = List.map (fn x => ( snd) x) b;
+val d = List.map (fn SymbValBE(x,y) => (Redblackset.listItems y)) c;
 *)

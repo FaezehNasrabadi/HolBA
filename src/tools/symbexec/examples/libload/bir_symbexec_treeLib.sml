@@ -680,14 +680,20 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 			      ("c_"^((Arbnum.toString o wordsSyntax.dest_word_literal o dest_Imm1 o dest_BExp_Const) pred_be))
 			  else raise ERR "BExp_Const:BExp_to_IMLExp" "this should not happen")
 		     else if (is_BExp_Den pred_be) then
-			 (if identical “BType_Bool” ((snd o dest_BVar o dest_BExp_Den) pred_be) then
+			 (let
+			     val be =  symbval_bexp (find_be_val vals_list (dest_BExp_Den pred_be));
+
+			 in
+			     BExp_to_IMLExp vals_list exec_sts be
+			 end) handle e => ((rev_name o fst o dest_BVar_string o dest_BExp_Den) pred_be)
+		(*	 (if identical “BType_Bool” ((snd o dest_BVar o dest_BExp_Den) pred_be) then
 			      let
 				  val pred_be_bool = symbval_bexp (find_be_val vals_list (dest_BExp_Den pred_be));
 				  
 			      in
 				  BExp_to_IMLExp vals_list exec_sts pred_be_bool
 			      end
-			  else ((rev_name o fst o dest_BVar_string o dest_BExp_Den) pred_be))
+			  else ((rev_name o fst o dest_BVar_string o dest_BExp_Den) pred_be))*)
 		     else if (is_BExp_Cast pred_be) then
 			 let
 			     val (castt, subexp, sz) = (dest_BExp_Cast) pred_be;
@@ -759,8 +765,13 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 				       else raise ERR "BExp_Load:BExp_to_IMLExp" "this should not happen";
 
 			     val x = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("x", “BType_Imm Bit64”));
-
 			     val name = (rev_name o fst o dest_BVar_string) x;
+(*
+val subexp1' =  bir_symbexec_stateLib.subset_mem_exp vals_list subexp1;
+			       
+("read("^(BExp_to_IMLExp vals_list exec_sts subexp1')^","^(BExp_to_IMLExp vals_list exec_sts subexp2)^","^len^")")
+*)
+			     
 			 in
 			     ("read("^name^","^len^")")
 			 end	 
@@ -768,6 +779,9 @@ fun BExp_to_IMLExp vals_list exec_sts pred_be =
 			 let
 			     val (subexp1, subexp2, litend, subexp3) = (dest_BExp_Store) pred_be;
 			     val name = (fst o dest_BVar_string o dest_BExp_Den) subexp3;
+
+			 (* val subexp1' =  bir_symbexec_stateLib.subset_mem_exp vals_list subexp1;
+				("write("^(BExp_to_IMLExp vals_list exec_sts subexp1')^","^(BExp_to_IMLExp vals_list exec_sts subexp2)^","^(BExp_to_IMLExp vals_list exec_sts subexp3)^")")*)
 			 in
 			     ("write("^name^")")
 			 end

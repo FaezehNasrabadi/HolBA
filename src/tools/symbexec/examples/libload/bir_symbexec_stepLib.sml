@@ -191,6 +191,7 @@ fun add_tgt_equ tgt be =
 	  val targets =  List.map (fn t => (mk_BL_Address o bir_expSyntax.dest_BExp_Const) t) tgts;
 
 	  val ts =  exist_in_prog targets [];
+	  (* val _ = List.map (fn t => print (term_to_string(t)^"\n") ts); *)
       in
 	  List.map (fn t => SYST_update_pc t syst) ts
       end

@@ -36,10 +36,27 @@ val _ = Datatype `SapicTerm_t =
 	    | TVar  Var_t
 	    | FAPP  (string # (int # Privacy_t # Constructability_t)) (SapicTerm_t list)`;
 
-(*
-val test_def = Define `
-    test = Con (Name FreshName "b") : SapicTerm_t`;
-*)
+
+
+(* Detect ground term *)
+val is_ground_term_def = Define `
+                                is_ground_term t =
+(case t of
+   (Con _) => T
+ | (TVar _) => F
+ | (FAPP _ _) => F)
+`;
+
+
+(* Subset SapicTerm *)
+(*TODO*)
+val sapic_subst_def = Define`
+                            (sapic_subst x y t = (if x = t then y else
+                                                    (case t of
+                                                       (FAPP n ts) => (FAPP n (MAP (sapic_subst x y) ts))
+                                                     | _ => x)
+                                                 ))
+                            `;       
 
 
 (* Facts *)
@@ -291,7 +308,21 @@ val sapic_lookup_false_transition_def = Define `
    (Sb = Sb') /\
    (Al' = Al))`;
 
-                                
+
+(* New rule *)
+(*TODO*)
+val sapic_new_transition_def = Define `
+                                  sapic_new_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P N N' n'.
+   (Pold = (BAG_UNION Ps {|ProcessAction (New N) P|})) /\
+   (Pnew = (BAG_UNION Ps {|subst[N |-> N'] P|})) /\
+   (Ev = NONE) /\
+   (N' = Name FreshName n') /\
+   (Ns' = (N' INSERT Ns)) /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;    
+                
 (* Transition relation *)
 
 val sapic_transition_def = Define `
@@ -316,8 +347,7 @@ is_a_silent_transition (Config (Ns,St,Ps,Sb,Al)) Ev (Config (Ns',St',Ps',Sb',Al'
 (case Ev of
    (SOME Fc) => F
  | (NONE)    => T)
-`; 
-
+`;
 
 
 

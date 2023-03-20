@@ -1,64 +1,11 @@
 open HolKernel Parse boolLib bossLib;
 open bagTheory;
+open messagesTheory;
 
 val _ = new_theory "sapicplus";
 
 (* Sapicplus Syntax *)
-    
-(* Names *)
-    
-val _ = Datatype `NameTag_t = FreshName | PubName | NodeName`;    
-
-
-val _ = Datatype `Name_t = Name NameTag_t string`;
-
-
-(* Variables*)
-
-val _ = Datatype `Var_t = Var string int`;
-    
-    
-(* Function symbols *)
-
-
-val _ = Datatype `Privacy_t = Private | Public`;
-
-    
-val _ = Datatype `Constructability_t = Constructor | Destructor`;
-
-
-
-(* Terms *)
-	      
-
-val _ = Datatype `SapicTerm_t =
-	      Con   Name_t
-	    | TVar  Var_t
-	    | FAPP  (string # (int # Privacy_t # Constructability_t)) (SapicTerm_t list)`;
-
-
-
-(* Detect ground term *)
-val is_ground_term_def = Define `
-                                is_ground_term t =
-(case t of
-   (Con _) => T
- | (TVar _) => F
- | (FAPP _ _) => F)
-`;
-
-
-(* Subset SapicTerm *)
-(*TODO*)
-val sapic_subst_def = Define`
-                            (sapic_subst x y t = (if x = t then y else
-                                                    (case t of
-                                                       (FAPP n ts) => (FAPP n (MAP (sapic_subst x y) ts))
-                                                     | _ => x)
-                                                 ))
-                            `;       
-
-
+                                             
 (* Facts *)
     
 val _ = Datatype `FactTag_t =
@@ -310,7 +257,7 @@ val sapic_lookup_false_transition_def = Define `
 
 
 (* New rule *)
-(*TODO*)
+(*TODO
 val sapic_new_transition_def = Define `
                                   sapic_new_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
 (∃Ps P N N' n'.
@@ -321,7 +268,7 @@ val sapic_new_transition_def = Define `
    (Ns' = (N' INSERT Ns)) /\
    (St = St') /\
    (Sb = Sb') /\
-   (Al = Al'))`;    
+   (Al = Al'))`;    *)
                 
 (* Transition relation *)
 

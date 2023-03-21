@@ -5,12 +5,12 @@ decrypt_proxy
 
 
 memcpy_proxy
-
+__globinit_client
 
 fail
 __stack_chk_fail
 
-
+lookup_xkey
 
 
 exit_proxy
@@ -30,6 +30,6 @@ exit_proxy
 
 nonce_proxy
 
-lookup_xkey
-wait_close_proxy
+
+
 

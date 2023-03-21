@@ -1,23 +1,19 @@
 The cryptographic functions names are as follows:
-get_shared_key_proxy
 
-
+encrypt
+decrypt
 hmacsha1
 hmacsha1Verify
-
-event1
+memcpy
+event4
 
 __stack_chk_fail
-exit_proxy
-
-
-
-event3
+exit
 
 
 
 
-
+fail
 
 
 
@@ -32,4 +28,8 @@ event3
 
 
 
-event2
+
+
+
+
+

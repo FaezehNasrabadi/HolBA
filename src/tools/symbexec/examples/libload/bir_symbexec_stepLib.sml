@@ -599,13 +599,13 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 
 			       val systs_processed = abpfun ([syst]);
 				   
-			       val _ = print("exit loop "^(term_to_string exit_adr)^"\n");
+			       (* val _ = print("exit loop "^(term_to_string exit_adr)^"\n"); *)
 			   in
 			       systs_processed
 			   end
 		       else if (state_is_running syst) then
 			   let
-			       val _ = print("enter loop "^(term_to_string lbl_tm)^"\n");
+			       (* val _ = print("enter loop "^(term_to_string lbl_tm)^"\n"); *)
 
 			       (* val _ = loop_flag := true; *)
 

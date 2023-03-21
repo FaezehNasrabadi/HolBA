@@ -1,4 +1,4 @@
 The event name is as follows:
-hostB
-bob_begin hostA hostB
-bob_end hostA hostB
+hostA
+alice_begin hostA hostX
+alice_end hostA hostX

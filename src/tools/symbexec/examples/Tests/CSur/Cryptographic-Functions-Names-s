@@ -1,16 +1,20 @@
 The cryptographic functions names are as follows:
 
-my_cypher@plt
+write@plt
 my_decypher@plt
 
 
 memcpy@plt
-struct_properties@plt
-close@plt
+
+
+
+
+
+
+
 
 exit@plt
 
-connect_socket@plt
 
 
 
@@ -24,12 +28,8 @@ connect_socket@plt
 
 
 
-
-
-
+my_cypher@plt
 
 RAND_bytes@plt
-
-
-
+strncmp@plt
 

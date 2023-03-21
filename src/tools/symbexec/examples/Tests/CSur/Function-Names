@@ -37,5 +37,3 @@ my_cypher@plt
 atoi@plt
 malloc@plt
 readenv@plt
-create_bind_socket@plt
-accept@plt

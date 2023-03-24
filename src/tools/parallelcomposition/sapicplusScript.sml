@@ -1,7 +1,8 @@
 open HolKernel Parse boolLib bossLib;
 open bagTheory;
+ (* HOL_Interactive.toggle_quietdec(); *)
 open messagesTheory;
-
+ (* HOL_Interactive.toggle_quietdec(); *)
 val _ = new_theory "sapicplus";
 
 (* Sapicplus Syntax *)
@@ -20,7 +21,13 @@ val _ = Datatype `FactTag_t =
 	      
 val _ = Datatype `SapicFact_t = Fact FactTag_t (SapicTerm_t list)`;
 
-    
+
+val sapicFact_substname_def = Define`
+                                (sapicFact_substname x y (Fact tag ts) = (Fact tag (MAP (sapic_substname x y) ts)))`;
+
+val sapicFact_substvar_def = Define`
+                                (sapicFact_substvar x y (Fact tag ts) = (Fact tag (MAP (sapic_substvar x y) ts)))`;                                        
+                                        
 (* Action *)
     
 val _ = Datatype `SapicAction_t =
@@ -35,6 +42,40 @@ val _ = Datatype `SapicAction_t =
 		 | Unlock  SapicTerm_t`;
 
 
+               
+val sapicAction_substname_def =
+Define`
+      (sapicAction_substname x y a = (case a of
+                                        (Rep) => Rep
+                                      | (New n) => New (messages$name_subst x y n)
+                                      | (ChIn (SOME t1) t2) => ChIn (SOME (sapic_substname x y t1)) (sapic_substname x y t2)
+                                      | (ChOut (SOME t1) t2) => ChOut (SOME (sapic_substname x y t1)) (sapic_substname x y t2)
+                                      | (ChIn (NONE) t) => ChIn NONE (sapic_substname x y t)
+                                      | (ChOut (NONE) t) => ChOut NONE (sapic_substname x y t)
+                                      | (Event f) => Event (sapicFact_substname x y f)
+                                      | (Insert t1 t2) => Insert (sapic_substname x y t1) (sapic_substname x y t2)
+		                      | (Delete t) => Delete (sapic_substname x y t)
+		                      | (Lock t) => Lock (sapic_substname x y t)
+		                      | (Unlock t) => Unlock (sapic_substname x y t)
+                                     ))`;
+                                   
+                                                                      
+val sapicAction_substvar_def =
+Define`
+      (sapicAction_substvar x y a = (case a of
+                                        (Rep) => Rep
+                                      | (New n) => New n
+                                      | (ChIn (SOME t1) t2) => ChIn (SOME (sapic_substvar x y t1)) (sapic_substvar x y t2)
+                                      | (ChOut (SOME t1) t2) => ChOut (SOME (sapic_substvar x y t1)) (sapic_substvar x y t2)
+                                      | (ChIn (NONE) t) => ChIn NONE (sapic_substvar x y t)
+                                      | (ChOut (NONE) t) => ChOut NONE (sapic_substvar x y t)
+                                      | (Event f) => Event (sapicFact_substvar x y f)
+                                      | (Insert t1 t2) => Insert (sapic_substvar x y t1) (sapic_substvar x y t2)
+		                      | (Delete t) => Delete (sapic_substvar x y t)
+		                      | (Lock t) => Lock (sapic_substvar x y t)
+		                      | (Unlock t) => Unlock (sapic_substvar x y t)
+                                     ))`;
+                                
 (* Processes *)
     
 val _ = Datatype `ProcessCombinator_t =

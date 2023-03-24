@@ -11,12 +11,16 @@ val _ = Datatype `NameTag_t = FreshName | PubName | NodeName`;
 
 val _ = Datatype `Name_t = Name NameTag_t string`;
 
+val name_subst_def = Define` (name_subst x y (Name tag str) = if x = (Name tag str) then y else (Name tag str))`;
+
 
 (* Variables*)
 
 val _ = Datatype `Var_t = Var string int`;
     
-    
+val var_subst_def = Define` (var_subst x y (Var str lbl) = if x = (Var str lbl) then y else (Var str lbl))`;
+                          
+                           
 (* Function symbols *)
 
 val _ = Datatype `Privacy_t = Private | Public`;
@@ -33,87 +37,72 @@ val _ = Datatype `SapicTerm_t =
 	    | TVar  Var_t
 	    | FAPP  (string # (int # Privacy_t # Constructability_t)) (SapicTerm_t list)`;
 
-(*
-val Tlist_Axiom = TypeBase.axiom_of “:SapicTerm_t list”;
 
-val TMAP = new_recursive_definition
-      {name = "TMAP",
-       rec_axiom = Tlist_Axiom,
-       def = “(!f:'a->'b. TMAP f [] = []) /\
-                   (!f h t. TMAP f (h::t) = f h::TMAP f t)”};
-val _ = export_rewrites ["TMAP"]
-DB.find "lambda";
-DB.find_in "SUM" (DB.find "MEM");
-
-DB.find_in "APPEND" (DB.find "DROP");
-DB.find "DROP";
-
-*)
-
+(* helper *)            
+val Inside_def =
+Define`(Inside a (FAPP n ts) = MEM a ts)`;  
+                                                                 
 val TExist_def = Define`
-(TExist t (FAPP n []) <=> F) /\
-(TExist t' (FAPP n (t::ts)) <=> (t' = t) \/ TExist t' (FAPP n ts))`; 
+                       (TExist t' (FAPP (n,(0,p,c)) ts) <=> F) /\
+(TExist t' (FAPP (n,(l,p,c)) []) <=> F) /\
+(TExist t' (FAPP (n,(l,p,c)) (t::ts)) <=> ((t' = t) \/ TExist t' (FAPP (n,((l-1),p,c)) ts)))
+`; 
 
                         
 (* set of variables inside a term *)
-                              
-val fv_defn = Hol_defn "fv"
-  `
-                   (fv (Con _) = {}) /\
+
+val fv_def = Define 
+             ` (fv (Con _) = {}) /\
 (fv (TVar v) = {v}) /\
-(fv (FAPP n ts) = BIGUNION (IMAGE fv (set ts)))`;
+(fv (FAPP (n,(l,p,c)) (t::ts)) <=> ((fv t) ∪ (fv (FAPP (n,((l-1),p,c)) ts))))`  ;
 
-val (fv_eqn0, fv_ind) =
- Defn.tprove (fv_defn,
-   WF_REL_TAC `measure (CARD o FST)` THEN 
-   PROVE_TAC [TExist_def]);                                                  
-
-
-                                                
+    
 (* Detect ground term *)
 
 val is_ground_term_def = Define `
-                                (is_ground_term t =
-(case t of
-   (Con _) => T
- | (TVar _) => F
- | (FAPP n []) => T
- | (FAPP n ts) => (is_ground_term (HD ts) ∧ AND_EL(MAP is_ground_term (TL ts)))))
-
-                                `;
+                                (is_ground_term t = (fv t = EMPTY))`;
 
                                         
 
-(*val sapic_FV = 
- Define 
-    `( sapic_FV (Con n) A      = if MEM (Con n) A then A else (Con n)::A) 
- /\  ( sapic_FV (TVar v) A     = if MEM (TVar v) A then A else (TVar v)::A)
- /\  ( sapic_FV (FAPP n ts) A  = (∀x∈ts. MEM x ts ∧ Asapic_FV x A))`;
                                                                         
 (* Subset SapicTerm *)
-(*TODO*)
 
+(* Subset names *)   
 val sapic_substn_def = Define`
-  (sapic_substn x y (Con n) = if x = (Con n) then y else (Con n))
+                             (sapic_substn x y (Con n) = if x = n then (Con y) else (Con n)) ∧
+(sapic_substn x y (TVar v) =(TVar v)) 
   `;
 
 
-val sapic_substv_def = Define`
-  (sapic_substv x y (TVar v) = if x = (TVar v) then y else (TVar v))
-  `;
-  
-val sapic_substnv_def = Define`
-                              (sapic_substnv x y t = (case t of
-                                                        (Con n) => sapic_substn x y (Con n)
-                                                      | (TVar v) => sapic_substv x y (TVar v)
-                                                      | (FAPP n ts) => (if ts = [] then (FAPP n ts)
-                                                                        else FAPP n (MAP (sapic_substnv x y) ts))
-
-                                                     ))
-                              `;*)
+val sapic_substnf_def = Define`
+                              (sapic_substnf x y (FAPP n ts) <=> (FAPP n (MAP (sapic_substn x y) ts)))`;
 
                                              
+val sapic_substname_def = Define`
+                                (sapic_substname x y t = (case t of
+(FAPP n ts) => sapic_substnf x y (FAPP n ts)
+| _ =>  sapic_substn x y _                                                            
+))
+                                `;
 
 
+(* Subset variables *)
+val sapic_substv_def = Define`
+                             (sapic_substv x y (Con n) = (Con n)) ∧
+(sapic_substv x y (TVar v) = if x = v then (TVar y) else (TVar v)) 
+  `;
+
+
+val sapic_substvf_def = Define`
+                              (sapic_substvf x y (FAPP n ts) <=> (FAPP n (MAP (sapic_substv x y) ts)))`;
+
+                                             
+val sapic_substvar_def = Define`
+                                (sapic_substvar x y t = (case t of
+(FAPP n ts) => sapic_substvf x y (FAPP n ts)
+| _ =>  sapic_substv x y _                                                            
+))
+                                `;
+                             
 
 val _ = export_theory();

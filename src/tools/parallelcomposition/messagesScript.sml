@@ -11,14 +11,10 @@ val _ = Datatype `NameTag_t = FreshName | PubName | NodeName`;
 
 val _ = Datatype `Name_t = Name NameTag_t string`;
 
-val name_subst_def = Define` (name_subst x y (Name tag str) = if x = (Name tag str) then y else (Name tag str))`;
-
 
 (* Variables*)
 
 val _ = Datatype `Var_t = Var string int`;
-    
-val var_subst_def = Define` (var_subst x y (Var str lbl) = if x = (Var str lbl) then y else (Var str lbl))`;
                           
                            
 (* Function symbols *)
@@ -41,14 +37,17 @@ val _ = Datatype `SapicTerm_t =
 (* helper *)            
 val Inside_def =
 Define`(Inside a (FAPP n ts) = MEM a ts)`;  
-                                                                 
+
 val TExist_def = Define`
                        (TExist t' (FAPP (n,(0,p,c)) ts) <=> F) /\
 (TExist t' (FAPP (n,(l,p,c)) []) <=> F) /\
 (TExist t' (FAPP (n,(l,p,c)) (t::ts)) <=> ((t' = t) \/ TExist t' (FAPP (n,((l-1),p,c)) ts)))
 `; 
 
-                        
+val name_subst_def = Define` (name_subst x (Con n) (Name tag str) = if x = (Name tag str) then n else (Name tag str))`;
+
+val var_subst_def = Define` (var_subst x (TVar v) (Var str lbl) = if x = (Var str lbl) then v else (Var str lbl))`;                             
+                           
 (* set of variables inside a term *)
 
 val fv_def = Define 
@@ -69,7 +68,7 @@ val is_ground_term_def = Define `
 
 (* Subset names *)   
 val sapic_substn_def = Define`
-                             (sapic_substn x y (Con n) = if x = n then (Con y) else (Con n)) ∧
+                             (sapic_substn x y (Con n) = if x = n then y else (Con n)) ∧
 (sapic_substn x y (TVar v) =(TVar v)) 
   `;
 
@@ -89,7 +88,7 @@ val sapic_substname_def = Define`
 (* Subset variables *)
 val sapic_substv_def = Define`
                              (sapic_substv x y (Con n) = (Con n)) ∧
-(sapic_substv x y (TVar v) = if x = v then (TVar y) else (TVar v)) 
+(sapic_substv x y (TVar v) = if x = v then y else (TVar v)) 
   `;
 
 
@@ -103,6 +102,8 @@ val sapic_substvar_def = Define`
 | _ =>  sapic_substv x y _                                                            
 ))
                                 `;
-                             
+
+                                        
+    
 
 val _ = export_theory();

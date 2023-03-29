@@ -42,16 +42,11 @@ ESt       (* empty state *)
 (* Dolev-Yao transition relation *)
 val DYtranrel_def =
 Define` 
-      (DYtranrel (Sym,Pi,ESt) (INR (P2A Y)) (Sym',Pi',ESt')
-       = ((Y ∉ Sym) ∧ (Pi' = Pi∪{K (TVar Y)}) ∧ (ESt = ESt') ∧ (Sym = Sym'))) ∧
-(DYtranrel (Sym,Pi,ESt) (INL (Alias (X,Y))) (Sym',Pi',ESt')
- = ((X ∉ Sym) ∧ (Sym' = Sym∪{X}) ∧ (Pi' = Pi∪{Equ((TVar X),Y)}) ∧ (Sym = Sym'))) ∧
-(DYtranrel (Sym,Pi,ESt) (INR (A2P X)) (Sym',Pi',ESt')
- = ((K (TVar X) ∈ Pi) ∧ (Pi = Pi') ∧ (ESt = ESt') ∧ (Sym = Sym'))) ∧
-(DYtranrel (Sym,Pi,ESt) (INL (Silent n)) (Sym',Pi',ESt')
- = ((Fr (Con n) ∉ Pi ) ∧ (Pi' = Pi∪{(Fr (Con n));(K (Con n))}) ∧ (ESt = ESt') ∧ (Sym = Sym'))) ∧
-(DYtranrel (Sym,Pi,ESt) (INR (Sync_Fr n)) (Sym',Pi',ESt')
- = ((Fr (Con n) ∉ Pi ) ∧ (Pi' = Pi∪{Fr (Con n)}) ∧ (ESt = ESt') ∧ (Sym = Sym')))
+      (DYtranrel (Sym,Pi,ESt) (INR (P2A Y)) (Sym',Pi',ESt) = ((Y ∉ Sym) ∧ (Pi' = Pi∪{K (TVar Y)}) ∧ (Sym = Sym'))) ∧
+      (DYtranrel (Sym,Pi,ESt) (INL (Alias (X',Y'))) (Sym',Pi',ESt) = ((X' ∉ Sym) ∧ (Sym' = Sym∪{X'}) ∧ (Pi' = Pi∪{Equ((TVar X'),Y')}))) ∧
+      (DYtranrel (Sym,Pi,ESt) (INR (A2P X)) (Sym',Pi',ESt) = ((K (TVar X) ∈ Pi) ∧ (Pi = Pi') ∧ (Sym = Sym'))) ∧
+      (DYtranrel (Sym,Pi,ESt) (INL (Silent n)) (Sym',Pi',ESt) = ((Fr (Con n) ∉ Pi ) ∧ (Pi' = Pi∪{(Fr (Con n));(K (Con n))}) ∧ (Sym = Sym'))) ∧
+      (DYtranrel (Sym,Pi,ESt) (INR (Sync_Fr n')) (Sym',Pi',ESt) = ((Fr (Con n') ∉ Pi ) ∧ (Pi' = Pi∪{Fr (Con n')}) ∧ (Sym = Sym')))
 `;                                      
 
 

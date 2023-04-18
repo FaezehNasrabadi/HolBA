@@ -167,7 +167,7 @@ struct
      "main"
  ];
 
-*)
+
  val symbs_sec_text = [
      "__globinit_client",
      "__CrestCall",
@@ -216,7 +216,7 @@ struct
      "__CrestReturn",
      "__stack_chk_fail",
      "main"
- ];(*
+ ];
  val symbs_sec_text = [
      "parseargs",
      "send_response",
@@ -498,7 +498,7 @@ val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff)
 				 (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)),
 				 (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       ) ];
-  *)  
+    
   val configs              = [ ("server",
 				("server_hmac.da", "balrob/server_hmac.da.plus", "balrob/server_hmac.mem"),
 				"server_THM",
@@ -506,7 +506,7 @@ val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff)
 				 (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)),
 				 (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       ) ]; 
-(*
+
   val configs              = [ ("simple",
 				("simple.da", "balrob/simple.da.plus", "balrob/simple.mem"),
 				"simple_THM",
@@ -607,7 +607,15 @@ val configs              = [ ("tinyssh",
 
 
    *)
-    
+
+    val configs              = [ ("wireguard",
+                              ("wireguard.da", "balrob/wireguard.da.plus", "balrob/wireguard.mem"),
+                              "wireguard_THM",
+			      ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
+                               (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
+                               (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
+			       )];
+	
 (*val symb_filter_lift = fn secname =>
 			    case secname of
 				".text" => (fn symbname => true)
@@ -618,13 +626,10 @@ val configs              = [ ("tinyssh",
     
 val symb_filter_lift = fn secname =>
 			  case secname of
-			      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			   (* |		     ".init" => (fn symbname => true)
+			      ".text" => (fn symbname => true)
 			    |		     ".plt" => (fn symbname => true)
 			    |		     ".fini" => (fn symbname => true)
-			    |		     ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    |				".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    |				".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)*)
+			    |                ".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
 			    | _       => (K false);
 
 end (* struct *)

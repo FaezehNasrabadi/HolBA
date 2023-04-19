@@ -415,12 +415,13 @@ fun get_refine_preds_list exec_sts =
     let
 	val all_preds = symb_execs_preds exec_sts [];
 
+	    (* val _ = List.map (fn x => print ("\n"^x)) all_preds; *)
 	val A = Array.fromList all_preds;
 
 	val _ = qsort A;
 
 	val sort_preds = arrayToList A;
-	    
+
 	val refine_preds = Remove_Repeated_preds sort_preds [hd sort_preds];
   
     in
@@ -613,7 +614,7 @@ fun Let_to_IML vals_list pred =
 		      then ((rev_name o fst o dest_BVar_string) be)
 		      else if((String.isSuffix "Conc3" pred) orelse (String.isSuffix "Enc" pred) (*orelse (String.isSuffix "HMAC" pred)*))
 		      then (Fun_3 (term_to_string be))
-		      else if((String.isSuffix "Conc2" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) (*orelse (String.isSuffix "sk" pred)*) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred) orelse (String.isSuffix "Conc1" pred) andalso (String.isSuffix "Cii" pred))
+		      else if((String.isSuffix "Conc2" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) (*orelse (String.isSuffix "sk" pred)*) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Ci" pred))
 		      then (Fun_1 (term_to_string be))
 		      else (Fun_2 (term_to_string be));
 	    
@@ -853,7 +854,7 @@ fun path_of_tree event_names vals_list refine_preds exec_sts [] str =
     (str)
   | path_of_tree event_names vals_list refine_preds exec_sts (pred::preds) str =
     let
-	(* val _ = print ((pred)^"\n"); *)
+	val _ = print ((pred)^"\n");
 
 	val Act = if (String.isSuffix "assert_true_cnd" pred) then ""
 		  else if ((String.isSuffix "cjmp_true_cnd" pred) orelse (String.isSuffix "comp_true_cnd" pred)) then (if (String.isSuffix "0" (IMLExp_from_pred vals_list exec_sts pred))
@@ -861,13 +862,13 @@ fun path_of_tree event_names vals_list refine_preds exec_sts [] str =
 	     else (to_string o Br_True) (IMLExp_from_pred vals_list exec_sts pred))
 		  else if (String.isSuffix "assert_false_cnd" pred) then (assert_false_string event_names vals_list exec_sts pred)
 		  else if ((String.isSuffix "cjmp_false_cnd" pred) orelse (String.isSuffix "comp_false_cnd" pred)) then ""
-		  else if ((String.isSuffix "Key" pred) orelse (String.isSuffix "iv" pred) orelse (String.isSuffix "pkP" pred) orelse (String.isSuffix "skS" pred) orelse (String.isSuffix "RAND_NUM" pred) orelse (String.isSuffix "OTP" pred) orelse (String.isSuffix "SKey" pred)) then (to_string o Fr_to_New) pred
+		  else if ((String.isSuffix "Key" pred) orelse (String.isSuffix "iv" pred) orelse (String.isSuffix "pkP" pred) orelse (String.isSuffix "skS" pred) orelse (String.isSuffix "RAND_NUM" pred) orelse (String.isSuffix "OTP" pred) orelse (String.isSuffix "SKey" pred)  orelse (String.isSuffix "Epriv_i" pred) ) then (to_string o Fr_to_New) pred
 		  else if (String.isSuffix "K" pred) then (K_to_Out vals_list refine_preds exec_sts pred preds)
 		  else if (String.isSuffix "Kr" pred) then (Kr_to_Out vals_list pred)
 		  else if (String.isSuffix "Rep" pred) then (to_string (I_Rep "N"))
 		  else if (String.isSuffix "RepEnd" pred) then ")\n"
 		  else if (String.isSuffix "Adv" pred) then (to_string (D_to_In  vals_list exec_sts pred))
-		  else if ((String.isSuffix "Dec" pred) orelse (String.isSuffix "signature" pred) orelse (String.isSuffix "Ver" pred) orelse (String.isSuffix "Enc" pred) orelse (String.isSuffix "kS" pred) orelse (String.isSuffix "kAB" pred)  orelse (String.isSuffix "kSP" pred) orelse (String.isSuffix "kPS" pred) orelse (String.isSuffix "concat" pred) orelse (String.isSuffix "HMAC" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Conc2" pred) orelse (String.isSuffix "Conc3" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred)  orelse (String.isSuffix "XOR" pred) orelse (String.isSuffix "sk" pred)) then (Let_to_IML vals_list pred)
+		  else if ((String.isSuffix "Dec" pred) orelse (String.isSuffix "signature" pred) orelse (String.isSuffix "Ver" pred) orelse (String.isSuffix "Enc" pred) orelse (String.isSuffix "kS" pred) orelse (String.isSuffix "kAB" pred)  orelse (String.isSuffix "kSP" pred) orelse (String.isSuffix "kPS" pred) orelse (String.isSuffix "concat" pred) orelse (String.isSuffix "HMAC" pred) orelse (String.isSuffix "Conc1" pred) orelse (String.isSuffix "Conc2" pred) orelse (String.isSuffix "Conc3" pred) orelse (String.isSuffix "Pars1" pred) orelse (String.isSuffix "Pars2" pred) orelse (String.isSuffix "Pars3" pred) orelse (String.isSuffix "Pars4" pred) orelse (String.isSuffix "Pars5" pred) orelse (String.isSuffix "Pars6" pred)  orelse (String.isSuffix "XOR" pred) orelse (String.isSuffix "sk" pred) orelse (String.isSuffix "Epub_i" pred)  orelse (String.isSuffix "KDF" pred)  orelse (String.isSuffix "Ci" pred) orelse (String.isSuffix "DH" pred) orelse (String.isSuffix "Cii" pred) ) then (Let_to_IML vals_list pred)
 		  else if ((String.isSuffix "event_true_cnd" pred) orelse (String.isSuffix "event1" pred) orelse (String.isSuffix "event2" pred) orelse (String.isSuffix "event3" pred) orelse (String.isSuffix "event_false_cnd" pred))
 		  then (IML_event event_names pred)
 		  else "";
@@ -914,7 +915,7 @@ fun sym_exe_to_IML exec_sts =
 	(*val _ = print ("\n number of refine path predicates found: " ^ (Int.toString (length refine_preds))^"\n \n");*) 
 	    
 	val IML_str = path_of_tree event_names vals_list refine_preds exec_sts (rev refine_preds) "";
-    
+	    
     in
 	IML_to_file IML_str
     end;

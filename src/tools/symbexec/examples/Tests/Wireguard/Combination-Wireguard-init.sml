@@ -34,7 +34,7 @@ val stop_lbl_tms = [``BL_Address (Imm64 3264w)``,``BL_Address (Imm64 3408w)``];
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-val _ = print "Test1\n";
+
 (*val ns = List.map (fn x => snd x)(listItems n_dict);
 val _ =  bir_cfg_vizLib.cfg_display_graph_ns ns;*)
 
@@ -47,9 +47,9 @@ val syst = state_add_preds "init_pred" pred_conjs syst;
 val _ = print "initial state created.\n\n";
 
 val cfb = false;
-val _ = print "Test2\n";
+
 val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [syst] stop_lbl_tms adr_dict [];
-val _ = print "Test3\n";
+
 val _ = print "\n\n";
 val _ = print "finished exploration of all paths.\n\n";
 val _ = print ("number of paths found: " ^ (Int.toString (length systs)));

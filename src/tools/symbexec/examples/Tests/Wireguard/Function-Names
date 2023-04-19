@@ -33,3 +33,5 @@ ktime_get_real_ts64
 wg_index_hashtable_insert
 init_module
 handshake_init
+message_encrypt
+mix_precomputed_dh

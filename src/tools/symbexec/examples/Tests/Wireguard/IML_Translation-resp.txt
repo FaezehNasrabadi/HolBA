@@ -1,0 +1,26 @@
+if (Bitwise_And(((R21_sy + c_12))(c_255)) = c_0) then
+if (read(x_359,64) = read(x_360,64)) then
+in c, a_89 
+let Cr_91 = hash1(Construction_90) in
+new Epriv_r_92 fixed_64 
+let Epub_r_94 = expdh(g_93,Epriv_r_92) in
+let Crr_97 = kdf1(Cr_91,Epub_r) in
+let HMAC_98 = hash2(a_89,Epub_r) in
+let DH_104 = DH(Epriv_r,Epub_r) in
+let Crr_107 = kdf1(Crr_97,DH_104) in
+if (Bitwise_And((SP_EL0_sy)(c_255)) = c_0) then
+if (read(x_363,64) = read(x_364,64)) then
+let DH_177 = DH(Epriv_r,Epub_r) in
+let Crr_180 = kdf1(Crr_107,DH_177) in
+if (Bitwise_And((SP_EL0_sy)(c_255)) = c_0) then
+if (read(x_367,64) = read(x_368,64)) then
+let KDF_252 = kdf3(Crr_180,Q_251) in
+let Pars1_255 = pars1(KDF_252) in
+let Pars2_256 = pars2(KDF_252) in
+let HMAC_259 = hash2(HMAC_98,Pars2_256) in
+let Pars3_262 = pars3(KDF_252) in
+let Enc_270 = AEAD(Pars3_262,epsilon_269,(BVar "259_HMAC" (BType_Imm Bit64))) in
+let HMAC_273 = hash2(HMAC_259,Enc_270) in
+out c, HMAC_273 
+event RespAnswer Spub_i Spub_r Epub_i Epub_r Q 
+if (read(x_371,64) = read(x_372,64)) then

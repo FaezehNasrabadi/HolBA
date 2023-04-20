@@ -434,7 +434,8 @@ val symbs_sec_text = [
      "base64_decode",
      "build_decoding_table",
      "base64_encode"
- ];*)
+ ];
+
 
 val symbs_sec_text = [
     "wait_for_random_bytes",
@@ -456,7 +457,33 @@ val symbs_sec_text = [
 "handshake_init",
 "message_encrypt",
     "mix_precomputed_dh",
+    "mix_psk",
     "wg_noise_handshake_create_initiation"
+ ];
+*)
+
+val symbs_sec_text = [
+    "wait_for_random_bytes",
+     "down_read",
+     "down_write",
+"mix_hash",
+"curve25519_generate_secret",
+"curve25519_generate_public",
+"up_write",
+"up_read",
+"message_ephemeral",
+"mix_dh",
+"chacha20poly1305_encrypt",
+"__crypto_memneq",
+"kdf.constprop.0",
+"ktime_get_real_ts64",
+"wg_index_hashtable_insert",
+"init_module",
+"handshake_init",
+"message_encrypt",
+    "mix_precomputed_dh",
+    "mix_psk",
+    "wg_noise_handshake_create_response"
  ];
     
 val arch_str         = "arm8";

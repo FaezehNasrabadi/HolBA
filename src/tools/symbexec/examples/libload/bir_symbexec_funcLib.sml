@@ -1121,8 +1121,8 @@ fun Parse2 syst =
 
     in
 	syst
-    end;*)
-
+    end;
+*)
 fun Parse2 syst =
     let
 	
@@ -1147,6 +1147,23 @@ fun Parse2 syst =
 	val syst = (state_add_path "comp_true_cnd" cnd) syst;
 
 	val syst = hd(Event "event2" syst);
+
+    in
+	syst
+    end;
+
+
+
+fun Parse21 msg syst =
+    let
+		    
+	val (P_bv, P_be) = Pars2 msg; (* Parse inputs *)
+	    
+	val Fr_par2 = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars2", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	    
+	val syst = store_mem_r0 P_be Fr_par2 syst; (* update syst *)
+
+	val syst =  update_envvar ``BVar "R7" (BType_Imm Bit64)`` Fr_par2 syst;
 
     in
 	syst
@@ -1275,7 +1292,7 @@ fun Parse1 syst =
     in
 	syst
     end;
-   
+  
 fun Concat3 syst =
     let
 	val syst = Parse1 syst;
@@ -1327,7 +1344,7 @@ fun Concat5 syst =
     in
 	syst
     end;
-(*
+ (*
 fun Concat6 syst =
     let
 	val input = (symbval_bexp o get_state_symbv "concat6::bv in env not found"  ``BVar "key" (BType_Imm Bit64)``) syst;
@@ -1349,6 +1366,12 @@ fun Compare syst =
     let
 
 	val input1 = compute_inputs_mem (1) syst;
+
+	val (P_bv, P_be) = Pars1 input1; (* Parse input *)
+	    
+	val Fr_par1 = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars1", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	    
+	val syst = store_op_mem_r0 P_be Fr_par1 syst; (* update syst *)
 	    
     in
 	[syst]
@@ -2052,7 +2075,10 @@ fun Encryption syst =
 	val n = List.nth (readint_inputs "Library-number of inputs", 0);
 	val input = compute_inputs_op_mem n syst; (* get values *)
 
-	val sk = get_bvar_fresh(bir_envSyntax.mk_BVar_string ("k", “BType_Imm Bit64”)); (* generate a fresh k *)
+	val env  = (SYST_get_env  syst);
+
+	val sk = find_bv_val ("Encryption::bv in env not found")
+                              env ``BVar "R7" (BType_Imm Bit64)``;
 	    
 	val (C_bv, C_be) = aead1 sk spub input;
 
@@ -2080,7 +2106,10 @@ fun Signature syst =
 	val n = List.nth (readint_inputs "Library-number of inputs", 0);
 	val input = compute_inputs_op_mem n syst; (* get values *)
 
-	val sk = get_bvar_fresh(bir_envSyntax.mk_BVar_string ("k", “BType_Imm Bit64”)); (* generate a fresh k *)
+	val env  = (SYST_get_env  syst);
+
+	val sk = find_bv_val ("Signature::bv in env not found")
+                              env ``BVar "R7" (BType_Imm Bit64)``; 
 	    
 	val (C_bv, C_be) = aead2 sk ts input;
 
@@ -2096,6 +2125,10 @@ fun Signature syst =
 	val Fr_Con = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
 	val syst = store_op_mem_r0 x_be Fr_Con syst; (* update syst *)
+
+	val syst = add_knowledge_r0 Fr_Con syst;  (*send to channel *)
+
+	val syst = hd(Event "event1" syst);
 	
     in
 	syst
@@ -2218,11 +2251,19 @@ fun KeyDF2 syst =
 
 	val (k_bv, k_be) = KDF2 key Fr_dh;
 
-	val Fr_Ci = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Cii", “BType_Imm Bit64”));
+	val Fr_kdf = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("KDF", “BType_Imm Bit64”));
 	    
-	val syst = update_key k_be Fr_Ci syst; (* update syst *)
+	val syst = store_mem_r0 k_be Fr_kdf syst; (* update syst *)
 
-	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_Ci syst;
+	val (P_bv, P_be) = Pars1 Fr_kdf; (* Parse inputs *)
+	    
+	val Fr_par1 = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars1", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	    
+	val syst = update_key P_be Fr_par1 syst; (* update syst *)
+
+	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_par1 syst;
+
+	val syst = Parse21 Fr_kdf syst;
 
     in
 	syst
@@ -2247,11 +2288,19 @@ fun KeyDF22 syst =
 
 	val (k_bv, k_be) = KDF2 key Fr_dh;
  
-	val Fr_Ci = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Cii", “BType_Imm Bit64”));
+	val Fr_kdf = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("KDF", “BType_Imm Bit64”));
 	    
-	val syst = update_key k_be Fr_Ci syst; (* update syst *)
+	val syst = store_mem_r0 k_be Fr_kdf syst; (* update syst *)
 
-	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_Ci syst;
+	val (P_bv, P_be) = Pars1 Fr_kdf; (* Parse inputs *)
+	    
+	val Fr_par1 = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars1", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	    
+	val syst = update_key P_be Fr_par1 syst; (* update syst *)
+
+	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_par1 syst;
+
+	val syst = Parse21 Fr_kdf syst;
 
 	val syst = Signature syst;
 

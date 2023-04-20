@@ -27,9 +27,9 @@ open bir_symbexec_loopLib;
 
 (******wg_noise_init******)
 
-val lbl_tm = ``BL_Address (Imm64 3100w)``;
+val lbl_tm = ``BL_Address (Imm64 3048w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 3264w)``,``BL_Address (Imm64 3408w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 3264w)``,``BL_Address (Imm64 3464w)``];
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 

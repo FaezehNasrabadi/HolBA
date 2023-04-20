@@ -1,5 +1,5 @@
 The event name is as follows:
 
-AcceptS pkS pkP
-AcceptS2 pkS pkP
+InitStart Spub_i Spub_r Epub_i Epub_r Q
+RespAnswer Spub_i Spub_r Epub_i Epub_r Q
 

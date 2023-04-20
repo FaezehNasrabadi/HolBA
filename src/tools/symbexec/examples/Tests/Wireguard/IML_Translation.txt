@@ -1,19 +1,25 @@
-if (read(x_251,8) = c_0) then
-let Ci_62 = hash1(Construction_61) in
-let HMAC_64 = hash2(Ci_62,id_63) in
-let HMAC_68 = hash2(HMAC_64,Spub_r) in
-new Epriv_i_71 fixed_64 
-let Epub_i_73 = expdh(g_72,Epriv_i_71) in
-if (Bitwise_And(((R21_sy + c_8))(c_255)) = c_0) then
-let Cii_125 = kdf1(Ci_62,Epub_i) in
-let HMAC_126 = hash2(HMAC_68,Epub_i) in
-let DH_130 = DH(Epriv_i,Spub_r) in
-let Cii_133 = kdf2(Cii_125,DH_130) in
+if (read(x_311,8) = c_0) then
+let Ci_88 = hash1(Construction_87) in
+let HMAC_90 = hash2(Ci_88,id_89) in
+let HMAC_94 = hash2(HMAC_90,Spub_r) in
+new Epriv_i_97 fixed_64 
+let Epub_i_99 = expdh(g_98,Epriv_i_97) in
+if (Bitwise_And(((R0_sy + c_8))(c_255)) = c_0) then
+let Cii_151 = kdf1(Ci_88,Epub_i) in
+let HMAC_152 = hash2(HMAC_94,Epub_i) in
+let DH_156 = DH(Epriv_i,Spub_r) in
+let KDF_159 = kdf2(Cii_151,DH_156) in
+let Pars1_162 = pars1(KDF_159) in
+let Pars2_163 = pars2(KDF_159) in
 if (Bitwise_And((SP_EL0_sy)(c_255)) = c_0) then
-let Enc_185 = AEAD(k_184,Spub_i,HMAC_126) in
-let HMAC_188 = hash2(HMAC_126,Enc_185) in
-let DH_193 = DH(Spriv_i,Spub_r) in
-let Cii_196 = kdf2(Cii_133,DH_193) in
-let Enc_198 = AEAD(k_197,ts_i, (BVar "188_HMAC" (BType_Imm Bit64))) in
-let HMAC_201 = hash2(HMAC_188,Enc_198) in
+let Enc_216 = AEAD(Pars2_163,Spub_i,HMAC_152) in
+let HMAC_219 = hash2(HMAC_152,Enc_216) in
+let DH_224 = DH(Spriv_i,Spub_r) in
+let KDF_227 = kdf2(Pars1_162,DH_224) in
+let Pars1_230 = pars1(KDF_227) in
+let Pars2_231 = pars2(KDF_227) in
+let Enc_234 = AEAD(Pars2_231,ts_i, (BVar "219_HMAC" (BType_Imm Bit64))) in
+let HMAC_237 = hash2(HMAC_219,Enc_234) in
+out c, HMAC_237 
+event InitStart Spub_i Spub_r Epub_i Epub_r Q 
 if (Bitwise_And((SP_EL0_sy)(c_255)) = c_0) then

@@ -123,7 +123,7 @@ struct
      "recv",
      "wait_close"
  ];
-*)
+
  val symbs_sec_text = [
      "server",
      "fail",
@@ -138,7 +138,7 @@ struct
      "main"
  ];
 
-(*
+
 
 
 
@@ -434,7 +434,30 @@ val symbs_sec_text = [
      "base64_decode",
      "build_decoding_table",
      "base64_encode"
- ];*)    
+ ];*)
+
+val symbs_sec_text = [
+    "wait_for_random_bytes",
+     "down_read",
+     "down_write",
+"mix_hash",
+"curve25519_generate_secret",
+"curve25519_generate_public",
+"up_write",
+"up_read",
+"message_ephemeral",
+"mix_dh",
+"chacha20poly1305_encrypt",
+"__crypto_memneq",
+"kdf.constprop.0",
+"ktime_get_real_ts64",
+"wg_index_hashtable_insert",
+"init_module",
+"handshake_init",
+"message_encrypt",
+    "mix_precomputed_dh",
+    "wg_noise_handshake_create_initiation"
+ ];
     
 val arch_str         = "arm8";
 val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));
@@ -626,7 +649,7 @@ val configs              = [ ("tinyssh",
     
 val symb_filter_lift = fn secname =>
 			  case secname of
-			      ".text" => (fn symbname => true)
+			      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
 			    |		     ".plt" => (fn symbname => true)
 			    |		     ".fini" => (fn symbname => true)
 			    |                ".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)

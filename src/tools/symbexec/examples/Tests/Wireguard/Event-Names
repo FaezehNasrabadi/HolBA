@@ -1,5 +1,5 @@
 The event name is as follows:
 
-InitStart Spub_i Spub_r Epub_i Epub_r Q
-RespAnswer Spub_i Spub_r Epub_i Epub_r Q
+RespRecv Spub_i Spub_r Q
+RespAnsw Spub_i Spub_r Q
 

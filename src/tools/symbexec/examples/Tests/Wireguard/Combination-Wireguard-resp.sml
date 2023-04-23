@@ -25,18 +25,15 @@ open bir_symbexec_oracleLib;
 open bir_symbexec_loopLib;
 (* HOL_Interactive.toggle_quietdec(); *)
 
-(******wg_noise_init******)
+(******wg_noise_handshake_consume_initiation******)
 
-val lbl_tm = ``BL_Address (Imm64 4384w)``;
+val lbl_tm = ``BL_Address (Imm64 3544w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 4620w)``,``BL_Address (Imm64 4380w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 3768w)``,``BL_Address (Imm64 4180w)``,``BL_Address (Imm64 4204w)``];
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-
-(*val ns = List.map (fn x => snd x)(listItems n_dict);
-val _ =  bir_cfg_vizLib.cfg_display_graph_ns ns;*)
 
 val syst = init_state lbl_tm prog_vars;
 
@@ -61,5 +58,33 @@ val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (l
 val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
+
+val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
+    
+(******wg_noise_handshake_create_response******)
+    
+val lbl_tm = ``BL_Address (Imm64 4384w)``;
+
+val stop_lbl_tms = [``BL_Address (Imm64 4620w)``,``BL_Address (Imm64 4380w)``];
+    
+val b = [];
+val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
+val systs = [((hd o rev)(List.concat systs))];
+val systs =  List.map (fn s => SYST_update_pc lbl_tm s) systs;
+val systs =  List.map (fn s => state_add_preds "init_pred" pred_conjs s) systs;
   
+val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_  systs stop_lbl_tms adr_dict systs;
+val _ = print "\n\n";
+val _ = print "finished exploration of all paths.\n\n";
+val _ = print ("number of paths found: " ^ (Int.toString (length systs)));
+val _ = print "\n\n";
+
+val (systs_noassertfailed, systs_assertfailed) =
+  List.partition (fn syst => not (identical (SYST_get_status syst) BST_AssertionViolated_tm)) systs;
+val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
+val _ = print "\n\n";
+val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
+val _ = print "\n\n";
+
+   
 val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;

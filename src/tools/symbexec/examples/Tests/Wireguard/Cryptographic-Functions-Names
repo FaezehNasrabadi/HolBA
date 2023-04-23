@@ -1,6 +1,7 @@
 The cryptographic functions names are as follows:
 
 message_encrypt
+message_decrypt
 
 
 
@@ -14,8 +15,7 @@ message_encrypt
 
 
 
-
-
+mix_precomputed_dh
 
 
 
@@ -26,7 +26,7 @@ message_encrypt
 message_ephemeral
 mix_dh
 
-
+handshake_init
 
 mix_psk
 

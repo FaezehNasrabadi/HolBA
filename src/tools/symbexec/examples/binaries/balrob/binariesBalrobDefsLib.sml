@@ -483,7 +483,8 @@ val symbs_sec_text = [
 "message_encrypt",
     "mix_precomputed_dh",
     "mix_psk",
-    "wg_noise_handshake_create_response"
+    "wg_noise_handshake_create_response",
+    "wg_noise_handshake_consume_initiation"
  ];
     
 val arch_str         = "arm8";

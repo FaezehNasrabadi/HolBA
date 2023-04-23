@@ -36,3 +36,4 @@ handshake_init
 message_encrypt
 mix_precomputed_dh
 mix_psk
+message_decrypt

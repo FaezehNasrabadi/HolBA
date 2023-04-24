@@ -17,7 +17,6 @@ blake2s_update
 blake2s_final
 __stack_chk_fail
 wait_for_random_bytes
-down_read
 down_write
 mix_hash
 curve25519_generate_secret

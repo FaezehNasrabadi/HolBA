@@ -1,7 +1,7 @@
 The cryptographic functions names are as follows:
 
 message_encrypt
-
+message_decrypt
 
 
 
@@ -15,7 +15,7 @@ __stack_chk_fail
 
 
 
-
+mix_psk
 
 
 

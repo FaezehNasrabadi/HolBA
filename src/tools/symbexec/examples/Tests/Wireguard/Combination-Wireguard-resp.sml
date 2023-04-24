@@ -59,7 +59,7 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 
-val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
+(* val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed; *)
     
 (******wg_noise_handshake_create_response******)
     
@@ -69,9 +69,8 @@ val stop_lbl_tms = [``BL_Address (Imm64 4620w)``,``BL_Address (Imm64 4380w)``];
     
 val b = [];
 val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
-val systs = [((hd o rev)(List.concat systs))];
-val systs =  List.map (fn s => SYST_update_pc lbl_tm s) systs;
-val systs =  List.map (fn s => state_add_preds "init_pred" pred_conjs s) systs;
+(* val systs = [((hd o rev)(List.concat systs))]; *)
+val systs =  List.map (fn s => SYST_update_pc lbl_tm s) (List.concat systs);
   
 val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_  systs stop_lbl_tms adr_dict systs;
 val _ = print "\n\n";

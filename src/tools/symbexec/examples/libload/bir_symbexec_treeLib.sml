@@ -857,7 +857,7 @@ fun path_of_tree event_names vals_list refine_preds exec_sts [] str =
     (str)
   | path_of_tree event_names vals_list refine_preds exec_sts (pred::preds) str =
     let
-	val _ = print ((pred)^"\n");
+	(* val _ = print ((pred)^"\n"); *)
 
 	val Act = if (String.isSuffix "assert_true_cnd" pred) then ""
 		  else if ((String.isSuffix "cjmp_true_cnd" pred) orelse (String.isSuffix "comp_true_cnd" pred)) then (if (String.isSuffix "0" (IMLExp_from_pred vals_list exec_sts pred))

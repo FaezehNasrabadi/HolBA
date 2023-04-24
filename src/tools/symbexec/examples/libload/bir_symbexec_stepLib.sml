@@ -463,7 +463,7 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 
 		val lib_type = bir_symbexec_oracleLib.lib_oracle adr_dict lbl_tm syst; (* detect type of library call *)
 
-		val _ = if false then () else
+		val _ = if true then () else
 			print ("Lib type: " ^ (lib_type) ^ "\n");
 
 		val systs = if (lib_type = "HMAC_send") then [bir_symbexec_funcLib.HMAC_Send syst]
@@ -634,9 +634,9 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 	    let
 		val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		val _ = if false then () else
+		val _ = if true then () else
 			print_term (lbl_tm);
-		val _ = if false then () else
+		val _ = if true then () else
 			print ("pc_type: " ^ (pc_type) ^ "\n");
 	    in
 		if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst

@@ -1,5 +1,5 @@
 The event name is as follows:
 
-InitStart Spub_i Spub_r Q
-InitAccept Spub_i Spub_r Q
+InitStart id_i Spub_i Spub_j
+InitAccept id_i id_j Spub_i Spub_j
 

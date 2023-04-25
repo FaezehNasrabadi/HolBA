@@ -2510,9 +2510,11 @@ fun HMAC_Send syst =
 	val key = find_bv_val ("HMAC_Send::bv in env not found")
                               env ``BVar "key" (BType_Imm Bit64)``;
 		  
-	val id = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("id", “BType_Imm Bit64”)); (* generate a fresh iv *)  
+	val sid = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("sid_r", “BType_Imm Bit64”)); (* generate a fresh iv *)
 
-	val (H_bv, H_be) = HMac2 key id; (* encrypt with iv *)
+	val syst = update_path sid syst; (* update path condition *)
+
+	val (H_bv, H_be) = HMac2 key sid; (* encrypt with iv *)
 
 	val Fr_Hash = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
@@ -2847,9 +2849,11 @@ fun HMAC_Send syst =
 	val key = find_bv_val ("HMAC_Send::bv in env not found")
                               env ``BVar "key" (BType_Imm Bit64)``;
 		  
-	val id = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("id", “BType_Imm Bit64”)); (* generate a fresh iv *)  
+	val sid = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("sid_i", “BType_Imm Bit64”)); (* generate a fresh iv *)
 
-	val (H_bv, H_be) = HMac2 key id; (* encrypt with iv *)
+	val syst = update_path sid syst; (* update path condition *)
+
+	val (H_bv, H_be) = HMac2 key sid; (* encrypt with iv *)
 
 	val Fr_Hash = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
@@ -3058,6 +3062,8 @@ fun Concat syst =
 	val Fr_Con = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
 	val syst = store_op_mem_r0  x_be Fr_Con syst; (* update syst *)
+
+	val syst = session_key syst;
 	
     in
 	syst

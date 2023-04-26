@@ -1,5 +1,5 @@
 The event name is as follows:
 
-RespRecv id_i id_r Spub_i Spub_r
-RespAnsw id_i id_r Spub_i Spub_r
+RespRecv HMAC
+RespAnsw HMAC
 

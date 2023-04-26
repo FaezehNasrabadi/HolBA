@@ -1,5 +1,5 @@
 The event name is as follows:
 
-InitStart id_i Spub_i Spub_r
-InitAccept id_i id_r Spub_i Spub_r
+InitStart HMAC
+InitAccept HMAC
 

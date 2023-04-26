@@ -62,7 +62,10 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
   
-(* val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed; *)
+(*
+val b =listItems( SYST_get_env (List.nth (systs, 1480))); 
+val b =listItems( SYST_get_vals (List.nth (systs, 53)));
+val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed; *)
 
 (******wg_noise_handshake_consume_response******)
     

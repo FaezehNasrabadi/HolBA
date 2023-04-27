@@ -18,7 +18,7 @@ if (read(x_6745,64) = read(x_6746,64)) then
 if (read(x_6749,64) = read(x_6750,64)) then
 let Dec_301 = dec(Pars2_159,Crr_179) in
 let HMAC_304 = hash2(HMAC_170,Pars2_159) in
-let DH_307 = DH(Dec_301,S_priv) in
+let DH_307 = DH(a_142,Spriv_r) in
 let Crr_310 = kdf1(Crr_179,DH_307) in
 if (Bitwise_And((SP_EL0_sy)(c_255)) = c_0) then
 if c_1 then

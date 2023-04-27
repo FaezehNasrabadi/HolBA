@@ -436,7 +436,7 @@ val symbs_sec_text = [
      "base64_encode"
  ];
 
-
+*)
 val symbs_sec_text = [
     "wait_for_random_bytes",
     "down_read",
@@ -461,7 +461,7 @@ val symbs_sec_text = [
     "wg_noise_handshake_create_initiation",
     "wg_noise_handshake_consume_response"
 ];
-*)
+(*
  val symbs_sec_text = [
      "wait_for_random_bytes",
      "down_read",
@@ -486,7 +486,7 @@ val symbs_sec_text = [
      "wg_noise_handshake_consume_initiation",
      "wg_noise_handshake_create_response"
  ];
- 
+ *)
 val arch_str         = "arm8";
 val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));
 

@@ -23,8 +23,8 @@ let Pars1_237 = pars12(KDF_231,c_32) in
 let Pars2_238 = pars22(KDF_231,c_32) in
 let Enc_241 = AEAD(Pars2_238,ts_i, (BVar "223_HMAC" (BType_Imm Bit64))) in
 let HMAC_244 = hash2(HMAC_223,Enc_241) in
-let 247_triple(Epub_i_100,Enc_220,(BVar "241_Enc" (BType_Imm Bit64))) = HMAC_244 in
-out c, HMAC_244 
+out c, triple (BVar "100_Epub_i" (BType_Imm Bit64))
+  (BVar "220_Enc" (BType_Imm Bit64)) (BVar "241_Enc" (BType_Imm Bit64))_247 
 event InitStart HMAC 
 in c, a_251 
 let Pars1_252 = pars12(a_251,c_32) in

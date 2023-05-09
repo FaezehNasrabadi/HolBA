@@ -58,12 +58,38 @@ Define`
 
 
 
+(* Reach a state *)
+val (Reach_rules, Reach_ind, Reach_cases)
+= Hol_reln
+  `(∀(TrnSys:( 'symb, 'pred, 'state, 'event ) transitionsystem) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Ded: ('pred) tded) (st: 'state) (Ev: 'event) (Conf':(('symb set) # ('pred set) # 'state)).
+      ((TrnSys = (Trn,Ded)) ∧ (Conf = ({},{},st)) ∧ (Trn Conf Ev Conf')) ==> (Reach TrnSys Conf)) /\
+  (∀(TrnSys:( 'symb, 'pred, 'state, 'event ) transitionsystem) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)) (Ev: 'event) (Conf':(('symb set) # ('pred set) # 'state)).
+     ((TrnSys = (Trn,Ded)) ∧ (Trn Conf Ev Conf') ∧ (Reach TrnSys Conf)) ==> (Reach TrnSys Conf'))
+  `;
 
 
 
+(* multi transitions relation *)
+val _ = Parse.type_abbrev("mtrel", ``:(('symb set) # ('pred set) # 'state) -> ('event list) -> (('symb set) # ('pred set) # 'state) -> bool``);
+
+(* multi transitions system *)    
+val _ = Parse.type_abbrev("multransys", ``:(( 'symb, 'pred, 'state, 'event ) mtrel # ('pred) tded)``);
+
+(* Trace *)
+(* val _ = Parse.type_abbrev("trace", ``:'event list``); *)  
+
+val (trace_rules, trace_ind, trace_cases)
+= Hol_reln
+  `(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)).
+      ((MTS = (MTrn,Ded)) ∧ (MTrn Conf [] Conf)) ==> (trace MTS [])) ∧
+(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)) (Evs: 'event list) (Conf':(('symb set) # ('pred set) # 'state)).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf')) ==> (trace MTS Evs)) ∧
+(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf1:(('symb set) # ('pred set) # 'state)) (Evs: 'event list) (Conf2:(('symb set) # ('pred set) # 'state)) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Conf3:(('symb set) # ('pred set) # 'state)) (Ev: 'event) (MTS':( 'symb, 'pred, 'state, 'event ) multransys) (MTrn':( 'event, 'pred, 'state, 'symb ) mtrel).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn Conf1 Evs Conf2) ∧ (Trn Conf2 Ev Conf3) ∧ (MTS' = (MTrn',Ded)) ∧ (MTrn' Conf1 (Ev::Evs) Conf3)) ==> (trace MTS' (Ev::Evs)))
+`;
 
 
-
+(* Traces *)
 
         
 val _ = export_theory();

@@ -33,8 +33,7 @@ val _ = Datatype `SapicTerm_t =
 	    | TVar  Var_t
 	    | FAPP  (string # (int # Privacy_t # Constructability_t)) (SapicTerm_t list)`;
 
-
-(* helper *)            
+(* helper *)  
 val Inside_def =
 Define`(Inside a (FAPP n ts) = MEM a ts)`;  
 
@@ -99,7 +98,7 @@ Defn.Hol_defn
                                | _ =>  t                                                            
                               ))
     ’;
-
+  
 val (sapic_substname_EQN, sapic_substname_IND) =
 Defn.tprove (sapic_substname_defn, cheat);
 *)

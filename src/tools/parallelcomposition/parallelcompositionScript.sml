@@ -76,7 +76,7 @@ val _ = Parse.type_abbrev("mtrel", ``:(('symb set) # ('pred set) # 'state) -> ('
 val _ = Parse.type_abbrev("multransys", ``:(( 'symb, 'pred, 'state, 'event ) mtrel # ('pred) tded)``);
 
 (* Trace *)
-(* val _ = Parse.type_abbrev("trace", ``:'event list``); *)  
+val _ = Parse.type_abbrev("trc", ``:'event list``);  
 
 val (trace_rules, trace_ind, trace_cases)
 = Hol_reln
@@ -90,8 +90,24 @@ val (trace_rules, trace_ind, trace_cases)
 
 
 (* Traces *)
+val traces_def =
+Define`
+traces (MTS:( 'symb, 'pred, 'state, 'event ) multransys) = {t| (trace MTS t)}
+`;
 
-        
+
+(* Trace property *)
+val traceProperty_def =
+Define`
+traceProperty (MTS:( 'symb, 'pred, 'state, 'event ) multransys) (Phi:( 'event trc set)) = ((traces MTS) ⊆ Phi)
+                                                           `;
+val _ = set_mapped_fixity { fixity = Infixl 90,
+                            term_name = "apply_traceProperty",
+                            tok = "|=" };
+
+val _ = overload_on ("apply_traceProperty", ``traceProperty``);
+
+
 val _ = export_theory();
 
 (* DB.find_in "SET" (DB.find "SUM_MAP"); *)

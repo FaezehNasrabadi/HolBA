@@ -55,14 +55,11 @@ Define`
 `;
 
 
-
-
-
 (* Reach a state *)
 val (Reach_rules, Reach_ind, Reach_cases)
 = Hol_reln
-  `(∀(TrnSys:( 'symb, 'pred, 'state, 'event ) transitionsystem) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Ded: ('pred) tded) (st: 'state) (Ev: 'event) (Conf':(('symb set) # ('pred set) # 'state)).
-      ((TrnSys = (Trn,Ded)) ∧ (Conf = ({},{},st)) ∧ (Trn Conf Ev Conf')) ==> (Reach TrnSys Conf)) /\
+  `(∀(TrnSys:( 'symb, 'pred, 'state, 'event ) transitionsystem) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Ded: ('pred) tded) (st0: 'state) (Ev: 'event) (Conf':(('symb set) # ('pred set) # 'state)).
+      ((TrnSys = (Trn,Ded)) ∧ (Conf = ({},{},st0)) ∧ (Trn Conf Ev Conf')) ==> (Reach TrnSys Conf)) /\
   (∀(TrnSys:( 'symb, 'pred, 'state, 'event ) transitionsystem) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)) (Ev: 'event) (Conf':(('symb set) # ('pred set) # 'state)).
      ((TrnSys = (Trn,Ded)) ∧ (Trn Conf Ev Conf') ∧ (Reach TrnSys Conf)) ==> (Reach TrnSys Conf'))
   `;
@@ -121,13 +118,27 @@ val _ = overload_on ("apply_traceRefinement", ``traceRefinement``);
 
 
 
-(* Coinductive simulation *)
-val (simulation_rules, simulation_coind, simulation_cases) =
+(* Coinductive state simulation *)
+val (stateSimulation_rules, stateSimulation_coind, stateSimulation_cases) =
 Hol_coreln`
           (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1:(('symb set) # ('pred set) # 'state)) (Conf1':(('symb set) # ('pred set) # 'state)) (Conf2:(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded).
-             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (simulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (simulation (MTS1,Conf1) (MTS2,Conf2)))  
+             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (stateSimulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (stateSimulation (MTS1,Conf1) (MTS2,Conf2)))  
           `;
 
+val _ = set_mapped_fixity { fixity = Infixl 95,
+                            term_name = "apply_stateSimulation",
+                            tok = "≼" };
+
+val _ = overload_on ("apply_stateSimulation", ``stateSimulation``);
+
+
+(* Simulation *)
+val (simulation_rules, simulation_ind, simulation_cases) =
+Hol_reln`
+          (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (st01: 'state) (st02: 'state).
+             (stateSimulation (MTS1,({},{},st01)) (MTS2,({},{},st02))) ==> (simulation MTS1 MTS2))  
+          `;
+    
 val _ = set_mapped_fixity { fixity = Infixl 95,
                             term_name = "apply_simulation",
                             tok = "≲" };
@@ -135,10 +146,15 @@ val _ = set_mapped_fixity { fixity = Infixl 95,
 val _ = overload_on ("apply_simulation", ``simulation``);
 
 
-
-
-
-
+val sim_vs_ref_thm = store_thm(
+   "sim_vs_ref_thm", ``
+!(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
+  (MTS1 ≲ MTS2) ==>
+  (MTS1 ⊑ MTS2)
+``,
+  cheat
+  );
+(* WIP on the proof *)
 
 
 val _ = export_theory();

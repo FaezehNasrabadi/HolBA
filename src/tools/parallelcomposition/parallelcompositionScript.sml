@@ -103,9 +103,42 @@ traceProperty (MTS:( 'symb, 'pred, 'state, 'event ) multransys) (Phi:( 'event tr
                                                            `;
 val _ = set_mapped_fixity { fixity = Infixl 90,
                             term_name = "apply_traceProperty",
-                            tok = "|=" };
+                            tok = "⊨" };
 
 val _ = overload_on ("apply_traceProperty", ``traceProperty``);
+
+
+(* Trace refinement *)
+val traceRefinement_def =
+Define`
+traceRefinement (MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) = ((traces MTS1) ⊆ (traces MTS2))
+                                                           `;
+val _ = set_mapped_fixity { fixity = Infixl 95,
+                            term_name = "apply_traceRefinement",
+                            tok = "⊑" };
+
+val _ = overload_on ("apply_traceRefinement", ``traceRefinement``);
+
+
+
+(* Coinductive simulation *)
+val (simulation_rules, simulation_coind, simulation_cases) =
+Hol_coreln`
+          (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1':(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded).
+             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (simulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (simulation (MTS1,Conf1) (MTS2,Conf2)))  
+          `;
+
+val _ = set_mapped_fixity { fixity = Infixl 95,
+                            term_name = "apply_simulation",
+                            tok = "≲" };
+
+val _ = overload_on ("apply_simulation", ``simulation``);
+
+
+
+
+
+
 
 
 val _ = export_theory();

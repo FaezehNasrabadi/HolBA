@@ -124,7 +124,7 @@ val _ = overload_on ("apply_traceRefinement", ``traceRefinement``);
 (* Coinductive simulation *)
 val (simulation_rules, simulation_coind, simulation_cases) =
 Hol_coreln`
-          (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1':(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded).
+          (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1:(('symb set) # ('pred set) # 'state)) (Conf1':(('symb set) # ('pred set) # 'state)) (Conf2:(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded).
              (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (simulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (simulation (MTS1,Conf1) (MTS2,Conf2)))  
           `;
 

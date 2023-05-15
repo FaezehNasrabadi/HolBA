@@ -138,7 +138,9 @@ val _ = overload_on ("apply_traceRefinement", ``traceRefinement``);
 val (stateSimulation_rules, stateSimulation_coind, stateSimulation_cases) =
 Hol_coreln`
           (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1:(('symb set) # ('pred set) # 'state)) (Conf1':(('symb set) # ('pred set) # 'state)) (Conf2:(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded).
-             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (stateSimulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (stateSimulation (MTS1,Conf1) (MTS2,Conf2)))  
+             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 Conf1 Evs Conf1')) ⇒ (∃(Conf2':(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 Conf2 Evs Conf2') ∧ (stateSimulation (MTS1,Conf1') (MTS2,Conf2')))) ==> (stateSimulation (MTS1,Conf1) (MTS2,Conf2))) ∧
+              (∀(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn1:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded1: ('pred) tded) (Evs: 'event list) (Conf1:(('symb set) # ('pred set) # 'state)) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn2:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded2: ('pred) tded) (st01: 'state) (st02: 'state).
+             (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 ({},{},st01) Evs Conf1)) ⇒ (∃(Conf2:(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 ({},{},st02) Evs Conf2) ∧ (stateSimulation (MTS1,Conf1) (MTS2,Conf2)))) ==> (stateSimulation (MTS1,({},{},st01)) (MTS2,({},{},st02)))) 
           `;
 
 val _ = set_mapped_fixity { fixity = Infixl 95,
@@ -163,17 +165,23 @@ val _ = overload_on ("apply_simulation", ``simulation``);
 
 
 val sim_vs_ref_thm = store_thm(
-   "sim_vs_ref_thm", ``
-!(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
-  (MTS1 ≲ MTS2) ==>
-  (MTS1 ⊑ MTS2)
-``,
-  cheat
+  "sim_vs_ref_thm", ``
+                    !(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
+                      (MTS1 ≲ MTS2) ==>
+                      (MTS1 ⊑ MTS2) ``
+  ,
+        REPEAT GEN_TAC >>
+                    REWRITE_TAC [simulation_cases]>>
+                    REWRITE_TAC [traceRefinement_def]>>
+                    REWRITE_TAC [traces_def]>>
+                      ASM_REWRITE_TAC [trace_cases]>>
+                    cheat
   );
 (* WIP on the proof *)
-
-
+(*
+ASM_REWRITE_TAC [stateSimulation_cases] *)
+  
 val _ = export_theory();
 
 (* DB.find_in "SET" (DB.find "SUM_MAP"); *)
-(* DB.find "SUM_MAP"; *)
+(* DB.find "SET_CASES_TAC"; *)

@@ -77,12 +77,12 @@ val _ = Parse.type_abbrev("trc", ``:'event list``);
 
 val (trace_rules, trace_ind, trace_cases)
 = Hol_reln
-  `(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)).
-      ((MTS = (MTrn,Ded)) ∧ (MTrn Conf [] Conf)) ==> (trace MTS [])) ∧
-(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf:(('symb set) # ('pred set) # 'state)) (Evs: 'event list) (Conf':(('symb set) # ('pred set) # 'state)).
-   ((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf')) ==> (trace MTS Evs)) ∧
-(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (Conf1:(('symb set) # ('pred set) # 'state)) (Evs: 'event list) (Conf2:(('symb set) # ('pred set) # 'state)) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Conf3:(('symb set) # ('pred set) # 'state)) (Ev: 'event) (MTS':( 'symb, 'pred, 'state, 'event ) multransys) (MTrn':( 'event, 'pred, 'state, 'symb ) mtrel).
-   ((MTS = (MTrn,Ded)) ∧ (MTrn Conf1 Evs Conf2) ∧ (Trn Conf2 Ev Conf3) ∧ (MTS' = (MTrn',Ded)) ∧ (MTrn' Conf1 (Ev::Evs) Conf3)) ==> (trace MTS' (Ev::Evs)))
+  `(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (st0: 'state).
+      ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) [] ({},{},st0))) ==> (trace MTS [])) ∧
+(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (st0: 'state) (Evs: 'event list) (Conf:(('symb set) # ('pred set) # 'state)).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf)) ==> (trace MTS Evs)) ∧
+(∀(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (st0: 'state) (Evs: 'event list) (Conf:(('symb set) # ('pred set) # 'state)) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Conf':(('symb set) # ('pred set) # 'state)) (Ev: 'event) (MTS':( 'symb, 'pred, 'state, 'event ) multransys) (MTrn':( 'event, 'pred, 'state, 'symb ) mtrel) (Ded': ('pred) tded).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf) ∧ (Trn Conf Ev Conf') ∧ (MTS' = (MTrn',Ded')) ∧ (MTrn' ({},{},st0) (Ev::Evs) Conf')) ==> (trace MTS' (Ev::Evs)))
 `;
 
 
@@ -106,7 +106,7 @@ val _ = overload_on ("apply_traceProperty", ``traceProperty``);
 
 
 (* Trace refinement *)
-val traceRefinement_def =
+   val traceRefinement_def =
 Define`
 traceRefinement (MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) = ((traces MTS1) ⊆ (traces MTS2))
                                                            `;

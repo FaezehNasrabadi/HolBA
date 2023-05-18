@@ -2,7 +2,7 @@ open HolKernel Parse boolLib bossLib;
 open sumTheory;
 open pred_setTheory;
 
-val _ = new_theory "propert";
+val _ = new_theory "property";
     
 (* Trace *)
 val _ = Parse.type_abbrev("trc", ``:'event list``);  
@@ -81,6 +81,14 @@ val _ = set_mapped_fixity { fixity = Infixl 95,
 val _ = overload_on ("apply_simulation", ``simulation``);
 
 
+
+(* Reach a state *)
+val (Reach_rules, Reach_ind, Reach_cases)
+= Hol_reln
+  `(((TrnSys = (Trn,Ded)) ∧ (Conf = ({},{},st0)) ∧ (Trn Conf Ev Conf')) ==> (Reach TrnSys Conf)) ∧
+(((TrnSys = (Trn,Ded)) ∧ (Trn Conf Ev Conf') ∧ (Reach TrnSys Conf)) ==> (Reach TrnSys Conf'))
+`;
+
  (*
 val sim_vs_ref_thm = store_thm(
   "sim_vs_ref_thm", ``!(MTS1:((α -> bool) # (β -> bool) # γ ->
@@ -95,16 +103,14 @@ val sim_vs_ref_thm = store_thm(
   REWRITE_TAC [traceRefinement_def,traces_def,trace_cases]>>
   STRIP_TAC >>          
   Cases_on `MTS1 = MTS2`  >| [
-      ALL_TAC
-      ,
+  ALL_TAC
+  ,
       ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []
     ] >>
   REWRITE_TAC [tracePropertyNot_def]>>
-  METIS_TAC [stateSimulation_rules, stateSimulation_ind, stateSimulation_cases]
+  METIS_TAC [Reach_rules, Reach_ind, Reach_cases,stateSimulation_rules, stateSimulation_ind, stateSimulation_cases]
   );
 WIP on the proof-no cheat but METIS_TAC could not find proof *)
   
 val _ = export_theory();
 
-(* DB.find_in "SET" (DB.find "SUM_MAP"); *)
-(* DB.find "SET_CASES_TAC"; *)

@@ -1,5 +1,6 @@
 open HolKernel Parse boolLib bossLib;
 open sumTheory;
+open pred_setTheory;
 
 val _ = new_theory "parallelcomposition";
 
@@ -22,7 +23,9 @@ val _ = Parse.type_abbrev("ComOpr",
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) transitionsystem``);
 
 
-(* compose deduction relation *)      
+(* compose deduction relation *)
+val _ = Parse.type_abbrev("ctded", ``:('pred1) tded -> ('pred2) tded -> ('pred1 + 'pred2) tded``);
+
 val composeDed_def =
 Define`
       (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INL (F1:'pred1)) = (ded1 (IMAGE OUTL P3) F1)) ∧
@@ -74,6 +77,10 @@ val _ = Parse.type_abbrev("multransys", ``:(( 'symb, 'pred, 'state, 'event ) mtr
 
 
 (* compose multi transition relation *)
+val _ = Parse.type_abbrev("cmtrel", ``:('symb, 'pred1, 'state1, 'event1 + 'eventS) mtrel ->
+  ('symb, 'pred2, 'state2, 'event2 + 'eventS) mtrel -> 
+  ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) mtrel``);
+
 val (composeMuRe_rules, composeMuRe_ind, composeMuRe_cases)
 = Hol_reln
   `(∀(Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Conf:(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)) (e:(('event1 + 'eventS) + ('event2 + 'eventS))) (rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) trel) (rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) trel) (Conf':(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)) (Sym:'symb set) (P:('pred1 + 'pred2) set) (S1:'state1) (S2:'state2) (Sym':'symb set) (P':('pred1 + 'pred2) set) (S1':'state1) (S2':'state2).
@@ -83,11 +90,24 @@ val (composeMuRe_rules, composeMuRe_ind, composeMuRe_cases)
 `; 
 
 (* compose multi transition system *)
+val _ = Parse.type_abbrev("MulComOpr", 
+  ``:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys ->
+  ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys -> 
+  ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys``);
+  
 val composeMultiOperation_def =
 Define`
       (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) = (composeMuRe rel1 rel2, composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys)
       `;
-      
+
+
+val _ = set_mapped_fixity { fixity = Infixl 95,
+                            term_name = "apply_composeMultiOperation",
+                            tok = "||" };
+
+val _ = overload_on ("apply_composeMultiOperation", ``composeMultiOperation``);
+
+    
 (* Trace *)
 val _ = Parse.type_abbrev("trc", ``:'event list``);  
 
@@ -102,37 +122,67 @@ val (trace_rules, trace_ind, trace_cases)
 `;
 
 
+(* Trace property NOT*)
+val tracePropertyNot_def =
+Define`
+tracePropertyNot (Phi:( 'event trc set)) = {t|(t ∉ Phi) ∧ (TL(t) ∈ Phi)}
+                                                           `;
+
+val _ = overload_on ("¬", ``tracePropertyNot``);
+
 (* Traces *)
 val traces_def =
 Define`
-traces (MTS:( 'symb, 'pred, 'state, 'event ) multransys) = {t| (trace MTS t)}
+traces (MTS:( 'symb, 'pred, 'state, 'event ) multransys) (Phi:( 'event trc set)) = {t| (trace MTS t) ∧ (t ∈ (tracePropertyNot Phi))}
 `;
 
 
-(* Trace property *)
-val traceProperty_def =
+(* Satisfy Trace property *)
+val satisfyTraceProperty_def =
 Define`
-traceProperty (MTS:( 'symb, 'pred, 'state, 'event ) multransys) (Phi:( 'event trc set)) = ((traces MTS) ⊆ Phi)
+satisfyTraceProperty (MTS:( 'symb, 'pred, 'state, 'event ) multransys) (Phi:( 'event trc set)) = ((traces MTS Phi) ⊆ Phi)
                                                            `;
 val _ = set_mapped_fixity { fixity = Infixl 90,
-                            term_name = "apply_traceProperty",
+                            term_name = "apply_satisfyTraceProperty",
                             tok = "⊨" };
 
-val _ = overload_on ("apply_traceProperty", ``traceProperty``);
+val _ = overload_on ("apply_satisfyTraceProperty", ``satisfyTraceProperty``);    
 
 
 (* Trace refinement *)
-   val traceRefinement_def =
+val traceRefinement_def =
 Define`
-traceRefinement (MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) = ((traces MTS1) ⊆ (traces MTS2))
-                                                           `;
+      traceRefinement (MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys) = (∀(Phi:( 'event trc set)). ((traces MTS1 Phi) ⊆ (traces MTS2 Phi)))
+                                                                                                                              `;
 val _ = set_mapped_fixity { fixity = Infixl 95,
                             term_name = "apply_traceRefinement",
-                            tok = "⊑" };
+                            tok = "≼" };
 
 val _ = overload_on ("apply_traceRefinement", ``traceRefinement``);
 
 
+(* Compose Trace *)  
+
+val (composeTrace_rules, composeTrace_ind, composeTrace_cases)
+= Hol_reln
+  `(∀(MTS:( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) (MTrn:( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) cmtrel) (Ded: ('pred) tded) (st0: 'state).
+      ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) [] ({},{},st0))) ==> (composeTrace MTS [])) ∧
+(∀(MTS:( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (st0: 'state) (Evs: 'event list) (Conf:(('symb set) # ('pred set) # 'state)).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf)) ==> (composeTrace MTS Evs)) ∧
+(∀(MTS:( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) (MTrn:( 'event, 'pred, 'state, 'symb ) mtrel) (Ded: ('pred) tded) (st0: 'state) (Evs: 'event list) (Conf:(('symb set) # ('pred set) # 'state)) (Trn:( 'event, 'pred, 'state, 'symb ) trel) (Conf':(('symb set) # ('pred set) # 'state)) (Ev: 'event) (MTS':( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) (MTrn':( 'event, 'pred, 'state, 'symb ) mtrel) (Ded': ('pred) tded).
+   ((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf) ∧ (Trn Conf Ev Conf') ∧ (MTS' = (MTrn',Ded')) ∧ (MTrn' ({},{},st0) (Ev::Evs) Conf')) ==> (composeTrace MTS' (Ev::Evs)))
+`;
+    
+(* Compose Trace refinement *)
+val composeTraceRefinement_def =
+Define`
+      composeTraceRefinement (CMTS1:( 'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) (CMTS2:(  'symb, 'pred1, 'pred2, 'state1, 'state2, 'event1, 'event2, 'eventS) MulComOpr) = (∀(Phi:((('event1+'eventS) + ('event2 +'eventS)) trc set)). ((traces CMTS1 Phi) ⊆ (traces CMTS2 Phi)))
+                                                                                                                              `;
+val _ = set_mapped_fixity { fixity = Infixl 95,
+                            term_name = "apply_composeTraceRefinement",
+                            tok = "⊑" };
+
+val _ = overload_on ("apply_composeTraceRefinement", ``composeTraceRefinement``);
 
 (* Inductive state simulation *)
 val (stateSimulation_rules, stateSimulation_ind, stateSimulation_cases) =
@@ -143,11 +193,11 @@ Hol_reln`
              (((MTS1 = (MTrn1,Ded1)) ∧ (MTrn1 ({},{},st01) Evs Conf1)) ⇒ (∃(Conf2:(('symb set) # ('pred set) # 'state)). (MTS2 = (MTrn2,Ded2)) ∧ (MTrn2 ({},{},st02) Evs Conf2) ∧ (stateSimulation (MTS1,({},{},st01)) (MTS2,({},{},st02))))) ==> (stateSimulation (MTS1,Conf1) (MTS2,Conf2))) 
           `;
 
-val _ = set_mapped_fixity { fixity = Infixl 95,
-                            term_name = "apply_stateSimulation",
-                            tok = "≼" };
+(* val _ = set_mapped_fixity { fixity = Infixl 95, *)
+(*                             term_name = "apply_stateSimulation", *)
+(*                             tok = "" }; *)
 
-val _ = overload_on ("apply_stateSimulation", ``stateSimulation``);
+(* val _ = overload_on ("apply_stateSimulation", ``stateSimulation``); *)
 
 
 (* Simulation *)
@@ -164,11 +214,13 @@ val _ = set_mapped_fixity { fixity = Infixl 95,
 val _ = overload_on ("apply_simulation", ``simulation``);
 
 
-val sim_vs_ref_thm = store_thm(
-  "sim_vs_ref_thm", ``
-                    !(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
-                      (MTS1 ≲ MTS2) ==>
-                      (MTS1 ⊑ MTS2) ``
+
+
+val comp_vs_mts_thm = store_thm(
+  "comp_vs_mts_thm", ``
+                    !(MTS:( 'symb, 'pred, 'state, 'event ) multransys) (MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
+                      (MTS1 ≼ MTS2) ==>
+                      ((MTS1 || MTS) ⊑ (MTS2 || MTS)) ``
   ,
   
   REPEAT GEN_TAC >>        
@@ -182,7 +234,30 @@ val sim_vs_ref_thm = store_thm(
     ] >>
   METIS_TAC [stateSimulation_rules, stateSimulation_ind, stateSimulation_cases]
   );
-(* WIP on the proof-no cheat but METIS_TAC could not find proof *)
+
+
+
+
+(*
+val sim_vs_ref_thm = store_thm(
+  "sim_vs_ref_thm", ``
+                    !(MTS1:( 'symb, 'pred, 'state, 'event ) multransys) (MTS2:( 'symb, 'pred, 'state, 'event ) multransys).
+                      (MTS1 ≲ MTS2) ==>
+                      (MTS1 ≼ MTS2) ``
+  ,
+  
+  REPEAT GEN_TAC >>        
+  REWRITE_TAC [simulation_cases]>>
+  STRIP_TAC >>
+  REWRITE_TAC [traceRefinement_def,traces_def,trace_cases]>>
+  Cases_on `MTS1 = MTS2`  >| [
+      ALL_TAC
+      ,
+      ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []
+    ] >>
+  METIS_TAC [stateSimulation_rules, stateSimulation_ind, stateSimulation_cases]
+  );
+ WIP on the proof-no cheat but METIS_TAC could not find proof *)
   
 val _ = export_theory();
 

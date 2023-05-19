@@ -9,9 +9,9 @@ val _ = Parse.type_abbrev("trc", ``:'event list``);
 
 val (trace_rules, trace_ind, trace_cases)
 = Hol_reln
-  `(((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) [] ({},{},st0))) ==> (trace MTS [])) ∧
-(((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf)) ==> (trace MTS Evs)) ∧
-(((MTS = (MTrn,Ded)) ∧ (MTrn ({},{},st0) Evs Conf) ∧ (Trn Conf Ev Conf') ∧ (MTS' = (MTrn',Ded')) ∧ (MTrn' ({},{},st0) (Ev::Evs) Conf')) ==> (trace MTS' (Ev::Evs)))
+  `(((MTS = (MTrn,Ded)) ∧ (MTrn Conf [] Conf)) ==> (trace MTS [])) ∧
+(((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf')) ==> (trace MTS Evs)) ∧
+(((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf') ∧ (Trn Conf' Ev Conf'') ∧ (MTS' = (MTrn',Ded')) ∧ (MTrn' Conf (Ev::Evs) Conf'')) ==> (trace MTS' (Ev::Evs)))
 `;
 
 

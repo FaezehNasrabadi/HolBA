@@ -1,39 +1,60 @@
 open HolKernel Parse boolLib bossLib;
 open sumTheory;
 open pred_setTheory;
+open listTheory;
 
 val _ = new_theory "property";
     
 (* Trace *)
 val _ = Parse.type_abbrev("trc", ``:'event list``);  
 
+(* Trace property*)
+val traceProperty_def =
+Define`
+traceProperty (Phi:( 'event trc set)) = {∀t i. ∃j. (t ∈ Phi) ∧ ((TAKE i t) ∈ Phi) ∧ (j < i) ∧ ((TAKE j t) ∈ Phi)}
+                                           `;
+
+(* Trace property NOT*)
+val tracePropertyNot_def =
+Define`
+tracePropertyNot (Phi:( 'event trc set)) = {∀t i. ∃j. (t ∉ Phi) ∧ ((TAKE i t) ∉ Phi) ∧ (j < i) ∧ ((TAKE j t) ∈ Phi)}
+                                                           `;
+
+val _ = overload_on ("¬", ``tracePropertyNot``);
+
+val trace_def =
+Define
+  `((trace (MTrn,Ded) []) = (∃Conf. (MTrn Conf [] Conf))) ∧
+   ((trace (MTrn,Ded) [e]) = (∃Conf Conf'. (MTrn Conf [e] Conf'))) ∧
+   ((trace (MTrn',Ded') (Ev::Evs)) = (∃MTrn Mded Trn Ded Conf Conf' Conf''. (trace (Trn,Ded) [Ev]) ∧ (trace (MTrn,Mded) Evs) ∧ (MTrn Conf Evs Conf') ∧ (Trn Conf' [Ev] Conf'') ∧ (MTrn' Conf (Ev::Evs) Conf'')))
+`;
+        
+(*    
 val (trace_rules, trace_ind, trace_cases)
 = Hol_reln
   `(((MTS = (MTrn,Ded)) ∧ (MTrn Conf [] Conf)) ==> (trace MTS [])) ∧
 (((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf')) ==> (trace MTS Evs)) ∧
 (((MTS = (MTrn,Ded)) ∧ (MTrn Conf Evs Conf') ∧ (Trn Conf' Ev Conf'') ∧ (MTS' = (MTrn',Ded')) ∧ (MTrn' Conf (Ev::Evs) Conf'')) ==> (trace MTS' (Ev::Evs)))
 `;
-
-
-(* Trace property NOT*)
-val tracePropertyNot_def =
-Define`
-tracePropertyNot (Phi:( 'event trc set)) = {t|(t ∉ Phi) ∧ (TL(t) ∈ Phi)}
-                                                           `;
-
-val _ = overload_on ("¬", ``tracePropertyNot``);
+*)
 
 (* Traces *)
 val traces_def =
 Define`
-traces MTS Phi = {t| (trace MTS t) ∧ (t ∈ (tracePropertyNot Phi))}
+traces MTS = {∀t. ∃MTrn Ded. (trace (MTrn,Ded) t) ∧ (MTS = (MTrn,Ded))}
 `;
 
+(*
+val traces_def =
+Define`
+traces MTS Phi = {t| (trace MTS t) ∧ (t ∈ (tracePropertyNot Phi))}
+`;
+*)
 
 (* Satisfy Trace property *)
 val satisfyTraceProperty_def =
 Define`
-satisfyTraceProperty MTS Phi = ((traces MTS Phi) ⊆ Phi)
+satisfyTraceProperty MTS Phi = ((traces MTS) ⊆ Phi)
                                                            `;
 val _ = set_mapped_fixity { fixity = Infixl 90,
                             term_name = "apply_satisfyTraceProperty",
@@ -45,7 +66,7 @@ val _ = overload_on ("apply_satisfyTraceProperty", ``satisfyTraceProperty``);
 (* Trace refinement *)
 val traceRefinement_def =
 Define`
-      traceRefinement MTS1 MTS2 = (∀Phi. ((traces MTS1 Phi) ⊆ (traces MTS2 Phi)))
+      traceRefinement MTS1 MTS2 = ((traces MTS1) ⊆ (traces MTS2))
                                                                                                                               `;
 val _ = set_mapped_fixity { fixity = Infixl 95,
                             term_name = "apply_traceRefinement",

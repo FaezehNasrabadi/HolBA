@@ -41,32 +41,47 @@ val composeDed_commutative_pred2_thm = store_thm(
   ASM_SIMP_TAC std_ss []              
   );
 
- 
+(*
 val compose_vs_module_thm = store_thm(
 "compose_vs_module_thm", ``
 !MTrn1 Ded1 MTrn2 Ded2 MTrn Ded (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
                  ((MTS1 ⊑ MTS2) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded))) ==> ((MTS1 || MTS) ⊑ (MTS2 || MTS)) ``
   ,
   
-  REPEAT GEN_TAC >>        
-  REWRITE_TAC [traceRefinement_def,traces_def,trace_rules,trace_cases,trace_ind,trace_cases,tracePropertyNot_def]>>
+  REPEAT GEN_TAC >>
+  REWRITE_TAC [traceRefinement_def]>>
+              REWRITE_TAC [traces_def]>>
+              REWRITE_TAC [trace_def]>>
+           ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) [] >>
+                          REPEAT STRIP_TAC >>
+                             Cases_on `MTS1 = MTS2`  >>
+ FULL_SIMP_TAC (simpLib.++(bossLib.bool_ss, boolSimps.LET_ss)) []>>
+ 
+                         REPEAT EQ_TAC >> REPEAT STRIP_TAC >>
+                         PAT_X_ASSUM ``!t. A`` (ASSUME_TAC o (Q.SPECL [`t`]))>>
+Q.EXISTS_TAC `MTrn'` >> Q.EXISTS_TAC `Ded'` >>
+REPEAT STRIP_TAC >>
+CONJUNCT2
+
+                         
+  REWRITE_TAC [traceRefinement_def,traces_def,trace_def]>>
   ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>
   REWRITE_TAC [composeMultiOperation_def]>>
   ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>
   REPEAT STRIP_TAC >>
-  PAT_X_ASSUM ``!Phi. A`` (ASSUME_TAC o (Q.SPECL [`Phi`]))>>
+  PAT_X_ASSUM ``?MTrn' Ded'. A`` (ASSUME_TAC o (Q.SPECL [`MTrn'`,`Ded'`])) >>
   Cases_on `MTS1 = MTS2 ∧ MTrn1 = MTrn2 ∧ Ded1 = Ded2`  >>
   ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>  
   EVERY [REPEAT STRIP_TAC] >>
   cheat
         );
 
-(*
+ FULL_SIMP_TAC (simpLib.++(bossLib.bool_ss, boolSimps.LET_ss)) []
 WIP                
 SET_TAC [Q.SPECL [`MTS`, `t`] trace_cases,composeMuRe_cases,composeRel_def] 
 
        
-REWRITE_TAC [composeMuRe_cases,composeRel_def]
+REWRITE_TAC [composeDed_def]
 
 
  PSet_ind.SET_INDUCT_TAC 
@@ -80,6 +95,8 @@ FULL_SIMP_TAC (std_ss) [listTheory.EVERY_DEF]
 
 
   SIMP_TAC (std_ss ++ SET_SPEC_ss) []
+
+ REWRITE_TAC [DE_MORGAN_THM]
 *)
 
 

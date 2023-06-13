@@ -85,22 +85,21 @@ val _ = Parse.type_abbrev("cmtrel", ``:('symb, 'pred1, 'state1, 'event1 + 'event
   ('symb, 'pred2, 'state2, 'event2 + 'eventS) mtrel -> 
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) mtrel``);
 
-(*
+
 val composeMuRe_def =
 Define  `
-        (composeMuRe ((Sym,P,S1,S2):(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)) (Ev:(('event1+'eventS) + ('event2 +'eventS)) list) =
+        (composeMuRe ((Sym,P,S1,S2):(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)) (Ev:(('event1+'eventS) + ('event2 +'eventS)) list) ((Sym',P',S1',S2'):(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)) =
          (case Ev of
-            [] => (λ(Sym',P',S1',S2'). (Sym,P,S1,S2) = (Sym',P',S1',S2'))  
-          | [e] => (composeTrn (Sym,P,S1,S2) e)
-          | (e::ev) => (λ(Sym'', P'', S1'', S2''). 
-                     ∃(Sym', P', S1', S2').
-                       (composeMuRe (Sym,P,S1,S2) [e]) (Sym', P', S1', S2') ∧
-                       (composeMuRe (Sym',P',S1',S2') ev) (Sym'', P'', S1'', S2'')
-                   )
+            [] => ((Sym,P,S1,S2) = (Sym',P',S1',S2'))  
+          | [e] => (composeTrn (Sym,P,S1,S2) e (Sym',P',S1',S2'))
+          | (e::ev) => (∃(Sym'', P'', S1'', S2''). 
+                          composeMuRe (Sym,P,S1,S2) [e] (Sym'', P'', S1'', S2'') ∧
+                          composeMuRe (Sym',P',S1',S2') ev (Sym', P', S1', S2')
+                       )
          ))
         `;
 
-*)
+
 
 
 val composesystems_def =
@@ -114,39 +113,62 @@ Define`
              | (INL (INR (E:'eventS))) => (C' = composeCon C1' C2') ∧ (INR E = e1) ∧ (INR E = e2) 
             ))`;     
 
-
 val composemultitransystems_def =
 Define`
-      composemultitransystems (C1,E1,C1') (C2,E2,C2') =
-(λ(C,E,C').
+      composemultitransystems (C1,E1,C1') (C2,E2,C2') (C,E,C') =
             (case E of
                []  => (C = C') ∧ (C1 = C1') ∧ (C2 = C2') ∧ (E1 = []) ∧ (E2 = [])        
              | [e] => (∃e1 e2. (composesystems (C1,e1,C1') (C2,e2,C2') (C,e,C')) ∧ (E1 = [e1]) ∧ (E2 = [e2]))
-             | _ => (composemultitransystems (C1,E1,C1') (C2,E2,C2'))
-            ))`;
-            
+             | (e::ev) => (∃e1 e2 ev1 ev2 C1'' C2'' C''.  (composesystems (C1,e1,C1'') (C2,e2,C2'') (C,e,C'')) ∧ (E1 = e1::ev1) ∧ (E2 = e2::ev2) ∧ (composemultitransystems (C1'',ev1,C1') (C2'',ev2,C2') (C'',ev,C')))
+            )`;
+
+
+(*
+val evtrace_def =
+Define
+`
+(evtrace (Conf : α) t (Conf' : α) t' = (case t of
+                                          ([]) => ((t' = []) ∧ (Conf = Conf'))
+                                        | _ => ((t' = t) ∧ (Conf ≠ Conf'))
+                                       ))`;
+                                 
+
+val trevtraces_def =
+Define`
+trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ∧ (MTrn Conf t Conf'))
+                    `;
+                    
+(* Traces *)
+val tracestwo_def =
+Define`
+      tracestwo (((Sym,P,S1,S2):(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2)),(Ev:(('event1+'eventS) + ('event2 +'eventS)) list),((Sym',P',S1',S2'):(('symb set) # (('pred1 + 'pred2) set) # 'state1 # 'state2))) =
+(case Ev of
+   [] => {}
+ | _ => {Ev}
+ )`;
+
+                                                                                                                                                                                                                 val tracesone_def =
+Define`
+      tracesone (((Sym,P1,S1):(('symb set) # ('pred set) # 'state)),(t:'event list),((Sym',P1',S1'):(('symb set) # ('pred set) # 'state))) = {t}
+                                                                                                                                             `;
+
+val trace_def =
+Define`
+      traces (((Sym1,P1,S1):(('symb set) # ('pred1 set) # 'state1)),(t1:'ev1 list),((Sym1',P1',S1'):(('symb set) # ('pred1 set) # 'state1))) (((Sym2,P2,S2):(('symb set) # ('pred set) # 'state)),(t2:'ev2 list),((Sym2',P2',S2'):(('symb set) # ('pred2 set) # 'state2))) = {t}
+`;                       
+                                                                                                                                                   
+                
+val compose_vs_module_thm = store_thm(
+"compose_vs_module_thm", ``
+!Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' t1 t2 t.
+                 ((Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+                 ) ==> ((tracestwo (composemultitransystems (Conf1,t1,Conf1') (Conf,t,Conf'))) ⊆ (tracestwo ((Conf2,t2,Conf2') (Conf,t,Conf')))) ``
+
+
+*)
+
+                              
 val _ = export_theory();
- (composemultitransystems (C1,[e1],C1'') (C2,[e2],C2'') (C,[e],C'')) ∧ (E1 = e1::ev1) ∧ (E2 = e2::ev2) ∧ (composemultitransystems (C1'',ev1,C1') (C2'',ev2,C2') (C'',ev,C')))
- | (e::ev) => (∃e1 e2 ev1 ev2 C1'' C2'' C''.
-                 (composesystems (C1,e1,C1'') (C2,e2,C2'') (C,e,C'')) ∧ (E1 = e1::ev1) ∧ (E2 = e2::ev2))
 
-
-
-
-val composemultitransystems_def =
-Define`
-(composemultitransystems (C1,E1,C1') (C2,E2,C2') = ((composesystems (C1,e1,C1'') (C2,e2,C2'') (C,e,C'')) ∧ (E1 = e1::ev1) ∧ (E2 = e2::ev2) ∧ (composemultitransystems (C1'',ev1,C1') (C2'',ev2,C2') (C'',ev,C'))))
-`;
-                                                                
-   (case E of
-      []  => (C = C') ∧ (C1 = C1') ∧ (C2 = C2') ∧ (E1 = []) ∧ (E2 = [])        
-    | [e] => (∃e1 e2. (composesystems (C1,e1,C1') (C2,e2,C2') (C,e,C')) ∧ (E1 = [e1]) ∧ (E2 = [e2]))
-    | _ => (composemultitransystems (C1,E1,C1') (C2,E2,C2'))
-   ))`;
-
-     val composemultitransystems_def =
-Define`
-      (composemultitransystems (C1,[],C1') (C2,[],C2') = (λ(C,E,C'). (C = C') ∧ (C1 = C1') ∧ (C2 = C2') ∧ (E = []))) ∧
-(composemultitransystems (C1,E1,C1') (C2,E2,C2') = (λ(C,E,C'). ∃e1 e2 e. (E = [e]) ∧ (composesystems (C1,e1,C1') (C2,e2,C2') (C,e,C')) ∧ (E1 = [e1]) ∧ (E2 = [e2]))) ∧
-(composemultitransystems (C1,E1,C1') (C2,E2,C2') = (∃e1 e2 ev1 ev2 C1'' C2'' C C' C'' e ev.  (composesystems (C1,e1,C1'') (C2,e2,C2'') (C,e,C'')) ∧ (E1 = e1::ev1) ∧ (E2 = e2::ev2) ∧ (composemultitransystems (C1'',ev1,C1') (C2'',ev2,C2') (C'',ev,C'))))
-`;

@@ -23,7 +23,7 @@ tracePropertyNot (Phi:( 'event trc set)) = {∀t i. ∃j. (t ∉ Phi) ∧ ((TAKE
 val _ = overload_on ("¬", ``tracePropertyNot``);
 
 
-
+(*
 val evtrace_def =
 Define
 `
@@ -31,7 +31,20 @@ Define
                                           ([]) => ((t' = []) ∧ (Conf = Conf'))
                                         | _ => ((t' = t) ∧ (Conf ≠ Conf'))
                                        ))`;
-                                 
+
+val trevtraces_def =
+Define`
+      trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ==> (MTrn Conf t Conf'))
+                          `;
+val traces_def =
+Define`
+      traces (MTrn,Ded) =  {t | trevtrace MTrn t}
+                           `;
+*)
+val traces_def =
+Define`
+      traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((MTrn Conf [] Conf') ==> ((t = []) ∧ (Conf = Conf'))) ∧ ((MTrn Conf (e::ev) Conf') ==> ((t = (e::ev)) ∧ (Conf ≠ Conf')))}
+                           `;                                
 (*
 val evtrace_def =
 Define
@@ -66,7 +79,7 @@ val traces_def =
 Define`
 traces (MTrn,Ded) =  {t | trevtrace MTrn t}
 `;
-*)
+
 val trevtraces_def =
 Define`
 trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ∧ (MTrn Conf t Conf'))
@@ -75,14 +88,14 @@ trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ∧ (MTrn Conf t
 (* Traces of a system *)
 val traces_def =
 Define`
-      traces (MTrn,Ded) = {t| ∃(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). (MTrn (Sym,P,S) t (Sym',P',S'))}
+      traces (MTrn,Ded) = {t| ∀(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). (MTrn (Sym,P,S) t (Sym',P',S'))}
 `;
 
 (* Traces of 2 systems *)
 val comptraces_def =
 Define`
-      comptraces (CMTrn,CDed) = {t| ∃(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
-`;
+      comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;*)
 (*
 val traces_def =
 Define`

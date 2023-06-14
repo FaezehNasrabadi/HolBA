@@ -40,12 +40,38 @@ val traces_def =
 Define`
       traces (MTrn,Ded) =  {t | trevtrace MTrn t}
                            `;
-*)
+
 val traces_def =
 Define`
       traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((MTrn Conf [] Conf') ==> ((t = []) ∧ (Conf = Conf'))) ∧ ((MTrn Conf (e::ev) Conf') ==> ((t = (e::ev)) ∧ (Conf ≠ Conf')))}
-                           `;                                
+                         `;
+
+val traces_def =
+Define`
+      traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((t = []) ==> ((MTrn Conf [] Conf) ∧ ((MTrn Conf [] Conf) = F))) ∧ ((t = (e::ev)) ==> ((MTrn Conf (e::ev) Conf') ∧ ((MTrn Conf (e::ev) Conf') = T))) }
+                           `;     *)
+
+val traces_def =
+Define`
+      traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((t = []) ==> (MTrn Conf [] Conf)) ∧ ((t = (e::ev)) ==> (MTrn Conf (e::ev) Conf')) }
+                         `;
+
+                                
+val tracesone_def =
+Define`
+      tracesone Tr C t C' =  {t}
+                             `;
+                             
+
+                                 val tracestwo_def =
+Define`
+      tracestwo Re1 Re2 C E C' =  {E}
+                             `;
 (*
+
+
+
+             
 val evtrace_def =
 Define
 `

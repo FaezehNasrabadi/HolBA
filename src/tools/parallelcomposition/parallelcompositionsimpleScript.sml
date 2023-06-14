@@ -33,7 +33,14 @@ Define`
           (INL (F1:'pred1)) => (ded1 (IMAGE OUTL P3) F1)
         | (INR (F2:'pred2)) => (ded2 (IMAGE OUTR P3) F2)
        )):('pred1 + 'pred2) tded`;
-                                                                
+
+
+val composeRelations_defn = Lib.with_flag (Defn.def_suffix, "") Defn.Hol_defn
+  "composeRelations"
+  ‘composeRelations C t C'  =
+     if t = [] then
+        C = C'
+     else C ≠ C'’;                  
 (* compose transition relation *)
 val composeRel_def =
 Define`

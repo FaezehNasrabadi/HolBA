@@ -91,7 +91,12 @@ PAT_X_ASSUM ``A = t`` (ASSUME_TAC o GSYM)
 FULL_SIMP_TAC (std_ss) [listTheory.EVERY_DEF]
         
 
- UNDISCH_TAC ``A ==> B`` >> ONCE_ASM_REWRITE_TAC [] >> POP_ASSUM K_TAC
+ UNDISCH_TAC `` (∀Conf Conf' e ev.
+           (MTrn1 Conf [] Conf' ⇒ x = [] ∧ Conf = Conf') ∧
+           (MTrn1 Conf (e::ev) Conf' ⇒ x = e::ev ∧ Conf ≠ Conf')) ⇒
+        ∀Conf Conf' e ev.
+          (MTrn2 Conf [] Conf' ⇒ x = [] ∧ Conf = Conf') ∧
+          (MTrn2 Conf (e::ev) Conf' ⇒ x = e::ev ∧ Conf ≠ Conf')`` >> ONCE_ASM_REWRITE_TAC [] >> POP_ASSUM K_TAC
 
 
   SIMP_TAC (std_ss ++ SET_SPEC_ss) []
@@ -113,8 +118,9 @@ ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>
        FULL_SIMP_TAC (simpLib.++(bossLib.bool_ss, boolSimps.LET_ss)) [] >>
        REPEAT STRIP_TAC >>
        REPEAT EQ_TAC >>
-
-
+val thm = ASSUME ``(!Conf Conf' e ev. A) ==> B``;
+val term = UNDISCH thm;
+DISCH_TAC THEN (ASSUME_TAC (ASSUME ``(!Conf Conf' e ev. A) ==> B``));
 
         REWRITE_TAC [traceRefinement_def,traces_def]>>
   ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>
@@ -161,8 +167,9 @@ val compose_vs_module_thm = store_thm(
                  (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
 )==> (MTS1 ⊑ MTS2) ==> ((MTS1 || MTS) ⊑ (MTS2 || MTS)) ``
   ,
-                 
-
+       POP_ASSUM (ASSUME_TAC (DISCH_ALL (ASSUME ``(!Conf Conf' e ev. A) ==> B``)) )
+       PAT_X_ASSUM ``(!Conf Conf' e ev. A) ==> B`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))       
+DISCH_TAC
 REWRITE_TAC [traceRefinement_def] >>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [] >>
 REWRITE_TAC [composeMultiOperation_def]
@@ -172,21 +179,21 @@ ASM_REWRITE_TAC [evtrace_def]
 Cases_on `MTrn1 = MTrn2` 
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 REPEAT STRIP_TAC
-
+IMP_REWRITE_RULE I
 UNDITSH
 
 ASM_REWRITE_TAC [ASSUME ``Conf = (Sym,P,S)``]
 `(MTrn1 Conf [] Conf) ∨ (MTrn2 Conf' [] Conf')` by DECIDE_TAC
               
-ASM_REWRITE_TAC[(ASSUME ``MTrn1 < MTrn2``)]
+ASM_REWRITE_TAC[Q.SPECL [`Conf`, `Conf'`] composeMuRe_def]
              
-SET_TAC [Q.SPECL [`Conf`, `Conf'`] evtrace_def,composeMuRe_def,composeRel_def]        
+SET_TAC [Q.SPECL [`Conf`, `Conf'`] composeMuRe_def]        
 FULL_SIMP_TAC std_ss []            
 ASM_REWRITE_TAC [evtrace_def]
-ASM_REWRITE_TAC [composeMuRe_def]
+METIS_TAC [composeMuRe_def]
 
             DB.find_in "NOT" (DB.find "SUBSET");
-        DB.find "MEM_DEF";
+        DB.find "RSUBSET";
 !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t
 
 rw[]
@@ -212,24 +219,26 @@ ASM_REWRITE_TAC [SUBSET_DEF]>>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>          
 REPEAT STRIP_TAC>>
 PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))>>
-PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
+PAT_X_ASSUM ``∀x. (A) ==> B`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
 PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))>>      
 Induct_on `t'`
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 rw[]
-
+Induct_on `x`
 listTheory.MEM
         Induct_on `t''`
 Cases_on `Conf'' = Conf'³'`
 ISR INR
-  Cases_on `OUTL(h) ∈ LIST_TO_SET(x)`      
+  Cases_on `OUTL(x') ∈ LIST_TO_SET(x)`
+  Cases_on `(IMAGE OUTL (LIST_TO_SET(x'))) = LIST_TO_SET(x)`
+  IMAGE OUTL      
 Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >>
             Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `S2` >>
             Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >>
             Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` >>
       IMP_RES_TAC  composeMuRe_def
 METIS_TAC [composeMuRe_def,composeRel_def] 
-
+Cases_on `x = x`
           Q.SPECL [`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]
 Q.EXISTS_TAC `t'` 
 PAT_X_ASSUM ``!t' Conf Conf'. A`` (ASSUME_TAC o (Q.SPECL [`t'`,`Conf`,`Conf'`]))>>
@@ -238,8 +247,8 @@ PAT_X_ASSUM ``!Conf Conf' e ev. A`` (ASSUME_TAC o (Q.SPECL [`Conf`,`Conf'`,`e`,`
                  ((MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
                  (MTrn2 Conf2 t2 Conf2') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2'))
 ) ==> (( ((MTrn1,Ded1) || (MTrn2,Ded2))) = ( ((MTrn2,Ded2) || (MTrn1,Ded1))))
-
-
+IN_DEF
+Induct_on `e`
   REWRITE_TAC [composeMultiOperation_def]>>
 REWRITE_TAC [comptraces_def]>>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
@@ -260,4 +269,26 @@ REPEAT STRIP_TAC >>
   !MTrn MTrn1 MTrn2 Ded Ded1 Ded2 (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
                  ((MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded))
 )==> (MTS1 ⊑ MTS2) ==> ((MTS1 || MTS) ⊑ (MTS2 || MTS)) 
+
+(∀x. A(x)) ==> B 
+
+  !MTrn MTrn1 Ded Ded1 (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 ((MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn1,Ded1)) ∧ (MTS = (MTrn,Ded)) ∧ (MTS1 ⊑ MTS2)
+)==> ((MTS1 || MTS) ⊑ (MTS2 || MTS))
+
+
+!Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' t1 t2 t (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2: ('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
+                 (((tracesone MTrn1 Conf1 t1 Conf1') ⊆ (tracesone MTrn1 Conf2 t2 Conf2')) ∧
+                (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                 (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> ((tracestwo (composeMultiOperation MTrn1 Conf1 t1 Conf1' MTrn2 Conf t Conf')) ⊆ (tracestwo (MTrn1 Conf2 t2 Conf2' MTrn2 Conf t Conf')))
+
+  
+!Sym1 Sym1' Sym2 Sym2' Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' t1 t2 t (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2: ('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
+                 (((MTrn1 Conf1 t1 Conf1') = (MTrn1 Conf2 t2 Conf2')) ∧
+                (Conf1 = (Sym1,P1,S1)) ∧ (Conf1' = (Sym1',P1',S1')) ∧
+                (Conf2 = (Sym2,P2,S2)) ∧ (Conf2' = (Sym2',P2',S2')) ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> ((composeMultiOperation MTrn1 Conf1 t1 Conf1' MTrn2 Conf t Conf') = (composeMultiOperation MTrn1 Conf2 t2 Conf2' MTrn2 Conf t Conf'))
+              
 *)

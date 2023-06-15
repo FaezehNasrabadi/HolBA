@@ -103,22 +103,22 @@ val _ = Parse.type_abbrev("MulComOpr",
   ``:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys ->
   ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys -> 
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys``);
-(*  
+
 val composeMultiOperation_def =
 Define`
       (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) = (composeMuRe rel1 rel2, composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys)
       `;
- *)     
+(*     
 val composeMultiOperation_def =
 Define`
       composeMultiOperation Re1 (Sym1,P1,S1) E1 (Sym1',P1',S1') Re2 (Sym2,P2,S2) E2 (Sym2',P2',S2') = (composeMuRe Re1 Re2 ((Sym1∪Sym2),(P1<+>P2),S1,S2) (SET_TO_LIST ((LIST_TO_SET E1)<+>(LIST_TO_SET E2))) ((Sym1' ∪ Sym2'),(P1'<+>P2'),S1',S2'))
-      `;
-(*
+      `;*)
+
 val _ = set_mapped_fixity { fixity = Infixl 95,
                             term_name = "apply_composeMultiOperation",
                             tok = "||" };
 
 val _ = overload_on ("apply_composeMultiOperation", ``composeMultiOperation``);
-*)
+
      
 val _ = export_theory();

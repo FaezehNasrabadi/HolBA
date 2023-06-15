@@ -5,7 +5,7 @@ open parallelcompositionTheory;
 open propertyTheory;
 open sigma_algebraTheory;
 open listTheory;
-
+open tautLib;
 val _ = new_theory "derived_rules";
 
 val composeDed_prop_thm = store_thm(
@@ -63,7 +63,7 @@ Q.EXISTS_TAC `MTrn'` >> Q.EXISTS_TAC `Ded'` >>
 REPEAT STRIP_TAC >>
 CONJUNCT2
 
-                         
+        DISCH                 
   REWRITE_TAC [traceRefinement_def,traces_def]>>
   ASM_SIMP_TAC (std_ss++pred_setSimps.PRED_SET_ss) []>>
   REWRITE_TAC [composeMultiOperation_def]>>
@@ -101,7 +101,9 @@ FULL_SIMP_TAC (std_ss) [listTheory.EVERY_DEF]
 
   SIMP_TAC (std_ss ++ SET_SPEC_ss) []
 
- REWRITE_TAC [DE_MORGAN_THM]
+ REWRITE_TAC [ASSUME ``case [] of
+          [] => x = [] ∧ Conf = Conf'
+        | v2::v3 => x = [] ∧ Conf ≠ Conf'``]
 
 
 
@@ -181,22 +183,28 @@ ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSi
 REPEAT STRIP_TAC
 IMP_REWRITE_RULE I
 UNDITSH
-
+ASM_CASES_TAC ``x = []``
 ASM_REWRITE_TAC [ASSUME ``Conf = (Sym,P,S)``]
 `(MTrn1 Conf [] Conf) ∨ (MTrn2 Conf' [] Conf')` by DECIDE_TAC
               
 ASM_REWRITE_TAC[Q.SPECL [`Conf`, `Conf'`] composeMuRe_def]
              
 SET_TAC [Q.SPECL [`Conf`, `Conf'`] composeMuRe_def]        
-FULL_SIMP_TAC std_ss []            
-ASM_REWRITE_TAC [evtrace_def]
-METIS_TAC [composeMuRe_def]
-
+FULL_SIMP_TAC std_ss []
+ASM_CASES_TAC        
+ASM_REWRITE_TAC []
+FULL_SIMP_TAC (simpLib.++(bossLib.bool_ss, boolSimps.LET_ss)) [composeMuRe_def]
+RES_TAC
+IMP_RES_TAC(evtrace_def)
+IMP_RES_TAC(evtrace_def)
             DB.find_in "NOT" (DB.find "SUBSET");
-        DB.find "RSUBSET";
+        DB.find "CASE";
 !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t
 
 rw[]
+REWRITE_TAC [NOT_CONS_NIL]
+(MATCH_MP_TAC ( tautLib.TAUT_PROVE ``if p then x = [] /\ Conf = Conf' else q``)) `case [] of [] => x = [] /\ Conf = Conf' | v2::v3 => x = [] /\ Conf ≠ Conf'
+CONV_TAC (REDEPTH_CONV (RATOR_CONV (RAND_CONV (REWR_CONV `case [] of [] => x = [] /\ Conf = Conf' | v2::v3 => x = [] /\ Conf <> Conf'`)))) []
 
 val compose_vs_module_thm = store_thm(
 "compose_vs_module_thm", ``
@@ -219,16 +227,18 @@ ASM_REWRITE_TAC [SUBSET_DEF]>>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>          
 REPEAT STRIP_TAC>>
 PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))>>
-PAT_X_ASSUM ``∀x. (A) ==> B`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
+PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
 PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))>>      
 Induct_on `t'`
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 rw[]
 Induct_on `x`
 listTheory.MEM
-        Induct_on `t''`
+        Induct_on `t'`
 Cases_on `Conf'' = Conf'³'`
 ISR INR
+RES_TAC
+CONJUNCTS_TAC o SPEC_ALL
   Cases_on `OUTL(x') ∈ LIST_TO_SET(x)`
   Cases_on `(IMAGE OUTL (LIST_TO_SET(x'))) = LIST_TO_SET(x)`
   IMAGE OUTL      
@@ -236,7 +246,9 @@ Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >>
             Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `S2` >>
             Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >>
             Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` >>
-      IMP_RES_TAC  composeMuRe_def
+      IMP_RES_TAC(composeMuRe_def)
+      SRW_TAC[][]
+      REWRITE_TAC[ASSUME ``Conf = (Sym,P1<+>P,S1,S')``] by PROVE_TAC []
 METIS_TAC [composeMuRe_def,composeRel_def] 
 Cases_on `x = x`
           Q.SPECL [`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]

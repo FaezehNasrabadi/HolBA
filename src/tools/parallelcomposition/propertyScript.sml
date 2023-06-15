@@ -23,6 +23,10 @@ tracePropertyNot (Phi:( 'event trc set)) = {∀t i. ∃j. (t ∉ Phi) ∧ ((TAKE
 val _ = overload_on ("¬", ``tracePropertyNot``);
 
 
+val evtrace_def =
+Define
+`
+(evtrace (Conf : α) (t:β list) (Conf' : α) (t':β list) = (if (t = []) then ((t' = []) ∧ Conf = Conf') else ((t' = t) ∧ Conf ≠ Conf')))`;
 (*
 val evtrace_def =
 Define
@@ -31,7 +35,7 @@ Define
                                           ([]) => ((t' = []) ∧ (Conf = Conf'))
                                         | _ => ((t' = t) ∧ (Conf ≠ Conf'))
                                        ))`;
-
+*)
 val trevtraces_def =
 Define`
       trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ==> (MTrn Conf t Conf'))
@@ -40,7 +44,7 @@ val traces_def =
 Define`
       traces (MTrn,Ded) =  {t | trevtrace MTrn t}
                            `;
-
+(*
 val traces_def =
 Define`
       traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((MTrn Conf [] Conf') ==> ((t = []) ∧ (Conf = Conf'))) ∧ ((MTrn Conf (e::ev) Conf') ==> ((t = (e::ev)) ∧ (Conf ≠ Conf')))}
@@ -49,7 +53,7 @@ Define`
 val traces_def =
 Define`
       traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((t = []) ==> ((MTrn Conf [] Conf) ∧ ((MTrn Conf [] Conf) = F))) ∧ ((t = (e::ev)) ==> ((MTrn Conf (e::ev) Conf') ∧ ((MTrn Conf (e::ev) Conf') = T))) }
-                           `;     *)
+                           `;     
 
 val traces_def =
 Define`
@@ -67,7 +71,7 @@ Define`
 Define`
       tracestwo Re1 Re2 C E C' =  {E}
                              `;
-(*
+
 
 
 

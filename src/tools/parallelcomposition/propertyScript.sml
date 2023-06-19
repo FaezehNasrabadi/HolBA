@@ -35,7 +35,7 @@ Define
                                           ([]) => ((t' = []) ∧ (Conf = Conf'))
                                         | _ => ((t' = t) ∧ (Conf ≠ Conf'))
                                        ))`;
-*)
+
 val trevtraces_def =
 Define`
       trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ==> (MTrn Conf t Conf'))
@@ -44,7 +44,7 @@ val traces_def =
 Define`
       traces (MTrn,Ded) =  {t | trevtrace MTrn t}
                            `;
-(*
+
 val traces_def =
 Define`
       traces (MTrn,_) =  {t | ∀(Conf:β) (Conf':β) e ev. ((MTrn Conf [] Conf') ==> ((t = []) ∧ (Conf = Conf'))) ∧ ((MTrn Conf (e::ev) Conf') ==> ((t = (e::ev)) ∧ (Conf ≠ Conf')))}
@@ -114,18 +114,26 @@ val trevtraces_def =
 Define`
 trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ∧ (MTrn Conf t Conf'))
                     `;
-                    
+     *)               
 (* Traces of a system *)
 val traces_def =
 Define`
       traces (MTrn,Ded) = {t| ∀(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). (MTrn (Sym,P,S) t (Sym',P',S'))}
 `;
 
+val trace_twosystem_thm = store_thm(
+  "trace_twosystem_thm", ``
+                                ∀MTrn1 Ded1 MTrn2 Ded2.
+(traces (MTrn1,Ded1) ⊆ traces (MTrn2,Ded2)) ⇒ (∀x. (x ∈ (traces (MTrn1,Ded1)))⇒(∃y. (y ∈ (traces (MTrn2,Ded2)))∧(x = y)))
+                                       ``,
+                         REWRITE_TAC [traces_def,SUBSET_DEF]>>
+                         ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+  );        
 (* Traces of 2 systems *)
 val comptraces_def =
 Define`
       comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
-`;*)
+`;
 (*
 val traces_def =
 Define`

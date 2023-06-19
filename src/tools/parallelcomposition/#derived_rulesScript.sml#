@@ -268,7 +268,7 @@ IMP_RES_TAC traces_def
         Induct_on `t'`
 Cases_on `rel1 = MTrn1`
 ISR INR
-IMP_RES_TAC
+RES_TAC
 CONJUNCTS_TAC o SPEC_ALL
   Cases_on `OUTL(x') ∈ LIST_TO_SET(x)`
   Cases_on `(IMAGE OUTL (LIST_TO_SET(x'))) = LIST_TO_SET(x)`

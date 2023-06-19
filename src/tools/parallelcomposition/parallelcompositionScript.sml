@@ -82,7 +82,22 @@ Define  `
                            (Re2' (Sym'',(IMAGE OUTR P''),S2'') (MAP OUTR ev) (Sym',(IMAGE OUTR P'),S2')) ∧
                            (Re1' (Sym'',(IMAGE OUTL P''),S1'') (MAP OUTL ev) (Sym',(IMAGE OUTL P'),S1')) ∧ (composeMuRe Re1' Re2' (Sym'',P'',S1'',S2'') ev (Sym',P',S1',S2')))
          ))`;
-(*         
+(*
+val composeMuRe_empty_event_thm = store_thm(
+  "composeMuRe_empty_event_thm", ``
+∀Re1 Re2 Sym P S1 S2 E Sym' P' S1' S2'.
+(composeMuRe Re1 Re2 (Sym,P,S1,S2) [] (Sym',P',S1',S2')) ⇒ ((Sym,P,S1,S2) = (Sym',P',S1',S2'))
+                                       ``,
+  REPEAT GEN_TAC >>
+                                 REPEAT STRIP_TAC >>
+                                        rw[]
+                                       Induct_on `E`
+                 IMP_RES_TAC composeMuRe_def                         FULL_SIMP_TAC std_ss [composeMuRe_def]>>
+                                          Cases_on `Conf = Conf'`
+                                 ASM_SIMP_TAC std_ss []
+                                                  ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []   
+  );
+       
 val composeMuRe_empty_event_thm = store_thm(
   "composeMuRe_empty_event_thm", ``
 ∀Re1 Re2 Conf E.

@@ -41,7 +41,7 @@ val composeRelations_defn = Lib.with_flag (Defn.def_suffix, "") Defn.Hol_defn
      if t = [] then
         C = C'
      else C ≠ C'’;    *)              
-(* compose transition relation *)
+(* compose transition relation *)(*
 val composeRel_def =
 Define`
       (composeRel (rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) trel) (rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) trel) = (λ((Sym:'symb set),(P:('pred1 + 'pred2) set),(S1:'state1),(S2:'state2)) (e:(('event1 + 'eventS) + ('event2 + 'eventS))) ((Sym':'symb set),(P':('pred1 + 'pred2) set),(S1':'state1),(S2':'state2)).
@@ -61,7 +61,7 @@ val composeOperation_def =
 Define`
       (composeOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) trel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) trel),(ded2:('pred2) tded)) = (composeRel rel1 rel2, composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) transitionsystem)
 `;
-
+*)
 
 (* multi transitions relation *)
 val _ = Parse.type_abbrev("mtrel", ``:(('symb set) # ('pred set) # 'state) -> ('event list) -> (('symb set) # ('pred set) # 'state) -> bool``);
@@ -75,14 +75,29 @@ val _ = Parse.type_abbrev("cmtrel", ``:('symb, 'pred1, 'state1, 'event1 + 'event
   ('symb, 'pred2, 'state2, 'event2 + 'eventS) mtrel -> 
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) mtrel``);
 
-
+(*
 val composeMuRe_def =
 Define  `
         ((composeMuRe Re1 Re2 (Sym,P,S1,S2) [] (Sym',P',S1',S2')) = ((Sym,P,S1,S2) = (Sym',P',S1',S2')))  ∧
         ((composeMuRe Re1 Re2 (Sym,P,S1,S2) [e] (Sym',P',S1',S2')) = (∃rel1 rel2. (composeRel rel1 rel2 (Sym,P,S1,S2) e (Sym',P',S1',S2')) ∧ (rel1 (Sym,(IMAGE OUTL P),S1) (OUTL e) (Sym',(IMAGE OUTL P'),S1')) ∧ (Re1 (Sym,(IMAGE OUTL P),S1) (MAP OUTL [e]) (Sym',(IMAGE OUTL P'),S1')) ∧ (rel2 (Sym,(IMAGE OUTR P),S2) (OUTR e) (Sym',(IMAGE OUTR P'),S2')) ∧ (Re2 (Sym,(IMAGE OUTR P),S2) (MAP OUTR [e]) (Sym',(IMAGE OUTR P'),S2'))))  ∧
 ((composeMuRe Re1 Re2 (Sym,P,S1,S2) (e::ev) (Sym'',P'',S1'',S2'')) = 
  (∃Sym' P' S1' S2' rel1 rel2 Re1' Re2'. (composeRel rel1 rel2 (Sym,P,S1,S2) e (Sym',P',S1',S2')) ∧ (rel1 (Sym,(IMAGE OUTL P),S1) (OUTL e) (Sym',(IMAGE OUTL P'),S1')) ∧ (Re1 (Sym,(IMAGE OUTL P),S1) (MAP OUTL (e::ev)) (Sym'',(IMAGE OUTL P''),S1'')) ∧ (rel2 (Sym,(IMAGE OUTR P),S2) (OUTR e) (Sym',(IMAGE OUTR P'),S2')) ∧ (Re2 (Sym,(IMAGE OUTR P),S2) (MAP OUTR (e::ev)) (Sym'',(IMAGE OUTR P''),S2'')) ∧ (Re2' (Sym',(IMAGE OUTR P'),S2') (MAP OUTR ev) (Sym'',(IMAGE OUTR P''),S2'')) ∧ (Re1' (Sym',(IMAGE OUTL P'),S1') (MAP OUTL ev) (Sym'',(IMAGE OUTL P''),S1'')) ∧ (composeMuRe Re1' Re2' (Sym',P',S1',S2') ev (Sym'',P'',S1'',S2''))))
-`;
+`;*)
+
+val composeMuRe_def =
+Define  `
+        ((composeMuRe Re1 Re2 (Sym,P,S1,S2) [] (Sym',P',S1',S2')) = ((Sym,P,S1,S2) = (Sym',P',S1',S2')))  ∧
+        ((composeMuRe Re1 Re2 (Sym,P,S1,S2) [e] (Sym',P',S1',S2')) = ( case e of 
+           (INL (INL (E:'event1))) =>
+             ((Re1 (Sym,(IMAGE OUTL P),S1) [INL E] (Sym',(IMAGE OUTL P'),S1'))∧(S2 = S2')∧((IMAGE OUTR P) = (IMAGE OUTR P')))
+         |   (INR (INL (E:'event2))) =>
+               ((Re2 (Sym,(IMAGE OUTR P),S2) [INL E] (Sym',(IMAGE OUTR P'),S2'))∧(S1 = S1')∧((IMAGE OUTL P) = (IMAGE OUTL P')))
+         |   (INR (INR (E:'eventS))) =>
+               (∃Sym1' Sym2'.
+                  (Re1 (Sym,(IMAGE OUTL P),S1) [INR E] (Sym1',(IMAGE OUTL P'),S1'))∧(Re2 (Sym,(IMAGE OUTR P),S2) [INR E] (Sym2',(IMAGE OUTR P'),S2'))∧(Sym' = Sym1'∪Sym2')))) ∧
+        ((composeMuRe Re1 Re2 (Sym,P,S1,S2) (e::ev) (Sym'',P'',S1'',S2'')) = 
+         (∃Sym' P' S1' S2'. (composeMuRe Re1 Re2 (Sym,P,S1,S2) [e] (Sym',P',S1',S2')) ∧ (composeMuRe Re1 Re2 (Sym',P',S1',S2') ev (Sym'',P'',S1'',S2''))))
+        `;
 
 
 val composeMuRe_empty_event_thm = store_thm(
@@ -92,7 +107,7 @@ val composeMuRe_empty_event_thm = store_thm(
                                        ``,
  FULL_SIMP_TAC std_ss [composeMuRe_def]  
   );
-  
+  (*
 val composeMuRe_single_event_thm = store_thm(
   "composeMuRe_single_event_thm", ``
 ∀Re1 Re2 Sym P S1 S2 e Sym' P' S1' S2'.
@@ -113,7 +128,7 @@ val composeMuRe_multi_events_thm = store_thm(
                                   Q.EXISTS_TAC `S1'³'` >> Q.EXISTS_TAC `S2'³'` >> Q.EXISTS_TAC `rel1` >> Q.EXISTS_TAC `rel2` >>
                                   Q.EXISTS_TAC `Re1'` >> Q.EXISTS_TAC `Re2'` >> REPEAT STRIP_TAC >> ASM_REWRITE_TAC[] >> ASM_REWRITE_TAC[]
                                                                                                                                         
-  );
+  );*)
 
 val composeMuRe_StatetoConfig_thm = store_thm(
   "composeMuRe_StatetoConfig_thm", ``
@@ -182,5 +197,10 @@ val _ = set_mapped_fixity { fixity = Infixl 95,
 
 val _ = overload_on ("apply_composeMultiOperation", ``composeMultiOperation``);
 
-    
+ (*                                   
+val composeMultiOperation_def =
+Define`
+      (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) =
+                             ((λ(Sym,P,S1,S2) E (Sym',P',S1',S2'). composeMuRe rel1 rel2 (Sym,P,S1,S2) E (Sym',P',S1',S2')), composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys)
+      `;*)
 val _ = export_theory();

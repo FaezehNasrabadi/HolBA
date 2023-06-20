@@ -8,6 +8,16 @@ open listTheory;
 open tautLib;
 val _ = new_theory "derived_rules";
 
+    
+val same_relation_thm = store_thm(
+  "same_relation_thm", ``
+ ∀Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 Ded Ded1 Ded2 t1 t2 (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn1 Conf2 t2 Conf2')) 
+) ==> ((comptraces ((MTrn1,Ded1) || (MTrn,Ded))) ⊆ (comptraces ((MTrn1,Ded2) || (MTrn,Ded))))                                                      
+      ``,
+REWRITE_TAC [composeMultiOperation_def,comptraces_def,traces_def] >>
+ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+  ); 
 (*
 val assume_ch_thm = store_thm(
   "assume_ch_thm", ``
@@ -67,7 +77,7 @@ val compose_vs_module_thm = store_thm(
  
                          REPEAT EQ_TAC >> REPEAT STRIP_TAC >>
                          PAT_X_ASSUM ``!t. A`` (ASSUME_TAC o (Q.SPECL [`t`]))>>
-Q.EXISTS_TAC `MTrn'` >> Q.EXISTS_TAC `Ded'` >>
+Q.EXISTS_TAC `rel1` >> Q.EXISTS_TAC `rel2` >>
 REPEAT STRIP_TAC >>
 CONJUNCT2
 
@@ -243,13 +253,13 @@ PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P
 PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
 PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))>>      
 Induct_on `h`
-ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 rw[]
-Induct_on `x''`
+Induct_on `x`
 REWRITE_TAC[composeMuRe_empty_event_thm]
 GEN_TAC
 EQ_TAC
-Induct_on `t2`
+Induct_on `t`
 REWRITE_TAC[composeMuRe_empty_event_thm]
 IMP_RES_TAC composeMuRe_single_event_thm
 REWRITE_TAC[composeMuRe_single_event_thm]
@@ -260,15 +270,22 @@ IMP_RES_TAC composeMuRe_single_event_thm
             FULL_SIMP_TAC std_ss [composeRel_def]
             ASM_REWRITE_TAC[]
 listTheory.MEM
+`OUTL(h) ∈ LIST_TO_SET(t2)` by PROVE_TAC []
+` MEM x t2` by PROVE_TAC []
+
 ASM_CASES_TAC ``(h:('event1 + 'eventS) + 'event2 + 'eventS)``
 cases_tac `h`
 FULL_SIMP_TAC std_ss [traces_def]
 FULL_SIMP_TAC std_ss [SUBSET_DEF]
 IMP_RES_TAC traces_def
         Induct_on `t'`
-Cases_on `rel1 = MTrn1`
+Cases_on `OUTL(h) ∈ LIST_TO_SET(t1)`
+Cases_on `h ∈ IMAGE INL (LIST_TO_SET(t1))`
+Cases_on `(h = INL (INL E)) ∧ t1 = [INL E]`
+METIS_TAC[]
 ISR INR
-IMP_RES_TAC
+RES_TAC
+ARB_TAC
 CONJUNCTS_TAC o SPEC_ALL
   Cases_on `OUTL(x') ∈ LIST_TO_SET(x)`
   Cases_on `(IMAGE OUTL (LIST_TO_SET(x'))) = LIST_TO_SET(x)`
@@ -279,7 +296,7 @@ Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >>
             Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` >>
       IMP_RES_TAC(composeMuRe_def)
       SRW_TAC[][]
-      REWRITE_TAC[ASSUME ``Conf = (Sym,P1<+>P,S1,S')``] by PROVE_TAC []
+      `OUTL(h) ∈ LIST_TO_SET(t2)` by PROVE_TAC []
 METIS_TAC [composeMuRe_def,composeRel_def] 
 Cases_on `x = x`
           Q.SPECL [`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]
@@ -303,7 +320,7 @@ REPEAT STRIP_TAC >>
        REPEAT EQ_TAC >>
        REPEAT STRIP_TAC >>
 
-
+Cases_on `rel1 = rel1'`
 
 !Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
                  (((traces MTS1) ⊆ (traces MTS2)) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
@@ -333,10 +350,47 @@ REPEAT STRIP_TAC >>
 
   
 !Sym1 Sym1' Sym2 Sym2' Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' t1 t2 t (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2: ('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
-                 (((MTrn1 Conf1 t1 Conf1') = (MTrn1 Conf2 t2 Conf2')) ∧
+                 ((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn2 Conf2 t2 Conf2')) ∧
                 (Conf1 = (Sym1,P1,S1)) ∧ (Conf1' = (Sym1',P1',S1')) ∧
                 (Conf2 = (Sym2,P2,S2)) ∧ (Conf2' = (Sym2',P2',S2')) ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
 ) ==> ((composeMultiOperation MTrn1 Conf1 t1 Conf1' MTrn2 Conf t Conf') = (composeMultiOperation MTrn1 Conf2 t2 Conf2' MTrn2 Conf t Conf'))
 
 
+  !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn1 Conf2 t2 Conf2')) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn1,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
+                 (MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                 (MTrn1 Conf2 t2 Conf2') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                 (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> ((comptraces (MTS1 || MTS)) ⊆ (comptraces (MTS2 || MTS))) 
+
+
+  !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 (((traces MTrn1 Conf1 t1 Conf1') = (traces MTrn2 Conf2 t2 Conf2')) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
+                 (MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                 (MTrn2 Conf2 t2 Conf2') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                 (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> ((comptraces (composeMultiOperation MTrn1 (Sym,P1,S1) t1 (Sym',P1',S1') MTrn (Sym,P,S) t (Sym',P',S'))) = (comptraces (composeMultiOperation MTrn2 (Sym,P2,S2) t2 (Sym',P2',S2') MTrn (Sym,P,S) t (Sym',P',S'))))
+
+
+
+!Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn2 Conf2 t2 Conf2')) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
+                 (MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                 (MTrn2 Conf2 t2 Conf2') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                 (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> (comptraces
+       ( MTrn1 MTrn (Sym ∪ Sym,P1 ⊔ P,S1,S)
+          (SET_TO_LIST (set t1 ⊔ set t)) (Sym' ∪ Sym',P1' ⊔ P',S1',S')) ⊆
+     comptraces
+       ( MTrn2 MTrn (Sym ∪ Sym,P2 ⊔ P,S2,S)
+          (SET_TO_LIST (set t2 ⊔ set t)) (Sym' ∪ Sym',P2' ⊔ P',S2',S')))
+
+Cases_on `MTrn2 (Sym'', IMAGE OUTL P'', S1'') [INL E] (Sym'³', IMAGE OUTL P'''', S1'³') ∧ IMAGE OUTL P'³' ≠ IMAGE OUTL P'''' `
+      
+   !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn2 Conf1 t2 Conf1')) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
+                 (MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
+                 (MTrn2 Conf1 t2 Conf1') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
+                 (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
+) ==> ((comptraces (MTS1 || MTS)) ⊆ (comptraces (MTS2 || MTS)))
 *)

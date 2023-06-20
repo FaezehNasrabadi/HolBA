@@ -2,7 +2,7 @@ open HolKernel Parse boolLib bossLib;
 open sumTheory;
 open pred_setTheory;
 open listTheory;
-
+open parallelcompositionsimpleTheory;
 val _ = new_theory "property";
     
 (* Trace *)
@@ -114,13 +114,25 @@ val trevtraces_def =
 Define`
 trevtrace MTrn t' = (∀t Conf Conf'. (evtrace Conf t Conf' t') ∧ (MTrn Conf t Conf'))
                     `;
-     *)               
-(* Traces of a system *)
+
+                    traces (MTrn,Ded) = {t| ∀(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). (MTrn (Sym,P,S) t (Sym',P',S'))}
+
+
 val traces_def =
 Define`
       traces (MTrn,Ded) = {t| ∀(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). (MTrn (Sym,P,S) t (Sym',P',S'))}
 `;
-
+val comptraces_def =
+Define`
+      comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;
+*)               
+(* Traces of a system *)
+val traces_def =
+Define`
+      traces MTrn (Sym,P,S) t (Sym',P',S') = {t}
+`;
+(*
 val trace_twosystem_thm = store_thm(
   "trace_twosystem_thm", ``
                                 ∀MTrn1 Ded1 MTrn2 Ded2.
@@ -128,18 +140,43 @@ val trace_twosystem_thm = store_thm(
                                        ``,
                          REWRITE_TAC [traces_def,SUBSET_DEF]>>
                          ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-  );        
+  );
+
+val trace_twosystem_thm = store_thm(
+  "trace_twosystem_thm", ``
+                                ∀MTrn1 Ded1 MTrn2 Ded2.
+(traces (MTrn1,Ded1) ⊆ traces (MTrn2,Ded2)) ⇒ (∀(Sym:α) (P: β) (S: γ) (Sym':α) (P': β) (S': γ). ∃t. (MTrn1 (Sym,P,S) t (Sym',P',S')) ⇒ (MTrn2 (Sym,P,S) t (Sym',P',S')))
+                                       ``,
+                         REWRITE_TAC [traces_def,SUBSET_DEF]>>
+                         ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+                                                                                                                               REPEAT GEN_TAC >>
+                         REPEAT STRIP_TAC >>
+                         Q.EXISTS_TAC `t`
+                          PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
+                                            Cases_on `MTrn1 = MTrn2` >>
+ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+                                            FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+rw[]  );   *)
 (* Traces of 2 systems *)
 val comptraces_def =
 Define`
-      comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
-`;
+ comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+                                                                        `;
+
 (*
+val subset_comptraces_def =
+Define`
+      subset_comptraces (CMTrn1,CDed1) (CMTrn2,CDed2) =
+((comptraces (CMTrn1,CDed1) = {t1| ∀(Sym1:α) (P1: β) (S11: γ) (S21: δ) (Sym1':α) (P1': β) (S11': γ) (S21': δ). (CMTrn1 (Sym1,P1,S11,S21) t1 (Sym1',P1',S11',S21'))}) ∧
+             (comptraces (CMTrn2,CDed2) = {t2| ∀(Sym2:α) (P2: β) (S12: γ) (S22: δ) (Sym2':α) (P2': β) (S12': γ) (S22': δ). (CMTrn2 (Sym2,P2,S12,S22) t2 (Sym2',P2',S12',S22'))}) ∧ (t1 = t2))
+                                `;                                
+                
+
 val traces_def =
 Define`
 traces MTS Phi = {t| (trace MTS t) ∧ (t ∈ (tracePropertyNot Phi))}
 `;
-*)
+
 
 (* Satisfy Trace property *)
 val satisfyTraceProperty_def =
@@ -222,6 +259,6 @@ val sim_vs_ref_thm = store_thm(
   METIS_TAC [Reach_rules, Reach_ind, Reach_cases,stateSimulation_rules, stateSimulation_ind, stateSimulation_cases]
   );
 WIP on the proof-no cheat but METIS_TAC could not find proof *)
-  
+  *)
 val _ = export_theory();
 

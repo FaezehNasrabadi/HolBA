@@ -3,6 +3,8 @@ open sumTheory;
 open pred_setTheory;
 open listTheory;
 open parallelcompositionsimpleTheory;
+open pairTheory wordsTheory set_sepTheory;
+open quantHeuristicsTheory;
 val _ = new_theory "property";
     
 (* Trace *)
@@ -126,11 +128,16 @@ val comptraces_def =
 Define`
       comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
 `;
+
+        val traces_def =
+Define`
+      traces MTrn (Sym,P,S) t (Sym',P',S') = {t}
+`;
 *)               
 (* Traces of a system *)
 val traces_def =
 Define`
-      traces MTrn (Sym,P,S) t (Sym',P',S') = {t}
+      traces (MTrn:('event, 'pred, 'state, 'symb) mtrel) ((Sym:'symb set),(P: 'pred set),(S: 'state)) (t:'event list) = {t}
 `;
 (*
 val trace_twosystem_thm = store_thm(
@@ -160,10 +167,41 @@ rw[]  );   *)
 (* Traces of 2 systems *)
 val comptraces_def =
 Define`
- comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
-                                                                        `;
+ comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {(t:'event list)| ∀(CMTrn:('event, 'pred1 + 'pred2, 'state1 # 'state2, 'symb) mtrel) (Sym:'symb set) (P: ('pred1 + 'pred2) set) (S1: 'state1) (S2: 'state2). (CMTrn (Sym,P,S1,S2) t = (Sym',P',S1',S2'))}
+                                `;
+                                (*
+val trace_twosystem_thm = store_thm(
+  "trace_twosystem_thm", ``
+                                ∀CMTrn1 Ded1 CMTrn2 Ded2.
+(comptraces (CMTrn1,Ded1) = comptraces (CMTrn2,Ded2)) ⇒ (∀t (Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn1 (Sym,P,S1,S2) t = (Sym',P',S1',S2')) ∧ (CMTrn2 (Sym,P,S1,S2) t = (Sym',P',S1',S2')))
+                                       ``,
+                                       REWRITE_TAC [comptraces_def]>>
+                                       REWRITE_TAC [SUBSET_DEF]>>
+                         ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+                                                                                                                               REPEAT GEN_TAC >>
+                         REPEAT STRIP_TAC >>
+                         Q.EXISTS_TAC `t`
+                          PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
+                                         Cases_on `x = t` >>
+                                         RES_TAC
+                                                EQ_TAC
+ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+                                         FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+val SPLIT_ss = REWRITE_TAC [SPLIT_def,SUBSET_DEF,DISJOINT_DEF,DELETE_DEF,IN_INSERT,SEP_EQ_def,
+                         EXTENSION,NOT_IN_EMPTY,IN_DEF,IN_UNION,IN_INTER,IN_DIFF];
+val SPLIT_TAC = FULL_SIMP_TAC (pure_ss++SPLIT_ss) [] \\ METIS_TAC [];
+IMP_RES_TAC EQ_IMP_THM
+            IMP_RES_TAC EQ_EXPAND
+            PAT_X_ASSUM ``!Sym' Sym S2' S2 S1' S1 P' P. A`` (ASSUME_TAC o (Q.SPECL [`Sym'`,`Sym`,`S2'`,`S2`,`S1'`,`S1`,`P'`,`P`]))>>
+            PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))
+ASM_REWRITE_TAC[]
+               IMP_RES_TAC AND_INTRO_THM
+               IMP_RES_TAC F_IMP
+                           IMP_RES_TAC EXISTS_NOT_FORALL_THM
+                           IMP_RES_TAC PULL_EXISTS
 
-(*
+rw[]  );
+
 val subset_comptraces_def =
 Define`
       subset_comptraces (CMTrn1,CDed1) (CMTrn2,CDed2) =

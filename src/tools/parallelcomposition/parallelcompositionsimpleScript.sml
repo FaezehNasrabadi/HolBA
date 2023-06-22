@@ -95,6 +95,23 @@ val THIRD_def =
 Define  `
         ((THIRD (a,b,c)) = c)
         `;
+
+val triple_same_thm = store_thm(
+  "triple_same_thm", ``
+∀a b c.
+((FIRST (a,b,c)),(SECOND (a,b,c)),(THIRD (a,b,c))) = (a,b,c)
+                                       ``,
+ FULL_SIMP_TAC std_ss [FIRST_def,SECOND_def,THIRD_def]  
+  );
+
+val triple_to_quadruple_thm = store_thm(
+  "triple_to_quadruple_thm", ``
+∀a b c a' b' c'.
+((FIRST (a,b,c))∪(FIRST (a',b',c')),(SECOND (a,b,c))⊔(SECOND (a',b',c')),(THIRD (a,b,c)),(THIRD (a',b',c'))) = (a∪a',b⊔b',c,c')
+                                       ``,
+ FULL_SIMP_TAC std_ss [FIRST_def,SECOND_def,THIRD_def]  
+  );
+   
 (*        
 val composeMuRe_def =
 Define  `

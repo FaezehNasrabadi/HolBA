@@ -163,12 +163,39 @@ val trace_twosystem_thm = store_thm(
                                             Cases_on `MTrn1 = MTrn2` >>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
                                             FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-rw[]  );   *)
+rw[]  );
+
+val comptraces_def =
+Define`
+ comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {(t:'event list)| ∀(CMTrn:('event, 'pred1 + 'pred2, 'state1 # 'state2, 'symb) mtrel) (Sym:'symb set) (P: ('pred1 + 'pred2) set) (S1: 'state1) (S2: 'state2). (CMTrn (Sym,P,S1,S2) t = (Sym',P',S1',S2'))}
+                                                                                           `;
+
+Define`
+comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) =
+{(y:'eventS)|
+ ∀(MTrn1:(('event1+'eventS), 'pred1, 'state1, 'symb) mtrel) (MTrn2:(('event2+'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym1:'symb set) (P1: 'pred1 set) (S1: 'state1) (Sym2:'symb set) (P2: 'pred2 set) (S2: 'state2).
+   (Sym' = FIRST (MTrn1 (Sym1,P1,S1) [INR y]) ∪ FIRST (MTrn2 (Sym2,P2,S2) [INR y])) ∧ (P' = SECOND (MTrn1 (Sym1,P1,S1) [INR y]) ⊔ SECOND (MTrn2 (Sym2,P2,S2) [INR y])) ∧ 
+    (S1' =THIRD (MTrn1 (Sym1,P1,S1) [INR y])) ∧ (S2' = THIRD (MTrn2 (Sym2,P2,S2) [INR y]))
+}
+                                                                                           `;
+*)
 (* Traces of 2 systems *)
 val comptraces_def =
 Define`
  comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {(t:'event list)| ∀(CMTrn:('event, 'pred1 + 'pred2, 'state1 # 'state2, 'symb) mtrel) (Sym:'symb set) (P: ('pred1 + 'pred2) set) (S1: 'state1) (S2: 'state2). (CMTrn (Sym,P,S1,S2) t = (Sym',P',S1',S2'))}
-                                `;
+                                                                                           `;
+
+val same_events_thm = store_thm(
+  "same_events_thm", ``
+ ∀(y :'eventS) (MTrn1:(('event1+'eventS), 'pred1, 'state1, 'symb) mtrel) (MTrn2:(('event2+'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym1:'symb set) (P1: 'pred1 set) (S1: 'state1) (Sym2:'symb set) (P2: 'pred2 set) (S2: 'state2).                       
+comptraces
+          (FIRST (MTrn1 (Sym1,P1,S1) [INR y]) ∪
+           FIRST (MTrn2 (Sym2,P2,S2) [INR y]),
+           SECOND (MTrn1 (Sym1,P1,S1) [INR y]) ⊔
+           SECOND (MTrn2 (Sym2,P2,S2) [INR y]),
+           THIRD (MTrn1 (Sym1,P1,S1) [INR y]),
+           THIRD (MTrn2 (Sym2,P2,S2) [INR y])) = {[y]}``, cheat);
+                                                                        
                                 (*
 val trace_twosystem_thm = store_thm(
   "trace_twosystem_thm", ``
@@ -185,6 +212,7 @@ val trace_twosystem_thm = store_thm(
                                          Cases_on `x = t` >>
                                          RES_TAC
                                                 EQ_TAC
+                                                 PAT_X_ASSUM ``!CMTrn Sym' P' S1' S2. A`` (ASSUME_TAC o (Q.SPECL [`CMTrn`,`Sym'`,`P'`,`S1'`,`S2`]))
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
                                          FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 val SPLIT_ss = REWRITE_TAC [SPLIT_def,SUBSET_DEF,DISJOINT_DEF,DELETE_DEF,IN_INSERT,SEP_EQ_def,

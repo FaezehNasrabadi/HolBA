@@ -137,8 +137,14 @@ Define`
 (* Traces of a system *)
 val traces_def =
 Define`
-      traces (MTrn:('event, 'pred, 'state, 'symb) mtrel) ((Sym:'symb set),(P: 'pred set),(S: 'state)) (t:'event list) = {t}
+      traces (MTrn:('event, 'pred, 'state, 'symb) mtrel) ((Sym:'symb set),(P: 'pred set),(S: 'state)) (t:'event list) ((Sym':'symb set),(P': 'pred set),(S': 'state)) = {t}
+                                                                                                                                                                        `;
+(* Traces of 2 systems *)
+val comptraces_def =
+Define`
+      comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
 `;
+                                                                                                                                                                                
 (*
 val trace_twosystem_thm = store_thm(
   "trace_twosystem_thm", ``
@@ -179,7 +185,8 @@ comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 's
 }
                                                                                            `;
 *)
-(* Traces of 2 systems *)
+
+ (*
 val comptraces_def =
 Define`
  comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {(t:'event list)| ∀(CMTrn:('event, 'pred1 + 'pred2, 'state1 # 'state2, 'symb) mtrel) (Sym:'symb set) (P: ('pred1 + 'pred2) set) (S1: 'state1) (S2: 'state2). (CMTrn (Sym,P,S1,S2) t = (Sym',P',S1',S2'))}
@@ -196,7 +203,23 @@ comptraces
            THIRD (MTrn1 (Sym1,P1,S1) [INR y]),
            THIRD (MTrn2 (Sym2,P2,S2) [INR y])) = {[y]}``, cheat);
                                                                         
-                                (*
+                               
+                                val comptraces_def =
+Define`
+ comptraces ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {(t:'event list)| ∀(CMTrn:('event, 'pred1 + 'pred2, 'state1 # 'state2, 'symb) mtrel) (Sym:'symb set) (P: ('pred1 + 'pred2) set) (S1: 'state1) (S2: 'state2). (CMTrn (Sym,P,S1,S2) t = (Sym',P',S1',S2'))}
+                                                                                           `;
+
+val same_events_thm = store_thm(
+  "same_events_thm", ``
+ ∀(y :'eventS) (MTrn1:(('event1+'eventS), 'pred1, 'state1, 'symb) mtrel) (MTrn2:(('event2+'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym1:'symb set) (P1: 'pred1 set) (S1: 'state1) (Sym2:'symb set) (P2: 'pred2 set) (S2: 'state2).                       
+comptraces
+          (FIRST (MTrn1 (Sym1,P1,S1) [INR y]) ∪
+           FIRST (MTrn2 (Sym2,P2,S2) [INR y]),
+           SECOND (MTrn1 (Sym1,P1,S1) [INR y]) ⊔
+           SECOND (MTrn2 (Sym2,P2,S2) [INR y]),
+           THIRD (MTrn1 (Sym1,P1,S1) [INR y]),
+           THIRD (MTrn2 (Sym2,P2,S2) [INR y])) = {[y]}``, cheat);
+                                                                   
 val trace_twosystem_thm = store_thm(
   "trace_twosystem_thm", ``
                                 ∀CMTrn1 Ded1 CMTrn2 Ded2.

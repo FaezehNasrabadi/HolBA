@@ -8,17 +8,36 @@ open listTheory;
 open tautLib;
 val _ = new_theory "derived_rules";
 
- (*   
-val same_relation_thm = store_thm(
-  "same_relation_thm", ``
- ∀Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 Ded Ded1 Ded2 t1 t2 (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
+  
+val same_relation_compose_one_thm = store_thm(
+  "same_relation_compose_one_thm", ``
+ ∀Conf1 Conf1' Conf2 Conf2' Conf Conf' Ded Ded1 Ded2 t1 t2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
                  (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn1 Conf2 t2 Conf2')) 
 ) ==> ((comptraces ((MTrn1,Ded1) || (MTrn,Ded))) ⊆ (comptraces ((MTrn1,Ded2) || (MTrn,Ded))))                                                      
       ``,
 REWRITE_TAC [composeMultiOperation_def,comptraces_def,traces_def] >>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-  ); 
+  );
 
+val same_relation_compose_two_thm = store_thm(
+  "same_relation_compose_two_thm", ``
+ ∀Conf1 Conf1' Conf2 Conf2' Conf3 Conf3' Conf3 Conf4 Conf4' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded4 Ded3 Ded1 Ded2 t1 t2 t3 t4.
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn1 Conf2 t2 Conf2')) ∧ ((traces MTrn2 Conf3 t3 Conf3') ⊆ (traces MTrn2 Conf4 t4 Conf4')) 
+) ==> ((comptraces ((MTrn1,Ded1) || (MTrn2,Ded2))) ⊆ (comptraces ((MTrn1,Ded3) || (MTrn2,Ded4))))                                                      
+      ``,
+REWRITE_TAC [composeMultiOperation_def,comptraces_def,traces_def] >>
+ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+  );
+
+val trace_elimination_thm = store_thm(
+  "trace_elimination_thm", ``
+ ∀Conf1 Conf1' Conf2 Conf2' Ded1 Ded2 t1 t2 (MTrn1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (MTrn:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel).
+                 ((IMAGE INL (traces MTrn1 Conf1 t1 Conf1')) ⊆ ((comptraces ((MTrn1,Ded1) || (MTrn2,Ded2))) DIFF (IMAGE INR (traces MTrn2 Conf2 t2 Conf2')))) ∧  ((IMAGE INR (traces MTrn2 Conf2 t2 Conf2')) ⊆ ((comptraces ((MTrn1,Ded1) || (MTrn2,Ded2))) DIFF (IMAGE INL (traces MTrn1 Conf1 t1 Conf1'))))                   
+      ``,
+REWRITE_TAC [composeMultiOperation_def,comptraces_def,traces_def] >>
+ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+  );  
+ (* 
 val assume_ch_thm = store_thm(
   "assume_ch_thm", ``
 ∀Sym P S Sym' P' S' MTrn1 MTrn2 t1 t2. ((MTrn1 (Sym,P,S) t1 (Sym',P',S')) ∧ (MTrn2 (Sym,P,S) t2 (Sym',P',S'))) ⇒ ((t1 = t2) ∧ (MTrn1 = MTrn2))                                                      
@@ -230,7 +249,7 @@ CONV_TAC (REDEPTH_CONV (RATOR_CONV (RAND_CONV (REWR_CONV `case [] of [] => x = [
 val compose_vs_module_thm = store_thm(
 "compose_vs_module_thm", ``
 !Sym Sym' P1 P1' P2 P2' P P' S1 S1' S2 S2' S S' Conf1 Conf1' Conf2 Conf2' Conf Conf' MTrn MTrn1 MTrn2 Ded Ded1 Ded2 t1 t2 t (MTS1:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS2:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys) (MTS: ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys).
-                 (((traces MTS1) ⊆ (traces MTS2)) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
+                 (((traces MTrn1 Conf1 t1 Conf1') ⊆ (traces MTrn2 Conf2 t2 Conf2')) ∧ (MTS1 = (MTrn1,Ded1)) ∧ (MTS2 = (MTrn2,Ded2)) ∧ (MTS = (MTrn,Ded)) ∧
                  (MTrn1 Conf1 t1 Conf1') ∧ (Conf1 = (Sym,P1,S1)) ∧ (Conf1' = (Sym',P1',S1')) ∧
                  (MTrn2 Conf2 t2 Conf2') ∧ (Conf2 = (Sym,P2,S2)) ∧ (Conf2' = (Sym',P2',S2')) ∧
                  (MTrn Conf t Conf') ∧ (Conf = (Sym,P,S)) ∧ (Conf' = (Sym',P',S'))
@@ -251,15 +270,16 @@ ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSi
 REPEAT STRIP_TAC>>
 PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))>>
 PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x`]))>>
-PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))>>      
+PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))>>
+PAT_X_ASSUM ``!Sym'' P S1'' S2 Sym'³' P' S1'³' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym''`,`P`,`S1''`,`S2`,`Sym'''`,`P'`,`S1'''`,`S2'`]))
 Induct_on `h`
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 rw[]
-Induct_on `t`
+Induct_on `x`
 REWRITE_TAC[composeMuRe_empty_event_thm]
 GEN_TAC
 EQ_TAC
-Induct_on `t1`
+Induct_on `h`
 REWRITE_TAC[composeMuRe_empty_event_thm]
 IMP_RES_TAC composeMuRe_single_event_thm
 REWRITE_TAC[composeMuRe_single_event_thm]
@@ -281,7 +301,7 @@ IMP_RES_TAC traces_def
         Induct_on `t'`
 Cases_on `OUTL(h) ∈ LIST_TO_SET(t1)`
 Cases_on `h ∈ IMAGE INL (LIST_TO_SET(t1))`
-Cases_on `(h = INL (INL E)) ∧ t1 = [INL E]`
+Cases_on `(h = INR (INL E)) ∧ t = [INL E]`
 METIS_TAC[]
 ISR INR
 RES_TAC
@@ -294,6 +314,9 @@ Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >>
             Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `S2` >>
             Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >>
             Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` >>
+Q.EXISTS_TAC `Sym''''` >> Q.EXISTS_TAC `P''''` >>
+            Q.EXISTS_TAC `S12''''`
+           
       IMP_RES_TAC(composeMuRe_def)
       SRW_TAC[][]
       `OUTL(h) ∈ LIST_TO_SET(t2)` by PROVE_TAC []

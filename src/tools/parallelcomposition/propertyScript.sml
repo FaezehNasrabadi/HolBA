@@ -146,6 +146,11 @@ Define`
 `;
                                                                                                                                                                                 
 (*
+val comptraces_def =
+Define`
+      comptraces (CMTrn:((('event1+'eventS) + ('event2 +'eventS)), ('pred1 + 'pred2), 'state1#'state2, 'symb) mtrel) ((Sym:'symb set),(P: ('pred1 + 'pred2) set),(S1: 'state1),(S2: 'state2)) (t:(('event1+'eventS) + ('event2 +'eventS)) list)  ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {t}
+`;
+        
 val trace_twosystem_thm = store_thm(
   "trace_twosystem_thm", ``
                                 ∀MTrn1 Ded1 MTrn2 Ded2.

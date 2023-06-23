@@ -28,13 +28,20 @@ val _ = Parse.type_abbrev("ctded", ``:('pred1) tded -> ('pred2) tded -> ('pred1 
 
 val composeDed_def =
 Define`
+      (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INL (F1:'pred1)) = (ded1 (IMAGE OUTL P3) F1)) ∧
+(composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INR (F2:'pred2)) = (ded2 (IMAGE OUTR P3) F2))
+`;
+
+(*
+
+val composeDed_def =
+Define`
       composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) = (λP3 F3. 
        (case F3 of
           (INL (F1:'pred1)) => (ded1 (IMAGE OUTL P3) F1)
         | (INR (F2:'pred2)) => (ded2 (IMAGE OUTR P3) F2)
        )):('pred1 + 'pred2) tded`;
-
-(*
+               
 val composeRelations_defn = Lib.with_flag (Defn.def_suffix, "") Defn.Hol_defn
   "composeRelations"
   ‘composeRelations C t C'  =
@@ -270,11 +277,19 @@ Define`
       (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) =
                              ((λ(Sym,P,S1,S2) E (Sym',P',S1',S2'). composeMuRe rel1 rel2 (Sym,P,S1,S2) E (Sym',P',S1',S2')), composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys)
       `;
+      val combinelists_def =
+Define`
+      (combinelists ([]:α list) ([]:β list) = (APPEND [] [])) ∧
+(combinelists ([]:α list) ((e2::ev2):β list) = APPEND (APPEND [] [INR e2]) (combinelists [] ev2))  ∧
+(combinelists ((e1::ev1):α list) ([]:β list) = APPEND (APPEND [INL e1] []) (combinelists ev1 [])) ∧
+(combinelists ((e1::ev1):α list) (E2:β list) = APPEND [INL e1] (combinelists ev1 E2)) ∧
+(combinelists (E1:α list) ((e2::ev2):β list) = APPEND [INR e2] (combinelists E1 ev2))
+`; 
 *)
 val combinelists_def =
 Define`
       (combinelists ([]:α list) ([]:β list) = (APPEND [] [])) ∧
-(combinelists ([]:α list) ((e2::ev2):β list) = APPEND (APPEND [] [INR e2]) (combinelists [] ev2))  ∧
+      (combinelists ([]:α list) ((e2::ev2):β list) = APPEND (APPEND [] [INR e2]) (combinelists [] ev2))  ∧
 (combinelists ((e1::ev1):α list) ([]:β list) = APPEND (APPEND [INL e1] []) (combinelists ev1 [])) ∧
 (combinelists ((e1::ev1):α list) ((e2::ev2):β list) = APPEND (APPEND [INL e1] [INR e2]) (combinelists ev1 ev2))
 `;      

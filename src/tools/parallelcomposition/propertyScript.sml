@@ -133,7 +133,7 @@ Define`
 Define`
       traces MTrn (Sym,P,S) t (Sym',P',S') = {t}
 `;
-*)               
+              
 (* Traces of a system *)
 val traces_def =
 Define`
@@ -143,8 +143,15 @@ Define`
 val comptraces_def =
 Define`
       comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;*)
+val traces_def =
+Define`
+      traces (MTrn,Ded) = {t| ∃Sym P S  Sym' P' S'. (MTrn (Sym,P,S) t (Sym',P',S'))}
 `;
-                                                                                                                                                                                
+val comptraces_def =
+Define`
+      comptraces (CMTrn,CDed) = {t| ∃Sym P S1 S2 Sym' P' S1' S2'. (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;                                                                                                                                                                                
 (*
 val comptraces_def =
 Define`

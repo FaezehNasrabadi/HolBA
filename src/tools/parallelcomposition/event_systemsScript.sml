@@ -40,7 +40,7 @@ End
 
 (* trace *)
 val _ = Parse.type_abbrev("trace_t", ``:'event list``);
-
+ (*   
 Definition trace:
   ((trace ES (v,p,s) [] (v',p',s')) = ((v,p,s) = (v',p',s'))) ∧
   ((trace ES (v,p,s) (e::(t: 'event trace_t)) (v'',p'',s'')) =
@@ -70,7 +70,7 @@ Induct_on `t` >>
                        METIS_TAC [trace]
               
 QED
-                                                  
+                                              
 Theorem trace_single:
  ∀ES v p s e v' p' s'. (ES.sys_trans (v,p,s) e (v',p',s')) ⇒ (trace ES (v,p,s) [e] (v',p',s'))
 Proof
@@ -90,6 +90,6 @@ PAT_X_ASSUM ``∀v p s e v' p' s'. A`` (ASSUME_TAC o (Q.SPECL [`v`,`p`,`s`,`e`,`
 
                                                      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [trace_nil,trace_snoc]
                                                      METIS_TAC [trace]
-QED
+QED*)
         
 val _ = export_theory();

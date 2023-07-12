@@ -8,7 +8,7 @@ open listTheory;
 open tautLib;
 val _ = new_theory "derived_rules";
 
- 
+ (*
 val same_relation_compose_one_thm = store_thm(
   "same_relation_compose_one_thm", ``
  ∀Conf1 Conf1' Conf2 Conf2' Conf Conf' Ded Ded1 Ded2 t1 t2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
@@ -27,7 +27,7 @@ val same_relation_compose_two_thm = store_thm(
       ``,
 REWRITE_TAC [composeMultiOperation_def,comptraces_def,traces_def] >>
 ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-  );
+  );*)
 (*
 val trace_elimination_thm = store_thm(
   "trace_elimination_thm", ``
@@ -447,6 +447,7 @@ ASM_REWRITE_TAC[]
 REWRITE_TAC[UNION_DEF]
 REWRITE_TAC[MAP]
 REWRITE_TAC[IMAGE_DEF]
+IMP_RES_TAC IMAGE_DEF
 REWRITE_TAC[MAP,OUTR,OUTL,INL,INR]
 SRW_TAC [] [SET_TO_LIST_THM]
 REWRITE_TAC [SUBSET_DEF,DISJOINT_DEF,DELETE_DEF,IN_INSERT,EXTENSION,NOT_IN_EMPTY,IN_DEF,IN_UNION,IN_INTER,IN_DIFF]
@@ -498,4 +499,92 @@ REWRITE_TAC [UNWIND_THM2,UNWIND_THM1]
                  (((traces MTrn1 (Sym1,P1,S1) t1) ⊆ (traces MTrn2 (Sym2,P2,S2) t2)) ∧
                  (MTrn1 (Sym1,P1,S1) t1 = (Sym1',P1',S1')) ∧ (MTrn1 (Sym2,P2,S2) t2 = (Sym2',P2',S2')) ∧ (MTrn (Sym,P,S) t = (Sym',P',S'))
 ) ==> ((comptraces (composeMultiOperation MTrn1 (Sym1,P1,S1) t1 MTrn (Sym,P,S) t)) ⊆ (comptraces (composeMultiOperation MTrn1 (Sym2,P2,S2) t2 MTrn (Sym,P,S) t)))
+
+
+
+
+
+
+
+
+
+ ∀Ded Ded1 Ded2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
+                 ((traces (MTrn1,Ded1)) ⊆ (traces (MTrn2,Ded2))) 
+ ==> ((comptraces ((MTrn1,Ded1) || (MTrn,Ded))) ⊆ (comptraces ((MTrn2,Ded2) || (MTrn,Ded))))             
+
+
+REWRITE_TAC[SUBSET_DEF,composeMultiOperation_def,traces_def,comptraces_def,IN_DEF]>>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+REPEAT GEN_TAC>>
+STRIP_TAC>>
+GEN_TAC>>
+Induct_on `ct`
+REWRITE_TAC[composeMuRe_empty_event_thm]
+REPEAT STRIP_TAC>>
+PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`]))>>
+Cases_on `h`
+Cases_on `x`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]
+Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `S1'''` >> Q.EXISTS_TAC `P1` >> Q.EXISTS_TAC `P1'` >> Q.EXISTS_TAC `P2'`
+PAT_X_ASSUM ``∀t. A`` (ASSUME_TAC o (Q.SPECL [`t`]))
+ASM_REWRITE_TAC[]
+Cases_on `x = [INL x'']`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []        
+rw[]
+
+
+IMP_RES_TAC AND_INTRO_THM
+RES_TAC
+REWRITE_TAC[AND_INTRO_THM]
+REWRITE_TAC[disjUNION_def]
+IMP_RES_TAC disjUNION_def
+ASM_REWRITE_TAC[]
+REWRITE_TAC[UNION_DEF]
+REWRITE_TAC[MAP]
+REWRITE_TAC[IMAGE_DEF]
+IMP_RES_TAC IMAGE_DEF
+REWRITE_TAC[IMAGE_DEF,MAP,OUTR,OUTL,INL,INR]
+SRW_TAC [] [SET_TO_LIST_THM]
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [IMAGE_DEF,MAP,OUTR,OUTL,INL,INR]
+
+∀Ded Ded1 Ded2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
+                 (∀t. (t ∈ (traces (MTrn1,Ded1))) ∧ (t ∈ (traces (MTrn2,Ded2)))) 
+ ==> (∀ct. (ct ∈ (comptraces ((MTrn1,Ded1) || (MTrn,Ded)))) ⇒ (ct ∈ (comptraces ((MTrn2,Ded2) || (MTrn,Ded)))))             
+REWRITE_TAC[SUBSET_DEF,composeMultiOperation_def,traces_def,comptraces_def,IN_DEF]>>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+REPEAT GEN_TAC>>
+STRIP_TAC>>
+GEN_TAC>>
+Induct_on `ct`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]>>
+GEN_TAC>>
+Cases_on `h`>>
+Cases_on `x`>>
+rw[] >>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]
+Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `S1'''` >> Q.EXISTS_TAC `P1` >> Q.EXISTS_TAC `P1'` >> Q.EXISTS_TAC `P2'`
+ASM_REWRITE_TAC[]
+Cases_on `x = [INL x'']`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []        
+rw[]              
+
+Cases_on `P = P1 ⊔ P2`
+Cases_on `P = P1 ⊔ P2`
+Q.EXISTS_TAC `S2` >> Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'`>>
+Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `P1` >> Q.EXISTS_TAC `P2`
+
+             PAT_X_ASSUM ``!Sym P S Sym' P' S'. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S`,`Sym'`,`P'`,`S'`]))
+
+CCONTR_TAC
+
+        Q.EXISTS_TAC `S2` >> Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'`>>
+Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `S1'''` >> Q.EXISTS_TAC `P1'` >> Q.EXISTS_TAC `P2'`
+RES_TAC
+Q.EXISTS_TAC `S2` >> Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'`>>
+Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `S1'''` >> Q.EXISTS_TAC `P1'` >> Q.EXISTS_TAC `P2'`
+
+Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >> Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `S2` >> 
+Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` 
+Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `P'''` >> Q.EXISTS_TAC `S1'''` 
+   ASM_REWRITE_TAC[]          
 *)

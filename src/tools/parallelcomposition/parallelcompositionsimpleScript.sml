@@ -166,7 +166,7 @@ Define  `
 val composeMuRe_def =
 Define  `
         ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
-         ((Sym,P,S1,S2) = (Sym',P',S1',S2')))  ∧
+         (((Sym,P,S1,S2) = (Sym',P',S1',S2'))∧(Re1 (Sym,(IMAGE OUTL P),S1) [] (Sym,(IMAGE OUTL P),S1))∧(Re2 (Sym,(IMAGE OUTR P),S2) [] (Sym,(IMAGE OUTR P),S2))))  ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INL (INL (E:'event1)))::ev) (Sym'',P'',S1'',S2'')) =
  (∃Sym' P' S1'. (Re1 (Sym,(IMAGE OUTL P),S1) [INL E] (Sym',(IMAGE OUTL P'),S1'))∧((IMAGE OUTR P) = (IMAGE OUTR P'))∧ (composeMuRe Re1 Re2 (Sym',P',S1',S2) ev (Sym'',P'',S1'',S2'')))) ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INL (E:'event2)))::ev) (Sym'',P'',S1'',S2'')) =
@@ -201,7 +201,7 @@ Define  `
  = composeMuRe Re1 Re2 ((FIRST(Re2 (Sym,(IMAGE OUTR P),S2) [INL E]),((IMAGE OUTL P)<+>(SECOND(Re2 (Sym,(IMAGE OUTR P),S2) [INL E]))),S1,THIRD(Re2 (Sym,(IMAGE OUTR P),S2) [INL E]))) ev) ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INR (E:'eventS)))::ev))
  = composeMuRe Re1 Re2 (((FIRST(Re1 (Sym,(IMAGE OUTL P),S1) [INR E]))∪(FIRST(Re2 (Sym,(IMAGE OUTR P),S2) [INR E])),((SECOND(Re1 (Sym,(IMAGE OUTL P),S1) [INR E]))<+>(SECOND(Re2 (Sym,(IMAGE OUTR P),S2) [INR E]))),THIRD(Re1 (Sym,(IMAGE OUTL P),S1) [INR E]),THIRD(Re2 (Sym,(IMAGE OUTR P),S2) [INR E]))) ev)
-`;*)
+`;
 val composeMuRe_empty_event_thm = store_thm(
   "composeMuRe_empty_event_thm", ``
 ∀Re1 Re2 Sym P S1 S2 Sym' P' S1' S2'.
@@ -209,7 +209,7 @@ val composeMuRe_empty_event_thm = store_thm(
                                        ``,
  FULL_SIMP_TAC std_ss [composeMuRe_def]  
   );
-  (*
+  
 val composeMuRe_single_event_thm = store_thm(
   "composeMuRe_single_event_thm", ``
 ∀Re1 Re2 Sym P S1 S2 e Sym' P' S1' S2'.

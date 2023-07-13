@@ -152,6 +152,17 @@ val comptraces_def =
 Define`
       comptraces (CMTrn,CDed) = {t| ∃Sym P S1 S2 Sym' P' S1' S2'. (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
 `;                                                                                                                                                                                
+
+val add_event_to_trace_thm = store_thm(
+  "add_event_to_trace_thm", ``
+∀MTrn1 Ded1 MTrn2 Ded2 x.
+  (∀x. x ∈ traces (MTrn1,Ded1) ⇒ x ∈ traces (MTrn2,Ded2)) ⇒ ∀h. ((h::x) ∈ traces (MTrn1,Ded1) ⇒ (h::x) ∈ traces (MTrn2,Ded2))
+  ``,
+                                                                                                                             REPEAT GEN_TAC >> strip_tac >> gen_tac >>
+  PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`h::x`]))>>rw[]
+  );
+
+
 (*
 
 val traces_def =

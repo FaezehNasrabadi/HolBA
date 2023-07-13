@@ -585,7 +585,7 @@ Q.EXISTS_TAC `S2` >> Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S
 Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `S1'''` >> Q.EXISTS_TAC `P1'` >> Q.EXISTS_TAC `P2'`
 
 Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >> Q.EXISTS_TAC `S1` >> Q.EXISTS_TAC `S2` >> 
-Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` 
+Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'` >> Q.EXISTS_TAC `S2'` >>
 Q.EXISTS_TAC `Sym'''` >> Q.EXISTS_TAC `P'''` >> Q.EXISTS_TAC `S1'''` 
    ASM_REWRITE_TAC[]
    PAT_X_ASSUM ``∀Sym' Sym S2' S2 S1' S1 P' P. A`` (ASSUME_TAC o (Q.SPECL [`Sym'`,`Sym`,`S2'`,`S2`,`S1'`,`S1`,`P'`,`P`]))>>      Q.EXISTS_TAC `S2''` >> Q.EXISTS_TAC `Sym''''` >> Q.EXISTS_TAC `P'''` >> Q.EXISTS_TAC `S1''''` >> Q.EXISTS_TAC `S2'''`>>
@@ -613,25 +613,27 @@ PAT_X_ASSUM ``∀Sym' Sym S'' S' P' P. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`Sym'`,
 
 REPEAT GEN_TAC
 REWRITE_TAC[SUBSET_DEF]
-STRIP_TAC
+STRIP_TAC>>
 GEN_TAC
-Induct_on `x'`
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMultiOperation_def,comptraces_def,composeMuRe_def]
+Induct_on `x`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMultiOperation_def,traces_def,comptraces_def,composeMuRe_def]
+PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`x'::ev`]))
 GEN_TAC
 Cases_on `h`>>
-Cases_on `x''`>>
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMultiOperation_def,traces_def,comptraces_def,composeMuRe_def]
+Cases_on `x'`>>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [comptraces_def]
 
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [traces_def]
 
 IMP_RES_TAC AND_INTRO_THM
 RES_TAC
 REWRITE_TAC[AND_INTRO_THM]
+asm_rewrite_tac[]
 
 
 
 PAT_X_ASSUM ``∀x Sym' Sym S'' S' P' P. A`` (ASSUME_TAC o (Q.SPECL [`x`,`Sym'`,`Sym`,`S''`,`S'`,`P`,`P'`]))>>   
-
+PAT_X_ASSUM ``∀Sym' Sym S'' S' P' P. A`` (ASSUME_TAC o (Q.SPECL [`Sym'`,`Sym`,`S''`,`S'`,`P'`,`P`]))>> 
 
 rw[]
 
@@ -646,10 +648,18 @@ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolS
 REPEAT STRIP_TAC
 Cases_on `z`
 rw[]
-Cases_on `x'`
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]
+Cases_on `x = x'::ev`
+Induct_on `(x :('event1 + 'eventS) list)`
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMultiOperation_def,composeMuRe_def]
 
+              Cases_on `x'`
 
-
-       
+rewrite_tac[comptraces_def]
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [traces_def]
+rewrite_tac[composeMuRe_def]
+              
+DB.find "INL"
+INJ
+  METIS_TAC[]
+  rw[]  
 *)

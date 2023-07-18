@@ -67,38 +67,56 @@ Definition binterleave_ts:
   binterleave_ts ts1 ts2 = {t| ∃t1 t2. (t1 ∈ ts1) ∧ (t2 ∈ ts2) ∧ (binterl t1 t2 t)}
 End
 
-val binterleave_trace_decomp_thm = store_thm(
-  "binterleave_trace_decomp", ``
-∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
-((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2'))
-⇒
-  (∃t1 t2. (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) ∧ (binterl t1 t2 t))
-  ``,
-  GEN_TAC >> rewrite_tac[composeMultiOperation_def] >>
-                                                    Induct_on `t` >- (
-                              rpt strip_tac >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> Q.EXISTS_TAC `[]` >> Q.EXISTS_TAC `[]` >> rw[binterl_nil]) >>
-                                                                     gen_tac >> Cases_on `h` >| [
-      Cases_on `x` >|
-      [
-        FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INL x')::t1` >> Q.EXISTS_TAC `t2` >> rw[binterl_left]  >- (
-        metis_tac[TranRelSnoc]
-        ) >> metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]
-       >>
-        FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y)::t1` >> Q.EXISTS_TAC `(INR y)::t2` >> rw[binterl_syncL] >- (
-        metis_tac[TranRelSnoc]
-        )  >> metis_tac[TranRelSnoc]
-    ] >> Cases_on `y` >|[
-      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `t1` >> Q.EXISTS_TAC `(INL x)::t2` >> rw[binterl_right]  >- (
-      metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]
-        ) >> metis_tac[TranRelSnoc]
-      >>
-        FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y')::t1` >> Q.EXISTS_TAC `(INR y')::t2` >> rw[binterl_syncR] >- (
-        metis_tac[TranRelSnoc]
-        )  >> metis_tac[TranRelSnoc]
-      ]
-        ]);
+val binterleave_trace_comp_to_decomp_thm = store_thm(
+  "binterleave_trace_comp_to_decomp", ``
+                              ∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+                                ((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2'))
+                                ⇒
+                                (∃t1 t2. (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) ∧ (binterl t1 t2 t))
+                                ``,
+                                GEN_TAC >> rewrite_tac[composeMultiOperation_def] >>
+                              Induct_on `t` >- (
+    rpt strip_tac >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> Q.EXISTS_TAC `[]` >> Q.EXISTS_TAC `[]` >> rw[binterl_nil]) >>
+                              gen_tac >> Cases_on `h` >- (
+    Cases_on `x` >-(
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INL x')::t1` >> Q.EXISTS_TAC `t2` >> rw[binterl_left] >- (metis_tac[TranRelSnoc]) >> metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]
+      ) >>
+    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y)::t1` >> Q.EXISTS_TAC `(INR y)::t2` >> rw[binterl_syncL] >- (metis_tac[TranRelSnoc])  >> metis_tac[TranRelSnoc]
+    ) >> Cases_on `y` >- (
+    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `t1` >> Q.EXISTS_TAC `(INL x)::t2` >> rw[binterl_right] >- ( metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]) >> metis_tac[TranRelSnoc])
+                              >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y')::t1` >> Q.EXISTS_TAC `(INR y')::t2` >> rw[binterl_syncR] >- (metis_tac[TranRelSnoc])  >> metis_tac[TranRelSnoc]
+  );
+(*
+val binterleave_trace_decomp_to_comp_thm = store_thm(
+  "binterleave_trace_decomp_to_comp",
+  ``∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+       (∃t1 t2. (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) ∧ (binterl t1 t2 t))
+     ⇒
+     ((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2'))
+     ``,
+     rpt strip_tac >> rewrite_tac[composeMultiOperation_def] >>         
+     Induct_on `t` >- (
+      Induct_on `t1` >- (
+        Induct_on `t2` >- (
+          FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]    >> reverse (RW_TAC bool_ss [binterl_nil])
+                        >-  (metis_tac[TranRelConfigEq])
+          >- (metis_tac[TranRelConfigEq])
+          >- (metis_tac[TranRelConfigEq])
+                >-  (metis_tac[TranRelConfigEq])
+                          >- ( `IMAGE OUTR P = IMAGE OUTR P'` by  metis_tac[TranRelConfigEq] >>
+                               `IMAGE OUTL P = IMAGE OUTL P'` by  metis_tac[TranRelConfigEq] >>
+                               `(INL a ∈ (IMAGE OUTL P) ⊔ (IMAGE OUTR P) ⇔ a ∈ (IMAGE OUTL P)) ∧ (INR b ∈ (IMAGE OUTL P) ⊔ (IMAGE OUTR P) ⇔ b ∈ (IMAGE OUTR P))` by metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION] >>
+                               `(IMAGE OUTL P) ⊔ (IMAGE OUTR P) = {INL a | a ∈ (IMAGE OUTL P)} ∪ {INR b | b ∈ (IMAGE OUTR P)}` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION] >>
 
-                
+                                       
+                                                    `(IMAGE OUTL P) ⊔ (IMAGE OUTR P) = {INL a | a ∈ (IMAGE OUTL P)} ∪ {INR b | b ∈ (IMAGE OUTR P)}` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION]
+                                                                                                                                                                 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[IMAGE_DEF,MAP,OUTR,OUTL,INL,INR,disjUNION_def]
+                              `{OUTL x | x ∈ P} ⊔ {OUTR x | x ∈ P} = P` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION]                                                                                                                                                                                                                                           ,MAP,OUTR,OUTL,INL,INR,disjUNION_def]
+                                     ) >> metis_tac[TranRelConfigEq]          
+        >> cheat)
+      >> cheat)
+      >> cheat );
+  
 val binterleave_composition_thm = store_thm(
   "binterleave_composition_thm",
   ``∀Ded1 Ded2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
@@ -107,7 +125,7 @@ val binterleave_composition_thm = store_thm(
 REPEAT GEN_TAC>> rewrite_tac[binterleave_ts,composeMultiOperation_def,comptraces_def,traces_def]>>                           FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [EXTENSION]  >>       gen_tac >> eq_tac >> cheat
                                           
   );
-(*
+
 val binterleave_composition_one_thm = store_thm(
   "binterleave_composition_one_thm",
   ``∀Ded1 Ded2 t1 t2 t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
@@ -197,25 +215,30 @@ rw[]
   PAT_X_ASSUM ``∃t1 t2.B`` (IMP_RES_TAC)
  PAT_X_ASSUM ``A = BType_Imm Bit1`` (ASSUME_TAC)
   IMP_RES_TAC AND_INTRO_THM
-  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [IMAGE_DEF,MAP,OUTR,OUTL,INL,INR]
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [IMAGE_DEF,MAP,OUTR,OUTL,INL,INR,TranRelConfigEq]
   rewrite_tac[AND_INTRO_THM]
+  rewrite_tac[LEFT_EXISTS_IMP_THM]
    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
 
    REPEAT GEN_TAC>> EQ_TAC>> rewrite_tac[composeMultiOperation_def]>> rpt strip_tac>>
                               Induct_on `t` >>  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> strip_tac >> Q.EXISTS_TAC `[]` >> Q.EXISTS_TAC `[]` >>
                               rw[binterl_nil] >> gen_tac >>  Cases_on `h` >> Cases_on `x` >>   FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac
                                                                                                              PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'`,`MTrn1`,`MTrn2`]))>>
-                              FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [TranRelSnoc]
+                              FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
                                             RES_TAC
                                             Q.EXISTS_TAC `(INL x')::t1` >> Q.EXISTS_TAC `t2`
                                                                             rw[binterl_left]
                                                                             asm_rewrite_tac[]
                                                                                 rw[TranRelSnoc]
                                                                                  metis_tac[TranRelSnoc]
-                DB.find "_AND_THM"                                                                 rewrite_tac[BOTH_EXISTS_AND_THM]
+                DB.find "disjUNION"                                                                 rewrite_tac[BOTH_EXISTS_AND_THM]
+                disjUNION_def
                 LEFT_EXISTS_AND_THM
+             `{OUTR x | x ∈ P} = {OUTR x | x ∈ P'}` by  metis_tac[TranRelConfigEq]
+             `{OUTL x | x ∈ P} = {OUTL x | x ∈ P'}` by  metis_tac[TranRelConfigEq]
+             FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[disjUNION_def]
+             metis_tac[disjUNION_def]
 *)
 
 
 val _ = export_theory();
-

@@ -45,8 +45,10 @@ Inductive binterl:
   (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
 [~right:]                                                                        
   (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
-[~sync:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t'))
+[~syncR:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
+[~syncL:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))
 End
 
 (*
@@ -80,9 +82,21 @@ val binterleave_trace_decomp_thm = store_thm(
       [
         FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INL x')::t1` >> Q.EXISTS_TAC `t2` >> rw[binterl_left]  >- (
         metis_tac[TranRelSnoc]
-        ) metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]] >> cheat
-
-    ] >> cheat ] >>  cheat);
+        ) >> metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]
+       >>
+        FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y)::t1` >> Q.EXISTS_TAC `(INR y)::t2` >> rw[binterl_syncL] >- (
+        metis_tac[TranRelSnoc]
+        )  >> metis_tac[TranRelSnoc]
+    ] >> Cases_on `y` >|[
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `t1` >> Q.EXISTS_TAC `(INL x)::t2` >> rw[binterl_right]  >- (
+      metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]
+        ) >> metis_tac[TranRelSnoc]
+      >>
+        FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'''`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INR y')::t1` >> Q.EXISTS_TAC `(INR y')::t2` >> rw[binterl_syncR] >- (
+        metis_tac[TranRelSnoc]
+        )  >> metis_tac[TranRelSnoc]
+      ]
+        ]);
 
                 
 val binterleave_composition_thm = store_thm(

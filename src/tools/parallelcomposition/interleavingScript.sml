@@ -10,6 +10,8 @@ val _ = new_theory "interleaving";
 
 val TranRelNil = new_axiom ("TranRelNil",
                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s. MTrn (v,p,s) [] (v,p,s)``);
+val TranRelConfigEq = new_axiom ("TranRelConfigEq",
+                            ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s'. (MTrn (v,p,s) [] (v',p',s')) ⇒ ((v = v')∧(p = p')∧(s = s'))``);
 val TranRelSnoc = new_axiom ("TranRelSnoc",
                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s''))) ⇒ (MTrn (v,p,s) (e::t) (v'',p'',s''))``);    
 (*
@@ -78,8 +80,11 @@ val binterleave_trace_decomp_thm = store_thm(
       [
         FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'''`,`P'''`,`S1'''`,`S2'`,`MTrn1`,`MTrn2`])) >> RES_TAC >> Q.EXISTS_TAC `(INL x')::t1` >> Q.EXISTS_TAC `t2` >> rw[binterl_left]  >- (
         metis_tac[TranRelSnoc]
-                ) >> cheat] >> cheat ] >>  cheat);
+        ) metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq]] >> cheat
 
+    ] >> cheat ] >>  cheat);
+
+                
 val binterleave_composition_thm = store_thm(
   "binterleave_composition_thm",
   ``∀Ded1 Ded2 (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel).
@@ -193,6 +198,8 @@ rw[]
                                                                             asm_rewrite_tac[]
                                                                                 rw[TranRelSnoc]
                                                                                  metis_tac[TranRelSnoc]
+                DB.find "_AND_THM"                                                                 rewrite_tac[BOTH_EXISTS_AND_THM]
+                LEFT_EXISTS_AND_THM
 *)
 
 

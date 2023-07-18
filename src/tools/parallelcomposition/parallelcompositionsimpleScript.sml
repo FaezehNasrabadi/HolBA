@@ -200,9 +200,9 @@ Define  `
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
          (((Sym,P,S1,S2) = (Sym',P',S1',S2'))∧(Re1 (Sym,(IMAGE OUTL P),S1) [] (Sym,(IMAGE OUTL P),S1))∧(Re2 (Sym,(IMAGE OUTR P),S2) [] (Sym,(IMAGE OUTR P),S2))))  ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INL (INL (E:'event1)))::ev) (Sym'',P'',S1'',S2')) =
- (∃Sym' P' S1'. (Re1 (Sym',(IMAGE OUTL P'),S1') [INL E] (Sym'',(IMAGE OUTL P''),S1''))∧((IMAGE OUTR P') = (IMAGE OUTR P''))∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
+ (∃Sym' P' S1'. (Re1 (Sym',(IMAGE OUTL P'),S1') [INL E] (Sym'',(IMAGE OUTL P''),S1''))∧((IMAGE OUTR P') = (IMAGE OUTR P''))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [] (Sym'',(IMAGE OUTR P''),S2')) ∧(composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INL (E:'event2)))::ev) (Sym'',P'',S1',S2'')) =
- (∃Sym' P' S2'. (Re2 (Sym',(IMAGE OUTR P'),S2') [INL E] (Sym'',(IMAGE OUTR P''),S2''))∧((IMAGE OUTL P') = (IMAGE OUTL P''))∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
+ (∃Sym' P' S2'. (Re2 (Sym',(IMAGE OUTR P'),S2') [INL E] (Sym'',(IMAGE OUTR P''),S2''))∧((IMAGE OUTL P') = (IMAGE OUTL P''))∧(Re1 (Sym',(IMAGE OUTL P'),S1') [] (Sym'',(IMAGE OUTL P''),S1')) ∧(composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
  (∃Sym1'' Sym2'' Sym' P' S1' S2'. (Re1 (Sym',(IMAGE OUTL P'),S1') [INR E] (Sym1'',(IMAGE OUTL P''),S1''))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [INR E] (Sym2'',(IMAGE OUTR P''),S2''))∧(Sym'' = Sym1''∪Sym2'') ∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2'))))
 `;

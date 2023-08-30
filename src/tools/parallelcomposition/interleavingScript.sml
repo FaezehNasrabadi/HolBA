@@ -6,6 +6,7 @@ open parallelcompositionsimpleTheory;
 open pairTheory wordsTheory set_sepTheory;
 open quantHeuristicsTheory;
 open propertyTheory;
+
 val _ = new_theory "interleaving";
 
 val TranRelNil = new_axiom ("TranRelNil",
@@ -13,7 +14,10 @@ val TranRelNil = new_axiom ("TranRelNil",
 val TranRelConfigEq = new_axiom ("TranRelConfigEq",
                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s'. (MTrn (v,p,s) [] (v',p',s')) ⇒ ((v = v')∧(p = p')∧(s = s'))``);
 val TranRelSnoc = new_axiom ("TranRelSnoc",
-                            ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s''))) ⇒ (MTrn (v,p,s) (e::t) (v'',p'',s''))``);    
+                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s''))) ⇒ (MTrn (v,p,s) (e::t) (v'',p'',s''))``);
+
+val IMAGEOUT = new_axiom ("IMAGEOUT",
+                             ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``); 
 (*
 Inductive MTrn1:
 [~nil:]
@@ -99,20 +103,11 @@ val binterleave_trace_decomp_to_comp_thm = store_thm(
       Induct_on `t1` >- (
         Induct_on `t2` >- (
           FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def]    >> reverse (RW_TAC bool_ss [binterl_nil])
-                        >-  (metis_tac[TranRelConfigEq])
+                        >- (metis_tac[TranRelConfigEq])
           >- (metis_tac[TranRelConfigEq])
           >- (metis_tac[TranRelConfigEq])
                 >-  (metis_tac[TranRelConfigEq])
-                          >- ( `IMAGE OUTR P = IMAGE OUTR P'` by  metis_tac[TranRelConfigEq] >>
-                               `IMAGE OUTL P = IMAGE OUTL P'` by  metis_tac[TranRelConfigEq] >>
-                               `(INL a ∈ (IMAGE OUTL P) ⊔ (IMAGE OUTR P) ⇔ a ∈ (IMAGE OUTL P)) ∧ (INR b ∈ (IMAGE OUTL P) ⊔ (IMAGE OUTR P) ⇔ b ∈ (IMAGE OUTR P))` by metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION] >>
-                               `(IMAGE OUTL P) ⊔ (IMAGE OUTR P) = {INL a | a ∈ (IMAGE OUTL P)} ∪ {INR b | b ∈ (IMAGE OUTR P)}` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION] >>
-
-                                       
-                                                    `(IMAGE OUTL P) ⊔ (IMAGE OUTR P) = {INL a | a ∈ (IMAGE OUTL P)} ∪ {INR b | b ∈ (IMAGE OUTR P)}` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION]
-                                                                                                                                                                 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[IMAGE_DEF,MAP,OUTR,OUTL,INL,INR,disjUNION_def]
-                              `{OUTL x | x ∈ P} ⊔ {OUTR x | x ∈ P} = P` by  metis_tac[OUTR,OUTL,INL,INR,disjUNION_def,IN_disjUNION]                                                                                                                                                                                                                                           ,MAP,OUTR,OUTL,INL,INR,disjUNION_def]
-                                     ) >> metis_tac[TranRelConfigEq]          
+ >- (metis_tac[TranRelConfigEq,IMAGEOUT])) >> metis_tac[TranRelConfigEq]          
         >> cheat)
       >> cheat)
       >> cheat );
@@ -232,12 +227,81 @@ rw[]
                                                                                 rw[TranRelSnoc]
                                                                                  metis_tac[TranRelSnoc]
                 DB.find "disjUNION"                                                                 rewrite_tac[BOTH_EXISTS_AND_THM]
+                rw[]
                 disjUNION_def
                 LEFT_EXISTS_AND_THM
              `{OUTR x | x ∈ P} = {OUTR x | x ∈ P'}` by  metis_tac[TranRelConfigEq]
              `{OUTL x | x ∈ P} = {OUTL x | x ∈ P'}` by  metis_tac[TranRelConfigEq]
              FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[disjUNION_def]
-             metis_tac[disjUNION_def]
+             rewrite_tac[TranRelConfigEq]
+              FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[MONO_EXISTS]
+ REPEAT (DISCH_THEN (CONJUNCTS_THEN2 ASSUME_TAC MP_TAC)),
+  REWRITE_TAC[EQT_INTRO],
+  ASM_MESON_TAC[]
+(* Apply tactics to manipulate the equations *)
+  REWRITE_TAC [GSYM EQ_SYM_EQ],  (* Use symmetry of equality *)
+  ONCE_REWRITE_TAC [GSYM EQ_TRANS],  (* Use transitivity of equality *)
+  
+  (* Substitute the assumptions into the goal *)
+  REWRITE_TAC [assumption1, assumption2],
+
+  (* Apply reflexivity of equality *)
+  REFL_TAC
+
+  REWRITE_TAC[EXTENSION, IN_ELIM_THM]
+ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[EXTENSION]
+,
+
+  (* Use the assumptions to rewrite terms *)
+  GEN_TAC,
+  EQ_TAC,
+  DISCH_TAC,
+  ASM_REWRITE_TAC [],
+  
+  DISCH_TAC,
+  ASM_REWRITE_TAC [],
+
+  (* Prove the equality *)
+  REFL_TAC
+
+
+
+val binterleave_trace_decomp_to_comp_thm = store_thm(
+  "binterleave_trace_decomp_to_comp",
+  ``∀t1 t2 Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+       (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) 
+     ⇒
+     (∃t. (FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2') ∧ (binterl t1 t2 t))
+     ``,
+     rewrite_tac[composeMultiOperation_def] >> GEN_TAC >> GEN_TAC >> Induct_on `t1` >> Induct_on `t2` >> rw[] >> Q.EXISTS_TAC `[]` >> rw[binterl_nil] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
+     IMP_RES_TAC TranRelConfigEq >> rw[] >>
+     metis_tac[IMAGEOUT] >>
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[] >>
+       FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[]>>
+       
+
+
+
+
+
+     
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[EXTENSION]
+ PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`a`])) >>
+ PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`b`])) >>
+ IMP_RES_TAC EQ_IMP_THM >>
+ GEN_TAC >>
+Induct_on `x`
+rpt (PAT_X_ASSUM ``!x'. A`` (ASSUME_TAC o (Q.SPECL [`x`]))) >>
+IMP_RES_TAC AND_INTRO_THM
+ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[]
+ rewrite_tac[EQ_IMP_THM] >>
+ strip_tac >>
+ rw[]
+ Cases_on ` b = OUTR x`
+ METIS_TAC[]
+ `x = x''` by  metis_tac[]
+     );
+
 *)
 
 

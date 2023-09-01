@@ -24,12 +24,17 @@ val TranRelSnocRev = new_axiom ("TranRelSnocRev",
 
 
 val TranRelSnocRev1 = new_axiom ("TranRelSnocRev1",
-                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn1 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃v' (p':('pred1+'pred2) set) s'. (MTrn1 (v,p,s) t (v',IMAGE OUTL p',s')) ∧ (MTrn1 (v',IMAGE OUTL p',s') [e] (v'',p'',s'')))``);
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn1 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [e] (v'',p'',s'')))``);
 
 val TranRelSnocRev2 = new_axiom ("TranRelSnocRev2",
-                                ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn2 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃v' (p':('pred1+'pred2) set) s'. (MTrn2 (v,p,s) t (v',IMAGE OUTR p',s')) ∧ (MTrn2 (v',IMAGE OUTR p',s') [e] (v'',p'',s'')))``);
+                                ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn2 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [e] (v'',p'',s'')))``);
 
-                                
+val TranRelSnocNil1 = new_axiom ("TranRelSnocNil1",
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [] (v'',p'',s'')))``);
+
+val TranRelSnocNil2 = new_axiom ("TranRelSnocNil2",
+                                 ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [] (v'',p'',s'')))``);
+                                 
 (*
 Inductive MTrn1:
 [~nil:]
@@ -64,7 +69,11 @@ Inductive binterl:
 [~syncR:]                                                                        
   (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
 [~syncL:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))          
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t')) /\
+[~moveL:]                                                                        
+  ((binterl ((INL e1)::(t1:('event1 + 'eventS) list)) (t2:('event2 + 'eventS) list) (INL (INL e1)::t)) ==> (binterl t1 t2 t)) /\
+[~moveR:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) ((INL e2)::(t2:('event2 + 'eventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t))     
 End
 
 val binterl_Empty = new_axiom ("binterl_Empty",
@@ -74,11 +83,11 @@ val binterl_Empty_t = new_axiom ("binterl_Empty_t",
 val binterl_moveL = new_axiom ("binterl_moveL",
                                ``∀e1 t t1 t2.
                                      binterl t1 t2 (INL (INL e1)::t) ⇒
-                                  (∃t1'. (t1 = (INL e1)::t1'))``);
+                                  (∃t1'. (t1 = (INL e1)::t1') ∧ (t2 = []))``);
 val binterl_moveR = new_axiom ("binterl_moveR",
                                ``∀e2 t t1 t2.
                                      binterl t1 t2 (INR (INL e2)::t) ⇒
-                                  (∃t2'. (t2 = (INL e2)::t2'))``);
+                                  (∃t2'. (t2 = (INL e2)::t2') ∧ (t1 = []))``);
 val binterl_moveSL = new_axiom ("binterl_moveSL",
                                 ``∀e t t1 t2.
                                      binterl t1 t2 (INL (INR e)::t) ⇒
@@ -443,13 +452,42 @@ PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPE
 
 
 rewrite_tac[composeMultiOperation_def] >> GEN_TAC >> Induct_on `t` >> rpt strip_tac >> IMP_RES_TAC binterl_Empty >> rw[] >>
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> metis_tac[TranRelConfigEq,IMAGEOUT] >>   gen_tac >>  Cases_on `h` >> rpt strip_tac >> Cases_on `x` >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> IMP_RES_TAC binterl_moveL >> rw[] >> IMP_RES_TAC TranRelSnocRev1 >> Q.EXISTS_TAC `v'` >> Q.EXISTS_TAC `p'` >> Q.EXISTS_TAC `s'` >>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> metis_tac[TranRelConfigEq,IMAGEOUT] >>   gen_tac >>  Cases_on `h` >> rpt strip_tac >> Cases_on `x` >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> IMP_RES_TAC binterl_moveL >> rw[] >> Q.EXISTS_TAC `Sym'` >> Q.EXISTS_TAC `P'` >> Q.EXISTS_TAC `S1'`>> reverse(rw[]) >> PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`,`MTrn1`,`MTrn2`]))
+>> RES_TAC >> IMP_RES_TAC binterl_left
+
+
+
+IMP_RES_TAC TranRelSnocRev1 >> Q.EXISTS_TAC `Sym''` >> Q.EXISTS_TAC `P''` >> Q.EXISTS_TAC `S1''`>>
+IMP_RES_TAC TranRelSnocNil2 >> 
+
+              
 reverse(rw[]) >> metis_tac[TranRelConfigEq,IMAGEOUT] >> metis_tac[TranRelConfigEq] >> 
 
-PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym''`,`P''`,`S1'`,`S2''`,`MTrn1`,`MTrn2`]))
+PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`,`MTrn1`,`MTrn2`]))
 
 IMP_RES_TAC AND_INTRO_THM
-rewrite_tac[AND_INTRO_THM]                  
+rewrite_tac[AND_INTRO_THM]
+
+
+val binterleave_trace_decomp_to_comp_thm = store_thm(
+  "binterleave_trace_decomp_to_comp",
+  ``∀t1 t2 Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+       (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) 
+     ⇒
+     (∃t. (binterl t1 t2 t) ⇒ ((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2')))
+     ``,
+     rewrite_tac[composeMultiOperation_def] >> GEN_TAC >> GEN_TAC >> Induct_on `t1` >> Induct_on `t2` >> rw[] >> Q.EXISTS_TAC `[]` >> rw[binterl_nil] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> metis_tac[TranRelConfigEq,IMAGEOUT] >> gen_tac >>  Cases_on `h` >> rpt strip_tac >>
+     Q.EXISTS_TAC `(INR (INL x))::t` >> rw[] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
+Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >> Q.EXISTS_TAC `S2`>>
+
+
+ IMP_RES_TAC binterl_moveR     
+IMP_RES_TAC TranRelSnocRev2 >>
+PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym''`,`P''`,`S1'`,`S2''`,`MTrn1`,`MTrn2`])) >>
+IMP_RES_TAC TranRelConfigEq
+rw[] >> RES_TAC
+
+                      
 *)
 
 

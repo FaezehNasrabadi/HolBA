@@ -195,6 +195,8 @@ Definition composeMuRe:
                  ==> (composeMuRe Re1 Re2 (Sym,P,S1,S2) ((INR (INR es))::ev) (Sym'',P'',S1',S2'')))
 End   *)
 
+      
+
 val composeMuRe_def =
 Define  `
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
@@ -208,7 +210,23 @@ Define  `
 ((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INL (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
  (∃Sym' P' S1' S2'. (Re1 (Sym',(IMAGE OUTL P'),S1') [INR E] (Sym'',(IMAGE OUTL P''),S1''))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [INR E] (Sym'',(IMAGE OUTR P''),S2''))∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2'))))
 `;
-      
+
+
+(*after changing composeMuRe definition
+val composeMuRe_def =
+Define  `
+((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
+         (∃t1 t2. (t1 = [])∧(t2 = [])∧((Sym,P,S1,S2) = (Sym',P',S1',S2'))∧(Re1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1'))∧(Re2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2'))))  ∧
+((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INL (INL (E:'event1)))::ev) (Sym'',P'',S1'',S2')) =
+ (∃Sym' P' S1' t1 t2. (Re1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1'))∧(Re1 (Sym',(IMAGE OUTL P'),S1') [INL E] (Sym'',(IMAGE OUTL P''),S1''))∧((IMAGE OUTR P') = (IMAGE OUTR P''))∧(Re2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2'))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [] (Sym'',(IMAGE OUTR P''),S2')) ∧(composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
+((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INL (E:'event2)))::ev) (Sym'',P'',S1',S2'')) =
+ (∃Sym' P' S2' t1 t2. (Re2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2'))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [INL E] (Sym'',(IMAGE OUTR P''),S2''))∧((IMAGE OUTL P') = (IMAGE OUTL P''))∧(Re1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1'))∧(Re1 (Sym',(IMAGE OUTL P'),S1') [] (Sym'',(IMAGE OUTL P''),S1')) ∧(composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
+((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INR (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
+ (∃Sym' P' S1' S2' t1 t2. (Re1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1'))∧(Re1 (Sym',(IMAGE OUTL P'),S1') [INR E] (Sym'',(IMAGE OUTL P''),S1''))∧(Re2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2'))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [INR E] (Sym'',(IMAGE OUTR P''),S2'')) ∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
+((composeMuRe (Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel) (Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel) (Sym,P,S1,S2) ((INL (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
+ (∃Sym' P' S1' S2' t1 t2. (Re1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1'))∧(Re1 (Sym',(IMAGE OUTL P'),S1') [INR E] (Sym'',(IMAGE OUTL P''),S1''))∧(Re2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2'))∧(Re2 (Sym',(IMAGE OUTR P'),S2') [INR E] (Sym'',(IMAGE OUTR P''),S2''))∧ (composeMuRe Re1 Re2 (Sym,P,S1,S2) ev (Sym',P',S1',S2'))))
+`;
+  *)    
 (*
 val composeMuRe_def =
 Define  `

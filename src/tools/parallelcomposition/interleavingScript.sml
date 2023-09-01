@@ -34,6 +34,12 @@ val TranRelSnocNil1 = new_axiom ("TranRelSnocNil1",
 
 val TranRelSnocNil2 = new_axiom ("TranRelSnocNil2",
                                  ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [] (v'',p'',s'')))``);
+
+val TranRelSnocRevHT1 = new_axiom ("TranRelSnocRevHT1",
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) (TL t) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [(HD t)] (v'',p'',s'')))``);
+
+val TranRelSnocRevHT2 = new_axiom ("TranRelSnocRevHT2",
+                                ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) (TL t) (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [(HD t)] (v'',p'',s'')))``);                                 
                                  
 (*
 Inductive MTrn1:
@@ -69,11 +75,12 @@ Inductive binterl:
 [~syncR:]                                                                        
   (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
 [~syncL:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t')) /\
-[~moveL:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))
+/\
+[~movesL:]                                                                        
   ((binterl ((INL e1)::(t1:('event1 + 'eventS) list)) (t2:('event2 + 'eventS) list) (INL (INL e1)::t)) ==> (binterl t1 t2 t)) /\
-[~moveR:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) ((INL e2)::(t2:('event2 + 'eventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t))     
+[~movesR:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) ((INL e2)::(t2:('event2 + 'eventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t))  
 End
 
 val binterl_Empty = new_axiom ("binterl_Empty",
@@ -83,7 +90,7 @@ val binterl_Empty_t = new_axiom ("binterl_Empty_t",
 val binterl_moveL = new_axiom ("binterl_moveL",
                                ``∀e1 t t1 t2.
                                      binterl t1 t2 (INL (INL e1)::t) ⇒
-                                  (∃t1'. (t1 = (INL e1)::t1') ∧ (t2 = []))``);
+                                  ((t1 = [INL e1]) ∧ (t2 = []))``);
 val binterl_moveR = new_axiom ("binterl_moveR",
                                ``∀e2 t t1 t2.
                                      binterl t1 t2 (INR (INL e2)::t) ⇒
@@ -97,7 +104,10 @@ val binterl_moveSR = new_axiom ("binterl_moveSR",
                                      binterl t1 t2 (INR (INR e)::t) ⇒
                                   (∃t1' t2'. (t1 = (INR e)::t1') ∧(t2 = (INR e)::t2'))``);
 
-        
+ val binterl_moveLL = new_axiom ("binterl_moveLL",
+                               ``∀e1 t t1 t2.
+                                     binterl t1 t2 (INL (INL e1)::t) ⇒
+                                  (∃t1' t2' e. (t1 = (INL e1)::t1') ∧ (t2 = (e::t2')))``);       
 (*
 (* Binary interleaving of traces *)
 Inductive binterl:
@@ -123,6 +133,8 @@ Inductive binterl:
   ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INR (INR e)::t)) ==> (binterl [INR e] [INR e] (INR (INR e)::t)))
             
 End
+
+      
         
 Definition binterl:
   binterl t1 t2 t =
@@ -437,7 +449,7 @@ PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPE
                                 rw[]
   val binterleave_trace_decomp_to_comp_thm = store_thm(
   "binterleave_trace_decomp_to_comp",
-  ``∀t1 t2 t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+  ``∀t t1 t2 Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
        ((MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) ∧ (binterl t1 t2 t))
      ⇒
      ((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2'))
@@ -479,15 +491,73 @@ val binterleave_trace_decomp_to_comp_thm = store_thm(
      rewrite_tac[composeMultiOperation_def] >> GEN_TAC >> GEN_TAC >> Induct_on `t1` >> Induct_on `t2` >> rw[] >> Q.EXISTS_TAC `[]` >> rw[binterl_nil] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> metis_tac[TranRelConfigEq,IMAGEOUT] >> gen_tac >>  Cases_on `h` >> rpt strip_tac >>
      Q.EXISTS_TAC `(INR (INL x))::t` >> rw[] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
 Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >> Q.EXISTS_TAC `S2`>>
+rename1 ` (INR (INL x)::t)`
 
-
+        
  IMP_RES_TAC binterl_moveR     
 IMP_RES_TAC TranRelSnocRev2 >>
 PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym''`,`P''`,`S1'`,`S2''`,`MTrn1`,`MTrn2`])) >>
 IMP_RES_TAC TranRelConfigEq
 rw[] >> RES_TAC
 
-                      
+MP_TAC (ISPECL [``MAP (\up. bir_var_name (bir_updateB_desc_var up)) updates``, ``i1:num``, ``i2:num``] ALL_DISTINCT_EL_IMP)
+rename1 `[]`
+Q.ABBREV_TAC `t1 = e::t1'`
+MP_TAC (Q.SPECL [`MTrn1`, `Sym`, `IMAGE OUTL (P:('pred1 + 'pred2)set)`, `S1`,`Sym'`, `IMAGE OUTL (P':('pred1 + 'pred2)set)`, `S1'`,`t1`] TranRelSnocRevHT1)
+rw[]MTrn1 v p s v'' p'' s'' t
+        
+ rewrite_tac[composeMultiOperation_def] >> GEN_TAC >> Induct_on `t` >>  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
+rpt strip_tac >> IMP_RES_TAC binterl_Empty >> metis_tac[TranRelConfigEq,IMAGEOUT] >> gen_tac
+Cases_on `h` >> Cases_on `x` >> 
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
+rpt strip_tac     >>
+Q.EXISTS_TAC `Sym''` >> Q.EXISTS_TAC `P''` >> Q.EXISTS_TAC `S1''`>> Q.EXISTS_TAC `(TL t1)` >> Q.EXISTS_TAC `(TL t2)`
+rw[] >> MP_TAC (Q.SPECL [`MTrn1`, `Sym`, `IMAGE OUTL (P:('pred1 + 'pred2)set)`, `S1`,`Sym'`, `IMAGE OUTL (P':('pred1 + 'pred2)set)`, `S1'`,`t1`] TranRelSnocRevHT1) >> strip_tac >> rw[]
+
+rpt gen_tac    
+MP_TAC (Q.SPECL [`Sym`,`Sym`, `Sym''`, `S2''`,`S2`, `S1''`, `S1`,`MTrn1`,`MTrn2`,`P''`,`P`] composeMuRe_def)
+DISCH_TAC
+IMP_RES_TAC binterl_moveL
+D (CHOOSE_THEN (CONJUNCTS_THEN ASSUME_TAC) ``t1 t2`` o SPEC ``INL (INL x')::t``)
+POP_ASSUM (MP_TAC o SPEC ``[]``)
+EXISTS_AND_THM
+POP_ASSUM(X_CHOOSE_THEN ``[]`` ASSUME_TAC)
+Q.X_CHOOSE_THEN `[]` strip_assume_tac
+D (GENL ["t1"; "t2"] THEN
+   DISCH_THEN (CONJUNCTS_THEN2
+     (X_CHOOSE_TAC "t1" o SPEC "Sym,IMAGE OUTL P,S1,Sym',IMAGE OUTL P',S1'")
+     (X_CHOOSE_TAC "t2" o SPEC "Sym,IMAGE OUTR P,S2,Sym',IMAGE OUTR P',S2'")))
+
+PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P'`,`S1'`,`S2'`,`MTrn1`,`MTrn2`]))
+RES_TAC
+Q.REFINE_EXISTS_TAC `MTrn1`
+NTAC 2 DISCH_TAC
+PULL_EXISTS
+rpt (PRED_ASSUM (exists (curry op = "the")
+  o map (fst o dest_const) o find_terms is_const) kall_tac)
+
+PAT_X_ASSUM ``?t1 t2. A`` (ASSUME_TAC o (Q.SPECL [`t1`,`t2`]))
+
+            IMP_RES_TAC BOTH_EXISTS_AND_THM
+
+
+
+rewrite_tac[composeMultiOperation_def] >>GEN_TAC >> Induct_on `t` >>rpt strip_tac >> IMP_RES_TAC binterl_Empty >> rw[]>>
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] 
+>>metis_tac[TranRelConfigEq,IMAGEOUT] >> gen_tac >> Cases_on `h` >> Cases_on `x` >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >> rpt strip_tac >> 
+rw[] >> Q.EXISTS_TAC `Sym` >> Q.EXISTS_TAC `P` >> Q.EXISTS_TAC `S1` >>
+IMP_RES_TAC binterl_moveL >> rw[] >> metis_tac[TranRelConfigEq,IMAGEOUT] >>
+IMP_RES_TAC binterl_moveLL >> rw[] >> MP_TAC (Q.SPECL [`MTrn1`, `Sym`, `IMAGE OUTL (P:('pred1 + 'pred2)set)`, `S1`,`Sym'`, `IMAGE OUTL (P':('pred1 + 'pred2)set)`, `S1'`,`t1`] TranRelSnocRev1)
+
+
+RES_TAC >> 
+                                      
+
+rpt strip_tac >> Q.EXISTS_TAC `(INR (INL x))::t` >> rw[] >> IMP_RES_TAC binterl_moveR >> rw[] >> FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [composeMuRe_def] >>
+rpt strip_tac 
+
+
+            
 *)
 
 

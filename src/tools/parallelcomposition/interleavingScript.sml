@@ -172,7 +172,17 @@ val compose_vs_modules_thm = store_thm(
   );
 
 
-
+val trace_inclusion_thm = store_thm(
+  "trace_inclusion_thm", ``  
+∀Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2.
+(traces MTrn1 (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) ⊆ (IMAGE (MAP OUTL) (comptraces (FST((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) (Sym',P',S1',S2'))) ∧ (traces MTrn2 (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2')) ⊆ (IMAGE (MAP OUTR) (comptraces (FST((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) (Sym',P',S1',S2')))``
+  ,
+  rewrite_tac[binterleave_composition_thm]
+             rewrite_tac[binterleave_ts]
+             rewrite_tac[traces_def]
+                FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF]
+                
+  );
         
 (*        
      rpt strip_tac >> rewrite_tac[composeMultiOperation_def] >>         
@@ -644,6 +654,7 @@ Definition binterl:
                    )
    
 End
+IMAGE (MAP INL)
 *) 
 
 val _ = export_theory();

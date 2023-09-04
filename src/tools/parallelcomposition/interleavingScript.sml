@@ -79,97 +79,7 @@ val binterl_moveAR = new_axiom ("binterl_moveAR",
                                ``∀e2 t t1 t2.
                                      binterl t1 t2 (INR (INL e2)::t) ⇒
                                   (∃t2'. (t2 = (INL e2)::t2'))``);                                  
-(*
-
-Inductive MTrn1:
-[~nil:]
-  (MTrn1 ((v:'symb),(p:'pred1),(s:'state1)) ([]:('event1+'eventS) list) (v,p,s)) /\
-[~snoc:]
-  ((( MTrn1 (v,p,s) t (v',p',s')) /\ ( MTrn1 (v',p',s') [e] (v'',p'',s''))) ==> ( MTrn1 (v,p,s) (e::t) (v'',p'',s'')))
-End
-
-Inductive MTrn2:
-[~nil:]
-  (MTrn2 ((v:'symb),(p:'pred2),(s:'state2)) ([]:('event2+'eventS) list) (v,p,s)) /\
-[~snoc:]
-  ((( MTrn2 (v,p,s) t (v',p',s')) /\ ( MTrn2 (v',p',s') [e] (v'',p'',s''))) ==> ( MTrn2 (v,p,s) (e::t) (v'',p'',s'')))
-End        
-    
-Inductive comptrace:
-[~nil:]
-  (comptrace (MTrn:( (('event1+'evenS)+('event2+'eventS)), ('pred1+'pred2), 'state1#'state2 , 'symb ) mtrel) (v,p,s1,s2) [] (v,p,s1,s2)) /\
-[~snoc:]
-  (((comptrace MTrn (v,p,s1,s2) t (v',p',s1',s2')) /\ (comptrace MTrn (v',p',s1',s2') [e] (v'',p'',s1'',s2''))) ==> (comptrace MTrn (v,p,s1,s2) (e::t) (v'',p'',s1'',s2'')))
-End
-        
-(* Binary interleaving of traces *)
-Inductive binterl:
-[~nil:]
-  (binterl [] [] []) /\
-[~left:]
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
-[~right:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
-[~syncR:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
-[~syncL:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t')) /\
-[~Empty:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) []) ==> (binterl [] [] []))/\
-[~moveL:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INL (INL e1)::t)) ==> (binterl [INL e1] [] (INL (INL e1)::t))) /\
-[~moveR:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INR (INL e2)::t)) ==> (binterl [] [INL e2] (INR (INL e2)::t)))/\
-[~moveSL:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INL (INR e)::t)) ==> (binterl [INR e] [INR e] (INL (INR e)::t))) /\
-[~moveSR:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INR (INR e)::t)) ==> (binterl [INR e] [INR e] (INR (INR e)::t)))
-            
-End
-
-val binterl_Empty_t = new_axiom ("binterl_Empty_t",
-                               ``∀t. binterl [] [] t ⇒ (t = [])``);                               
-val binterl_moveL = new_axiom ("binterl_moveL",
-                               ``∀e1 t t1 t2.
-                                     binterl t1 t2 (INL (INL e1)::t) ⇒
-                                  ((t1 = [INL e1]) ∧ (t2 = []))``);
-val binterl_moveR = new_axiom ("binterl_moveR",
-                               ``∀e2 t t1 t2.
-                                     binterl t1 t2 (INR (INL e2)::t) ⇒
-                                  (∃t2'. (t2 = (INL e2)::t2') ∧ (t1 = []))``);
-                                          
-val TranRelSnocRev = new_axiom ("TranRelSnocRev",
-                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃v' p' s'. (MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
-
-
-val TranRelSnocRev1 = new_axiom ("TranRelSnocRev1",
-                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn1 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [e] (v'',p'',s'')))``);
-
-val TranRelSnocRev2 = new_axiom ("TranRelSnocRev2",
-                                ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn2 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [e] (v'',p'',s'')))``);
-
-val TranRelSnocNil1 = new_axiom ("TranRelSnocNil1",
-                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [] (v'',p'',s'')))``);
-
-val TranRelSnocNil2 = new_axiom ("TranRelSnocNil2",
-                                 ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [] (v'',p'',s'')))``);
-
-val TranRelSnocRevHT1 = new_axiom ("TranRelSnocRevHT1",
-                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) (TL t) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [(HD t)] (v'',p'',s'')))``);
-
-val TranRelSnocRevHT2 = new_axiom ("TranRelSnocRevHT2",
-                                   ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) (TL t) (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [(HD t)] (v'',p'',s'')))``);      
-        
-Definition binterl:
-  binterl t1 t2 t =
-                   (case t of
-                      [] => ((t1 = []) ∧ (t2 = []))
-                    | ((INL e1)::ev) => ((HD t1 = e1) ∧ (binterl (TL t1) t2 ev))
-                    | ((INR e2)::ev) => ((HD t2 = e2) ∧ (binterl t1 (TL t2) ev))
-                   )
-   
-End
-*)   
+  
 
 Definition binterleave_ts:
   binterleave_ts ts1 ts2 = {t| ∃t1 t2. (t1 ∈ ts1) ∧ (t2 ∈ ts2) ∧ (binterl t1 t2 t)}
@@ -229,7 +139,41 @@ val binterleave_trace_decomp_to_comp_thm = store_thm(
   );
 
 
+val binterleave_trace_thm = store_thm(
+  "binterleave_trace", ``
+                       ∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2. 
+                         ((FST ((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) t (Sym',P',S1',S2'))
+                         ⇔
+                           (∃t1 t2. (MTrn1 (Sym,(IMAGE OUTL P),S1) t1 (Sym',(IMAGE OUTL P'),S1')) ∧ (MTrn2 (Sym,(IMAGE OUTR P),S2) t2 (Sym',(IMAGE OUTR P'),S2')) ∧ (binterl t1 t2 t))
+                           ``,
+                           rpt gen_tac >> EQ_TAC >>
+                       rewrite_tac[binterleave_trace_comp_to_decomp_thm] >>
+                       rewrite_tac[binterleave_trace_decomp_to_comp_thm]
+  );
+
+val binterleave_composition_thm = store_thm(
+  "binterleave_composition", ``
+  ∀Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2.
+   (comptraces (FST((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) (Sym',P',S1',S2'))                           
+  = (binterleave_ts (traces MTrn1 (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) (traces MTrn2 (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2')))
+``,
+rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >> rw[] >> rewrite_tac[binterleave_trace_thm]   
+  ); 
   
+
+val compose_vs_modules_thm = store_thm(
+  "compose_vs_modules_thm", ``
+                           !Sym Sym' Sym'' Sym''' P P' P'' P''' S1 S1' S1'' S1''' S2 S2' S2'' S2''' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn1':('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn1':('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn1':('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (MTrn2':('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded1' Ded2 Ded2'.
+                             (((traces MTrn1 (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) ⊆ (traces MTrn1' (Sym'',(IMAGE OUTL P''),S1'') (Sym''',(IMAGE OUTL P'''),S1'''))) ∧ ((traces MTrn2 (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2')) ⊆ (traces MTrn2' (Sym'',(IMAGE OUTR P''),S2'') (Sym''',(IMAGE OUTR P'''),S2''')))
+                             ) ==> ((comptraces (FST((MTrn1,Ded1) || (MTrn2,Ded2))) (Sym,P,S1,S2) (Sym',P',S1',S2')) ⊆ (comptraces (FST((MTrn1',Ded1') || (MTrn2',Ded2'))) (Sym'',P'',S1'',S2'') (Sym''',P''',S1''',S2'''))) ``
+  ,
+  rewrite_tac[binterleave_composition_thm,binterleave_ts] >>
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF] >> metis_tac[]
+  );
+
+
+
+        
 (*        
      rpt strip_tac >> rewrite_tac[composeMultiOperation_def] >>         
      Induct_on `t` >- (
@@ -610,6 +554,96 @@ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolS
 *)
 
         
+(*
 
+Inductive MTrn1:
+[~nil:]
+  (MTrn1 ((v:'symb),(p:'pred1),(s:'state1)) ([]:('event1+'eventS) list) (v,p,s)) /\
+[~snoc:]
+  ((( MTrn1 (v,p,s) t (v',p',s')) /\ ( MTrn1 (v',p',s') [e] (v'',p'',s''))) ==> ( MTrn1 (v,p,s) (e::t) (v'',p'',s'')))
+End
+
+Inductive MTrn2:
+[~nil:]
+  (MTrn2 ((v:'symb),(p:'pred2),(s:'state2)) ([]:('event2+'eventS) list) (v,p,s)) /\
+[~snoc:]
+  ((( MTrn2 (v,p,s) t (v',p',s')) /\ ( MTrn2 (v',p',s') [e] (v'',p'',s''))) ==> ( MTrn2 (v,p,s) (e::t) (v'',p'',s'')))
+End        
+    
+Inductive comptrace:
+[~nil:]
+  (comptrace (MTrn:( (('event1+'evenS)+('event2+'eventS)), ('pred1+'pred2), 'state1#'state2 , 'symb ) mtrel) (v,p,s1,s2) [] (v,p,s1,s2)) /\
+[~snoc:]
+  (((comptrace MTrn (v,p,s1,s2) t (v',p',s1',s2')) /\ (comptrace MTrn (v',p',s1',s2') [e] (v'',p'',s1'',s2''))) ==> (comptrace MTrn (v,p,s1,s2) (e::t) (v'',p'',s1'',s2'')))
+End
+        
+(* Binary interleaving of traces *)
+Inductive binterl:
+[~nil:]
+  (binterl [] [] []) /\
+[~left:]
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
+[~right:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
+[~syncR:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
+[~syncL:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t')) /\
+[~Empty:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) []) ==> (binterl [] [] []))/\
+[~moveL:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INL (INL e1)::t)) ==> (binterl [INL e1] [] (INL (INL e1)::t))) /\
+[~moveR:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INR (INL e2)::t)) ==> (binterl [] [INL e2] (INR (INL e2)::t)))/\
+[~moveSL:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INL (INR e)::t)) ==> (binterl [INR e] [INR e] (INL (INR e)::t))) /\
+[~moveSR:]                                                                        
+  ((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) (INR (INR e)::t)) ==> (binterl [INR e] [INR e] (INR (INR e)::t)))
+            
+End
+
+val binterl_Empty_t = new_axiom ("binterl_Empty_t",
+                               ``∀t. binterl [] [] t ⇒ (t = [])``);                               
+val binterl_moveL = new_axiom ("binterl_moveL",
+                               ``∀e1 t t1 t2.
+                                     binterl t1 t2 (INL (INL e1)::t) ⇒
+                                  ((t1 = [INL e1]) ∧ (t2 = []))``);
+val binterl_moveR = new_axiom ("binterl_moveR",
+                               ``∀e2 t t1 t2.
+                                     binterl t1 t2 (INR (INL e2)::t) ⇒
+                                  (∃t2'. (t2 = (INL e2)::t2') ∧ (t1 = []))``);
+                                          
+val TranRelSnocRev = new_axiom ("TranRelSnocRev",
+                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃v' p' s'. (MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+
+
+val TranRelSnocRev1 = new_axiom ("TranRelSnocRev1",
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn1 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [e] (v'',p'',s'')))``);
+
+val TranRelSnocRev2 = new_axiom ("TranRelSnocRev2",
+                                ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t e. (MTrn2 (v,p,s) (e::t) (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [e] (v'',p'',s'')))``);
+
+val TranRelSnocNil1 = new_axiom ("TranRelSnocNil1",
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) t (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [] (v'',p'',s'')))``);
+
+val TranRelSnocNil2 = new_axiom ("TranRelSnocNil2",
+                                 ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) t (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [] (v'',p'',s'')))``);
+
+val TranRelSnocRevHT1 = new_axiom ("TranRelSnocRevHT1",
+                                ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn1 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S1'. (MTrn1 (v,p,s) (TL t) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P',S1') [(HD t)] (v'',p'',s'')))``);
+
+val TranRelSnocRevHT2 = new_axiom ("TranRelSnocRevHT2",
+                                   ``∀(MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) v p s v'' p'' s'' t. (MTrn2 (v,p,s) t (v'',p'',s'')) ⇒ (∃Sym' (P':('pred1+'pred2) set) S2'. (MTrn2 (v,p,s) (TL t) (Sym',IMAGE OUTR P',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P',S2') [(HD t)] (v'',p'',s'')))``);      
+        
+Definition binterl:
+  binterl t1 t2 t =
+                   (case t of
+                      [] => ((t1 = []) ∧ (t2 = []))
+                    | ((INL e1)::ev) => ((HD t1 = e1) ∧ (binterl (TL t1) t2 ev))
+                    | ((INR e2)::ev) => ((HD t2 = e2) ∧ (binterl t1 (TL t2) ev))
+                   )
+   
+End
+*) 
 
 val _ = export_theory();

@@ -143,14 +143,23 @@ Define`
 val comptraces_def =
 Define`
       comptraces (CMTrn,CDed) = {t| ∀(Sym:α) (P: β) (S1: γ) (S2: δ) (Sym':α) (P': β) (S1': γ) (S2': δ). (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
-`;*)
+`;
 val traces_def =
 Define`
-      traces (MTrn,Ded) = {t| ∃Sym P S  Sym' P' S'. (MTrn (Sym,P,S) t (Sym',P',S'))}
-`;
+      traces (MTrn,Ded) = {t| ∀Sym P S  Sym' P' S'. (MTrn (Sym,P,S) t (Sym',P',S'))}
+                          `;
+*)
+val traces_def =
+Define`
+      traces (MTrn:('event, 'pred, 'state, 'symb) mtrel) ((Sym:'symb set),(P: 'pred set),(S: 'state)) ((Sym':'symb set),(P': 'pred set),(S': 'state)) = {t| (MTrn (Sym,P,S) t (Sym',P',S'))}
+                                                                                                                                                                        `;
+ val comptraces_def =
+Define`
+      comptraces (CMTrn:((('event1+'eventS) + ('event2 +'eventS)), ('pred1 + 'pred2), 'state1#'state2, 'symb) mtrel) ((Sym:'symb set),(P: ('pred1 + 'pred2) set),(S1: 'state1),(S2: 'state2)) ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {t| (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;                                                                                                                          (*                                               
 val comptraces_def =
 Define`
-      comptraces (CMTrn,CDed) = {t| ∃Sym P S1 S2 Sym' P' S1' S2'. (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+      comptraces (CMTrn,CDed) = {t| ∀Sym P S1 S2 Sym' P' S1' S2'. (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
 `;                                                                                                                                                                                
 
 val add_event_to_trace_thm = store_thm(
@@ -161,7 +170,7 @@ val add_event_to_trace_thm = store_thm(
                                                                                                                              REPEAT GEN_TAC >> strip_tac >> gen_tac >>
   PAT_X_ASSUM ``∀x. A`` (ASSUME_TAC o (Q.SPECL [`h::x`]))>>rw[]
   );
-
+*)
 
 (*
 

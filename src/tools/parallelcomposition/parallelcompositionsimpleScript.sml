@@ -366,11 +366,11 @@ val _ = Parse.type_abbrev("MulComOpr",
   ``:('symb, 'pred1, 'state1, 'event1 + 'eventS) multransys ->
   ('symb, 'pred2, 'state2, 'event2 + 'eventS) multransys -> 
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys``);
- 
+
 val composeMultiOperation_def =
 Define`
       (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) = (composeMuRe rel1 rel2, composeDed ded1 ded2): ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) multransys)
-      `;
+      `;   
 
 val _ = set_mapped_fixity { fixity = Infixl 95,
                             term_name = "apply_composeMultiOperation",
@@ -378,6 +378,15 @@ val _ = set_mapped_fixity { fixity = Infixl 95,
 
 val _ = overload_on ("apply_composeMultiOperation", ``composeMultiOperation``);
 (*
+
+val composeMultiOperation_def =
+Define`
+      composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) =
+
+(λ(Sym,P,S1,S2) E (Sym',P',S1',S2'). ((composeMuRe rel1 rel2 (Sym,P,S1,S2) E (Sym',P',S1',S2')),
+                                                   (∀y. (y ∈ (P' DIFF P)) ⇒ (composeDed ded1 ded2 P y))))
+      `; 
+        
  val composeMultiOperation_def =
 Define`
       (composeMultiOperation ((rel1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((rel2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) =

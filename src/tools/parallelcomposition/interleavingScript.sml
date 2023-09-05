@@ -171,7 +171,7 @@ val compose_vs_modules_thm = store_thm(
   FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF] >> metis_tac[]
   );
 
-
+(* 
 val trace_inclusion_thm = store_thm(
   "trace_inclusion_thm", ``  
 ∀Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Ded1 Ded2.
@@ -180,11 +180,12 @@ val trace_inclusion_thm = store_thm(
   rewrite_tac[binterleave_composition_thm]
              rewrite_tac[binterleave_ts]
              rewrite_tac[traces_def]
-                FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF]
+             FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF]
+                           rw[]
                 
   );
         
-(*        
+       
      rpt strip_tac >> rewrite_tac[composeMultiOperation_def] >>         
      Induct_on `t` >- (
       Induct_on `t1` >- (

@@ -12,43 +12,22 @@ val _ = Parse.type_abbrev("trel", ``:(('symb set) # ('pred set) # 'state) -> ('e
 (* deduction relation *)    
 val _ = Parse.type_abbrev("tded", ``:('pred set) -> 'pred -> bool``);
 
- (*   
-(* equality pred1 *)    
-val _ = Parse.type_abbrev("equalityOne", ``:'symb -> 'symb -> 'pred1``);
-
-
-(* equality pred2 *)    
-val _ = Parse.type_abbrev("equalityTwo", ``:'symb -> 'symb -> 'pred2``);
-
-
-val _ = overload_on ("apply_equalityTwo", ``equalityTwo``);
-
-(* knowledge pred2 *)    
-val _ = Parse.type_abbrev("knowledge", ``:'symb -> 'pred2``);
-
-(* constant pred1 *)    
-val _ = Parse.type_abbrev("const", ``:'symb -> 'pred1``);
-
-(* operation pred1 *)    
-val _ = Parse.type_abbrev("operation", ``:'symb -> 'symb -> 'pred1``);
-
-
-(* symbols of a symbol*)    
-val _ = Parse.type_abbrev("symbols", ``:'symb -> ('symb set)``);
- *)
  
-val _ = Datatype `pred2 =
-K 'symb 
-| EquTwo 'symb 'symb 
-         `;
-
+(* predicate of first program language *)
 val _ = Datatype `pred1 =
 Const string 
 | Op 'symb string
 | EquOne 'symb 'symb
 | EquOp 'symb pred1
          `;
-         
+
+(* predicate of second program language *)         
+val _ = Datatype `pred2 =
+K 'symb 
+| EquTwo 'symb 'symb 
+         `;
+
+(* a set of symbols *)         
 val symbols_def =
 Define`
       symbols (x:'symb) = {x}
@@ -56,49 +35,33 @@ Define`
 
 val _ = Parse.type_abbrev("ctded", ``:('pred1) tded -> ('pred2) tded -> ('pred1 + 'pred2) tded``);
 
+(* Composing two deduction relation of two program languages *)    
 val composeDed_def =
 Define`
       (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INL (F1:'pred1)) = (ded1 (IMAGE OUTL P3) F1)) ∧
 (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INR (F2:'pred2)) = (ded2 (IMAGE OUTR P3) F2))
 `;
 
+(* Sharing equalities between program languages *)        
 val composeDedEqu_def =
 Define`
       (composeDedEqu (P3:(('symb pred1) + ('symb pred2)) set) ((INL ((EquOne (x:'symb) (z:'symb)):('symb pred1))):('symb pred1) + ('symb pred2)) = (∃(y: 'symb). (((EquOne (x:'symb) (y:'symb)):('symb pred1)) ∈ (IMAGE OUTL (P3:(('symb pred1) + ('symb pred2)) set))) ∧ (((EquTwo (y:'symb) (z:'symb)):('symb pred2)) ∈ (IMAGE OUTR (P3:(('symb pred1) + ('symb pred2)) set))))) ∧
 (composeDedEqu (P3:(('symb pred1) + ('symb pred2)) set) (INR ((EquTwo (x:'symb) (z:'symb)):('symb pred2))) = (∃(y: 'symb). (((EquOne (x:'symb) (y:'symb)):('symb pred1)) ∈ (IMAGE OUTL (P3:(('symb pred1) + ('symb pred2)) set))) ∧ (((EquTwo (y:'symb) (z:'symb)):('symb pred2)) ∈ (IMAGE OUTR (P3:(('symb pred1) + ('symb pred2)) set)))))
 `;
 
+(* Generic over-approximation *)        
 val composeDedOverApprox_def =
 Define`
       composeDedOverApprox (P3:(('symb pred1) + ('symb pred2)) set) ((INR ((K (z:'symb)):('symb pred2))):('symb pred1) + ('symb pred2)) = (∃(x:'symb) (y: 'symb). (((K (x:'symb)):('symb pred2)) ∈ (IMAGE OUTR (P3:(('symb pred1) + ('symb pred2)) set))) ∧ (((EquOne (x:'symb) (y:'symb)):('symb pred1)) ∈ (IMAGE OUTL (P3:(('symb pred1) + ('symb pred2)) set))) ∧ (z ∈ (symbols y)))
 `;
 
+(* Bitwise reasoning *)        
 val composeDedBit_def =
 Define`
       composeDedBit (P3:(('symb pred1) + ('symb pred2)) set) ((INR ((K (y:'symb)):('symb pred2))):('symb pred1) + ('symb pred2)) = (∃(x:'symb) (c: string). (((K (x:'symb)):('symb pred2)) ∈ (IMAGE OUTR (P3:(('symb pred1) + ('symb pred2)) set))) ∧ (((EquOp (y:'symb) (Op x c)):('symb pred1)) ∈ (IMAGE OUTL (P3:(('symb pred1) + ('symb pred2)) set))) ∧ ((Const c) ∈ (IMAGE OUTL (P3:(('symb pred1) + ('symb pred2)) set))))
 `;
-
-        
-(*        
-
-Inductive composeDed:
-[~left:]
-  (((ded1:('pred1) tded) (IMAGE OUTL (P3:('pred1 + 'pred2) set)) (F1:'pred1)) ==> (composeDed ded1 (ded2:('pred2) tded) P3 (INL F1))) /\
-[~right:]                                                                        
-  (((ded2:('pred2) tded) (IMAGE OUTR (P3:('pred1 + 'pred2) set)) (F2:'pred2)) ==> (composeDed (ded1:('pred1) tded) ded2 P3 (INR F2))) /\
-[~eqOne:]
-  (((((equalityOne (x:'symb) (y:'symb)):'pred1) ∈ (IMAGE OUTL (P3:('pred1 + 'pred2) set))) ∧ (((equalityTwo (y:'symb) (z:'symb)):'pred2) ∈ (IMAGE OUTR (P3:('pred1 + 'pred2) set)))) ==> (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) P3 (INL (equalityOne (x:'symb) (z:'symb)))))                 
-End
-(* compose deduction relation *)
-Inductive composeDed:
-
-[~eqOne:]
-  (((((equalityOne (x:'symb) (y:'symb)):'pred1) ∈ (IMAGE OUTL (P3:('pred1 + 'pred2) set))) ∧ (((equalityTwo (y:'symb) (z:'symb)):'pred2) ∈ (IMAGE OUTR (P3:('pred1 + 'pred2) set)))) ==> (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) P3 (INL (equalityOne (x:'symb) (z:'symb)))))                 
-End
-*)
-
-        
-(* compose deduction relation *)
+       
+(* combine all deduction relations *)
 val combineAllDed_def =
 Define `
        (combineAllDed (P3:(('symb pred1) + ('symb pred2)) set) (F3:('symb pred1) + ('symb pred2)) = (

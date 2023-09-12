@@ -58,7 +58,11 @@ new_axiom ("TranRelSnocRevSync",
            ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
                                                                         ((MTrn1 (Sym,IMAGE OUTL P,S1) (SOME (INR e)::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (SOME (INR e)::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':('pred1+'pred2) set) S1'' S2''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1'')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1'') [SOME (INR e)] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2'')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2'') [SOME (INR e)] (Sym',IMAGE OUTR P',S2')))``);                                                                        
 
-                    
+val TranRelSnocRevSync =
+new_axiom ("TranRelSnocRevNone",
+           ``∀(MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2.
+                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) (NONE::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (NONE::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃(P'':('pred1+'pred2) set). (∀(Ded1:('pred1) tded) (Ded2:('pred2) tded) phi. ((composeDed Ded1 Ded2) P'' phi) ∧ P'=P''∪{phi}) ∧ (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P',S2')))``);
+                                                                        
 (* Binary interleaving of traces *)
 Inductive binterl:
 [~nil:]

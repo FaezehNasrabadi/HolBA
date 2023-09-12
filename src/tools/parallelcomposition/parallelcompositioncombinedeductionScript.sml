@@ -64,8 +64,8 @@ Define`
 (* combine all deduction relations *)
 val combineAllDed_def =
 Define `
-       (combineAllDed (P3:(('symb pred1) + ('symb pred2)) set) (F3:('symb pred1) + ('symb pred2)) = (
-         (∃(ded1:('symb pred1) tded) (ded2:('symb pred2) tded). composeDed ded1 ded2 P3 F3) ∨
+       (combineAllDed (ded1:('symb pred1) tded) (ded2:('symb pred2) tded) (P3:(('symb pred1) + ('symb pred2)) set) (F3:('symb pred1) + ('symb pred2)) = (
+         (composeDed ded1 ded2 P3 F3) ∨
          (composeDedEqu P3 F3) ∨
          (composeDedOverApprox P3 F3) ∨
          (composeDedBit P3 F3)  
@@ -84,34 +84,34 @@ val _ = Parse.type_abbrev("cmtrel", ``:('symb, 'pred1, 'state1, 'event1 + 'event
   ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) mtrel``);
   
 
-
+(* Symbolic Parallel Composition *)
 val symbolicParlComp_def =
 Define  `
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) [] (Sym',P',S1',S2')) =
  (((Sym,P,S1,S2) = (Sym',P',S1',S2'))∧
   (Re1 (Sym,(IMAGE OUTL P),S1) [] (Sym,(IMAGE OUTL P),S1))∧
   (Re2 (Sym,(IMAGE OUTR P),S2) [] (Sym,(IMAGE OUTR P),S2))))  ∧
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) (NONE::ev) (Sym',P',S1',S2')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) (NONE::ev) (Sym',P',S1',S2')) =
 (∃P''.
-   (∀phi. ((composeDed ded1 ded2) P'' phi) ∧ P'=P''∪{phi}) ∧
+   (∀phi. (combineAllDed ded1 ded2 P'' phi) ∧ (P'=P''∪{phi})) ∧
    (Re1 (Sym',(IMAGE OUTL P''),S1') [NONE] (Sym',(IMAGE OUTL P'),S1'))∧
   (Re2 (Sym',(IMAGE OUTR P''),S2') [NONE] (Sym',(IMAGE OUTR P'),S2')) ∧
   (symbolicParlComp (Re1,ded1) (Re2,ded2) (Sym,P,S1,S2) ev (Sym',P'',S1',S2'))))  ∧
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) (SOME(INL (INL (E:'event1)))::ev) (Sym'',P'',S1'',S2')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) (SOME(INL (INL (E:'event1)))::ev) (Sym'',P'',S1'',S2')) =
  (∃Sym' P' S1'. (Re1 (Sym',(IMAGE OUTL P'),S1') [SOME(INL E)] (Sym'',(IMAGE OUTL P''),S1''))∧
                 ((IMAGE OUTR P') = (IMAGE OUTR P''))∧
                 (Re2 (Sym',(IMAGE OUTR P'),S2') [] (Sym'',(IMAGE OUTR P''),S2')) ∧
                 (symbolicParlComp (Re1,ded1) (Re2,ded2) (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) (SOME(INR (INL (E:'event2)))::ev) (Sym'',P'',S1',S2'')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) (SOME(INR (INL (E:'event2)))::ev) (Sym'',P'',S1',S2'')) =
  (∃Sym' P' S2'. (Re2 (Sym',(IMAGE OUTR P'),S2') [SOME(INL E)] (Sym'',(IMAGE OUTR P''),S2''))∧
                 ((IMAGE OUTL P') = (IMAGE OUTL P''))∧
                 (Re1 (Sym',(IMAGE OUTL P'),S1') [] (Sym'',(IMAGE OUTL P''),S1')) ∧
                 (symbolicParlComp (Re1,ded1) (Re2,ded2) (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) (SOME(INR (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) (SOME(INR (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
  (∃Sym' P' S1' S2'. (Re1 (Sym',(IMAGE OUTL P'),S1') [SOME(INR E)] (Sym'',(IMAGE OUTL P''),S1''))∧
                     (Re2 (Sym',(IMAGE OUTR P'),S2') [SOME(INR E)] (Sym'',(IMAGE OUTR P''),S2'')) ∧
                     (symbolicParlComp (Re1,ded1) (Re2,ded2) (Sym,P,S1,S2) ev (Sym',P',S1',S2')))) ∧
-((symbolicParlComp ((Re1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1:('pred1) tded)) ((Re2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2:('pred2) tded)) (Sym,P,S1,S2) (SOME(INL (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
+((symbolicParlComp ((Re1:(('event1 + 'eventS), ('symb pred1), 'state1, 'symb) mtrel),(ded1:('symb pred1) tded)) ((Re2:(('event2 + 'eventS), ('symb pred2), 'state2, 'symb) mtrel),(ded2:('symb pred2) tded)) (Sym,P,S1,S2) (SOME(INL (INR (E:'eventS)))::ev) (Sym'',P'',S1'',S2'')) =
  (∃Sym' P' S1' S2'. (Re1 (Sym',(IMAGE OUTL P'),S1') [SOME(INR E)] (Sym'',(IMAGE OUTL P''),S1''))∧
                     (Re2 (Sym',(IMAGE OUTR P'),S2') [SOME(INR E)] (Sym'',(IMAGE OUTR P''),S2''))∧
                     (symbolicParlComp (Re1,ded1) (Re2,ded2) (Sym,P,S1,S2) ev (Sym',P',S1',S2'))))

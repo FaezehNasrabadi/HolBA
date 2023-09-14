@@ -20,7 +20,7 @@ val IMAGEOUT = new_axiom ("IMAGEOUT",
                           ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);
 
 val DedRelAll = new_axiom ("DedRelAll",
-                          ``∀(ded1:('symb pred1) tded) (ded2:('symb pred2) tded) (MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 phi.
+                          ``∀(ded1:(('pred1,'symb) predOne) tded) (ded2:(('pred2,'symb) predTwo) tded) (MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 phi.
                             ((MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P'' ∪ {OUTL phi},S1')) ∧
                           (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P'' ∪ {OUTR phi},S2')) ∧
                           (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
@@ -31,7 +31,7 @@ val DedRelAll = new_axiom ("DedRelAll",
                               (MTrn2 (Sym,IMAGE OUTR P,S2) (NONE::t2) (Sym',IMAGE OUTR P'' ∪ {OUTR phi},S2')))``);
                               
 val DedRelINL = new_axiom ("DedRelINL",
-                          ``∀(ded1:('symb pred1) tded) (MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 x.
+                          ``∀(ded1:(('pred1,'symb) predOne) tded) (MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 x.
                             ((MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P'' ∪ {x},S1')) ∧
                           (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P'' ∪ {OUTR (INL x)},S2')) ∧
                           (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
@@ -42,7 +42,7 @@ val DedRelINL = new_axiom ("DedRelINL",
                               (MTrn2 (Sym,IMAGE OUTR P,S2) (NONE::t2) (Sym',IMAGE OUTR P'' ∪ {OUTR (INL x)},S2')))``);
                               
 val DedRelINR = new_axiom ("DedRelINR",
-                          ``∀(ded2:('symb pred2) tded) (MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 x.
+                          ``∀(ded2:(('pred2,'symb) predTwo) tded) (MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 x.
                             ((MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P'' ∪ {OUTL (INR x)},S1')) ∧
                           (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P'' ∪ {x},S2')) ∧
                           (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
@@ -54,24 +54,24 @@ val DedRelINR = new_axiom ("DedRelINR",
                               
 val TranRelSnocRevAsyncL =
 new_axiom ("TranRelSnocRevAsyncL",
-           ``∀(MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
-                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) ((SOME (INL e))::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':(('symb pred1)+('symb pred2)) set) S1''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1'')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1'') [SOME (INL e)] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2') [] (Sym',IMAGE OUTR P',S2')))``);                                   
+           ``∀(MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
+                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) ((SOME (INL e))::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':((('pred1,'symb) predOne)+(('pred2,'symb) predTwo)) set) S1''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1'')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1'') [SOME (INL e)] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2') [] (Sym',IMAGE OUTR P',S2')))``);                                   
 
 
 val TranRelSnocRevAsyncR =
 new_axiom ("TranRelSnocRevAsyncR",
-           ``∀(MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
-                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (SOME (INL e)::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':(('symb pred1)+('symb pred2)) set) S2''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1') [] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2'')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2'') [SOME (INL e)] (Sym',IMAGE OUTR P',S2')))``);
+           ``∀(MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
+                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (SOME (INL e)::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':((('pred1,'symb) predOne)+(('pred2,'symb) predTwo)) set) S2''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1') [] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2'')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2'') [SOME (INL e)] (Sym',IMAGE OUTR P',S2')))``);
 
 val TranRelSnocRevSync =
 new_axiom ("TranRelSnocRevSync",
-           ``∀(MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
-                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) (SOME (INR e)::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (SOME (INR e)::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':(('symb pred1)+('symb pred2)) set) S1'' S2''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1'')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1'') [SOME (INR e)] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2'')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2'') [SOME (INR e)] (Sym',IMAGE OUTR P',S2')))``);                                                                        
+           ``∀(MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2 e.
+                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) (SOME (INR e)::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (SOME (INR e)::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃Sym'' (P'':((('pred1,'symb) predOne)+(('pred2,'symb) predTwo)) set) S1'' S2''. (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym'',IMAGE OUTL P'',S1'')) ∧ (MTrn1 (Sym'',IMAGE OUTL P'',S1'') [SOME (INR e)] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym'',IMAGE OUTR P'',S2'')) ∧ (MTrn2 (Sym'',IMAGE OUTR P'',S2'') [SOME (INR e)] (Sym',IMAGE OUTR P',S2')))``);                                                                        
 
 val TranRelSnocRevSync =
 new_axiom ("TranRelSnocRevNone",
-           ``∀(MTrn1:('event1 + 'eventS, ('symb pred1), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, ('symb pred2), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2.
-                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) (NONE::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (NONE::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃(P'':(('symb pred1)+('symb pred2)) set). (∀(Ded1:('symb pred1) tded) (Ded2:('symb pred2) tded) phi. (combineAllDed Ded1 Ded2 P'' phi) ∧ P'=P''∪{phi}) ∧ (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P',S2')))``);
+           ``∀(MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2.
+                                                                        ((MTrn1 (Sym,IMAGE OUTL P,S1) (NONE::t1) (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) (NONE::t2) (Sym',IMAGE OUTR P',S2'))) ⇒ (∃(P'':((('pred1,'symb) predOne)+(('pred2,'symb) predTwo)) set). (∀(Ded1:(('pred1,'symb) predOne) tded) (Ded2:(('pred2,'symb) predTwo) tded) phi. (combineAllDed Ded1 Ded2 P'' phi) ∧ P'=P''∪{phi}) ∧ (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧ (MTrn1 (Sym',IMAGE OUTL P'',S1') [NONE] (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')) ∧ (MTrn2 (Sym',IMAGE OUTR P'',S2') [NONE] (Sym',IMAGE OUTR P',S2')))``);
                                                                         
 (* Binary interleaving of traces *)
 Inductive binterl:

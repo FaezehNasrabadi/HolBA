@@ -26,7 +26,7 @@ Const string
 val _ = Datatype `predTwo =
 K 'symb 
 | EquTwo 'symb 'symb
-| Normal 'pred2
+| NormalP2 'pred2
          `;
 
 (* a set of symbols *)         

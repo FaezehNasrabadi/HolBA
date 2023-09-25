@@ -1,17 +1,17 @@
 # includes
 # ----------------------------------
 DEPENDENCIES   = 
-#../../core ../../theories
+#../../../core ../../../theories
 
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../symbexec/HolBATools_SymbExec-heap
-NEWHOLHEAP     = HolBATools_ParallelComposition-heap
+HOLHEAP        = ../HolBATools_ParallelComposition-heap
+NEWHOLHEAP     = HolBATools_EmptyDeduction-heap
 
 HEAPINC_EXTRA  = 
 
 
 # included lines follow
 # ----------------------------------
-include ../../Holmakefile.inc
+include ../../../Holmakefile.inc

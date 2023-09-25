@@ -27,6 +27,7 @@ val _ = Datatype
         `SBIRnsyc_event =
 Event bir_var_t
 | Crypto bir_var_t
+| Loop bir_var_t
         `;
                 
 (* calculate next label *)
@@ -105,13 +106,23 @@ then {(state with bsst_pc updated_by birs_next_bsst_pc)}
 else {birs_state_set_failed state}
 `; 
 
-   
+(* symbolic execution step for Loops *)    
+val birs_exec_loop_def =
+Define `
+       birs_exec_loop p state (Loop t) =
+if (t NOTIN (birs_symb_symbols state))
+then (birs_exec_step p state)
+else {birs_state_set_failed state}
+     `;
+
+(* symbolic execution single-step labeled transition *)     
 val birs_exec_event_step_def = Define `
     birs_exec_event_step p state event states =
   case event of
     | NONE => (birs_exec_step p state states) (* normal steps *)
     | SOME (INL (Event e)) => (birs_exec_event_fun p state (Event e) states) (* event functions *)
     | SOME (INL (Crypto v)) => (birs_exec_crypto_fun p state (Crypto v) states) (* Crypto functions *)
+    | SOME (INL (Loop t)) => (birs_exec_loop p state (Loop t) states) (* Loops *)
     | SOME (INR (Sync_Fr n)) => (birs_exec_rng_fun p state (Sync_Fr n) states) (* RNG functions *)
     | SOME (INR (P2A s)) => (birs_exec_out_fun p state (P2A s) states) (* Output functions *)
     | SOME (INR (A2P r)) => (birs_exec_in_fun p state (A2P r) states) (* Input functions *)

@@ -455,7 +455,39 @@ val sapic_out_in_transition_def = Define `
    (St = St') /\
    (Sb = Sb') /\
    (Al = Al'))`;
-                
+
+
+(* Let true rule *)
+
+val sapic_let_true_transition_def = Define `
+                                  sapic_let_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessComb (Let t1 t2) P Q|})) /\
+   (t1 = t2) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = []) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+                                
+
+(* Let false rule *)
+
+val sapic_let_false_transition_def = Define `
+                                  sapic_let_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessComb (Let t1 t2) P Q|})) /\
+   (t1 ≠ t2) /\
+   (Pnew = (BAG_UNION Ps {|Q|})) /\
+   (Ev = []) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`; 
+
+
+                 
 (* Transition relation *)
 
 val sapic_transition_def = Define `
@@ -466,6 +498,8 @@ val sapic_transition_def = Define `
                                     (sapic_replication_transition C Ev C') ∨
                                     (sapic_conditional_true_transition C Ev C') ∨
                                     (sapic_conditional_false_transition C Ev C') ∨
+                                    (sapic_let_true_transition C Ev C') ∨
+                                    (sapic_let_false_transition C Ev C') ∨
                                     (sapic_delete_transition C Ev C') ∨
                                     (sapic_insert_transition C Ev C') ∨
                                     (sapic_lock_transition C Ev C') ∨

@@ -1,12 +1,11 @@
 # includes
 # ----------------------------------
 DEPENDENCIES   = 
-#../../core ../../theories
 
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../symbexecbin/HolBATools_SymbExecBin-heap
+HOLHEAP        = ../wp/HolBATools_Wp-heap
 NEWHOLHEAP     = HolBATools_SymbExec-heap
 
 HEAPINC_EXTRA  = 

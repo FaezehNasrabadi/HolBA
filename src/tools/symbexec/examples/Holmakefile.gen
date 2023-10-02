@@ -5,7 +5,7 @@ DEPENDENCIES   =
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../HolBATools_SymbExec-heap
+HOLHEAP        = libload/HolBATools_SymbExec_ExampleLibload-heap
 NEWHOLHEAP     = 
 
 HEAPINC_EXTRA  = 

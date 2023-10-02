@@ -1,6 +1,5 @@
 open HolKernel Parse boolLib bossLib;
 open sapicplusTheory;
-open birs_eventstepTheory;
 open wordsTheory;
 open ASCIInumbersTheory;
 open bir_immTheory;

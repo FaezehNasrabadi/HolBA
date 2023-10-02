@@ -6,7 +6,7 @@ DEPENDENCIES   =
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../HolBATools_ParallelComposition-heap
+HOLHEAP        = ../../../theory/HolBATheory-heap
 NEWHOLHEAP     = HolBATools_Plain-heap
 
 HEAPINC_EXTRA  = 

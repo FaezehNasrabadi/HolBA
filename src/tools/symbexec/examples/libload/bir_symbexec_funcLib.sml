@@ -24,7 +24,7 @@ val _ = Parse.type_abbrev("hash2", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Parse.type_abbrev("hash3", ``:bir_var_t -> bir_var_t -> bir_var_t -> bir_exp_t``);    
 
-val _ = Parse.type_abbrev("exclusive_or", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
+val _ = Theory.new_constant("exclusive_or", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Parse.type_abbrev("enc", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
@@ -38,7 +38,7 @@ val _ = Parse.type_abbrev("dec", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Parse.type_abbrev("concatenate", ``:bir_var_t list -> bir_exp_t``);
 
-val _ = Parse.type_abbrev("conc1", ``:bir_var_t -> bir_exp_t``);
+val _ = Theory.new_constant("conc1", ``:bir_var_t -> bir_exp_t``);
 
 val _ = Parse.type_abbrev("conc2", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 (*
@@ -248,7 +248,7 @@ fun XOR input pad =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (exclusive_or
 			  ( ^input)
-			  ( pad))``;
+			  ( ^pad))``;
 
     in
 	dest_BStmt_Assign stmt

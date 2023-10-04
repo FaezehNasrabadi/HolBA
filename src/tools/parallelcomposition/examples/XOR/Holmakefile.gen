@@ -1,6 +1,6 @@
 # includes
 # ----------------------------------
-DEPENDENCIES   = ../../../symbexec/examples/PreProcess
+DEPENDENCIES   = ../../../symbexec/examples/PreProcess ../../helper ../../sapic ../../translateTosapic
 
 
 # configuration
@@ -13,4 +13,4 @@ HEAPINC_EXTRA  =
 
 # included lines follow
 # ----------------------------------
-include ../../../../../Holmakefile.inc
+include ../../../../Holmakefile.inc

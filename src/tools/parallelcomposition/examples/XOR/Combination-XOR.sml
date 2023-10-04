@@ -22,7 +22,8 @@ open Redblackmap;
 open bir_symbexec_oracleLib;
 open sbir_treeLib;
 open sapicplusTheory;
-open translate_to_sapicTheory;     
+open translate_to_sapicTheory;
+open rich_listTheory;
 
 
 (*Server*)   (*  
@@ -167,8 +168,9 @@ SLeaf
 fun smltree_to_holtree tree =
     case tree of
         VLeaf => mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``)
-      | VNode ((a,b), subtree) => mk_comb (mk_comb (mk_comb (mk_const ("SNode",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``), a),b), smltree_to_holtree subtree)
-      | VBranch ((a,b),lsubtree, rsubtree) => mk_comb (mk_comb (mk_comb (mk_comb (mk_const ("SBranch",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``),a),b), smltree_to_holtree lsubtree), smltree_to_holtree rsubtree);
+      | VBranch ((a,b),lsubtree, rsubtree) => (mk_comb (mk_comb (mk_comb (mk_comb (mk_const ("SBranch",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``),a),b), smltree_to_holtree lsubtree), smltree_to_holtree rsubtree))
+      | VNode ((a,b), subtree) => (mk_comb (mk_comb (mk_comb (mk_const ("SNode",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``), a),b), smltree_to_holtree subtree)) handle HOL_ERR {message = "incompatible types", ...} =>
+      mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``);
 
 
 val holtree = smltree_to_holtree valtr;
@@ -180,15 +182,25 @@ val symbtree_def = Define `
 val holtree = (snd o dest_eq o concl) symbtree_def;
 
 
-val symbtree_def = Define `
-    symbtree holtree  =
+(fst o dest_BVar_string) ``BVar "57_assert_false_cnd" BType_Bool``
+val symbtree_to_sapic_def = Define `
+    symbtree_to_sapic holtree  =
 case holtree of
 SLeaf => ProcessNull
-| SNode a b str  => ProcessAction Rep (symbtree str)
-| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree lstr) (symbtree rstr)
+| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
+| SNode (BVar name type) b str  =>  (
+if ((IS_SUFFIX name "assert_true_cnd") /\ (IS_SUFFIX name "assert_false_cnd") /\ (IS_SUFFIX name "cjmp_false_cnd")) then (symbtree_to_sapic str)
+else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name type)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull)) 
+)
 `;
+(String.isSuffix "false_cnd"  ((fst o dest_BVar_string) a))
+(String.isSuffix "event_false_cnd"  "60_event_false_cnd")
+EVAL ``symbtree_to_sapic (^holtree)``
 
-EVAL ``symbtree (^holtree)``
+EVAL ``IS_SUFFIX "9_assert_true_cnd" "assert_true_cnd" ``
 
-
+is_substring
+ HOL_Interactive.toggle_quietdec();
+open rich_listTheory;
+ HOL_Interactive.toggle_quietdec();
  *)

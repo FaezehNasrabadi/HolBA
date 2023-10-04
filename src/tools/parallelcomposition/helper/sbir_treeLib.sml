@@ -135,9 +135,9 @@ SLeaf
 fun smltree_to_holtree tree =
     case tree of
         VLeaf => mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``)
-      | VNode ((a,b), subtree) => mk_comb (mk_comb (mk_comb (mk_const ("SNode",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``), a),b), smltree_to_holtree subtree)
-      | VBranch ((a,b),lsubtree, rsubtree) => mk_comb (mk_comb (mk_comb (mk_comb (mk_const ("SBranch",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``),a),b), smltree_to_holtree lsubtree), smltree_to_holtree rsubtree);
-
+      | VBranch ((a,b),lsubtree, rsubtree) => (mk_comb (mk_comb (mk_comb (mk_comb (mk_const ("SBranch",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``),a),b), smltree_to_holtree lsubtree), smltree_to_holtree rsubtree))
+      | VNode ((a,b), subtree) => (mk_comb (mk_comb (mk_comb (mk_const ("SNode",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``), a),b), smltree_to_holtree subtree)) handle HOL_ERR {message = "incompatible types", ...} =>
+      mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``);
 
 
 				       

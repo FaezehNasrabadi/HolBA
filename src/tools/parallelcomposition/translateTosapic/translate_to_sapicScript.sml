@@ -5,6 +5,7 @@ open ASCIInumbersTheory;
 open Arbnumcore;
 open bir_immTheory;
 open integerTheory;
+(* open sbir_treeLib; *)
 val _ = new_theory "translate_to_sapic";
 
 (*
@@ -84,6 +85,18 @@ translate_birexp_to_sapicterm exp =
 `;
   
 
-
+(* val symbtree_to_sapic_def = *)
+(* Define `symbtree_to_sapic holtree  = *)
+(* case holtree of *)
+(*   SLeaf => ProcessNull *)
+(* | SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr) *)
+(* | SNode (BVar name type) b str  =>  ( *)
+(*   if ((IS_SUFFIX name "assert_true_cnd") /\ *)
+(*       (IS_SUFFIX name "assert_false_cnd") /\ *)
+(*       (IS_SUFFIX name "cjmp_false_cnd")) *)
+(*   then (symbtree_to_sapic str) *)
+(*   else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name type)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))  *)
+(*   ) *)
+(*                                     `; *)
 
 val _ = export_theory();

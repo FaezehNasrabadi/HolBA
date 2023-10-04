@@ -1,7 +1,7 @@
 # includes
 # ----------------------------------
 DEPENDENCIES   = 
-#../../../core ../../../theories
+#../../../core ../../../theories ../helper
 
 
 # configuration
@@ -10,7 +10,6 @@ HOLHEAP        = ../sapic/HolBATools_Sapic-heap
 NEWHOLHEAP     = HolBATools_TranslateToSapic-heap
 
 HEAPINC_EXTRA  = 
-
 
 # included lines follow
 # ----------------------------------

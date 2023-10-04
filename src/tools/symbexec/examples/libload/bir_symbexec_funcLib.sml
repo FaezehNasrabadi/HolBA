@@ -3266,7 +3266,7 @@ fun Xor syst =
 
 	val syst = store_mem_r0 x_be Fr_Xor syst; (* update syst *)
 
-	val syst = add_knowledge_r0 Fr_Xor syst; (*The adversary has a right to know *)
+	val syst = add_knowledge_r0 x_be syst; (*The adversary has a right to know *)
 
 		
     in

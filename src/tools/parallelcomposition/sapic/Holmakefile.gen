@@ -1,12 +1,12 @@
 # includes
 # ----------------------------------
 DEPENDENCIES   = 
-#../../../core ../../../theories
+#../../../core ../../../theories ../helper
 
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../../../theory/HolBATheory-heap
+HOLHEAP        = ../../symbexec/examples/libload/HolBATools_SymbExec_ExampleLibload-heap
 NEWHOLHEAP     = HolBATools_Sapic-heap
 
 HEAPINC_EXTRA  = 

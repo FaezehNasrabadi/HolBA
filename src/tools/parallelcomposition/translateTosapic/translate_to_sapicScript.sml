@@ -73,7 +73,7 @@ val translate_birexp_to_sapicterm_def = Define`
 translate_birexp_to_sapicterm exp =
 (case exp of
    BExp_Const c                      => Con (Name PubName (translate_Imm_to_string c))
- | BExp_Den bvar                     => (translate_birvar_to_sapicterm bvar)
+ | BExp_Den bv                       => (translate_birvar_to_sapicterm bv)
  | BExp_Load e1 e2 a b               => FAPP ("Load",(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_Store e1 e2 a e3             => FAPP ("Store",(3, Public, Destructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2);(translate_birexp_to_sapicterm e3)]
  | BExp_UnaryExp ue e                => FAPP ((translate_UnaryExp_to_string ue),(1, Public, Constructor)) [(translate_birexp_to_sapicterm e)]
@@ -81,22 +81,25 @@ translate_birexp_to_sapicterm exp =
  | BExp_BinPred bp e1 e2             => FAPP ((translate_BinPred_to_string bp),(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_MemEq e1 e2                  => FAPP ("MemEq",(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_IfThenElse e1 e2 e3          => FAPP ("IfThenElse",(3, Public, Destructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2);(translate_birexp_to_sapicterm e3)]
-)
+ | _                                 => Con (Name PubName "NotKnown")
+
+) 
 `;
-  
+  (*
+| exclusive_or bv1 bv2              => FAPP ("exclusive_or",(2, Public, Constructor)) [(translate_birvar_to_sapicterm bv1);(translate_birvar_to_sapicterm bv2)]
+ | conc1 bv                         => FAPP ("conc1",(1, Public, Constructor)) [(translate_birvar_to_sapicterm bv)]  
 
-(* val symbtree_to_sapic_def = *)
-(* Define `symbtree_to_sapic holtree  = *)
-(* case holtree of *)
-(*   SLeaf => ProcessNull *)
-(* | SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr) *)
-(* | SNode (BVar name type) b str  =>  ( *)
-(*   if ((IS_SUFFIX name "assert_true_cnd") /\ *)
-(*       (IS_SUFFIX name "assert_false_cnd") /\ *)
-(*       (IS_SUFFIX name "cjmp_false_cnd")) *)
-(*   then (symbtree_to_sapic str) *)
-(*   else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name type)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))  *)
-(*   ) *)
-(*                                     `; *)
 
+val symbtree_to_sapic_def = Define `
+    symbtree_to_sapic holtree  =
+case holtree of
+SLeaf => ProcessNull
+| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
+| SNode (BVar name ty) b str  =>  (
+  if ((rich_list$IS_SUFFIX name "assert_true_cnd") \/
+      (rich_list$IS_SUFFIX name "assert_false_cnd") \/
+      (rich_list$IS_SUFFIX name "cjmp_false_cnd"))
+  then (symbtree_to_sapic str)
+  else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
+*)
 val _ = export_theory();

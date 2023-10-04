@@ -102,13 +102,8 @@ fun HeadsEqual ([]: term list) = false
 
 
 val lst =
-   [[“BVar "70_XOR" BType_Bool”,“BVar "66_Conc1" BType_Bool”,
-     “BVar "51_assert_true_cnd" BType_Bool”,
-     “BVar "54_assert_false_cnd" BType_Bool”],
-    [“BVar "70_XOR" BType_Bool”,“BVar "66_Conc1" BType_Bool”,
-     “BVar "51_assert_true_cnd" BType_Bool”,
-     “BVar "53_assert_true_cnd" BType_Bool”,
-     “BVar "57_assert_false_cnd" BType_Bool”]];
+   [[
+     “BVar "51_assert_true_cnd" BType_Bool”]];
     
 val tr = predlist_to_tree lst
 val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs [];
@@ -197,10 +192,32 @@ else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name type)) (transl
 (String.isSuffix "event_false_cnd"  "60_event_false_cnd")
 EVAL ``symbtree_to_sapic (^holtree)``
 
-EVAL ``IS_SUFFIX "9_assert_true_cnd" "assert_true_cnd" ``
-
+EVAL ``IS_SUFFIX ((FST o dest_BVar_string) BVar "57_assert_false_cnd" BType_Bool) "assert_true_cnd" ``
+EVAL ``rich_list$IS_SUFFIX "51_assert_true_cnd" "assert_true_cnd"``
+EVAL ``list$REV "57_assert_true_cnd" ""``
 is_substring
  HOL_Interactive.toggle_quietdec();
-open rich_listTheory;
+open stringSyntax;
  HOL_Interactive.toggle_quietdec();
  *)
+
+val holtree = smltree_to_holtree valtr;
+
+val _ = print "\n";     
+val _ = print ("built a hol tree with value");
+val _ = print "\n";
+    
+val symbtree_to_sapic_def = Define `
+    symbtree_to_sapic holtree  =
+case holtree of
+SLeaf => ProcessNull
+| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
+| SNode (BVar name ty) b str  =>  (
+  if ((rich_list$IS_SUFFIX name "assert_true_cnd") \/ (rich_list$IS_SUFFIX name "assert_false_cnd") \/ (rich_list$IS_SUFFIX name "cjmp_false_cnd")) then (symbtree_to_sapic str)
+else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
+
+val _ = EVAL ``symbtree_to_sapic (^holtree)``
+
+val _ = print "\n";     
+val _ = print ("translated to sapic");
+val _ = print "\n";	

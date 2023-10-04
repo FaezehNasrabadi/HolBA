@@ -2,10 +2,12 @@ open HolKernel Parse boolLib bossLib;
 open sapicplusTheory;
 open wordsTheory;
 open ASCIInumbersTheory;
+open Arbnumcore;
 open bir_immTheory;
 open integerTheory;
 val _ = new_theory "translate_to_sapic";
 
+(*
 val translate_Imm_to_string_def = Define`
 translate_Imm_to_string imm =
 (case imm of
@@ -16,8 +18,18 @@ translate_Imm_to_string imm =
   | Imm64  w64  => (w2s 64 HEX w64)
   | Imm128 w128 => (w2s 128 HEX w128)
 )
+`;*)
+
+val translate_Imm_to_string_def = Define`
+translate_Imm_to_string imm =
+(toString o b2n) imm
 `;
 
+val translate_birvar_to_sapicterm_def = Define`
+translate_birvar_to_sapicterm (BVar str (BType_Imm s)) =
+TVar (Var str ((int_of_num o size_of_bir_immtype) s))
+`;
+        
 val translate_UnaryExp_to_string_def = Define`
 translate_UnaryExp_to_string ue =
 (case ue of
@@ -60,7 +72,7 @@ val translate_birexp_to_sapicterm_def = Define`
 translate_birexp_to_sapicterm exp =
 (case exp of
    BExp_Const c                      => Con (Name PubName (translate_Imm_to_string c))
- | BExp_Den (BVar str (BType_Imm s)) => TVar (Var str ((int_of_num o size_of_bir_immtype) s))
+ | BExp_Den bvar                     => (translate_birvar_to_sapicterm bvar)
  | BExp_Load e1 e2 a b               => FAPP ("Load",(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_Store e1 e2 a e3             => FAPP ("Store",(3, Public, Destructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2);(translate_birexp_to_sapicterm e3)]
  | BExp_UnaryExp ue e                => FAPP ((translate_UnaryExp_to_string ue),(1, Public, Constructor)) [(translate_birexp_to_sapicterm e)]

@@ -101,10 +101,10 @@ fun HeadsEqual ([]: term list) = false
 
 
 val lst =
-   [[“BVar "70_XOR" BType_Bool”,
+   [[“BVar "70_XOR" BType_Bool”,“BVar "66_Conc1" BType_Bool”,
      “BVar "51_assert_true_cnd" BType_Bool”,
      “BVar "54_assert_false_cnd" BType_Bool”],
-    [“BVar "70_XOR" BType_Bool”,
+    [“BVar "70_XOR" BType_Bool”,“BVar "66_Conc1" BType_Bool”,
      “BVar "51_assert_true_cnd" BType_Bool”,
      “BVar "53_assert_true_cnd" BType_Bool”,
      “BVar "57_assert_false_cnd" BType_Bool”]];
@@ -185,10 +185,10 @@ val symbtree_def = Define `
 case holtree of
 SLeaf => ProcessNull
 | SNode a b str  => ProcessAction Rep (symbtree str)
-| SBranch a b lstr rstr  => ProcessComb Parallel (symbtree lstr) (symbtree rstr)
+| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree lstr) (symbtree rstr)
 `;
 
 EVAL ``symbtree (^holtree)``
-EVAL (symbtree_def (^holtree))
+
 
  *)

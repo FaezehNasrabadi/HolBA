@@ -83,6 +83,7 @@ val _ = Datatype `ProcessCombinator_t =
 		   Parallel
 		 | NDC
 		 | CondEq       SapicTerm_t SapicTerm_t
+                 | Cond         SapicTerm_t
 		 | Lookup       SapicTerm_t Var_t
 		 | Let          SapicTerm_t SapicTerm_t
 		 | ProcessCall  string (SapicTerm_t list)`;
@@ -95,6 +96,7 @@ Define`
                                               Parallel           => Parallel
 		                            | NDC                => NDC
 		                            | (CondEq t1 t2)     => CondEq (sapic_substname x y t1) (sapic_substname x y t2)
+                                            | (Cond t)           => Cond (sapic_substname x y t)
 		                            | (Lookup t v)       => Lookup (sapic_substname x y t) v
 		                            | (Let t1 t2)        => Let (sapic_substname x y t1) (sapic_substname x y t2)
 		                            | (ProcessCall s ts) => ProcessCall s (MAP (sapic_substname x y) ts)
@@ -106,6 +108,7 @@ Define`
                                               Parallel           => Parallel
 		                            | NDC                => NDC
 		                            | (CondEq t1 t2)     => CondEq (sapic_substvar x y t1) (sapic_substvar x y t2)
+                                            | (Cond t)           => Cond (sapic_substvar x y t)
 		                            | (Lookup t v)       => Lookup (sapic_substvar x y t) (var_subst x y v)
 		                            | (Let t1 t2)        => Let (sapic_substvar x y t1) (sapic_substvar x y t2)
 		                            | (ProcessCall s ts) => ProcessCall s (MAP (sapic_substvar x y) ts)
@@ -255,14 +258,16 @@ val sapic_event_transition_def = Define `
    (Sb = Sb') /\
    (Al = Al'))`;
 
-                
+
+val _ = Theory.new_constant("termholds", ``:SapicTerm_t -> bool``);
+
 (* Conditional true rule *)
 
 val sapic_conditional_true_transition_def = Define `
                                   sapic_conditional_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Q t1 t2.
-   (Pold = (BAG_UNION Ps {|ProcessComb (CondEq t1 t2) P Q|})) /\
-   (t1 = t2) /\
+(∃Ps P Q t.
+   (Pold = (BAG_UNION Ps {|ProcessComb (Cond t) P Q|})) /\
+   (termholds t) /\
    (Pnew = (BAG_UNION Ps {|P|})) /\
    (Ev = []) /\
    (Ns = Ns') /\
@@ -275,6 +280,35 @@ val sapic_conditional_true_transition_def = Define `
 
 val sapic_conditional_false_transition_def = Define `
                                   sapic_conditional_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t.
+   (Pold = (BAG_UNION Ps {|ProcessComb (Cond t) P Q|})) /\
+   (¬(termholds t)) /\
+   (Pnew = (BAG_UNION Ps {|Q|})) /\
+   (Ev = []) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`; 
+                
+(* Conditional eq true rule *)
+
+val sapic_conditional_eq_true_transition_def = Define `
+                                  sapic_conditional_eq_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P Q t1 t2.
+   (Pold = (BAG_UNION Ps {|ProcessComb (CondEq t1 t2) P Q|})) /\
+   (t1 = t2) /\
+   (Pnew = (BAG_UNION Ps {|P|})) /\
+   (Ev = []) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+                                
+
+(* Conditional eq false rule *)
+
+val sapic_conditional_eq_false_transition_def = Define `
+                                  sapic_conditional_eq_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
 (∃Ps P Q t1 t2.
    (Pold = (BAG_UNION Ps {|ProcessComb (CondEq t1 t2) P Q|})) /\
    (t1 ≠ t2) /\
@@ -498,6 +532,8 @@ val sapic_transition_def = Define `
                                     (sapic_replication_transition C Ev C') ∨
                                     (sapic_conditional_true_transition C Ev C') ∨
                                     (sapic_conditional_false_transition C Ev C') ∨
+                                    (sapic_conditional_eq_true_transition C Ev C') ∨
+                                    (sapic_conditional_eq_false_transition C Ev C') ∨
                                     (sapic_let_true_transition C Ev C') ∨
                                     (sapic_let_false_transition C Ev C') ∨
                                     (sapic_delete_transition C Ev C') ∨

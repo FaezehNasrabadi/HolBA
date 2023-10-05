@@ -103,7 +103,7 @@ fun HeadsEqual ([]: term list) = false
 
 val lst =
    [[
-     “BVar "51_assert_true_cnd" BType_Bool”]];
+     “BVar "70_XOR" BType_Bool”,“BVar "51_assert_true_cnd" BType_Bool”]];
     
 val tr = predlist_to_tree lst
 val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs [];
@@ -207,17 +207,3 @@ val _ = print "\n";
 val _ = print ("built a hol tree with value");
 val _ = print "\n";
     
-val symbtree_to_sapic_def = Define `
-    symbtree_to_sapic holtree  =
-case holtree of
-SLeaf => ProcessNull
-| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
-| SNode (BVar name ty) b str  =>  (
-  if ((rich_list$IS_SUFFIX name "assert_true_cnd") \/ (rich_list$IS_SUFFIX name "assert_false_cnd") \/ (rich_list$IS_SUFFIX name "cjmp_false_cnd")) then (symbtree_to_sapic str)
-else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
-
-val _ = EVAL ``symbtree_to_sapic (^holtree)``
-
-val _ = print "\n";     
-val _ = print ("translated to sapic");
-val _ = print "\n";	

@@ -5,9 +5,11 @@ open ASCIInumbersTheory;
 open Arbnumcore;
 open bir_immTheory;
 open integerTheory;
+open Term;
 (* open sbir_treeLib; *)
 val _ = new_theory "translate_to_sapic";
 
+                 
 (*
 val translate_Imm_to_string_def = Define`
 translate_Imm_to_string imm =
@@ -70,7 +72,7 @@ translate_BinPred_to_string bp =
 )`;
         
 val translate_birexp_to_sapicterm_def = Define`
-translate_birexp_to_sapicterm exp =
+                                              translate_birexp_to_sapicterm exp =
 (case exp of
    BExp_Const c                      => Con (Name PubName (translate_Imm_to_string c))
  | BExp_Den bv                       => (translate_birvar_to_sapicterm bv)
@@ -81,14 +83,12 @@ translate_birexp_to_sapicterm exp =
  | BExp_BinPred bp e1 e2             => FAPP ((translate_BinPred_to_string bp),(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_MemEq e1 e2                  => FAPP ("MemEq",(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
  | BExp_IfThenElse e1 e2 e3          => FAPP ("IfThenElse",(3, Public, Destructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2);(translate_birexp_to_sapicterm e3)]
- | _                                 => Con (Name PubName "NotKnown")
 
 ) 
 `;
   (*
 | exclusive_or bv1 bv2              => FAPP ("exclusive_or",(2, Public, Constructor)) [(translate_birvar_to_sapicterm bv1);(translate_birvar_to_sapicterm bv2)]
  | conc1 bv                         => FAPP ("conc1",(1, Public, Constructor)) [(translate_birvar_to_sapicterm bv)]  
-
 
 val symbtree_to_sapic_def = Define `
     symbtree_to_sapic holtree  =
@@ -100,6 +100,10 @@ SLeaf => ProcessNull
       (rich_list$IS_SUFFIX name "assert_false_cnd") \/
       (rich_list$IS_SUFFIX name "cjmp_false_cnd"))
   then (symbtree_to_sapic str)
-  else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
+  else if (rich_list$IS_SUFFIX name "XOR")
+  then (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (FAPP (((FST o strip_comb) b),(2, Public, Constructor)) [])) (symbtree_to_sapic str) (ProcessNull))
+else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
+
+val _ = EVAL ``symbtree_to_sapic (^holtree)``
 *)
 val _ = export_theory();

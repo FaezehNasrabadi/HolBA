@@ -19,8 +19,6 @@ open bir_extra_expsSyntax bir_interval_expSyntax;
 val ERR = mk_HOL_ERR "bir_translationLib";
 
 (* Comparison function between two BIR variables.
-val var1 = “BVar "PSR_N" BType_Bool”;
-val var2 = “BVar "PSR_S" BType_Bool”;
  * Variables are sorted by type first, string name second. *)
 fun bir_var_compare (var1, var2) =
   let

@@ -86,24 +86,5 @@ val translate_birexp_to_sapicterm_def = Define`
 
 ) 
 `;
-  (*
-| exclusive_or bv1 bv2              => FAPP ("exclusive_or",(2, Public, Constructor)) [(translate_birvar_to_sapicterm bv1);(translate_birvar_to_sapicterm bv2)]
- | conc1 bv                         => FAPP ("conc1",(1, Public, Constructor)) [(translate_birvar_to_sapicterm bv)]  
 
-val symbtree_to_sapic_def = Define `
-    symbtree_to_sapic holtree  =
-case holtree of
-SLeaf => ProcessNull
-| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
-| SNode (BVar name ty) b str  =>  (
-  if ((rich_list$IS_SUFFIX name "assert_true_cnd") \/
-      (rich_list$IS_SUFFIX name "assert_false_cnd") \/
-      (rich_list$IS_SUFFIX name "cjmp_false_cnd"))
-  then (symbtree_to_sapic str)
-  else if (rich_list$IS_SUFFIX name "XOR")
-  then (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (FAPP (((FST o strip_comb) b),(2, Public, Constructor)) [])) (symbtree_to_sapic str) (ProcessNull))
-else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name ty)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull))) `;
-
-val _ = EVAL ``symbtree_to_sapic (^holtree)``
-*)
 val _ = export_theory();

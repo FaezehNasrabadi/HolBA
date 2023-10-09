@@ -1,5 +1,6 @@
 open HolKernel Parse boolLib bossLib;
 open bagTheory;
+open intSyntax stringSyntax;
 
 val _ = new_theory "messages";
 

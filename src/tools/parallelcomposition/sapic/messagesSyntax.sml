@@ -20,29 +20,39 @@ val syntax_fns2 = syntax_fns 2 HolKernel.dest_binop HolKernel.mk_binop;
 
     
 (* NameTag_t *)
+
+val NameTag_t_ty = mk_type ("NameTag_t", []);
+
 val (FreshName_tm, is_FreshName) = syntax_fns0 "FreshName";
 val (PubName_tm,   is_PubName)   = syntax_fns0 "PubName";
 val (NodeName_tm,  is_NodeName)  = syntax_fns0 "NodeName";
-
     
 (* Name_t *)   
+
+val Name_t_ty = mk_type ("Name_t", []);
+
 val (Name_tm, mk_Name, dest_Name, is_Name) = syntax_fns2 "Name";
-
-
+    
 (* Var_t *)
+
+val Var_t_ty = mk_type ("Var_t", []);
+
 val (Var_tm, mk_Var, dest_Var, is_Var) = syntax_fns2 "Var";
 
-    
 (* Privacy_t *)    
+val Privacy_t_ty = mk_type ("Privacy_t", []);
+
 val (Private_tm,  is_Private)  = syntax_fns0 "Private";
 val (Public_tm,   is_Public)   = syntax_fns0 "Public";
 
-
+    
 (* Constructability_t *)
+
+val Constructability_t_ty = mk_type ("Constructability_t", []);
+
 val (Constructor_tm,  is_Constructor)  = syntax_fns0 "Constructor";
 val (Destructor_tm,   is_Destructor)   = syntax_fns0 "Destructor";
 
-    
 (***************)
 (* SapicTerm_t *)
 (***************)

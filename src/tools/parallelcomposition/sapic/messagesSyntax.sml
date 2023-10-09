@@ -63,6 +63,4 @@ val (Con_tm,  mk_Con,  dest_Con,  is_Con)  = syntax_fns1 "Con";
 val (TVar_tm, mk_TVar, dest_TVar, is_TVar) = syntax_fns1 "TVar";
 val (FAPP_tm, mk_FAPP, dest_FAPP, is_FAPP) = syntax_fns2 "FAPP";
 
-
-
 end

@@ -1,0 +1,4 @@
+[submodule "HolBA"]
+	path = HolBA
+	url = https://oauth2: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@github.com/FaezehNasrabadi/HolBA.git
+	branch = dev_symbexec_cryptobap

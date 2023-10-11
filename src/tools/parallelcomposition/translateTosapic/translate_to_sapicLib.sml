@@ -15,6 +15,7 @@ open bir_immTheory;
 open bir_valuesSyntax;
 open bir_immSyntax;
 open bir_expSyntax;
+open bir_expTheory;
 open bir_envSyntax;
 open integerTheory;
 open intSyntax;
@@ -24,7 +25,137 @@ open translate_to_sapicTheory;
 val ERR = mk_HOL_ERR "translate_to_sapicLib";
 val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
-                
+
+open helperLib;
+open Type;
+open wordsSyntax;
+
+(*
+
+
+val original_theorem =
+  <<[∃b. BExp_Const (Imm64 112w) = BExp_Const b ∧
+        translate_Imm_to_string b = v]
+    ⊢ const_name_from_str "112" = Name PubName "112">>;
+
+val simplified_theorem =
+  let
+    val (_, ex_eq) = dest_exists (concl thm7);
+    val (b_eq, _) = dest_conj ex_eq;
+    val (lhs_eq, rhs_eq) = dest_eq b_eq;
+    val b = rhs_eq
+  in
+    PROVE_HYP (EXISTS_ELIM_TAC original_theorem) (CONJUNCT1 (EQT_INTRO thm10))
+  end;
+
+
+val is_word_op = can dim_of;
+val exp = “n2w ((w2n 2w) + (w2n 2w))”
+fun n2w_plus_handler exp =
+    let 
+	val (n2w_exp,ty) = wordsSyntax.dest_n2w exp
+	val (plus_1, plus_2) = numSyntax.dest_plus n2w_exp
+	val thm_1 = (Thm.INST [ ``a:num`` |-> plus_1 , ``b:num`` |-> plus_2 ] 
+			      (Thm.INST_TYPE [ alpha |-> ty](SPEC_ALL Bword_add_thm)))
+	val thm_2 = (SIMP_RULE (srw_ss()) [GSYM w2w_def] thm_1)
+	val (f_plus_1, f_plus_2) = wordsSyntax.dest_word_add (rhs (concl thm_2))
+	val plus_1_lift_thm = worker_exp2il f_plus_1
+	val plus_2_lift_thm = worker_exp2il f_plus_2 
+	val add_1r_f_arg = rhs(concl plus_1_lift_thm)
+	val add_2r_f_arg = rhs(concl plus_2_lift_thm)
+	val add_1l_f_arg = lhs(concl plus_1_lift_thm)
+	val add_2l_f_arg = lhs(concl plus_2_lift_thm)
+	val thm_3 =  MP(MP(SPECL [ add_1l_f_arg, add_1r_f_arg ,add_2l_f_arg, add_2r_f_arg, (Term.inst[alpha |-> ty] word_add_tm)] 
+				 (Thm.INST_TYPE[alpha |-> type_of(add_1r_f_arg) ,beta |-> type_of(add_2r_f_arg), gamma |-> type_of(add_2l_f_arg)] two_arg_fun_thm)) plus_1_lift_thm) plus_2_lift_thm
+	val a = lhs (concl thm_2)
+	val b = rhs (concl thm_2)
+	val c = rhs (concl thm_3)
+	val t3 = SPECL [a,b,c] (Thm.INST_TYPE [ alpha |-> (type_of a)] EQ_TRANS)
+	val t4 = CONJ thm_2 thm_3
+    in
+	MP t3 t4
+    end
+
+fun trans_n2w_w2n exp =
+    let val (arg_1, n2w_ty) = wordsSyntax.dest_n2w exp
+	val _::w2n_ty::[] = snd( dest_type(type_of(wordsSyntax.dest_w2n arg_1)))
+    in
+	SIMP_CONV (srw_ss()) [GSYM (Thm.INST_TYPE [alpha |-> w2n_ty, beta |->  n2w_ty] w2w_def)] exp
+    end;
+
+val thm0 = SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL);
+	    val thm1 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] “translate_Imm_to_string ^imm”;
+val tm2 = (rhs o concl) thm4;
+val thm5 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] tm2;
+ 
+
+
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val tm1 = (fst o boolSyntax.dest_disj o boolSyntax.rhs o Thm.concl) thm3;
+val thm4 = ASSUME tm1;
+val thm4 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] tm1;
+    val thm5 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm0);
+val tm2 = (fst o dest_eq o (rhs o concl) thm5;
+val thm5 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm6 =  CONJ thm4 thm5;
+val tm3 = (snd o dest_eq o rhs o concl) thm4;
+val thm7 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
+
+
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val thm4 = SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3;
+
+val tm1 = (fst o boolSyntax.dest_disj o boolSyntax.rhs o Thm.concl) thm3;
+val thm4 = ASSUME tm1;
+val thm5 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm4);
+val tm2 = (lhs o concl) thm5;
+val thm6 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm7 =  CONJ thm5 thm6;  
+val tm3 = (rhs o concl) thm5;
+val thm8 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val thm9 = CONJ thm7 thm8;
+    
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
+val thm9 =  CONJ thm7 thm8;
+    Thm.TRANS thm7 thm8
+    val thm8 = Thm.INST [ ``v:string`` |-> tm3] thm7;
+val tm3 = (rhs o concl) thm6;
+val thm1 = SIMP_CONV (srw_ss()) [] tm7
+
+	SIMP_RULE (pure_ss) []
+	     EVAL (concl thm5)
+    EXISTS (``b:bir_imm_t``,imm) thm7
+    CHOOSE (imm,)
+	    val thm7 = Thm.INST [ ``b:bir_imm_t`` |-> imm] thm6;
+ SIMP_RULE (pure_ss) [AND_INTRO_THM] thm5  
+
+
+(*working well
+
+   val imm = dest_BExp_Const exp;
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+val (lthm,rthm) =  EQ_IMP_RULE thm4;
+val thm5 = IMP_TRANS rthm lthm;
+val thm6 =  UNDISCH thm5;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
+val tm2 = (lhs o concl) thm8;   
+val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm10 =  REWRITE_RULE [thm8] thm9;
+
+
+*)
+*)
 
 in
 
@@ -37,8 +168,49 @@ in
         val exp = ``BExp_Const (Imm64 112w)``;*)
     if is_BExp_Const exp then
 	let
-	    val imm = (dest_BExp_Const) exp;	
-	    val cons = (rhs o concl o (SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def])) “translate_Imm_to_string ^imm”;
+	    val imm = dest_BExp_Const exp;
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+val (lthm,rthm) = EQ_IMP_RULE thm4;
+val thm5 = IMP_TRANS rthm lthm;
+val thm6 =  UNDISCH thm5;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
+val tm2 = (lhs o concl) thm8;   
+val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm10 =  REWRITE_RULE [thm8] thm9;
+
+
+
+    
+val tm3 = (rhs o concl) thm5;
+val thm8 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val thm9 = CONJ thm7 thm8;
+    
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
+val thm9 =  CONJ thm7 thm8;
+    Thm.TRANS thm7 thm8
+    val thm8 = Thm.INST [ ``v:string`` |-> tm3] thm7;
+val tm3 = (rhs o concl) thm6;
+val thm1 = SIMP_CONV (srw_ss()) [] tm7;
+    (snd o EQ_IMP_RULE) thm6
+
+ Thm.TRANS ((fst o EQ_IMP_RULE) thm4) ((fst o EQ_IMP_RULE) thm5)
+   EXISTS
+   val tm3 = (snd o dest_eq o rhs o concl) thm6;  
+   val thm7 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] (concl thm4);
+    SNOC_CASES thm4
+    (SIMP_RULE (srw_ss()) [] thm4)
+    SIMP_CONV (srw_ss()) [] tm4
+ SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3
+ CONJ thm0 thm1
+ MP bir_exp_t_distinct thm3
+  val thm0 =  SIMP_CONV (srw_ss())  [bir_exp_t_distinct] (concl thm3)
+  val thm = ASSUME exp
+	   
 	in
 	    mk_Con (mk_Name (PubName_tm, cons))
 	end

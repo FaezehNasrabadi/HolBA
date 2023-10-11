@@ -1,7 +1,11 @@
 open HolKernel Parse boolLib bossLib;
 open bagTheory;
 open intSyntax stringSyntax;
-
+open bir_immTheory wordsTheory;
+open sum_numTheory;
+open bitTheory;
+open ASCIInumbersTheory;
+open string_numTheory;
 val _ = new_theory "messages";
 
     
@@ -9,23 +13,42 @@ val _ = new_theory "messages";
     
 val _ = Datatype `NameTag_t = FreshName | PubName | NodeName`;    
 
+val NameTag_ss = rewrites (type_rws ``:NameTag_t``);
 
 val _ = Datatype `Name_t = Name NameTag_t string`;
 
+val Name_ss = rewrites (type_rws ``:Name_t``);
+
+val name_from_tag_str_def =
+Define`
+      name_from_tag_str tag str =
+(case tag of
+   FreshName => Name FreshName str
+ | PubName   => Name PubName str
+ | NodeName  => Name NodeName str
+)`;
+
+val const_name_from_str_def =
+Define`
+      const_name_from_str str = Name PubName str
+                                     `;
 
 (* Variables*)
 
 val _ = Datatype `Var_t = Var string int`;
                           
-                           
+val Var_ss = rewrites (type_rws ``:Var_t``);                           
+
 (* Function symbols *)
 
 val _ = Datatype `Privacy_t = Private | Public`;
 
+val Privacy_ss = rewrites (type_rws ``:Privacy_t``);    
+
     
 val _ = Datatype `Constructability_t = Constructor | Destructor`;
 
-
+val Constructability_ss = rewrites (type_rws ``:Constructability_t``);
 
 (* Terms *)	      
 
@@ -33,6 +56,8 @@ val _ = Datatype `SapicTerm_t =
 	      Con   Name_t
 	    | TVar  Var_t
 	    | FAPP  (string # (int # Privacy_t # Constructability_t)) (SapicTerm_t list)`;
+
+val SapicTerm_ss = rewrites (type_rws ``:SapicTerm_t``);
 
 (* helper *)  
 val Inside_def =

@@ -1,3 +1,4 @@
+
 structure translate_to_sapicLib :> translate_to_sapicLib =
 struct
 open Abbrev
@@ -25,8 +26,8 @@ open translate_to_sapicTheory;
 val ERR = mk_HOL_ERR "translate_to_sapicLib";
 val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
+open simpLib;
 
-open helperLib;
 open Type;
 open wordsSyntax;
 
@@ -147,18 +148,29 @@ val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS
 val (lthm,rthm) =  EQ_IMP_RULE thm4;
 val thm5 = IMP_TRANS rthm lthm;
 val thm6 =  UNDISCH thm5;
-val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm4;
 val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
 val tm2 = (lhs o concl) thm8;   
 val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
 val thm10 =  REWRITE_RULE [thm8] thm9;
 
+also working well
 
-*)
-*)
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:SapicTerm_t”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> SapicTerm_t`` |-> “translate_imm_to_sapic_term”] thm2;
+val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+val (lthm,rthm) = EQ_IMP_RULE thm4;
+val thm5 = IMP_TRANS rthm lthm;
+val thm6 =  UNDISCH thm5;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_imm_to_sapic_term_def] thm7);
 
-in
+*)*)
 
+  in
+
+  
 fun bir_exp_to_sapic_term exp =
 let
 	val _ = ()
@@ -168,23 +180,22 @@ in
         val exp = ``BExp_Const (Imm64 112w)``;*)
     if is_BExp_Const exp then
 	let
-	    val imm = dest_BExp_Const exp;
-val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
-val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
-val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
-val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
-val (lthm,rthm) = EQ_IMP_RULE thm4;
-val thm5 = IMP_TRANS rthm lthm;
-val thm6 =  UNDISCH thm5;
-val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
-val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
-val tm2 = (lhs o concl) thm8;   
-val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm1 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
+val thm2 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm1;
+val thm3 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm2;
+val tm1 = (lhs o snd o dest_exists o concl) thm3;
+val thm4 = SIMP_CONV (srw_ss()) [b2n_def,translate_imm_to_sapic_term_def] “translate_imm_to_sapic_term ^tm1”;
+
+UNDISCH thm4
+val thm4 = Thm.INST [ ``imm:α word -> string`` |-> tm1] (SPEC_ALL translate_imm_to_sapic_term_def);
+    
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_imm_to_sapic_term_def] thm7);
+
 val thm10 =  REWRITE_RULE [thm8] thm9;
 
 
 
-    
+    REWRITE_RULE [] thm4
 val tm3 = (rhs o concl) thm5;
 val thm8 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
 val thm9 = CONJ thm7 thm8;
@@ -203,7 +214,8 @@ val thm1 = SIMP_CONV (srw_ss()) [] tm7;
    val tm3 = (snd o dest_eq o rhs o concl) thm6;  
    val thm7 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] (concl thm4);
     SNOC_CASES thm4
-    (SIMP_RULE (srw_ss()) [] thm4)
+	       (ASM_SIMP_RULE (srw_ss()) [] thm4)
+	       ASM_SIMP_RULE bool_ss [] (ASSUME (Term `x = 3`))
     SIMP_CONV (srw_ss()) [] tm4
  SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3
  CONJ thm0 thm1
@@ -299,6 +311,8 @@ val thm1 = SIMP_CONV (srw_ss()) [] tm7;
       else if is_BExp_BinExp exp then
         (* 
         val exp = ``(BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) (BExp_Const (Imm64 11w)))``;
+
+
         *)
         let
           val (bop, bir_exp1, bir_exp2) = (dest_BExp_BinExp) exp
@@ -427,8 +441,9 @@ val thm1 = SIMP_CONV (srw_ss()) [] tm7;
         raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
     end; 
 
-       
+    
   end (* local *)
 
 end (* translate_to_sapicLib *)
+
 

@@ -231,7 +231,7 @@ val thm1 = SIMP_CONV (srw_ss()) [] tm7;
     SNOC_CASES thm4
 	       (ASM_SIMP_RULE (srw_ss()) [] thm4)
 	       ASM_SIMP_RULE bool_ss [] (ASSUME (Term `x = 3`))
-    SIMP_CONV (srw_ss()) [] tm4
+    
  SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3
  CONJ thm0 thm1
  MP bir_exp_t_distinct thm3
@@ -288,142 +288,87 @@ val tm0 = (rand o concl) w2n_def
 val exp = “12w”
 val tm1 = mk_comb(tm0,exp)
 (SIMP_CONV std_ss [] tm1)
-val thm1 = SIMP_CONV (srw_ss()) [b2n_def] “(toString ∘ b2n) ^imm”
+val thm1 = SIMP_CONV (srw_ss()) [b2n_def] “(num_to_dec_string ∘ b2n) ^imm”
 SimpRHS thm1
 SIMPR_RULE (srw_ss()) 
 REWRITE_RULE [n2s_def,ASCIInumbersTheory.num_to_dec_string_def,w2n_def] thm
+
+DB.find "ADD_CLAUSES"
 *)*)
 
   in
 
-  
+ (* SIMP_RULE (srw_ss()) [b2n_def,translate_BinPred_to_string_def,translate_UnaryExp_to_string_def,size_of_bir_immtype_def,translate_BinExp_to_string_def,translate_Endian_to_string_def] to_st_thm *) 
 fun bir_exp_to_sapic_term exp =
 let
 	val _ = ()
 in
     (* Constants *)
     (* Manual tests
-        val exp = ``BExp_Const (Imm64 112w)``;*)
+        val exp = ``BExp_Const (Imm64 112w)``;
+		    bir_exp_to_sapic_term exp 
+     *)
     if is_BExp_Const exp then
 	let
-
-	    val thm1 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
-	    val thm2 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm1;
-	    val thm3 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm2;
-	    val thm4 = if ((Teq o concl) (SIMP_RULE (srw_ss()) [] thm3)) then ASSUME (concl thm2) else raise ERR "thm is not true" ""; 
-	    val tm1 = (lhs o snd o dest_exists o concl) thm3;
-	    val tm2 = (rand o concl) (SPEC_ALL Name_t_nchotomy);  
-	    val tm3 = mk_comb(tm2,PubName_tm);
-	    val tm4	= (rand o rhs o concl) (SIMP_CONV std_ss [] tm3);
-	    val tm5 = mk_comb(tm4,“(toString ∘ b2n) ^tm1”);
-	    val tm6	= (rhs o rhs o concl) (SIMP_CONV (srw_ss()) [w2n_def,b2n_def] tm5);
-	    val tm7 = mk_comb(Con_tm, tm6);
-	    val thm5 = Thm.INST [``SS:SapicTerm_t`` |-> tm7] (SPEC_ALL SapicTerm_t_nchotomy);
-	    val thm6 = SIMP_RULE (bool_ss) [ SapicTerm_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm5;
-	    val thm7 = PROVE_HYP thm4 thm6;
-		
-
+	    val imm = dest_BExp_Const exp;
+	    val thm0 = SIMP_CONV (srw_ss()) [b2n_def] “(num_to_dec_string ∘ b2n) ^imm”;
+	    val cons = (snd o dest_eq o concl) thm0;
+	    val sp_name = mk_Con (mk_Name (PubName_tm, cons));
 	in
-	    thm7
+	    (sp_name,thm0)
 	end
-    else if is_BExp_BinExp exp then
-        (* 
-         val exp = ``(BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) ((BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) (BExp_Const (Imm64 11w)))))``;
-
-
-         *)
-	let
-	    val (binexp,exp1,exp2) = dest_BExp_BinExp exp;
-	    val thm1 = bir_exp_to_sapic_term exp1;
-	    val thm2 = bir_exp_to_sapic_term exp2;
-            val thm3 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
-	    val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
-	    val thm5 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm4;
-	    val thm6 = if ((Teq o concl) (SIMP_RULE (srw_ss()) [] thm5)) then ASSUME (concl thm4) else raise ERR "thm is not true" "";
-	    val tm1 = (lhs o fst o dest_conj o snd o dest_exists o snd o dest_exists o snd o dest_exists o concl) thm5;
-	    val to_st = ``translate_BinExp_to_string ^tm1``;
-            val st_bop = (rhs o concl o SIMP_CONV (srw_ss()) [translate_BinExp_to_string_def]) to_st
-	    val fun_sig = pairSyntax.list_mk_pair [st_bop,“(2:int)”,Public_tm, Constructor_tm];
-	    val tm2 = (rand o snd o dest_disj o snd o dest_disj o concl) (SPEC_ALL SapicTerm_t_nchotomy);
-	    val tm3 = mk_comb(tm2,fun_sig);
-	    val tm4 = (rand o rhs o concl) (SIMP_CONV std_ss [] tm3);
-	    val tm5 = (lhs o snd o dest_exists o concl) thm1;
-	    val tm6 = (lhs o snd o dest_exists o concl) thm2;
-	    val trm_list = (listSyntax.mk_list ([tm5,tm6],SapicTerm_t_ty));
-	    val tm7 = mk_comb(tm4, trm_list);
-	    val tm8	= (rhs o rhs o concl) (SIMP_CONV (srw_ss()) [] tm7);
-	    val thm7 = Thm.INST [``SS:SapicTerm_t`` |-> tm8] (SPEC_ALL SapicTerm_t_nchotomy);
-	    val thm8 = SIMP_RULE (bool_ss) [ SapicTerm_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm7;
-	    val thm9 = PROVE_HYP thm6 thm8; 
-		   
-        in
-          thm9
-        end
-	
-else
-        raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
-end;
-  (*
-    (* Memory constants *)
-	(* val exp = ``BExp_MemConst Bit64 Bit8 abcd``; *)
-    else if is_BExp_MemConst exp then
-      
-        let 
-            val (addr_bir_ty, val_bir_ty, tm_map) = dest_BExp_MemConst exp;
-            
-            val addr_ty = (rhs o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(size_of_bir_immtype) ^addr_bir_ty”; 
-            val val_ty =  (rhs o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(size_of_bir_immtype) ^val_bir_ty”;
-            val cons_int = (rhs o concl o (SIMP_CONV (srw_ss()) [])) (numSyntax.mk_plus(addr_ty,val_ty))
-	    val cons =  (rhs o concl o (SIMP_CONV (srw_ss()) [])) “toString ^cons_int”
-        in
-            mk_Con (mk_Name (PubName_tm, cons))
-        end
-        handle e => raise wrap_exn "bir_exp_to_words::MemConst" e
     (* Den *)
     (*
 	val exp = ``(BExp_Den (BVar "MEM" (BType_Mem Bit32 Bit8)))``;
-val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
+	val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
      *)
     else if is_BExp_Den exp then
 	let
           val (name,bir_type) = (dest_BVar o dest_BExp_Den) exp
-          val size =
-              if is_BType_Imm bir_type then
-		  let val immty = dest_BType_Imm bir_type in
-		      (snd o dest_eq o concl o ((SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(int_of_num o size_of_bir_immtype) ^immty”
-		  end
-              else if is_BType_Mem bir_type then
-		  let
-                      val (addr_bir_ty, val_bir_ty) = dest_BType_Mem bir_type
-                      val addr_ty =  (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(int_of_num o size_of_bir_immtype) ^addr_bir_ty”
-                      val val_ty =  (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(int_of_num o size_of_bir_immtype) ^val_bir_ty”
-		  in
-                      intSyntax.mk_plus(addr_ty,val_ty)
-		  end
-              else
-		  raise Fail ("unhandled type: " ^ (term_to_string bir_type))
+          val thm0 = SPEC name (Thm.INST_TYPE [alpha |-> (type_of name)] EQ_REFL);
+	  val sp_var = mk_TVar (mk_Var (name,(“0:int”)));
     in   
-          mk_TVar (mk_Var (name,size))
-    end
+          (sp_var,thm0)
+	end
+
+    (* Memory constants *)
+    (* val exp = ``BExp_MemConst Bit64 Bit8 abcd``; 
+		   ``BExp_MemConst Bit128 Bit16 amap``,
+    ``amap :128 |-> 16``
+*)
+    else if is_BExp_MemConst exp then
+	
+        let 
+            val (addr_bir_ty, val_bir_ty, tm_map) = dest_BExp_MemConst exp;
+	    val thm0 = SIMP_CONV (srw_ss()) [size_of_bir_immtype_def] “toString (((size_of_bir_immtype) ^addr_bir_ty) + ((size_of_bir_immtype) ^val_bir_ty))”; 
+            val cons = (snd o dest_eq o concl) thm0;
+            val sp_name = mk_Con (mk_Name (PubName_tm, cons));
+	in
+	    (sp_name,thm0)
+        end
+        handle e => raise wrap_exn "bir_exp_to_sapic_term::MemConst" e 
     (* Casts *)
-	(* 
-        val exp = ``BExp_Cast BIExp_LowCast
-                           (BExp_Den (BVar "R1" (BType_Imm Bit64))) Bit32``;
-        *)
+    (* 
+     val exp = ``BExp_Cast BIExp_LowCast
+                 (BExp_Den (BVar "R1" (BType_Imm Bit64))) Bit32``;
+     *)
     else if is_BExp_Cast exp then
         let
             val (casttyp, ex, sz) = (dest_BExp_Cast) exp;
-            val cast_sz = (rhs o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(toString o size_of_bir_immtype) ^sz”;
+	    val thm1 = (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def]) “(toString o size_of_bir_immtype) ^sz”;
+            val cast_sz = (snd o dest_eq o concl) thm1;
 	    val cast_sz_st = mk_Con (mk_Name (PubName_tm, cast_sz));
-            val val_st = bir_exp_to_sapic_term ex;
-            val cast_ty = (rhs o concl o (SIMP_CONV (srw_ss()) [translate_Cast_to_string_def])) “translate_Cast_to_string ^casttyp”;
+            val (val_st,thm2) = bir_exp_to_sapic_term ex;
+	    val thm3 =  (SIMP_CONV (srw_ss()) [translate_Cast_to_string_def]) “translate_Cast_to_string ^casttyp”;
+            val cast_ty = (snd o dest_eq o concl) thm3;
 	    val trm_list = (listSyntax.mk_list ([val_st,cast_sz_st],SapicTerm_t_ty));
-	    val fun_sig = pairSyntax.list_mk_pair [cast_ty,“(2:int)”,Public_tm, Constructor_tm]
-		   
+	    val fun_sig = pairSyntax.list_mk_pair [cast_ty,“(2:int)”,Public_tm, Constructor_tm];
+	    val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	    val to_st_thm = CONJ (CONJ thm1 thm2) thm3;
         in
-          mk_FAPP (fun_sig,trm_list)
+          (sp_fun,to_st_thm)
         end
-        handle e => raise wrap_exn "bir_exp_to_sapic_term::Cast" e                         
+        handle e => raise wrap_exn "bir_exp_to_sapic_term::Cast" e                       
   (* Unary expressions *)
   else if is_BExp_UnaryExp exp then
         (* 
@@ -434,14 +379,15 @@ val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
         *)
         let
           val (uop, bir_exp) = (dest_BExp_UnaryExp) exp
-          val exp_sap_tr = bir_exp_to_sapic_term bir_exp
-          val to_str = ``translate_UnaryExp_to_string ^uop``
-          val uop_str = (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [translate_UnaryExp_to_string_def])) to_str
+          val (exp_sap_tr,thm1) = bir_exp_to_sapic_term bir_exp
+          val thm0 = (SIMP_CONV (srw_ss()) [translate_UnaryExp_to_string_def]) ``translate_UnaryExp_to_string ^uop``
+          val uop_str = (snd o dest_eq o concl) thm0;
 	  val trm_list = (listSyntax.mk_list ([exp_sap_tr],SapicTerm_t_ty));
-	  val fun_sig = pairSyntax.list_mk_pair [uop_str,“(1:int)”,Public_tm, Constructor_tm]
-		   
+	  val fun_sig = pairSyntax.list_mk_pair [uop_str,“(1:int)”,Public_tm, Constructor_tm];
+	  val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	  val to_st_thm = CONJ thm1 thm0;
         in
-          mk_FAPP (fun_sig,trm_list)
+          (sp_fun,to_st_thm)
         end
           handle e => raise wrap_exn "bir_exp_to_sapic_term::unary_exp" e
 
@@ -449,43 +395,44 @@ val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
       else if is_BExp_BinExp exp then
         (* 
         val exp = ``(BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) (BExp_Const (Imm64 11w)))``;
-
-
         *)
         let
           val (bop, bir_exp1, bir_exp2) = (dest_BExp_BinExp) exp
-          val st_exp1 =  bir_exp_to_sapic_term bir_exp1
-          val st_exp2 =  bir_exp_to_sapic_term bir_exp2
-          val to_st = ``translate_BinExp_to_string ^bop``
-          val st_bop = (rhs o concl o SIMP_CONV (srw_ss()) [translate_BinExp_to_string_def]) to_st
+          val (st_exp1,thm1) =  bir_exp_to_sapic_term bir_exp1
+          val (st_exp2,thm2) =  bir_exp_to_sapic_term bir_exp2
+          val thm0 = SIMP_CONV (srw_ss()) [translate_BinExp_to_string_def] ``translate_BinExp_to_string ^bop``;
+          val st_bop = (snd o dest_eq o concl) thm0;
           val trm_list = (listSyntax.mk_list ([st_exp1,st_exp2],SapicTerm_t_ty));
-	  val fun_sig = pairSyntax.list_mk_pair [st_bop,“(2:int)”,Public_tm, Constructor_tm]
-		   
+	  val fun_sig = pairSyntax.list_mk_pair [st_bop,“(2:int)”,Public_tm, Constructor_tm];
+	  val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	  val to_st_thm = CONJ (CONJ thm1 thm2) thm0;
         in
-          mk_FAPP (fun_sig,trm_list)
+          (sp_fun,to_st_thm)
         end
-          handle e => raise wrap_exn "bir_exp_to_sapic_term::binary_exp" e
-
+        handle e => raise wrap_exn "bir_exp_to_sapic_term::binary_exp" e
+			  
       (* Binary predicates *)
       else if is_BExp_BinPred exp then
-        (*
-        val exp = ``BExp_BinPred BIExp_Equal
-          (BExp_Den (BVar "oracle" (BType_Imm Bit32)))
-          (BExp_Const (Imm32 0w))``;
-        *)
-        let
-          val (bpred, bir_exp1, bir_exp2) = (dest_BExp_BinPred) exp
-          val st_exp1 = bir_exp_to_sapic_term bir_exp1
-          val st_exp2 = bir_exp_to_sapic_term bir_exp2
-          val to_st = ``translate_BinPred_to_string ^bpred``
-          val st_bp = (rhs o concl o SIMP_CONV (srw_ss()) [translate_BinPred_to_string_def]) to_st
-	  val trm_list = (listSyntax.mk_list ([st_exp1,st_exp2],SapicTerm_t_ty));
-	  val fun_sig = pairSyntax.list_mk_pair [st_bp,“(2:int)”,Public_tm, Constructor_tm]
-        in
-          mk_FAPP (fun_sig,trm_list)
-        end
+          (*
+           val exp = ``BExp_BinPred BIExp_Equal
+		       (BExp_Den (BVar "oracle" (BType_Imm Bit32)))
+		       (BExp_Const (Imm32 0w))``;
+           *)
+          let
+              val (bpred, bir_exp1, bir_exp2) = (dest_BExp_BinPred) exp
+              val (st_exp1,thm1) =  bir_exp_to_sapic_term bir_exp1
+              val (st_exp2,thm2) =  bir_exp_to_sapic_term bir_exp2
+	      val thm0 = SIMP_CONV (srw_ss()) [translate_BinPred_to_string_def] ``translate_BinPred_to_string ^bpred``;
+              val st_bp = (snd o dest_eq o concl) thm0;
+	      val trm_list = (listSyntax.mk_list ([st_exp1,st_exp2],SapicTerm_t_ty));
+	      val fun_sig = pairSyntax.list_mk_pair [st_bp,“(2:int)”,Public_tm, Constructor_tm];
+	      val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	      val to_st_thm = CONJ (CONJ thm1 thm2) thm0;
+          in
+              (sp_fun,to_st_thm)
+          end
           handle e => raise wrap_exn "bir_exp_to_sapic_term::binary_pred" e
-
+ 
       (* MemEq expressions *)
       else if is_BExp_MemEq exp then
         (* 
@@ -498,12 +445,14 @@ val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
         *)
         let
           val (bir_lhs, bir_rhs) = dest_BExp_MemEq exp
-          val lhs = bir_exp_to_sapic_term bir_lhs
-          val rhs = bir_exp_to_sapic_term bir_rhs
+          val (lhs,lthm) = bir_exp_to_sapic_term bir_lhs
+          val (rhs,rthm) = bir_exp_to_sapic_term bir_rhs
           val trm_list = (listSyntax.mk_list ([lhs,rhs],SapicTerm_t_ty));
 	  val fun_sig = pairSyntax.list_mk_pair[“"MemEq"”,“(2:int)”,Public_tm, Constructor_tm]
-        in
-          mk_FAPP (fun_sig,trm_list)
+	  val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	  val to_st_thm = (CONJ lthm rthm)
+          in
+              (sp_fun,to_st_thm)
         end
         handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_eq" e
 
@@ -517,13 +466,15 @@ val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
         *)
         let
           val (bir_cond_exp, bir_then_exp, bir_else_exp) = dest_BExp_IfThenElse exp
-          val st_cond_exp = bir_exp_to_sapic_term bir_cond_exp
-          val st_then_exp = bir_exp_to_sapic_term bir_then_exp
-          val st_else_exp = bir_exp_to_sapic_term bir_else_exp
+          val (st_cond_exp,thm1) = bir_exp_to_sapic_term bir_cond_exp
+          val (st_then_exp,thm2) = bir_exp_to_sapic_term bir_then_exp
+          val (st_else_exp,thm3) = bir_exp_to_sapic_term bir_else_exp
           val trm_list = (listSyntax.mk_list ([st_cond_exp,st_then_exp,st_else_exp],SapicTerm_t_ty));
 	  val fun_sig = pairSyntax.list_mk_pair[“"IfThenElse"”,“(3:int)”,Public_tm, Destructor_tm]
-        in
-            mk_FAPP (fun_sig,trm_list)
+          val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	  val to_st_thm = CONJ (CONJ thm3 thm2) thm1
+          in
+              (sp_fun,to_st_thm)
 	end
         handle e => raise wrap_exn "bir_exp_to_sapic_term::if_then_else" e
 
@@ -538,48 +489,73 @@ val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
         *)
         let
           val (bir_mem, bir_addr, bir_endi, bir_val_ty) = dest_BExp_Load exp;
-          val mem_st = bir_exp_to_sapic_term bir_mem;
-          val base_addr_st = bir_exp_to_sapic_term bir_addr;
-	  val ld_endi = (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [translate_Endian_to_string_def])) ``translate_Endian_to_string ^bir_endi``
-	  val ld_endi_st = mk_TVar (mk_Var (ld_endi,(“0:int”)))
-	  val ld_sz = (rhs o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(toString o size_of_bir_immtype) ^bir_val_ty”;
+          val (mem_st,thm1) = bir_exp_to_sapic_term bir_mem;
+          val (base_addr_st,thm2) = bir_exp_to_sapic_term bir_addr;
+	  val thm3 =  (SIMP_CONV (srw_ss()) [translate_Endian_to_string_def]) ``translate_Endian_to_string ^bir_endi``;
+	  val ld_endi = (snd o dest_eq o concl) thm3
+	  val ld_endi_st = mk_TVar (mk_Var (ld_endi,(“0:int”)));
+	  val thm4 = (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def]) “(toString o size_of_bir_immtype) ^bir_val_ty”;
+	  val ld_sz = (snd o dest_eq o concl) thm4; 
 	  val ld_sz_st = mk_Con (mk_Name (PubName_tm, ld_sz)); 
           val trm_list = (listSyntax.mk_list ([mem_st,base_addr_st,ld_endi_st,ld_sz_st],SapicTerm_t_ty));
-	  val fun_sig = pairSyntax.list_mk_pair[“"Load"”,“(4:int)”,Public_tm, Constructor_tm]
+	  val fun_sig = pairSyntax.list_mk_pair[“"Load"”,“(4:int)”,Public_tm, Constructor_tm];
+	  val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	  val to_st_thm =  CONJ (CONJ (CONJ thm1 thm2) thm3) thm4
         in
-	    mk_FAPP (fun_sig,trm_list)
+              (sp_fun,to_st_thm)
         end
-        handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_load" e
-      
+        handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_load" e    
       (* Store expressions *)
       else if is_BExp_Store exp then
-        (* 
-        val exp = ``
-          (BExp_Store
-            (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
-            (BExp_Den (BVar "ADDR1" (BType_Imm Bit64)))
-            BEnd_BigEndian
-            (BExp_Const (Imm128 (42w :word128))))
-        ``;
-        *)
-        let
-          val (bir_mem, bir_addr, bir_endi, bir_val) = dest_BExp_Store exp
-          val mem_st = bir_exp_to_sapic_term bir_mem
-          val base_addr_st = bir_exp_to_sapic_term bir_addr
-          val val_st = bir_exp_to_sapic_term bir_val
-	  val st_endi = (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [translate_Endian_to_string_def])) ``translate_Endian_to_string ^bir_endi``
-	  val st_endi_st = mk_TVar (mk_Var (st_endi,(“0:int”)))
-          val trm_list = (listSyntax.mk_list ([ mem_st,base_addr_st,st_endi_st,val_st],SapicTerm_t_ty));
-	  val fun_sig = pairSyntax.list_mk_pair[“"Store"”,“(4:int)”,Public_tm, Destructor_tm]
+          (* 
+           val exp = ``
+			 (BExp_Store
+			      (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+			      (BExp_Den (BVar "ADDR1" (BType_Imm Bit64)))
+			      BEnd_BigEndian
+			      (BExp_Const (Imm128 (42w :word128))))
+			 ``;
+           *)
+          let
+              val (bir_mem, bir_addr, bir_endi, bir_val) = dest_BExp_Store exp
+              val (mem_st,thm1) = bir_exp_to_sapic_term bir_mem;
+              val (base_addr_st,thm2) = bir_exp_to_sapic_term bir_addr;
+              val (val_st,thm3) = bir_exp_to_sapic_term bir_val;
+	      val thm4 = (SIMP_CONV (srw_ss()) [translate_Endian_to_string_def]) ``translate_Endian_to_string ^bir_endi``;
+	      val st_endi = (snd o dest_eq o concl) thm4; 
+	      val st_endi_st = mk_TVar (mk_Var (st_endi,(“0:int”)));
+              val trm_list = (listSyntax.mk_list ([ mem_st,base_addr_st,st_endi_st,val_st],SapicTerm_t_ty));
+	      val fun_sig = pairSyntax.list_mk_pair[“"Store"”,“(4:int)”,Public_tm, Destructor_tm]
+              val sp_fun = mk_FAPP (fun_sig,trm_list);
+ 	      val to_st_thm =  CONJ (CONJ (CONJ thm1 thm2) thm3) thm4;
         in
-          mk_FAPP (fun_sig,trm_list)
-        end
-        handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_store" e
+              (sp_fun,to_st_thm)
+          end
+          handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_store" e
       else
-        raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
-    end; 
+          raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
+end; 
 
-   *) 
+
+(*
+
+val exp = “BExp_Store
+                        (BExp_Store
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Minus
+                              (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 48w))) BEnd_LittleEndian
+                           (BExp_Den (BVar "R29" (BType_Imm Bit64))))
+                        (BExp_BinExp BIExp_Minus
+                           (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))
+                           (BExp_Const (Imm64 40w))) BEnd_LittleEndian
+                        (BExp_Den (BVar "R30" (BType_Imm Bit64)))”;
+
+val (sp_term,main_thm) = bir_exp_to_sapic_term exp;
+
+SIMP_RULE (srw_ss()) [b2n_def,translate_BinPred_to_string_def,translate_UnaryExp_to_string_def,size_of_bir_immtype_def,translate_BinExp_to_string_def,translate_Endian_to_string_def,translate_Cast_to_string_def] main_thm
+*)    
+    
   end (* local *)
 
 end (* translate_to_sapicLib *)

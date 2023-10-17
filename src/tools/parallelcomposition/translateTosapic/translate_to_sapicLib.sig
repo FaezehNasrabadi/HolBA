@@ -3,6 +3,6 @@ sig
 
     include Abbrev
 
-     val bir_exp_to_sapic_term : term -> term
+     val bir_exp_to_sapic_term : term -> term * thm
 
 end

@@ -1,3 +1,4 @@
+
 structure translate_to_sapicLib :> translate_to_sapicLib =
 struct
 open Abbrev
@@ -15,6 +16,7 @@ open bir_immTheory;
 open bir_valuesSyntax;
 open bir_immSyntax;
 open bir_expSyntax;
+open bir_expTheory;
 open bir_envSyntax;
 open integerTheory;
 open intSyntax;
@@ -25,14 +27,45 @@ val ERR = mk_HOL_ERR "translate_to_sapicLib";
 val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
 
-    open arm_coretypesTheory;
-open arm_stepTheory;
+open simpLib;
+
+
 open Type;
 open wordsSyntax;
 
 (*
+
+SIMP_CONV (srw_ss()) [] “w2s 112w”
+ASCIInumbersTheory.num_to_dec_string_def
+SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL)
+EQ_TRANS
+val original_theorem =
+  <<[∃b. BExp_Const (Imm64 112w) = BExp_Const b ∧
+        translate_Imm_to_string b = v]
+    ⊢ const_name_from_str "112" = Name PubName "112">>;
+
+val simplified_theorem =
+  let
+    val (_, ex_eq) = dest_exists (concl thm7);
+    val (b_eq, _) = dest_conj ex_eq;
+    val (lhs_eq, rhs_eq) = dest_eq b_eq;
+    val b = rhs_eq
+  in
+    PROVE_HYP (EXISTS_ELIM_TAC original_theorem) (CONJUNCT1 (EQT_INTRO thm10))
+  end;
+
+fun trans_n2w_w2n exp =
+    let val (arg_1, n2w_ty) = wordsSyntax.dest_n2w exp
+	val _::w2n_ty::[] = snd( dest_type(type_of(wordsSyntax.dest_w2n arg_1)))
+    in
+	SIMP_CONV (srw_ss()) [GSYM (Thm.INST_TYPE [alpha |-> w2n_ty, beta |->  n2w_ty] w2w_def)] exp
+    end;
+(dest_type o hd o snd o dest_type o type_of) exp
+val exp = “"str"”
+val exp = “(12:int)”
 val is_word_op = can dim_of;
-val exp = “n2w ((w2n 2w) + (w2n 2w))”
+val exp = “112w”;
+val exp = “n2w (w2n 2w)”
 fun n2w_plus_handler exp =
     let 
 	val (n2w_exp,ty) = wordsSyntax.dest_n2w exp
@@ -65,11 +98,205 @@ fun trans_n2w_w2n exp =
 	SIMP_CONV (srw_ss()) [GSYM (Thm.INST_TYPE [alpha |-> w2n_ty, beta |->  n2w_ty] w2w_def)] exp
     end;
 
+val thm0 = SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL);
+	    val thm1 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] “translate_Imm_to_string ^imm”;
+val tm2 = (rhs o concl) thm4;
+val thm5 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] tm2;
+ 
+SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL);
 
- SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL) *)
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val tm1 = (fst o boolSyntax.dest_disj o boolSyntax.rhs o Thm.concl) thm3;
+val thm4 = ASSUME tm1;
+val thm4 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] tm1;
+    val thm5 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm0);
+val tm2 = (fst o dest_eq o (rhs o concl) thm5;
+val thm5 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm6 =  CONJ thm4 thm5;
+val tm3 = (snd o dest_eq o rhs o concl) thm4;
+val thm7 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
 
-in
 
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val thm4 = SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3;
+
+val tm1 = (fst o boolSyntax.dest_disj o boolSyntax.rhs o Thm.concl) thm2;
+val thm4 = ASSUME tm1;
+val thm5 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm4);
+val tm2 = (lhs o concl) thm5;
+val thm6 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm7 =  CONJ thm5 thm6;  
+val tm3 = (rhs o concl) thm5;
+val thm8 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val thm9 = CONJ thm7 thm8;
+    
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
+val thm9 =  CONJ thm7 thm8;
+    Thm.TRANS thm7 thm8
+    val thm8 = Thm.INST [ ``v:string`` |-> tm3] thm7;
+val tm3 = (rhs o concl) thm6;
+val thm1 = SIMP_CONV (srw_ss()) [] tm7
+
+	SIMP_RULE (pure_ss) []
+	     EVAL (concl thm5)
+    EXISTS (``b:bir_imm_t``,imm) thm7
+    CHOOSE (imm,)
+	    val thm7 = Thm.INST [ ``b:bir_imm_t`` |-> imm] thm6;
+ SIMP_RULE (pure_ss) [AND_INTRO_THM] thm5  
+
+
+(*working well
+ val thm1 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
+	    val thm2 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm1;
+	    val thm3 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm2;
+	    val thm4 = if ((Teq o concl) (SIMP_RULE (srw_ss()) [] thm3)) then ASSUME (concl thm2) else raise ERR "thm is not true" ""; 
+	    val tm1 = (lhs o snd o dest_exists o concl) thm3;    
+	    val tm2 = (rand o concl) (SPEC_ALL Name_t_nchotomy);    
+	    val tm3 = mk_comb(tm2,PubName_tm);
+	    val tm4	= (rand o rhs o concl) (SIMP_CONV std_ss [] tm3);
+	    val tm5 = mk_comb(tm4,“(toString ∘ b2n) ^tm1”);
+	    val tm6	= (rhs o rhs o concl) (SIMP_CONV (srw_ss()) [w2n_def,b2n_def] tm5);
+	    val tm7 = mk_comb(Con_tm, tm6);
+	    val thm5 = Thm.INST [``SS:SapicTerm_t`` |-> tm7] (SPEC_ALL SapicTerm_t_nchotomy);
+	    val thm6 = SIMP_RULE (bool_ss) [ SapicTerm_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm5;
+	    val thm7 = PROVE_HYP thm4 thm6;
+
+also working well 
+
+   val imm = dest_BExp_Const exp;
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+val (lthm,rthm) =  EQ_IMP_RULE thm4;
+val thm5 = IMP_TRANS rthm lthm;
+val thm6 =  UNDISCH thm5;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm4;
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
+val tm2 = (lhs o concl) thm8;   
+val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+val thm10 =  REWRITE_RULE [thm8] thm9;
+
+also working well
+
+val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+val thm2 = Thm.INST_TYPE [alpha |-> “:SapicTerm_t”] thm1;
+val thm3 = Thm.INST [``f:bir_imm_t -> SapicTerm_t`` |-> “translate_imm_to_sapic_term”] thm2;
+val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+val (lthm,rthm) = EQ_IMP_RULE thm4;
+val thm5 = IMP_TRANS rthm lthm;
+val thm6 =  UNDISCH thm5;
+val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_imm_to_sapic_term_def] thm7);
+
+
+UNDISCH (SIMP_CONV (srw_ss()) [] ((rand o concl) thm3))
+SapicTerm_t_case_def
+			tm0 = (rand o concl) Name_t_nchotomy										   mk_comb((concl translate_imm_to_sapic_term_def),tm1)
+Name_t_nchotomy											   val thm10 =   SIMP_RULE (bool_ss) [] thm3;
+UNDISCH thm4
+val thm4 = Thm.INST [ ``imm:α word -> string`` |-> tm1] (SPEC_ALL translate_imm_to_sapic_term_def);
+    
+val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_imm_to_sapic_term_def] thm7);
+
+val thm10 =  REWRITE_RULE [thm8] thm9;
+
+
+
+    REWRITE_RULE [] thm4
+val tm3 = (rhs o concl) thm5;
+val thm8 = Thm.INST [ ``str:string`` |-> tm3] (SPEC_ALL const_name_from_str_def);
+val thm9 = CONJ thm7 thm8;
+    
+val tm4 =  concl thm7;
+val thm8 = SIMP_CONV (srw_ss()) [thm6] tm4;
+val thm9 =  CONJ thm7 thm8;
+    Thm.TRANS thm7 thm8
+    val thm8 = Thm.INST [ ``v:string`` |-> tm3] thm7;
+val tm3 = (rhs o concl) thm6;
+val thm1 = SIMP_CONV (srw_ss()) [] tm7;
+    (snd o EQ_IMP_RULE) thm6
+
+ Thm.TRANS ((fst o EQ_IMP_RULE) thm4) ((fst o EQ_IMP_RULE) thm5)
+   EXISTS
+   val tm3 = (snd o dest_eq o rhs o concl) thm6;  
+   val thm7 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] (concl thm4);
+    SNOC_CASES thm4
+	       (ASM_SIMP_RULE (srw_ss()) [] thm4)
+	       ASM_SIMP_RULE bool_ss [] (ASSUME (Term `x = 3`))
+    SIMP_CONV (srw_ss()) [] tm4
+ SIMP_RULE (pure_ss) [bir_exp_t_distinct] thm3
+ CONJ thm0 thm1
+ MP bir_exp_t_distinct thm3
+  val thm0 =  SIMP_CONV (srw_ss())  [bir_exp_t_distinct] (concl thm3)
+  val thm = ASSUME exp
+
+val patch_thms_m0modft_a202 = mk_patch_thms [
+``(* copied an modified accordingly, based on "aa02" *)
+  (bmr_ms_mem_contains (m0_mod_bmr (F,T)) ms
+       (ms.base.REG RName_PC,[2w; 162w])) ==>
+  (ms.countw <=+ 0xFFFFFFFFFFFFFFFEw) ==>
+  ((m0_mod_bmr (F,T)).bmr_extra ms) ==>
+  (aligned 1 (ms.base.REG RName_PC)) ==>
+  (NextStateM0_mod ms =
+      SOME
+        <|base :=
+          ms.base with
+          <|REG :=
+              (RName_PC =+ ms.base.REG RName_PC + 2w)
+                ((RName_2 =+ ms.base.REG RName_PC + 8w) ms.base.REG);
+            count := w2n ms.countw + 1; pcinc := 2w|>;
+        countw := ms.countw + 1w|>)
+``];
+
+	    val tm8 = (lhs o snd o dest_exists o concl) thm6;
+		val StepPatchThm = mk_oracle_thm "BirExptoSapicTerm";
+val mk_patch_thms = List.map (fn tm => UNDISCH_ALL (StepPatchThm ([], tm)));
+	    val thmls = mk_patch_thms [
+``^exp ==>
+  ^tm8
+``];
+ASSUME exp
+
+val imm = dest_BExp_Const exp;
+ val thm1 = Thm.INST [``x:bir_exp_t`` |-> exp] (bir_exp_t_case_eq); 
+ val thm2 = Thm.INST_TYPE [alpha |-> “:string”] thm1;
+ val thm3 = Thm.INST [``f:bir_imm_t -> string`` |-> “translate_Imm_to_string”] thm2;
+ val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+ val (lthm,rthm) = EQ_IMP_RULE thm4;
+ val thm5 = IMP_TRANS rthm lthm;
+ val thm6 =  UNDISCH thm5;
+ val thm7 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm6;
+ val thm8 = (SIMP_RULE (srw_ss()) [b2n_def,translate_Imm_to_string_def] thm7);
+ val tm2 = (lhs o concl) thm8;   
+ val thm9 = Thm.INST [ ``str:string`` |-> tm2] (SPEC_ALL const_name_from_str_def);
+ val thm10 =  REWRITE_RULE [thm8] thm9;
+
+val exp1 = “Con (Name PubName "112")”;
+dest_type(type_of exp)
+identical exp exp1
+
+val imm = dest_BExp_Const exp
+val tm0 = (rand o concl) w2n_def
+val exp = “12w”
+val tm1 = mk_comb(tm0,exp)
+(SIMP_CONV std_ss [] tm1)
+val thm1 = SIMP_CONV (srw_ss()) [b2n_def] “(toString ∘ b2n) ^imm”
+SimpRHS thm1
+SIMPR_RULE (srw_ss()) 
+REWRITE_RULE [n2s_def,ASCIInumbersTheory.num_to_dec_string_def,w2n_def] thm
+*)*)
+
+  in
+
+  
 fun bir_exp_to_sapic_term exp =
 let
 	val _ = ()
@@ -79,18 +306,64 @@ in
         val exp = ``BExp_Const (Imm64 112w)``;*)
     if is_BExp_Const exp then
 	let
-	    val imm = (dest_BExp_Const) exp;
-	    val thm0 = SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL);
-	    val thm1 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] “translate_Imm_to_string ^imm”;
-	    val thm2 = Thm.INST [ ``str:string`` |-> ((rhs o concl) thm1)] (SPEC_ALL const_name_from_str_def);
-	    val res = ((rhs o concl) thm2);
 
-		    CONJ thm0 thm1
-		    val thm = ASSUME exp
+	    val thm1 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
+	    val thm2 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm1;
+	    val thm3 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm2;
+	    val thm4 = if ((Teq o concl) (SIMP_RULE (srw_ss()) [] thm3)) then ASSUME (concl thm2) else raise ERR "thm is not true" ""; 
+	    val tm1 = (lhs o snd o dest_exists o concl) thm3;
+	    val tm2 = (rand o concl) (SPEC_ALL Name_t_nchotomy);  
+	    val tm3 = mk_comb(tm2,PubName_tm);
+	    val tm4	= (rand o rhs o concl) (SIMP_CONV std_ss [] tm3);
+	    val tm5 = mk_comb(tm4,“(toString ∘ b2n) ^tm1”);
+	    val tm6	= (rhs o rhs o concl) (SIMP_CONV (srw_ss()) [w2n_def,b2n_def] tm5);
+	    val tm7 = mk_comb(Con_tm, tm6);
+	    val thm5 = Thm.INST [``SS:SapicTerm_t`` |-> tm7] (SPEC_ALL SapicTerm_t_nchotomy);
+	    val thm6 = SIMP_RULE (bool_ss) [ SapicTerm_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm5;
+	    val thm7 = PROVE_HYP thm4 thm6;
+		
+
 	in
-	    mk_Con (mk_Name (PubName_tm, cons))
+	    thm7
 	end
+    else if is_BExp_BinExp exp then
+        (* 
+         val exp = ``(BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) ((BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) (BExp_Const (Imm64 11w)))))``;
 
+
+         *)
+	let
+	    val (binexp,exp1,exp2) = dest_BExp_BinExp exp;
+	    val thm1 = bir_exp_to_sapic_term exp1;
+	    val thm2 = bir_exp_to_sapic_term exp2;
+            val thm3 = Thm.INST [``bb:bir_exp_t`` |-> exp] (SPEC_ALL bir_exp_t_nchotomy); 
+	    val thm4 = SIMP_RULE (bool_ss) [bir_exp_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm3;
+	    val thm5 = SIMP_RULE (pure_ss) [bir_exp_t_11] thm4;
+	    val thm6 = if ((Teq o concl) (SIMP_RULE (srw_ss()) [] thm5)) then ASSUME (concl thm4) else raise ERR "thm is not true" "";
+	    val tm1 = (lhs o fst o dest_conj o snd o dest_exists o snd o dest_exists o snd o dest_exists o concl) thm5;
+	    val to_st = ``translate_BinExp_to_string ^tm1``;
+            val st_bop = (rhs o concl o SIMP_CONV (srw_ss()) [translate_BinExp_to_string_def]) to_st
+	    val fun_sig = pairSyntax.list_mk_pair [st_bop,“(2:int)”,Public_tm, Constructor_tm];
+	    val tm2 = (rand o snd o dest_disj o snd o dest_disj o concl) (SPEC_ALL SapicTerm_t_nchotomy);
+	    val tm3 = mk_comb(tm2,fun_sig);
+	    val tm4 = (rand o rhs o concl) (SIMP_CONV std_ss [] tm3);
+	    val tm5 = (lhs o snd o dest_exists o concl) thm1;
+	    val tm6 = (lhs o snd o dest_exists o concl) thm2;
+	    val trm_list = (listSyntax.mk_list ([tm5,tm6],SapicTerm_t_ty));
+	    val tm7 = mk_comb(tm4, trm_list);
+	    val tm8	= (rhs o rhs o concl) (SIMP_CONV (srw_ss()) [] tm7);
+	    val thm7 = Thm.INST [``SS:SapicTerm_t`` |-> tm8] (SPEC_ALL SapicTerm_t_nchotomy);
+	    val thm8 = SIMP_RULE (bool_ss) [ SapicTerm_t_distinct,AND_CLAUSES,OR_CLAUSES,EXISTS_OR_THM] thm7;
+	    val thm9 = PROVE_HYP thm6 thm8; 
+		   
+        in
+          thm9
+        end
+	
+else
+        raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
+end;
+  (*
     (* Memory constants *)
 	(* val exp = ``BExp_MemConst Bit64 Bit8 abcd``; *)
     else if is_BExp_MemConst exp then
@@ -109,6 +382,7 @@ in
     (* Den *)
     (*
 	val exp = ``(BExp_Den (BVar "MEM" (BType_Mem Bit32 Bit8)))``;
+val exp = “BExp_Den (BVar "oracle" (BType_Imm Bit32))”
      *)
     else if is_BExp_Den exp then
 	let
@@ -116,7 +390,7 @@ in
           val size =
               if is_BType_Imm bir_type then
 		  let val immty = dest_BType_Imm bir_type in
-		      (snd o dest_eq o concl o (SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(int_of_num o size_of_bir_immtype) ^immty”
+		      (snd o dest_eq o concl o ((SIMP_CONV (srw_ss()) [size_of_bir_immtype_def])) “(int_of_num o size_of_bir_immtype) ^immty”
 		  end
               else if is_BType_Mem bir_type then
 		  let
@@ -175,6 +449,8 @@ in
       else if is_BExp_BinExp exp then
         (* 
         val exp = ``(BExp_BinExp BIExp_Plus (BExp_Const (Imm64 112w)) (BExp_Const (Imm64 11w)))``;
+
+
         *)
         let
           val (bop, bir_exp1, bir_exp2) = (dest_BExp_BinExp) exp
@@ -303,8 +579,9 @@ in
         raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
     end; 
 
-       
+   *) 
   end (* local *)
 
 end (* translate_to_sapicLib *)
+
 

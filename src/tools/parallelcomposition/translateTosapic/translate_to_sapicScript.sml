@@ -17,6 +17,13 @@ val _ = new_theory "translate_to_sapic";
 val translate_Imm_to_string_def = Define`
 translate_Imm_to_string imm =
 (toString o b2n) imm
+
+`;
+
+val translate_imm_to_sapic_term_def = Define`
+translate_imm_to_sapic_term imm =
+Con (Name PubName ((toString o b2n) imm))
+
 `;
 
 

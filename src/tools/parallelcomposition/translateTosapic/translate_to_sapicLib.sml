@@ -24,7 +24,49 @@ open translate_to_sapicTheory;
 val ERR = mk_HOL_ERR "translate_to_sapicLib";
 val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
-                
+
+    open arm_coretypesTheory;
+open arm_stepTheory;
+open Type;
+open wordsSyntax;
+
+(*
+val is_word_op = can dim_of;
+val exp = “n2w ((w2n 2w) + (w2n 2w))”
+fun n2w_plus_handler exp =
+    let 
+	val (n2w_exp,ty) = wordsSyntax.dest_n2w exp
+	val (plus_1, plus_2) = numSyntax.dest_plus n2w_exp
+	val thm_1 = (Thm.INST [ ``a:num`` |-> plus_1 , ``b:num`` |-> plus_2 ] 
+			      (Thm.INST_TYPE [ alpha |-> ty](SPEC_ALL Bword_add_thm)))
+	val thm_2 = (SIMP_RULE (srw_ss()) [GSYM w2w_def] thm_1)
+	val (f_plus_1, f_plus_2) = wordsSyntax.dest_word_add (rhs (concl thm_2))
+	val plus_1_lift_thm = worker_exp2il f_plus_1
+	val plus_2_lift_thm = worker_exp2il f_plus_2 
+	val add_1r_f_arg = rhs(concl plus_1_lift_thm)
+	val add_2r_f_arg = rhs(concl plus_2_lift_thm)
+	val add_1l_f_arg = lhs(concl plus_1_lift_thm)
+	val add_2l_f_arg = lhs(concl plus_2_lift_thm)
+	val thm_3 =  MP(MP(SPECL [ add_1l_f_arg, add_1r_f_arg ,add_2l_f_arg, add_2r_f_arg, (Term.inst[alpha |-> ty] word_add_tm)] 
+				 (Thm.INST_TYPE[alpha |-> type_of(add_1r_f_arg) ,beta |-> type_of(add_2r_f_arg), gamma |-> type_of(add_2l_f_arg)] two_arg_fun_thm)) plus_1_lift_thm) plus_2_lift_thm
+	val a = lhs (concl thm_2)
+	val b = rhs (concl thm_2)
+	val c = rhs (concl thm_3)
+	val t3 = SPECL [a,b,c] (Thm.INST_TYPE [ alpha |-> (type_of a)] EQ_TRANS)
+	val t4 = CONJ thm_2 thm_3
+    in
+	MP t3 t4
+    end
+
+fun trans_n2w_w2n exp =
+    let val (arg_1, n2w_ty) = wordsSyntax.dest_n2w exp
+	val _::w2n_ty::[] = snd( dest_type(type_of(wordsSyntax.dest_w2n arg_1)))
+    in
+	SIMP_CONV (srw_ss()) [GSYM (Thm.INST_TYPE [alpha |-> w2n_ty, beta |->  n2w_ty] w2w_def)] exp
+    end;
+
+
+ SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL) *)
 
 in
 
@@ -37,8 +79,14 @@ in
         val exp = ``BExp_Const (Imm64 112w)``;*)
     if is_BExp_Const exp then
 	let
-	    val imm = (dest_BExp_Const) exp;	
-	    val cons = (rhs o concl o (SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def])) “translate_Imm_to_string ^imm”;
+	    val imm = (dest_BExp_Const) exp;
+	    val thm0 = SPEC exp (Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL);
+	    val thm1 = SIMP_CONV (srw_ss()) [b2n_def,translate_Imm_to_string_def] “translate_Imm_to_string ^imm”;
+	    val thm2 = Thm.INST [ ``str:string`` |-> ((rhs o concl) thm1)] (SPEC_ALL const_name_from_str_def);
+	    val res = ((rhs o concl) thm2);
+
+		    CONJ thm0 thm1
+		    val thm = ASSUME exp
 	in
 	    mk_Con (mk_Name (PubName_tm, cons))
 	end

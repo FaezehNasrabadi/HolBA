@@ -13,6 +13,7 @@ open Term;
 
 val _ = new_theory "translate_to_sapic";                
 
+
 val translate_Imm_to_string_def = Define`
 translate_Imm_to_string imm =
 (toString o b2n) imm

@@ -125,7 +125,7 @@ fun tree_with_value tr sort_vals =
 
 
 
-(* define a symbolic tree hol datatype *)
+(* define a symbolic tree hol datatype 
 val _ = Datatype `stree =
 SLeaf
 | SNode 'a 'b stree
@@ -141,7 +141,7 @@ fun smltree_to_holtree tree =
 
 
 				       
-(*
+
 
 val holtree = smltree_to_holtree smltree;
  

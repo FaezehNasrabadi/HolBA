@@ -145,6 +145,9 @@ val _ = Datatype `sapic_substitution_t =
    Substitution (Var_t -> (SapicTerm_t option))
 `;    
 
+val sapic_substitution_get_def = Define `
+    sapic_substitution_get (Substitution Sb) symb = Sb symb
+`;
 
 val sapic_substitution_dom_def = Define `
     sapic_substitution_dom (Substitution S) = {vars | S vars <> NONE}
@@ -194,7 +197,10 @@ val _ = Datatype `sapic_configuration_t =
 `;       
       
 
-
+val get_substitution_conf_def = Define `
+    get_substitution_conf (Config (Ns,St,Pold,Sb,Al)) = Sb
+                                                       `;
+                                                       
 (* Labeled Transition System *)      
 
 val _ = Datatype `sapic_lts_t =

@@ -81,6 +81,11 @@ val fv_def = Define
 (fv (FAPP (n,(l,p,c)) (t::ts)) <=> ((fv t) ∪ (fv (FAPP (n,((l-1),p,c)) ts))))`  ;
 
     
+val var_of_term_def = Define 
+             `
+(var_of_term (TVar v) = SOME v) /\
+(var_of_term _ = NONE)`  ;
+
 (* Detect ground term *)
 
 val is_ground_term_def = Define `

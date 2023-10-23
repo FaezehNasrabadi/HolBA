@@ -13,23 +13,7 @@ val _ = new_theory "birs_eventstep";
 val _ = new_constant("Rfun", ``:sbir_environment_t -> bir_var_t``);
 val _ = new_constant("Oracle", ``:sbir_environment_t -> bir_var_t``);
 val _ = new_constant("birs_exec_step", ``:((sbir_pc_t,sbir_environment_t) stree) -> (sbir_pc_t#sbir_environment_t) -> ((sbir_pc_t#sbir_environment_t) -> bool)``);
-(* Synchronize Event *)
-val _ = Datatype `sync_event =
-    P2A bir_var_t
-    | A2P bir_var_t
-    | Sync_Fr bir_var_t
-              `;
-              
-             
-(* SBIR non-synchronous events *)        
-val _ = Datatype
-        `SBIRnsyc_event =
-Event bir_var_t
-| Crypto bir_var_t
-| Loop bir_var_t
-| Branch
-        `;
-                
+    
 (* calculate next label *)
 val calculate_next_label_def  =
 Define `

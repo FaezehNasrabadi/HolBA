@@ -10,7 +10,26 @@ open bossLib;
 
 val _ = new_theory "sbir_tree";
 
+    
+(* Synchronize Event *)
+val _ = Datatype `sync_event =
+    P2A bir_var_t
+    | A2P bir_var_t
+    | Sync_Fr bir_var_t
+              `;
+              
+             
+(* SBIR non-synchronous events *)        
+val _ = Datatype
+        `SBIRnsyc_event =
+Event bir_var_t
+| Crypto bir_var_t
+| Loop bir_var_t
+| Branch
+| Silent
+        `;
 
+                
 (* define a symbolic tree hol datatype *)
 val _ = Datatype `stree =
 SLeaf
@@ -62,7 +81,7 @@ val symb_env_get_def = Define `
                                                                      
 (*
 
-                                                               
+                                                        
 val execute_symbolic_tree_def = Define`
 (execute_symbolic_tree (SLeaf) [] = {}) /\
 (execute_symbolic_tree (SNode (PC_Normal,(SEnv e)) st) (INL Silent::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
@@ -75,8 +94,25 @@ val execute_symbolic_tree_def = Define`
 (execute_symbolic_tree (SBranch (PC_Branch,(SEnv e)) lst rst) (INL Silent::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree lst t)∪(execute_symbolic_tree rst t))) /\
 (execute_symbolic_tree _ _ = {})`;
 
-
 *)
+                       
+val execute_symbolic_tree_def = Define`
+(execute_symbolic_tree (SLeaf) = {}) /\
+(execute_symbolic_tree (SNode (INL Silent,(SEnv e)) st) = ({(INL Silent,(SEnv e))}∪(execute_symbolic_tree st))) /\
+(execute_symbolic_tree (SNode (INL (Event v),(SEnv e)) st) = ({(INL (Event v),(SEnv e))}∪(execute_symbolic_tree st))) /\
+(execute_symbolic_tree (SNode (INL (Crypto v),(SEnv e)) st) = ({(INL (Crypto v),(SEnv (((BVar "crypto" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st))) /\
+(execute_symbolic_tree (SNode (INL (Loop v),(SEnv e)) st) = ({(INL (Loop v),(SEnv e))}∪(execute_symbolic_tree st)))  /\
+(execute_symbolic_tree (SNode (INR (P2A v),(SEnv e)) st) = ({(INR (P2A v),(SEnv e))}∪(execute_symbolic_tree st))) /\
+(execute_symbolic_tree (SNode (INR (A2P v),(SEnv e)) st) = ({(INR (A2P v),(SEnv (((BVar "Adv" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st))) /\
+(execute_symbolic_tree (SNode (INR (Sync_Fr v),(SEnv e)) st) = ({(INR (Sync_Fr v),(SEnv (((BVar "RNG" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st)))/\
+(execute_symbolic_tree (SBranch (INL Branch,(SEnv e)) lst rst) = ({(INL Branch,(SEnv e))}∪(execute_symbolic_tree lst)∪(execute_symbolic_tree rst))) /\
+(execute_symbolic_tree _ = {})`;
+
+val traces_of_tree_def  = Define`
+(traces_of_tree (SLeaf) = []) /\
+(traces_of_tree (SNode (a,b) st) = (a::(traces_of_tree st))) /\
+(traces_of_tree (SBranch (a,b) lst rst) = (a::(APPEND (traces_of_tree lst) (traces_of_tree rst))))`;                          
+
 
                                                                                                                                 
 

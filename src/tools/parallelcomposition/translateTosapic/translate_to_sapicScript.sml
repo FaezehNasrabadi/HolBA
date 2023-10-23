@@ -111,10 +111,26 @@ val translate_birexp_to_sapicterm_def = Define`
 
         
 (*****************end translation Bir Exp to Sapic Term**********************)
+val _ = new_constant("trans", ``:(bir_var_t -> bir_exp_t option) -> (Var_t -> SapicTerm_t option)``);                    
+(*
 
+val symbtree_to_sapic_def = Define`
+(symbtree_to_sapic (SLeaf) = ProcessNull) /\
+(symbtree_to_sapic (SNode (INL Silent,(SEnv e)) st) = ({(INL Silent,(SEnv e))}∪(execute_symbolic_tree st))) /\
+(symbtree_to_sapic (SNode (INL (Event v),(SEnv e)) st) =
+(ProcessAction (Event (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])) (symbtree_to_sapic str)))
+({(INL (Event v),(SEnv e))}∪(execute_symbolic_tree st))) /\
+(symbtree_to_sapic (SNode (INL (Crypto v),(SEnv e)) st) =
+(ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64)))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic str) (ProcessNull)) /\
+(symbtree_to_sapic (SNode (INL (Loop v),(SEnv e)) st) = ({(INL (Loop v),(SEnv e))}∪(execute_symbolic_tree st)))  /\
+(symbtree_to_sapic (SNode (INR (P2A v),(SEnv e)) st) = ({(INR (P2A v),(SEnv e))}∪(execute_symbolic_tree st))) /\
+(symbtree_to_sapic (SNode (INR (A2P v),(SEnv e)) st) = ({(INR (A2P v),(SEnv (((BVar "Adv" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st))) /\
+(symbtree_to_sapic (SNode (INR (Sync_Fr v),(SEnv e)) st) = ({(INR (Sync_Fr v),(SEnv (((BVar "RNG" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st)))/\
+(symbtree_to_sapic (SBranch (INL Branch,(SEnv e)) lst rst) =
+(ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)) /\
+(symbtree_to_sapic _ = ProcessNull)`;
 
-                      
-(*                      
+                       
 val symbtree_to_sapic_def = Define `
     symbtree_to_sapic holtree  =
 case holtree of

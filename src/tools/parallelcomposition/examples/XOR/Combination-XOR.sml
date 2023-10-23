@@ -199,9 +199,9 @@ is_substring
  HOL_Interactive.toggle_quietdec();
 open stringSyntax;
  HOL_Interactive.toggle_quietdec();
- *)
+ 
 
-val holtree = smltree_to_holtree valtr;
+val holtree = smltree_to_holtree valtr;*)
 
 val _ = print "\n";     
 val _ = print ("built a hol tree with value");

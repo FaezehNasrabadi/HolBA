@@ -14,17 +14,73 @@ val _ = new_theory "sbir_tree";
 (* define a symbolic tree hol datatype *)
 val _ = Datatype `stree =
 SLeaf
-| SNode ('a # 'a) stree
-| SBranch ('a # 'a) stree stree
+| SNode ('a # 'b) stree
+| SBranch ('a # 'b) stree stree
 	  `;
-
 
 val STATES_def = Define`
 (STATES (SLeaf) = {}) /\
-(STATES (SNode (a,b) st) = ({(a,b)}∪(STATES st))) /\
-(STATES (SBranch (a,b) lst rst) = ({(a,b)}∪(STATES lst)∪(STATES rst)))`;
-                                                                      
-		       
+(STATES (SNode n st) = ({n}∪(STATES st))) /\
+(STATES (SBranch n lst rst) = ({n}∪(STATES lst)∪(STATES rst)))`;
+
+        
+val val_of_tree_def = Define`
+(val_of_tree (SLeaf) = NONE) /\
+(val_of_tree (SNode n st) = SOME n) /\
+(val_of_tree (SBranch n lst rst) = SOME n)`;
+
+             
+val connected_def  = Define`
+(connected (SLeaf) (a:α # β) (b:α # β) = F) /\
+(connected (SNode n st) (a:α # β) (b:α # β) = ((a = n) ∧ (b = THE (val_of_tree st)))) /\
+(connected (SBranch n lst rst) (a:α # β) (b:α # β) = ((a = n) ∧ ((b = THE (val_of_tree lst)) ∨ (b = THE (val_of_tree rst)))))`;                                              
+
+val _ = Datatype `sbir_pc_t =
+  | PC_Normal 
+  | PC_Event
+  | PC_In
+  | PC_Out
+  | PC_Cr
+  | PC_Fr
+  | PC_Loop
+  | PC_Branch
+    `;
+    
+val _ = Datatype `sbir_environment_t = SEnv (bir_var_t -> (bir_exp_t option))`;
+
+val symb_env_dom_def = Define `
+    symb_env_dom (SEnv ro) = {symb | ro symb <> NONE}
+                             `;
+
+val symb_env_update_def = Define `
+    symb_env_update (SEnv ro) (symb, vo) = SEnv ((symb =+ vo) ro)
+                                                `;
+
+val symb_env_get_def = Define `
+    symb_env_get (SEnv ro) symb = ro symb
+`;
+                                                                     
+(*
+
+                                                               
+val execute_symbolic_tree_def = Define`
+(execute_symbolic_tree (SLeaf) [] = {}) /\
+(execute_symbolic_tree (SNode (PC_Normal,(SEnv e)) st) (INL Silent::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
+(execute_symbolic_tree (SNode (PC_Event,(SEnv e)) st) (INL (Event v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
+(execute_symbolic_tree (SNode (PC_Cr,(SEnv e)) st) (INL (Crypto v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
+(execute_symbolic_tree (SNode (PC_Loop,(SEnv e)) st) (INL (Loop v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t)))  /\
+(execute_symbolic_tree (SNode (PC_Out,(SEnv e)) st) (INR (P2A v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
+(execute_symbolic_tree (SNode (PC_In,(SEnv e)) st) (INR (A2P v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t))) /\
+(execute_symbolic_tree (SNode (PC_Fr,(SEnv e)) st) (INR (Sync_Fr v)::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree st t)))/\
+(execute_symbolic_tree (SBranch (PC_Branch,(SEnv e)) lst rst) (INL Silent::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree lst t)∪(execute_symbolic_tree rst t))) /\
+(execute_symbolic_tree _ _ = {})`;
+
+
+*)
+
+                                                                                                                                
+
+    
 val _ = export_theory();
 
 

@@ -9,6 +9,7 @@ open bir_immTheory;
 open integerTheory;
 open Term;
 open sbir_treeTheory;
+open optionTheory;
 
 
 
@@ -23,9 +24,9 @@ translate_Imm_to_string imm =
 `;
 
 
- val translate_birvar_to_sapicterm_def = Define`
- translate_birvar_to_sapicterm (BVar str (BType_Imm s)) =
- TVar (Var str ((int_of_num o size_of_bir_immtype) s))
+ val translate_birvar_to_sapicvar_def = Define`
+ translate_birvar_to_sapicvar (BVar str _) =
+ (Var str 0)
       `;
 
  val translate_bir_immtype_to_sapicterm_def = Define`
@@ -96,7 +97,7 @@ val translate_birexp_to_sapicterm_def = Define`
  (case exp of
     BExp_Const c                      => Con (Name PubName (translate_Imm_to_string c))
   | BExp_MemConst v1 v2 v3            => Con (Name PubName (toString ((size_of_bir_immtype v1) + (size_of_bir_immtype v2))))
-  | BExp_Den (BVar str _)             => TVar (Var str 0)
+  | BExp_Den bv                       => TVar (translate_birvar_to_sapicvar bv)
   | BExp_Load e1 e2 a b               => FAPP ("Load",(2, Public, Constructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2)]
   | BExp_Store e1 e2 a e3             => FAPP ("Store",(3, Public, Destructor)) [(translate_birexp_to_sapicterm e1);(translate_birexp_to_sapicterm e2);(translate_birexp_to_sapicterm e3)]
   | BExp_UnaryExp ue e                => FAPP ((translate_UnaryExp_to_string ue),(1, Public, Constructor)) [(translate_birexp_to_sapicterm e)]
@@ -110,7 +111,27 @@ val translate_birexp_to_sapicterm_def = Define`
 
         
 (*****************end translation Bir Exp to Sapic Term**********************)
-(*
+
+
+                      
+(*                      
+val symbtree_to_sapic_def = Define `
+    symbtree_to_sapic holtree  =
+case holtree of
+SLeaf => ProcessNull
+| SBranch (a,b) lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
+| SNode ((BVar name type),b) str  =>  (
+if ((IS_SUFFIX name "assert_true_cnd") /\ (IS_SUFFIX name "assert_false_cnd") /\ (IS_SUFFIX name "cjmp_false_cnd")) then (symbtree_to_sapic str)
+else (ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar name type))) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull)) 
+)
+                                      `;
+
+val sim_def = Define`
+                    sim snod conf =
+((THE (sapic_substitution_get (get_substitution_conf conf) (translate_birvar_to_sapicvar (FST snod)))) = (translate_birexp_to_sapicterm (SND snod)))
+`;
+
+
                       
 val tree_node_to_process_thm = store_thm(
   "tree_node_to_process",
@@ -124,12 +145,55 @@ val tree_node_to_process_thm = store_thm(
                         
   );
 
+
+val tree_node_to_process_thm = store_thm(
+  "tree_node_to_process",
+        ``∀(Tree: (bir_var_t,bir_exp_t) stree) (var: bir_var_t) (valu: bir_exp_t). ((var,valu) ∈ (STATES Tree)) ⇒ (∃(C:sapic_configuration_t). THE (sapic_substitution_get (get_substitution_conf C) (translate_birvar_to_sapicvar var)) = (translate_birexp_to_sapicterm valu))``,
+        rpt strip_tac >>
+                           Q.EXISTS_TAC `Config (Ns,St,Pold,(Substitution Sb),Al)`>>
+                       rewrite_tac[sapic_substitution_get_def,get_substitution_conf_def] >>
+                       Cases_on `var` >>
+                           
+   rewrite_tac[translate_birvar_to_sapicvar_def]                     
+  );
+    
+  translate_birexp_to_sapicterm x
+
 translate_birexp_to_sapicterm (BExp_Const (Imm64 64w)) = Con (Name PubName "64")
 
-  val sim_def = Define`
-sim sbst spcf  =
-(
-)`; 
+ 
+
+val tree_node_to_process_thm = store_thm(
+  "tree_node_to_process",
+        ``∀(Tree: (bir_var_t,bir_exp_t) stree) (snod: (bir_var_t # bir_exp_t)) (snod': (bir_var_t # bir_exp_t)) (C:sapic_configuration_t).
+        ((connected Tree snod snod') ∧ (sim snod C))
+        ⇒ (∃(C':sapic_configuration_t). sim snod' C')``,
+        gen_tac >>
+        Cases_on `Tree`
+rewrite_tac[connected_def]
+rewrite_tac[connected_def]
+reverse (Cases_on `s`)
+rewrite_tac[val_of_tree_def]
+        
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+rewrite_tac[sim_def]
+gen_tac
+
+     (Cases_on `C`)
+       Cases_on `p''`
+       Cases_on `r`
+       Cases_on `r'`
+       rewrite_tac[get_substitution_conf_def]
+       Cases_on `q'''`
+       rewrite_tac[sapic_substitution_get_def]
+       strip_tac
+                           Q.EXISTS_TAC `Config (Ns,St,Pold,(Substitution f),Al)`>>
+                       rewrite_tac[sapic_substitution_get_def,get_substitution_conf_def] >>
+                       Cases_on `var` >>
+                           
+   asm_rewrite_tac[translate_birvar_to_sapicvar_def]                     
+  );
+       DB.find "THE NONE"     
 *)
 
        

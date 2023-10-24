@@ -20,19 +20,26 @@ val _ = new_theory "translate_to_sapic";
 val translate_Imm_to_string_def = Define`
 translate_Imm_to_string imm =
 (toString o b2n) imm
-
 `;
 
 
- val translate_birvar_to_sapicvar_def = Define`
- translate_birvar_to_sapicvar (BVar str _) =
- (Var str 0)
-      `;
+val translate_birvar_to_sapicvar_def = Define`
+translate_birvar_to_sapicvar (BVar str _) =
+(Var str 0)
+`;
 
- val translate_bir_immtype_to_sapicterm_def = Define`
- translate_bir_immtype_to_sapicterm immty =
- Con (Name PubName ((toString o size_of_bir_immtype) immty))
-      `;        
+
+val translate_birvar_to_sapicfreshname_def = Define`
+translate_birvar_to_sapicfreshname (BVar str _) =
+(Name FreshName str)
+`;
+
+        
+val translate_bir_immtype_to_sapicterm_def = Define`
+translate_bir_immtype_to_sapicterm immty =
+Con (Name PubName ((toString o size_of_bir_immtype) immty))
+    `;
+        
       
 val translate_UnaryExp_to_string_def = Define`
 translate_UnaryExp_to_string ue =
@@ -111,26 +118,42 @@ val translate_birexp_to_sapicterm_def = Define`
 
         
 (*****************end translation Bir Exp to Sapic Term**********************)
-val _ = new_constant("trans", ``:(bir_var_t -> bir_exp_t option) -> (Var_t -> SapicTerm_t option)``);                    
-(*
+                 
+
 
 val symbtree_to_sapic_def = Define`
 (symbtree_to_sapic (SLeaf) = ProcessNull) /\
-(symbtree_to_sapic (SNode (INL Silent,(SEnv e)) st) = ({(INL Silent,(SEnv e))}∪(execute_symbolic_tree st))) /\
-(symbtree_to_sapic (SNode (INL (Event v),(SEnv e)) st) =
-(ProcessAction (Event (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])) (symbtree_to_sapic str)))
-({(INL (Event v),(SEnv e))}∪(execute_symbolic_tree st))) /\
-(symbtree_to_sapic (SNode (INL (Crypto v),(SEnv e)) st) =
-(ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64)))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic str) (ProcessNull)) /\
-(symbtree_to_sapic (SNode (INL (Loop v),(SEnv e)) st) = ({(INL (Loop v),(SEnv e))}∪(execute_symbolic_tree st)))  /\
-(symbtree_to_sapic (SNode (INR (P2A v),(SEnv e)) st) = ({(INR (P2A v),(SEnv e))}∪(execute_symbolic_tree st))) /\
-(symbtree_to_sapic (SNode (INR (A2P v),(SEnv e)) st) = ({(INR (A2P v),(SEnv (((BVar "Adv" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st))) /\
-(symbtree_to_sapic (SNode (INR (Sync_Fr v),(SEnv e)) st) = ({(INR (Sync_Fr v),(SEnv (((BVar "RNG" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e)))}∪(execute_symbolic_tree st)))/\
-(symbtree_to_sapic (SBranch (INL Branch,(SEnv e)) lst rst) =
-(ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)) /\
+(symbtree_to_sapic (SNode ( Silent,(SEnv e)) st) = (symbtree_to_sapic st)) /\
+(symbtree_to_sapic (SNode ( (Event v),(SEnv e)) st) =
+(ProcessAction (Event (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ( (Crypto v),(SEnv e)) st) =
+(ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64)))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st) (ProcessNull))) /\
+(symbtree_to_sapic (SNode ( (Loop v),(SEnv e)) st) = (ProcessAction  Rep (symbtree_to_sapic st)))  /\
+(symbtree_to_sapic (SNode ( (P2A v),(SEnv e)) st) = (ProcessAction (ChOut (SOME (TVar (Var "Channel" 0))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ( (A2P v),(SEnv e)) st) = (ProcessAction (ChIn (SOME (TVar (Var "Channel" 0))) (TVar (translate_birvar_to_sapicvar v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ( (Sync_Fr v),(SEnv e)) st) = (ProcessAction (New (translate_birvar_to_sapicfreshname v)) (symbtree_to_sapic st)))/\
+(symbtree_to_sapic (SBranch ( Branch v,(SEnv e)) lst rst) =
+(ProcessComb (Cond (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic lst) (symbtree_to_sapic rst))) /\
 (symbtree_to_sapic _ = ProcessNull)`;
 
-                       
+val sim_def = Define`
+                    sim Tr (Config (Ns,St,Pold,Sb,Al)) =
+((Pold = {|(symbtree_to_sapic Tr)|}) ∧
+(∀(eve,env). ((THE (val_of_tree Tr)) = (eve,env)) ∧
+(∀x. (THE (sapic_substitution_get Sb (translate_birvar_to_sapicvar x))) =  translate_birexp_to_sapicterm (THE (symb_env_get env x))) ∧
+(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_env_dom env))
+))
+`;                   
+(*
+
+val sim_def = Define`
+                    sim (eve,env) (Config (Ns,St,Pold,Sb,Al)) =
+(
+(∀T. ((THE (val_of_tree T)) = (eve,env)) ∧ (Pold = {|(symbtree_to_sapic T)|})) ∧
+(∀x. (THE (sapic_substitution_get Sb (translate_birvar_to_sapicvar x))) =  translate_birexp_to_sapicterm (THE (symb_env_get env x))) ∧
+(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_env_dom env))
+)
+`;                             
 val symbtree_to_sapic_def = Define `
     symbtree_to_sapic holtree  =
 case holtree of
@@ -147,7 +170,7 @@ val sim_def = Define`
 ((THE (sapic_substitution_get (get_substitution_conf conf) (translate_birvar_to_sapicvar (FST snod)))) = (translate_birexp_to_sapicterm (SND snod)))
 `;
 
-
+val _ = new_constant("trans", ``:(bir_var_t -> bir_exp_t option) -> (Var_t -> SapicTerm_t option)``);   
                       
 val tree_node_to_process_thm = store_thm(
   "tree_node_to_process",
@@ -209,7 +232,39 @@ gen_tac
                            
    asm_rewrite_tac[translate_birvar_to_sapicvar_def]                     
   );
-       DB.find "THE NONE"     
+       DB.find "THE NONE"
+
+
+val tree_node_to_process_thm = store_thm(
+  "tree_node_to_process",
+        ``∀Tree snod snod' C.
+        ((connected Tree snod snod') ∧ (sim snod C))
+        ⇒ (∃(C':sapic_configuration_t). sim snod' C')``,
+        gen_tac >>
+        Cases_on `Tree`
+rewrite_tac[connected_def]
+rewrite_tac[connected_def]
+reverse (Cases_on `s`)
+rewrite_tac[val_of_tree_def]
+        
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+rewrite_tac[sim_def]
+gen_tac
+
+     (Cases_on `C`)
+       Cases_on `p''`
+       Cases_on `r`
+       Cases_on `r'`
+       rewrite_tac[get_substitution_conf_def]
+       Cases_on `q'''`
+       rewrite_tac[sapic_substitution_get_def]
+       strip_tac
+                           Q.EXISTS_TAC `Config (Ns,St,Pold,(Substitution f),Al)`>>
+                       rewrite_tac[sapic_substitution_get_def,get_substitution_conf_def] >>
+                       Cases_on `var` >>
+                           
+   asm_rewrite_tac[translate_birvar_to_sapicvar_def]                     
+  );          
 *)
 
        

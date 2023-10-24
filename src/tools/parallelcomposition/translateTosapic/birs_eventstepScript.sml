@@ -88,7 +88,7 @@ else {}
 (* symbolic execution step for Loops *)    
 val birs_exec_branch_def =
 Define `
-       birs_exec_branch (t:(sbir_pc_t,sbir_environment_t) stree) (st:(sbir_pc_t#sbir_environment_t)) (Branch) =
+       birs_exec_branch (t:(sbir_pc_t,sbir_environment_t) stree) (st:(sbir_pc_t#sbir_environment_t)) (Branch v) =
 if ((st ∈ (STATES t)) ∧ ((FST st) = PC_Branch))
 then {(PC_Normal,(SND st))}∪{(PC_Normal,(SND st))}
 else {}
@@ -99,13 +99,13 @@ val birs_exec_event_step_def = Define `
     birs_exec_event_step (t:(sbir_pc_t,sbir_environment_t) stree) (state:(sbir_pc_t#sbir_environment_t)) event states =
   case event of
     | NONE                   => (birs_exec_step t state states) (* normal steps *)
-    | SOME (INL (Event e))   => (birs_exec_event_fun t state (Event e) states) (* event functions *)
-    | SOME (INL (Crypto v))  => (birs_exec_crypto_fun t state (Crypto v) states) (* Crypto functions *)
-    | SOME (INL (Loop t'))   => (birs_exec_loop t state (Loop t') states) (* Loops *)
-    | SOME (INL (Branch))    => (birs_exec_branch t state (Branch) states) (* Branch *)
-    | SOME (INR (Sync_Fr n)) => (birs_exec_rng_fun t state (Sync_Fr n) states) (* RNG functions *)
-    | SOME (INR (P2A s))     => (birs_exec_out_fun t state (P2A s) states) (* Output functions *)
-    | SOME (INR (A2P r))     => (birs_exec_in_fun t state (A2P r) states) (* Input functions *)
+    | SOME ( (Event e))   => (birs_exec_event_fun t state (Event e) states) (* event functions *)
+    | SOME ( (Crypto v))  => (birs_exec_crypto_fun t state (Crypto v) states) (* Crypto functions *)
+    | SOME ( (Loop t'))   => (birs_exec_loop t state (Loop t') states) (* Loops *)
+    | SOME ( (Branch v))    => (birs_exec_branch t state (Branch v) states) (* Branch *)
+    | SOME ( (Sync_Fr n)) => (birs_exec_rng_fun t state (Sync_Fr n) states) (* RNG functions *)
+    | SOME ( (P2A s))     => (birs_exec_out_fun t state (P2A s) states) (* Output functions *)
+    | SOME ( (A2P r))     => (birs_exec_in_fun t state (A2P r) states) (* Input functions *)
 `;
 
 

@@ -125,7 +125,17 @@ val traces_of_tree_def  = Define`
 (traces_of_tree (SNode (a,b) st) = (a::(traces_of_tree st))) /\
 (traces_of_tree (SBranch (a,b) lst rst) = (a::(APPEND (traces_of_tree lst) (traces_of_tree rst))))`;                          
 
-
+val single_step_execute_symbolic_tree_def = Define`
+(single_step_execute_symbolic_tree (SLeaf) = SLeaf) /\
+(single_step_execute_symbolic_tree (SNode ( Silent,(SEnv e)) st) = (SNode ( Silent,(SEnv e)) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (Event v),(SEnv e)) st) = (SNode ( (Event v),(SEnv e)) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (Crypto v),(SEnv e)) st) = (SNode ( (Crypto v),(SEnv (((BVar "crypto" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (Loop v),(SEnv e)) st) = (SNode ( (Loop v),(SEnv e)) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (P2A v),(SEnv e)) st) = (SNode ( (P2A v),(SEnv e)) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (A2P v),(SEnv e)) st) = (SNode ( (A2P v),(SEnv (((BVar "Adv" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (Sync_Fr v),(SEnv e)) st) = (SNode ( (Sync_Fr v),(SEnv (((BVar "RNG" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
+(single_step_execute_symbolic_tree (SBranch ( Branch v,(SEnv e)) lst rst) = (SBranch ( Branch v,(SEnv e)) lst rst)) /\
+(single_step_execute_symbolic_tree t = t)`;
                                                                                                                                 
 
     

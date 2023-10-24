@@ -531,7 +531,9 @@ val sapic_let_false_transition_def = Define `
 (* Transition relation *)
 
 val sapic_transition_def = Define `
-                                  (sapic_transition C Ev C' = (
+(sapic_transition C Ev C' = (
+if ((C = C') ∧ (Ev = [])) then (T) else
+(
                                     (sapic_null_transition C Ev C') ∨
                                     (sapic_event_transition C Ev C') ∨
                                     (sapic_parallel_transition C Ev C') ∨
@@ -552,9 +554,15 @@ val sapic_transition_def = Define `
                                     (sapic_K_transition C Ev C') ∨
                                     (sapic_in_transition C Ev C') ∨
                                     (sapic_out_in_transition C Ev C') ∨
-                                    (sapic_out_transition C Ev C')    
+                                    (sapic_out_transition C Ev C')
+                                    )                      
                                     ))`;
-                
+
+                                    
+val SapicTranNil = new_axiom ("SapicTranNil",
+``∀St Sb P Ns Al. sapic_transition (Config (Ns,St,P,Sb,Al)) []
+          (Config (Ns,St,P,Sb,Al))``);
+                            
 (* Detect a silent transition *)
    
 val is_a_silent_transition_def = Define `

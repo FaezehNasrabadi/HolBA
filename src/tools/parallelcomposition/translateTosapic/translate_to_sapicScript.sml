@@ -12,6 +12,7 @@ open sbir_treeTheory;
 open optionTheory;
 open updateTheory;
 open pred_setTheory;
+open symb_interpretTheory;
 
 val _ = new_theory "translate_to_sapic";                
 
@@ -135,16 +136,16 @@ sbirEvent_to_sapicFact e =
 
 val symbtree_to_sapic_def = Define`
 (symbtree_to_sapic (SLeaf) = ProcessNull) /\
-(symbtree_to_sapic (SNode ( Silent,(SEnv e)) st) = (symbtree_to_sapic st)) /\
-(symbtree_to_sapic (SNode ( (Event v),(SEnv e)) st) =
+(symbtree_to_sapic (SNode ( Silent,H) st) = (symbtree_to_sapic st)) /\
+(symbtree_to_sapic (SNode ( (Event v),H) st) =
 (ProcessAction (Event (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (Crypto v),(SEnv e)) st) =
+(symbtree_to_sapic (SNode ( (Crypto v),H) st) =
 (ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64)))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st) (ProcessNull))) /\
-(symbtree_to_sapic (SNode ( (Loop v),(SEnv e)) st) = (ProcessAction  Rep (symbtree_to_sapic st)))  /\
-(symbtree_to_sapic (SNode ( (P2A v),(SEnv e)) st) = (ProcessAction (ChOut (SOME (TVar (Var "Channel" 0))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (A2P v),(SEnv e)) st) = (ProcessAction (ChIn (SOME (TVar (Var "Channel" 0))) (TVar (translate_birvar_to_sapicvar v))) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (Sync_Fr v),(SEnv e)) st) = (ProcessAction (New (translate_birvar_to_sapicfreshname v)) (symbtree_to_sapic st)))/\
-(symbtree_to_sapic (SBranch ( Branch v,(SEnv e)) lst rst) =
+(symbtree_to_sapic (SNode ( (Loop v),H) st) = (ProcessAction  Rep (symbtree_to_sapic st)))  /\
+(symbtree_to_sapic (SNode ( (P2A v),H) st) = (ProcessAction (ChOut (SOME (TVar (Var "Channel" 0))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ( (A2P v),H) st) = (ProcessAction (ChIn (SOME (TVar (Var "Channel" 0))) (TVar (translate_birvar_to_sapicvar v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ( (Sync_Fr v),H) st) = (ProcessAction (New (translate_birvar_to_sapicfreshname v)) (symbtree_to_sapic st)))/\
+(symbtree_to_sapic (SBranch ( Branch v,H) lst rst) =
 (ProcessComb (Cond (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic lst) (symbtree_to_sapic rst))) /\
 (symbtree_to_sapic _ = ProcessNull)`;
 
@@ -152,8 +153,8 @@ val sim_def = Define`
                     sim Tr (Config (Ns,St,Pold,Sb,Al)) =
 ((Pold = {|(symbtree_to_sapic Tr)|}) ∧
 (∀eve env. (((THE (val_of_tree Tr)) = (eve,env)) ∧ ((val_of_tree Tr ≠ NONE))) ∧
-(∀x. ((THE (sapic_substitution_get Sb (translate_birvar_to_sapicvar x))) =  translate_birexp_to_sapicterm (THE (symb_env_get env x))) ∧ ((symb_env_get env x) ≠ NONE) ∧ ((sapic_substitution_get Sb (translate_birvar_to_sapicvar x)) ≠ NONE)) ∧
-(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_env_dom env))
+(∀x. ((THE (sapic_substitution_get Sb (translate_birvar_to_sapicvar x))) =  translate_birexp_to_sapicterm (THE (symb_interpr_get env x))) ∧ ((symb_interpr_get env x) ≠ NONE) ∧ ((sapic_substitution_get Sb (translate_birvar_to_sapicvar x)) ≠ NONE)) ∧
+(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_interpr_dom env))
 ))
 `;                   
 (*
@@ -296,13 +297,17 @@ rpt strip_tac>>
 (Cases_on `Sb`) >>
 (Cases_on `b`) >>          
 Q.EXISTS_TAC `Substitution (((translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64))) =+ SOME (TVar (translate_birvar_to_sapicvar (BVar s b')))) f')` >>
-rewrite_tac[symb_env_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_env_get_def,translate_birvar_to_sapicvar_def]
+rewrite_tac[symb_interpr_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_interpr_get_def,translate_birvar_to_sapicvar_def]
 rpt strip_tac >>
-rewrite_tac[symb_env_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_env_get_def,translate_birvar_to_sapicvar_def] >>
-metis_tac[symb_env_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_env_get_def,translate_birvar_to_sapicvar_def] >>
+rewrite_tac[symb_interpr_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_interpr_get_def,translate_birvar_to_sapicvar_def] >>
+metis_tac[symb_interpr_dom_def,sapic_substitution_get_def,sapic_substitution_dom_def,symb_interpr_get_def,translate_birvar_to_sapicvar_def] >>
 IMP_RES_TAC NOT_SOME_NONE >>
+
+PAT_X_ASSUM ``! eve env. A `` (ASSUME_TAC o (Q.SPECL [`Crypto (BVar s b')`,`symb_interpr_update H (x,SOME (BExp_Den (BVar s b')))`]))>>  
 PAT_X_ASSUM ``! eve env. A `` (ASSUME_TAC o (Q.SPECL [`Crypto (BVar s b')`,`SEnv f⦇BVar "crypto" (BType_Imm Bit64) ↦ SOME (BExp_Den (BVar s b'))⦈`]))>>                                                                            rewrite_tac [APPLY_UPDATE_THM]
 metis_tac[]
+IMP_RES_TAC symb_interpr_get_update_id_thm
+RES_TAC
                                                                    
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [] >>
 rw[] >>
@@ -329,7 +334,7 @@ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolS
 )
 
       APPLY_UPDATE_THM
-PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [`BVar "crypto" (BType_Imm Bit64)`]))>>
+PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [`x`]))>>
 
 PAT_X_ASSUM ``! eve env. A `` (ASSUME_TAC o (Q.SPECL [`Crypto (BVar s b')`,`SEnv f''`]))>>
 asm_rewrite_tac[]
@@ -338,7 +343,7 @@ ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSi
 IMP_RES_TAC AND1_THM
 RES_TAC
 
-       
+  ASM_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symb_interpr_get_update_id_thm]     
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [single_step_execute_symbolic_tree_def,val_of_tree_def] >>
  (Cases_on `p`) >>
 rw[] >>

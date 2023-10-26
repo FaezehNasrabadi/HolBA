@@ -6,7 +6,7 @@ open boolTheory;
 open pred_setTheory;
 open simpLib;
 open bossLib;
-
+open symb_interpretTheory;
 
 val _ = new_theory "sbir_tree";
 
@@ -41,12 +41,30 @@ P2A bir_var_t
 | Branch bir_var_t
 | Silent
   `;
-        
-(* define a symbolic tree hol datatype *)
+
+val _ = Datatype `stree =
+SLeaf
+| SNode ('a # 'b # 'c) stree
+| SBranch ('a # 'b # 'c) stree stree
+	  `;
+
+val val_of_tree_def = Define`
+(val_of_tree (SLeaf) = NONE) /\
+(val_of_tree (SNode n st) = SOME n) /\
+(val_of_tree (SBranch n lst rst) = SOME n)`;
+                                          
+(*define a symbolic tree hol datatype
 val _ = Datatype `stree =
 SLeaf
 | SNode ('a # 'b) stree
 | SBranch ('a # 'b) stree stree
+	  `;
+
+
+val _ = Datatype `stree =
+SLeaf
+| SNode 'a 'b 'c stree
+| SBranch 'a 'b 'c stree stree
 	  `;
 
 val STATES_def = Define`
@@ -54,18 +72,28 @@ val STATES_def = Define`
 (STATES (SNode n st) = ({n}∪(STATES st))) /\
 (STATES (SBranch n lst rst) = ({n}∪(STATES lst)∪(STATES rst)))`;
 
+val ENVs_def = Define`
+(ENVs (SLeaf) = {}) /\
+(ENVs (SNode p e f st) = ({f}∪(ENVs st))) /\
+(ENVs (SBranch p e f lst rst) = ({f}∪(ENVs lst)∪(ENVs rst)))`;
+
         
 val val_of_tree_def = Define`
 (val_of_tree (SLeaf) = NONE) /\
 (val_of_tree (SNode n st) = SOME n) /\
 (val_of_tree (SBranch n lst rst) = SOME n)`;
 
+val position_in_tree_def = Define`
+(position_in_tree (SLeaf) = NONE) /\
+(position_in_tree (SNode p e f st) = SOME p) /\
+(position_in_tree (SBranch p e f lst rst) = SOME p)`;
+
              
 val connected_def  = Define`
 (connected (SLeaf) (a:α # β) (b:α # β) = F) /\
-(connected (SNode n st) (a:α # β) (b:α # β) = ((a = n) ∧ (b = THE (val_of_tree st)))) /\
-(connected (SBranch n lst rst) (a:α # β) (b:α # β) = ((a = n) ∧ ((b = THE (val_of_tree lst)) ∨ (b = THE (val_of_tree rst)))))`;                                              
-
+(connected (SNode p n st) (a:α # β) (b:α # β) = ((a = n) ∧ (b = THE (val_of_tree st)))) /\
+(connected (SBranch p n lst rst) (a:α # β) (b:α # β) = ((a = n) ∧ ((b = THE (val_of_tree lst)) ∨ (b = THE (val_of_tree rst)))))`;                                            
+*)
 val _ = Datatype `sbir_pc_t =
   | PC_Normal 
   | PC_Event
@@ -106,7 +134,7 @@ val execute_symbolic_tree_def = Define`
 (execute_symbolic_tree (SBranch (PC_Branch,(SEnv e)) lst rst) (INL Silent::t) = ({(PC_Normal,(SEnv e))}∪(execute_symbolic_tree lst t)∪(execute_symbolic_tree rst t))) /\
 (execute_symbolic_tree _ _ = {})`;
 
-*)
+
                        
 val execute_symbolic_tree_def = Define`
 (execute_symbolic_tree (SLeaf) = {}) /\
@@ -123,20 +151,40 @@ val execute_symbolic_tree_def = Define`
 val traces_of_tree_def  = Define`
 (traces_of_tree (SLeaf) = []) /\
 (traces_of_tree (SNode (a,b) st) = (a::(traces_of_tree st))) /\
-(traces_of_tree (SBranch (a,b) lst rst) = (a::(APPEND (traces_of_tree lst) (traces_of_tree rst))))`;                          
+(traces_of_tree (SBranch (a,b) lst rst) = (a::(APPEND (traces_of_tree lst) (traces_of_tree rst))))`;
+
+val traces_of_tree_def  = Define`
+(traces_of_tree (SLeaf) = []) /\
+(traces_of_tree (SNode p e f st) = (e::(traces_of_tree st))) /\
+(traces_of_tree (SBranch p e f lst rst) = (e::(APPEND (traces_of_tree lst) (traces_of_tree rst))))`;  
+                                                                                                  
 
 val single_step_execute_symbolic_tree_def = Define`
 (single_step_execute_symbolic_tree (SLeaf) = SLeaf) /\
-(single_step_execute_symbolic_tree (SNode ( Silent,(SEnv e)) st) = (SNode ( Silent,(SEnv e)) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (Event v),(SEnv e)) st) = (SNode ( (Event v),(SEnv e)) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (Crypto v),(SEnv e)) st) = (SNode ( (Crypto v),(SEnv (((BVar "crypto" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (Loop v),(SEnv e)) st) = (SNode ( (Loop v),(SEnv e)) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (P2A v),(SEnv e)) st) = (SNode ( (P2A v),(SEnv e)) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (A2P v),(SEnv e)) st) = (SNode ( (A2P v),(SEnv (((BVar "Adv" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
-(single_step_execute_symbolic_tree (SNode ( (Sync_Fr v),(SEnv e)) st) = (SNode ( (Sync_Fr v),(SEnv (((BVar "RNG" (BType_Imm Bit64)) =+ SOME (BExp_Den v)) e))) st)) /\
-(single_step_execute_symbolic_tree (SBranch ( Branch v,(SEnv e)) lst rst) = (SBranch ( Branch v,(SEnv e)) lst rst)) /\
-(single_step_execute_symbolic_tree t = t)`;
-                                                                                                                                
+(single_step_execute_symbolic_tree (SNode i Silent H st) = (SNode (i+1) Silent H st)) /\
+(single_step_execute_symbolic_tree (SNode i (Event v) H st) = (SNode (i+1) Silent H st)) /\
+(single_step_execute_symbolic_tree (SNode i (Crypto v) H st) = (SNode (i+1) Silent (symb_interpr_update H ((BVar "crypto" (BType_Imm Bit64)), SOME (BExp_Den v))) st)) /\
+(single_step_execute_symbolic_tree (SNode i (Loop v) H st) = (SNode (i+1) Silent H st)) /\
+(single_step_execute_symbolic_tree (SNode ( (P2A v),H) st) = (SNode (i+1) (P2A v),H) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (A2P v),H) st) = (SNode ( (A2P v),(symb_interpr_update H ((BVar "Adv" (BType_Imm Bit64)), SOME (BExp_Den v)))) st)) /\
+(single_step_execute_symbolic_tree (SNode ( (Sync_Fr v),H) st) = (SNode ( (Sync_Fr v),(symb_interpr_update H ((BVar "RNG" (BType_Imm Bit64)), SOME (BExp_Den v)))) st)) /\
+(single_step_execute_symbolic_tree (SBranch ( Branch v,H) lst rst) = (SBranch ( Branch v,H) lst rst)) /\
+(single_step_execute_symbolic_tree t = t)`;*)
+
+val single_step_execute_symbolic_tree_def =
+Define`single_step_execute_symbolic_tree tre ev tre' =
+(case ev of
+   Silent => (∃ i H st. (tre = (SNode (Silent,i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+ | (Event v) => (∃ i H st. (tre = (SNode ((Event v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+ | (Loop v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+ | (P2A v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+ | (Crypto v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "crypto" (BType_Imm Bit64)), SOME (BExp_Den v))))))
+ | (A2P v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "Adv" (BType_Imm Bit64)), SOME (BExp_Den v))))))
+ | (Sync_Fr v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "RNG" (BType_Imm Bit64)), SOME (BExp_Den v))))))             
+| (Branch v) => (∃ i H lst rst. (tre = (SBranch (i,H) lst rst)) ∧ ((tre' = lst) ∨ (tre' = rst)) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+)
+`;  
+   
 
     
 val _ = export_theory();

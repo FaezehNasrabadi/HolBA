@@ -9,7 +9,7 @@ open sapicplusTheory;
 
 val _ = new_theory "birs_eventstep";
 
-
+(*
 val _ = new_constant("Rfun", ``:sbir_environment_t -> bir_var_t``);
 val _ = new_constant("Oracle", ``:sbir_environment_t -> bir_var_t``);
 val _ = new_constant("birs_exec_step", ``:((sbir_pc_t,sbir_environment_t) stree) -> (sbir_pc_t#sbir_environment_t) -> ((sbir_pc_t#sbir_environment_t) -> bool)``);
@@ -107,6 +107,6 @@ val birs_exec_event_step_def = Define `
     | SOME ( (P2A s))     => (birs_exec_out_fun t state (P2A s) states) (* Output functions *)
     | SOME ( (A2P r))     => (birs_exec_in_fun t state (A2P r) states) (* Input functions *)
 `;
-
+*)
 
 val _ = export_theory();

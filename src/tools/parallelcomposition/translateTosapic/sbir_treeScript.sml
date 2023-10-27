@@ -93,7 +93,20 @@ val connected_def  = Define`
 (connected (SLeaf) (a:α # β) (b:α # β) = F) /\
 (connected (SNode p n st) (a:α # β) (b:α # β) = ((a = n) ∧ (b = THE (val_of_tree st)))) /\
 (connected (SBranch p n lst rst) (a:α # β) (b:α # β) = ((a = n) ∧ ((b = THE (val_of_tree lst)) ∨ (b = THE (val_of_tree rst)))))`;                                            
-*)
+ *)
+
+val position_in_tree_def = Define`
+(position_in_tree (SLeaf) = NONE) /\
+(position_in_tree (SNode (e,p,f) st) = SOME p) /\
+(position_in_tree (SBranch (e,p,f) lst rst) = SOME p)`;
+
+
+val event_of_tree_def = Define`
+(event_of_tree (SLeaf) = NONE) /\
+(event_of_tree (SNode (e,p,f) st) = SOME e) /\
+(event_of_tree (SBranch (e,p,f) lst rst) = SOME e)`;
+
+                  
 val _ = Datatype `sbir_pc_t =
   | PC_Normal 
   | PC_Event
@@ -174,14 +187,14 @@ val single_step_execute_symbolic_tree_def = Define`
 val single_step_execute_symbolic_tree_def =
 Define`single_step_execute_symbolic_tree tre ev tre' =
 (case ev of
-   Silent => (∃ i H st. (tre = (SNode (Silent,i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
- | (Event v) => (∃ i H st. (tre = (SNode ((Event v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
- | (Loop v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
- | (P2A v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,H)))
- | (Crypto v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "crypto" (BType_Imm Bit64)), SOME (BExp_Den v))))))
- | (A2P v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "Adv" (BType_Imm Bit64)), SOME (BExp_Den v))))))
- | (Sync_Fr v) => (∃ i H st. (tre = (SNode (i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (i+1,(symb_interpr_update H ((BVar "RNG" (BType_Imm Bit64)), SOME (BExp_Den v))))))             
-| (Branch v) => (∃ i H lst rst. (tre = (SBranch (i,H) lst rst)) ∧ ((tre' = lst) ∨ (tre' = rst)) ∧ ((val_of_tree tre') = SOME (i+1,H)))
+   Silent => (∃ i H st. (tre = (SNode (Silent,i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
+ | (Event v) => (∃ i H st. (tre = (SNode ((Event v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
+ | (Loop v) => (∃ i H st. (tre = (SNode ((Loop v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
+ | (P2A v) => (∃ i H st. (tre = (SNode ((P2A v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
+ | (Crypto v) => (∃ i H st. (tre = (SNode ((Crypto v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,(symb_interpr_update H ((BVar "crypto" (BType_Imm Bit64)), SOME (BExp_Den v))))))
+ | (A2P v) => (∃ i H st. (tre = (SNode ((A2P v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,(symb_interpr_update H ((BVar "Adv" (BType_Imm Bit64)), SOME (BExp_Den v))))))
+ | (Sync_Fr v) => (∃ i H st. (tre = (SNode ((Sync_Fr v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,(symb_interpr_update H ((BVar "RNG" (BType_Imm Bit64)), SOME (BExp_Den v))))))             
+| (Branch v) => (∃ i H lst rst. (tre = (SBranch ((Branch v),i,H) lst rst)) ∧ ((tre' = lst) ∨ (tre' = rst)) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
 )
 `;  
    

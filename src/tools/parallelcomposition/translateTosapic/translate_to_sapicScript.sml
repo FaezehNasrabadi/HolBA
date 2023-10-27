@@ -136,19 +136,34 @@ sbirEvent_to_sapicFact e =
 
 val symbtree_to_sapic_def = Define`
 (symbtree_to_sapic (SLeaf) = ProcessNull) /\
-(symbtree_to_sapic (SNode ( Silent,H) st) = (symbtree_to_sapic st)) /\
-(symbtree_to_sapic (SNode ( (Event v),H) st) =
+(symbtree_to_sapic (SNode (Silent,i,H) st) = (symbtree_to_sapic st)) /\
+(symbtree_to_sapic (SNode ((Event v),i,H) st) =
 (ProcessAction (Event (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (Crypto v),H) st) =
+(symbtree_to_sapic (SNode ((Crypto v),i,H) st) =
 (ProcessComb  (Let (TVar (translate_birvar_to_sapicvar (BVar "crypto" (BType_Imm Bit64)))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st) (ProcessNull))) /\
-(symbtree_to_sapic (SNode ( (Loop v),H) st) = (ProcessAction  Rep (symbtree_to_sapic st)))  /\
-(symbtree_to_sapic (SNode ( (P2A v),H) st) = (ProcessAction (ChOut (SOME (TVar (Var "Channel" 0))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (A2P v),H) st) = (ProcessAction (ChIn (SOME (TVar (Var "Channel" 0))) (TVar (translate_birvar_to_sapicvar v))) (symbtree_to_sapic st))) /\
-(symbtree_to_sapic (SNode ( (Sync_Fr v),H) st) = (ProcessAction (New (translate_birvar_to_sapicfreshname v)) (symbtree_to_sapic st)))/\
-(symbtree_to_sapic (SBranch ( Branch v,H) lst rst) =
+(symbtree_to_sapic (SNode ((Loop v),i,H) st) = (ProcessAction  Rep (symbtree_to_sapic st)))  /\
+(symbtree_to_sapic (SNode ((P2A v),i,H) st) = (ProcessAction (ChOut (SOME (TVar (Var "Channel" 0))) (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ((A2P v),i,H) st) = (ProcessAction (ChIn (SOME (TVar (Var "Channel" 0))) (TVar (translate_birvar_to_sapicvar v))) (symbtree_to_sapic st))) /\
+(symbtree_to_sapic (SNode ((Sync_Fr v),i,H) st) = (ProcessAction (New (translate_birvar_to_sapicfreshname v)) (symbtree_to_sapic st)))/\
+(symbtree_to_sapic (SBranch (Branch v,i,H) lst rst) =
 (ProcessComb (Cond (translate_birexp_to_sapicterm (BExp_Den v))) (symbtree_to_sapic lst) (symbtree_to_sapic rst))) /\
 (symbtree_to_sapic _ = ProcessNull)`;
 
+
+val sim_def = Define`
+(sim (SNode (e,i,H) st) (Config (Ns,St,Pold,Sb,Al)) =
+(∀Pro v. (BAG_IN Pro Pold) ⇒ (∃(Re: sapic_renaming_t) (NRe: sapic_name_renaming_t).
+                              ((Pro = (apply (position (symbtree_to_sapic (SNode (e,i,H) st)) i) Re)) ∧ (e ≠ (Sync_Fr v))) ∨
+                                                 ((e = (Sync_Fr v)) ∧ (Pro = (applyName (position (symbtree_to_sapic (SNode ((Sync_Fr v),i,H) st)) i) NRe)))))) /\
+ (sim (SBranch (e,i,H) lst rst) (Config (Ns,St,Pold,Sb,Al)) =
+(∀Pro v. (BAG_IN Pro Pold) ⇒ (∃(Re: sapic_renaming_t).
+                              (Pro = (apply (position (symbtree_to_sapic (SBranch (e,i,H) lst rst)) i) Re)) ∧ (e = (Branch v)))))  /\                         
+(sim (SLeaf) (Config (Ns,St,Pold,Sb,Al)) = T )                              
+ `;        
+
+
+                                        
+(*
 val sim_def = Define`
                     sim Tr (Config (Ns,St,Pold,Sb,Al)) =
 ((Pold = {|(symbtree_to_sapic Tr)|}) ∧
@@ -157,7 +172,7 @@ val sim_def = Define`
 (sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_interpr_dom env))
 ))
 `;                   
-(*
+
 
 val sim_def = Define`
                     sim (eve,env) (Config (Ns,St,Pold,Sb,Al)) =

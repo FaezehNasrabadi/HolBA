@@ -106,7 +106,11 @@ val event_of_tree_def = Define`
 (event_of_tree (SNode (e,p,f) st) = SOME e) /\
 (event_of_tree (SBranch (e,p,f) lst rst) = SOME e)`;
 
-                  
+val env_of_tree_def = Define`
+(env_of_tree (SLeaf) = NONE) /\
+(env_of_tree (SNode (e,p,f) st) = SOME f) /\
+(env_of_tree (SBranch (e,p,f) lst rst) = SOME f)`;
+
 val _ = Datatype `sbir_pc_t =
   | PC_Normal 
   | PC_Event
@@ -130,8 +134,22 @@ val symb_env_update_def = Define `
 
 val symb_env_get_def = Define `
     symb_env_get (SEnv ro) symb = ro symb
-`;
-                                                                     
+                                     `;
+
+val env_of_val_thm = store_thm(
+  "env_of_val_thm",
+  ``∀Tree e i h. ((val_of_tree Tree) = SOME (e,i,h)) ⇒ ((env_of_tree Tree) = SOME h)``,
+                                                                                    gen_tac >>
+     Cases_on ‘Tree’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def] >>
+     Cases_on ‘p’ >>
+     Cases_on ‘r’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def,env_of_tree_def] >>
+     Cases_on ‘p’ >>
+     Cases_on ‘r’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def,env_of_tree_def]           
+  );
+  
 (*
 
                                                         

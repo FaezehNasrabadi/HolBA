@@ -151,19 +151,42 @@ val symbtree_to_sapic_def = Define`
 
 
 val sim_def = Define`
+                   ( sim Tr (Config (Ns,St,Pold,Sb,Al)) =
+((Pold = {|(symbtree_to_sapic Tr)|}) ∧
+(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_interpr_dom (THE (env_of_tree Tr))))))
+`;       
+
+val env_of_val = new_axiom ("env_of_val",
+                            ``∀Tree e i h. ((val_of_tree Tree) = SOME (e,i,h)) ⇒ ((env_of_tree Tree) = SOME h)``);
+              
+                                        
+(*
+val sim_def = Define`
 (sim (SNode (e,i,H) st) (Config (Ns,St,Pold,Sb,Al)) =
-(∀Pro v. (BAG_IN Pro Pold) ⇒ (∃(Re: sapic_renaming_t) (NRe: sapic_name_renaming_t).
+ (∀Pro v. (BAG_IN Pro Pold) ∧
+          (if (e = (Sync_Fr v))
+           then
+                (∃(NRe: sapic_name_renaming_t). (Pro = (applyName (position (symbtree_to_sapic (SNode ((Sync_Fr v),i,H) st)) i) NRe)))
+           else
+             (∃(Re: sapic_renaming_t). (Pro = (apply (position (symbtree_to_sapic (SNode (e,i,H) st)) i) Re)))
+             ))) /\ 
+(sim (SBranch (e,i,H) lst rst) (Config (Ns,St,Pold,Sb,Al)) =
+(∀Pro v. (BAG_IN Pro Pold) ∧ (∃(Re: sapic_renaming_t).
+                              (Pro = (apply (position (symbtree_to_sapic (SBranch (e,i,H) lst rst)) i) Re)) ∧ (e = (Branch v)))))  /\                         
+(sim (SLeaf) (Config (Ns,St,Pold,Sb,Al)) = T )                              
+ `;
+ 
+val sim_def = Define`
+(sim (SNode (e,i,H) st) (Config (Ns,St,Pold,Sb,Al)) =
+(∀Pro v. (BAG_IN Pro Pold) ∧ (∃(Re: sapic_renaming_t) (NRe: sapic_name_renaming_t).
                               ((Pro = (apply (position (symbtree_to_sapic (SNode (e,i,H) st)) i) Re)) ∧ (e ≠ (Sync_Fr v))) ∨
                                                  ((e = (Sync_Fr v)) ∧ (Pro = (applyName (position (symbtree_to_sapic (SNode ((Sync_Fr v),i,H) st)) i) NRe)))))) /\
  (sim (SBranch (e,i,H) lst rst) (Config (Ns,St,Pold,Sb,Al)) =
-(∀Pro v. (BAG_IN Pro Pold) ⇒ (∃(Re: sapic_renaming_t).
+(∀Pro v. (BAG_IN Pro Pold) ∧ (∃(Re: sapic_renaming_t).
                               (Pro = (apply (position (symbtree_to_sapic (SBranch (e,i,H) lst rst)) i) Re)) ∧ (e = (Branch v)))))  /\                         
 (sim (SLeaf) (Config (Ns,St,Pold,Sb,Al)) = T )                              
- `;        
-
-
-                                        
-(*
+ `;
+ 
 val sim_def = Define`
                     sim Tr (Config (Ns,St,Pold,Sb,Al)) =
 ((Pold = {|(symbtree_to_sapic Tr)|}) ∧
@@ -171,8 +194,13 @@ val sim_def = Define`
 (∀x. ((THE (sapic_substitution_get Sb (translate_birvar_to_sapicvar x))) =  translate_birexp_to_sapicterm (THE (symb_interpr_get env x))) ∧ ((symb_interpr_get env x) ≠ NONE) ∧ ((sapic_substitution_get Sb (translate_birvar_to_sapicvar x)) ≠ NONE)) ∧
 (sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_interpr_dom env))
 ))
-`;                   
-
+`;
+                
+val sim_def = Define`
+                   ( sim Tr (Config (Ns,St,Pold,Sb,Al)) =
+((Pold = {|(symbtree_to_sapic Tr)|}) ∧
+(sapic_substitution_dom Sb = IMAGE translate_birvar_to_sapicvar (symb_interpr_dom (THE (env_of_tree Tr))))))
+`;  
 
 val sim_def = Define`
                     sim (eve,env) (Config (Ns,St,Pold,Sb,Al)) =
@@ -402,6 +430,130 @@ gen_tac
                            
    asm_rewrite_tac[translate_birvar_to_sapicvar_def]                     
   );          
+
+
+
+
+
+
+∀E Tree Tree' Ns St Pold Sb Al.
+        (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Config (Ns,St,Pold,Sb,Al))))
+        ⇒ (∃Pro Ns' St' Pold' Sb' Al' Ev. (sim Tree' (Config (Ns',St',Pold',Sb',Al'))) ∧ (sapic_position_transition Pro (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))))
+
+gen_tac >>
+reverse(Cases_on ‘E’)
+rw[single_step_execute_symbolic_tree_def]
+IMP_RES_TAC sim_def
+PAT_X_ASSUM ``!v Pro. A `` (ASSUME_TAC o (Q.SPECL [`v`,`Pro`]))>>
+
+Q.EXISTS_TAC `(symbtree_to_sapic Tree')`
+rewrite_tac[symbtree_to_sapic_def]
+Cases_on ‘Tree'’
+rewrite_tac[sapic_position_transition_def]
+rw[]
+RES_TAC
+IMP_RES_TAC symbtree_to_sapic_def
+
+IMP_RES_TAC sbir_event_distinct
+                     
+rewrite_tac[single_step_execute_symbolic_tree_def]
+ASM_SIMP_TAC (srw_ss()) []
+rpt gen_tac
+rpt strip_tac
+RES_TAC
+rw[single_step_execute_symbolic_tree_def,sim_def]
+rewrite_tac[sim_def]
+        
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
+rw[]
+case_def
+TypeBasePure.case_def_of
+optionTheory.option_CLAUSES
+pair_CASE_def
+DB.find "CASE_DEF"
+
+
+              
+∀E Tree Tree' Ns St Pold Sb Al.
+        (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Config (Ns,St,Pold,Sb,Al))))
+        ⇒ (∃Ns' St' Pold' Sb' Al' Ev. (sim Tree' (Config (Ns',St',Pold',Sb',Al'))) ∧ (sapic_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))))                    
+
+gen_tac >>
+reverse(Cases_on ‘E’) >>
+rw[single_step_execute_symbolic_tree_def]>>
+IMP_RES_TAC sim_def >>
+ASM_SIMP_TAC (srw_ss()) []>>
+rewrite_tac[symbtree_to_sapic_def]>>
+Q.EXISTS_TAC `Ns` >> Q.EXISTS_TAC `St` >> Q.EXISTS_TAC `{|symbtree_to_sapic Tree'|}` >> Q.EXISTS_TAC `Sb` >>  Q.EXISTS_TAC `Al` >> Q.EXISTS_TAC `[]`>>            
+rw[sim_def]>>
+IMP_RES_TAC env_of_val >>
+rewrite_tac[env_of_tree_def] >>
+ASM_SIMP_TAC (srw_ss()) [] >>
+rewrite_tac[sapic_transition_def]
+
+
+rw[single_step_execute_symbolic_tree_def]>>
+IMP_RES_TAC sim_def >>
+ASM_SIMP_TAC (srw_ss()) []>>
+rewrite_tac[symbtree_to_sapic_def]>>
+Q.EXISTS_TAC `Ns` >> Q.EXISTS_TAC `St` >> Q.EXISTS_TAC `{|symbtree_to_sapic Tree'|}` >> Q.EXISTS_TAC `sapic_substitution_update Sb (Var "att" n, SOME (translate_birexp_to_sapicterm (BExp_Den b)))` >>  Q.EXISTS_TAC `Al` >> Q.EXISTS_TAC `Ev`>>            
+rw[sim_def]>>
+IMP_RES_TAC env_of_val >>
+Cases_on ‘Sb’
+rewrite_tac[sapic_substitution_update_def]
+IMP_RES_TAC env_of_tree_def >>
+ASM_SIMP_TAC (srw_ss()) [] >>
+rewrite_tac[sapic_transition_def]
+reverse(rw[])
+        
+Q.EXISTS_TAC ‘{||}’ >> Q.EXISTS_TAC ‘ProcessAction
+                (ChOut (SOME (TVar (Var "Channel" 0)))
+                   (translate_birexp_to_sapicterm (BExp_Den b)))
+                (symbtree_to_sapic Tree')’ >>
+ASM_SIMP_TAC (srw_ss()) [] >>
+rewrite_tac[sapic_out_transition_def]
+ASM_SIMP_TAC (srw_ss()) []
+
+rw[OR_INTRO_THM1]
+        
+
+IMP_RES_TAC val_of_tree_def
+
+ASM_SIMP_TAC (srw_ss()) [OR_INTRO_THM1]
+
+Q.EXISTS_TAC `Ns` >> Q.EXISTS_TAC `St` >> Q.EXISTS_TAC `{|symbtree_to_sapic Tree'|}` >> Q.EXISTS_TAC `Sb` >>  Q.EXISTS_TAC `Al` >> Q.EXISTS_TAC `[]`
+
+PAT_X_ASSUM ``!ev i' env. A `` (ASSUME_TAC o (Q.SPECL [`Silent`,`i+1`,‘H’]))>>
+rewrite_tac[sapic_transition_def]
+rw[]
+rw[sim_def]
+ASM_SIMP_TAC (srw_ss()) [env_of_tree_def]
+rewrite_tac[env_of_tree_def]
+ASM_SIMP_TAC (srw_ss()) []
+
+IMP_RES_TAC env_of_val 
+Cases_on ‘Tree'’
+
+         DB.find "OR_REFL"
+
+
+∀E Tree Tree' Ns St Pold Sb Al.
+        (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Config (Ns,St,Pold,Sb,Al))))
+        ⇒ (∃Ns' St' Pold' Sb' Al' Ev. (sim Tree' (Config (Ns',St',Pold',Sb',Al')))))  
+
+gen_tac >>
+reverse(Cases_on ‘E’) >>
+rw[single_step_execute_symbolic_tree_def]>>
+IMP_RES_TAC sim_def >>
+ASM_SIMP_TAC (srw_ss()) []>>
+IMP_RES_TAC symbtree_to_sapic_def>>
+Q.EXISTS_TAC `Ns` >> Q.EXISTS_TAC `St` >> Q.EXISTS_TAC `{|symbtree_to_sapic Tree'|}` >> Q.EXISTS_TAC `Sb` >>  Q.EXISTS_TAC `Al` >>       
+rw[sim_def]>>
+IMP_RES_TAC env_of_val >>
+rewrite_tac[env_of_tree_def] >>
+ASM_SIMP_TAC (srw_ss()) [] >>
+
+                
 *)
 
        

@@ -152,7 +152,9 @@ val sapic_substitution_get_def = Define `
 val sapic_substitution_dom_def = Define `
     sapic_substitution_dom (Substitution S) = {vars | S vars <> NONE}
                                          `;
-
+val sapic_substitution_update_def = Define `
+    sapic_substitution_update (Substitution S) (symb, vo) = Substitution ((symb =+ vo) S)
+                                                             `;
 val substitvn_to_term_def =
 Define`
       (substitvn_to_term (Substitution S) (Con n)  = (Con n)) ∧
@@ -563,7 +565,7 @@ val sapic_let_false_transition_def = Define `
 
                  
 (* Transition relation *)
-
+(*
 val sapic_transition_def = Define `
 (sapic_transition C Ev C' = (
 if ((C = C') ∧ (Ev = [])) then (T) else
@@ -590,9 +592,35 @@ if ((C = C') ∧ (Ev = [])) then (T) else
                                     (sapic_out_in_transition C Ev C') ∨
                                     (sapic_out_transition C Ev C')
                                     )                      
-                                    ))`;
+  ))`;*)
 
-                                    
+
+val sapic_transition_def = Define `
+(sapic_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')) =
+(∃Ps Pn.
+ if ((Ns = Ns')∧(St = St')∧(Pold = Pold')∧(Sb = Sb')∧(Al = Al')∧(Ev = []))
+ then (T)
+ else
+ (Pold = (BAG_UNION Ps {|Pn|})) ∧ (case Pn of
+    (ProcessNull) => (sapic_null_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessComb Parallel P Q) => (sapic_parallel_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction Rep P) => (sapic_replication_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (Event Fc) P) => (sapic_event_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessComb (Cond t) P Q) => ((sapic_conditional_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))) ∨ (sapic_conditional_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))))
+  | (ProcessComb (CondEq t1 t2) P Q) => ((sapic_conditional_eq_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))) ∨ (sapic_conditional_eq_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))))
+  | (ProcessAction (Delete t) P) => (sapic_delete_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (Insert t1 t2) P) => (sapic_insert_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (Lock t) P) => (sapic_lock_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (Unlock t) P) => (sapic_unlock_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessComb (Lookup t x) P Q) => ((sapic_lookup_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))) ∨ (sapic_lookup_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))))
+  | (ProcessAction (ChIn (SOME t) (TVar x)) P) => (sapic_in_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (ChOut (SOME t1) t2) P) => (sapic_out_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessAction (ChOut (SOME t1) t2) (ProcessAction (ChIn (SOME t) (TVar x)) P)) => (sapic_out_in_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+  | (ProcessComb (Let t1 t2) P Q) => ((sapic_let_true_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))) ∨ (sapic_let_false_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al'))))
+  | (ProcessAction (New N) P) => (sapic_new_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pold',Sb',Al')))
+                                 
+ )))`;
+  
 
                             
 (* Detect a silent transition *)

@@ -1,11 +1,10 @@
 
-open HolKernel Parse;
+open HolKernel Parse boolLib bossLib;
 open HolBACoreSimps;
 open HolBASimps;
 open boolTheory;
 open pred_setTheory;
 open simpLib;
-open bossLib;
 open symb_interpretTheory;
 
 val _ = new_theory "sbir_tree";
@@ -139,7 +138,7 @@ val symb_env_get_def = Define `
 val env_of_val_thm = store_thm(
   "env_of_val_thm",
   ``∀Tree e i h. ((val_of_tree Tree) = SOME (e,i,h)) ⇒ ((env_of_tree Tree) = SOME h)``,
-                                                                                    gen_tac >>
+                                                                                    GEN_TAC >>
      Cases_on ‘Tree’ >>
      ASM_SIMP_TAC (srw_ss()) [val_of_tree_def] >>
      Cases_on ‘p’ >>
@@ -148,6 +147,20 @@ val env_of_val_thm = store_thm(
      Cases_on ‘p’ >>
      Cases_on ‘r’ >>
      ASM_SIMP_TAC (srw_ss()) [val_of_tree_def,env_of_tree_def]           
+  );
+
+val position_of_val_thm = store_thm(
+  "position_of_val_thm",
+  ``∀Tree e i h. ((val_of_tree Tree) = SOME (e,i,h)) ⇒ ((position_in_tree Tree) = SOME i)``,
+                                                                                    GEN_TAC >>
+     Cases_on ‘Tree’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def] >>
+     Cases_on ‘p’ >>
+     Cases_on ‘r’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def,position_in_tree_def] >>
+     Cases_on ‘p’ >>
+     Cases_on ‘r’ >>
+     ASM_SIMP_TAC (srw_ss()) [val_of_tree_def,position_in_tree_def]           
   );
   
 (*

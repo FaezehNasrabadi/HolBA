@@ -638,6 +638,10 @@ val _ = Theory.new_constant("apply", ``:Process_t -> sapic_renaming_t -> Process
 val _ = Theory.new_constant("position", ``:Process_t -> real -> Process_t``);
 val _ = Theory.new_constant("applyName", ``:Process_t -> sapic_name_renaming_t -> Process_t``);
 
+val _ = Datatype `sapic_position_configuration_t =
+   Pconfig (Process_t # real # sapic_renaming_t # sapic_name_renaming_t)
+          `;
+ (*         
 (* Null rule *)
 
 val sapic_position_null_transition_def = Define `
@@ -668,78 +672,66 @@ val sapic_position_parallel_transition_def = Define `
    (St = St') /\
    (Sb = Sb') /\
    (Al = Al'))`;
-
+*)
                 
 (* Replication rule *)
 
 val sapic_position_replication_transition_def = Define `
-                                  sapic_position_replication_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessAction Rep P|})) /\
-   (Pnew = (BAG_UNION (BAG_UNION Ps {|P|}) {|ProcessAction Rep P|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessAction Rep P)) /\
-   (((position Pro (i+1)) = (apply P Re)) \/ ((position Pro (i+1)) = (apply (ProcessAction Rep P) Re))) /\
+                                  sapic_position_replication_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P.
+   (Pro = ProcessAction Rep P) /\
+   (Pro' = ProcessAction Rep P) /\
+   (i' = i+1) /\
    (Ev = []) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;
+   (Re = Re') /\
+   (NRe = NRe'))`;
                 
 (* Event rule *)
 
 val sapic_position_event_transition_def = Define `
-                                  sapic_position_event_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Fc i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessAction (Event Fc) P|})) /\
-   (Pnew = (BAG_UNION Ps {|P|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessAction (Event Fc) P)) /\
-   ((position Pro (i+1)) = (apply P Re)) /\
+                                  sapic_position_event_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Fc.
+   (Pro = ProcessAction (Event Fc) P) /\
+   (Pro' = P) /\
    (Ev = [Fc]) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
 
+val termhold_def = Define 
+             `
+(termhold (TVar v) = T) /\
+(termhold _ = F)`  ;
 
-val _ = Theory.new_constant("termholds", ``:SapicTerm_t -> bool``);
+(* val _ = Theory.new_constant("termholds", ``:SapicTerm_t -> bool``); *)
 
 (* Conditional true rule *)
 
 val sapic_position_conditional_true_transition_def = Define `
-                                  sapic_position_conditional_true_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Q t i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessComb (Cond t) P Q|})) /\
-   (termholds t) /\
-   (Pnew = (BAG_UNION Ps {|P|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessComb (Cond t) P Q)) /\
-   ((position Pro (i+1)) = (apply P Re)) /\
+                                  sapic_position_conditional_true_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Q t.
+   (termhold t) /\
+   (Pro = (ProcessComb (Cond t) P Q)) /\
+   (Pro' = P) /\
    (Ev = []) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
                                 
 
 (* Conditional false rule *)
 
 val sapic_position_conditional_false_transition_def = Define `
-                                  sapic_position_conditional_false_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Q t i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessComb (Cond t) P Q|})) /\
-   (¬(termholds t)) /\
-   (Pnew = (BAG_UNION Ps {|Q|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessComb (Cond t) P Q)) /\
-   ((position Pro (i+1)) = (apply Q Re)) /\
+                                  sapic_position_conditional_false_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Q t.
+   (¬(termhold t)) /\
+   (Pro = (ProcessComb (Cond t) P Q)) /\
+   (Pro' = Q) /\
    (Ev = []) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`; 
-                
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
+(*                
 (* Conditional eq true rule *)
 
 val sapic_position_conditional_eq_true_transition_def = Define `
@@ -888,25 +880,20 @@ val sapic_position_lookup_true_transition_def = Define `
    (St = St') /\
    (Sb = Sb') /\
    (Al' = Al))`;
-
+*)
                 
 (* New rule *)
 val sapic_position_new_transition_def = Define `
-                                  sapic_position_new_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P N N' n' i (NRe: sapic_name_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessAction (New N) P|})) /\
-   (Pnew = (BAG_UNION Ps {|(process_substname N (Con N') P)|})) /\
-   (BAG_IN Pro Ps) /\
-   ((applyName (position Pro i) NRe) = (ProcessAction (New N) P)) /\
-   ((position Pro (i+1)) = (applyName P (sapic_name_renaming_update NRe (N, SOME (Con N'))))) /\
+                                  sapic_position_new_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P N.
+   (Pro = ProcessAction (New N) P) /\
+   (Pro' = P) /\
+   (NRe' = (sapic_name_renaming_update NRe (N, SOME (Con N)))) /\
+   (i' = i+1) /\
    (Ev = []) /\
-   (N' = Name FreshName n') /\
-   (Ns' = (N' INSERT Ns)) /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;   
+   (Re' = (sapic_renaming_update Re ((Var "RNG" 0), SOME (Con N)))))`;   
 
-
+(*
 (* K rule *)
 val sapic_position_K_transition_def = Define `
                                   sapic_position_K_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
@@ -918,47 +905,33 @@ val sapic_position_K_transition_def = Define `
    (St = St') /\
    (Sb = Sb') /\
    (Al = Al'))`;
-
+*)
                 
 (* In rule *)
 val sapic_position_in_transition_def = Define `
-                                  sapic_position_in_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P t x R R' i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessAction (ChIn (SOME t) (TVar x)) P|})) /\
-   (Pnew = (BAG_UNION Ps {|(process_substvar x (substitution_to_term Sb R') P)|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessAction (ChIn (SOME t) (TVar x)) P)) /\
-   ((position Pro (i+1)) = (apply P (sapic_renaming_update Re (x, SOME (substitution_to_term Sb R'))))) /\
-   (Ev = [(Fact InFact [R;R']);(Fact KUFact [t;(substitution_to_term Sb R')])]) /\
-   (is_ground_term (substitution_to_term Sb R')) /\
-   (t = (substitution_to_term Sb R)) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;   
+                                  sapic_position_in_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P t x.
+   (Pro = ProcessAction (ChIn (SOME t) (TVar x)) P) /\
+   (Pro' = P) /\
+   (Ev = [Fact InFact [(TVar x)]]) /\
+   (Re' = (sapic_renaming_update Re ((Var "Adv" 0), SOME (TVar x)))) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`;   
 
                    
 (* Out rule *)
 
 val sapic_position_out_transition_def = Define `
-                                      sapic_position_out_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P t1 t2 n R S i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessAction (ChOut (SOME t1) t2) P|})) /\
-   (Pnew = (BAG_UNION Ps {|P|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessAction (ChOut (SOME t1) t2) P)) /\
-   ((position Pro (i+1)) = (apply P Re)) /\
-   (Ev = [(Fact OutFact [R]);(Fact KUFact [t1])]) /\
-   (is_ground_term t2) /\
-   (t1 = (substitution_to_term Sb R)) /\
-   (n = (((int_of_num o list$LENGTH o list$SET_TO_LIST o sapic_substitution_dom) Sb)+1)) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Substitution S) /\
-   (Sb' = Substitution (((Var "att" n) =+ (SOME t2)) S)) /\
-   (Al = Al'))`; 
+                                      sapic_position_out_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P t1 t2.
+   (Pro = ProcessAction (ChOut (SOME t1) t2) P) /\
+   (Pro' = P) /\
+   (Ev = [(Fact OutFact [t2])]) /\
+   (Re' = Re) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`; 
 
-
+(*
 (* Out-In rule *)
 val sapic_position_out_in_transition_def = Define `
                                   sapic_position_out_in_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
@@ -976,46 +949,38 @@ val sapic_position_out_in_transition_def = Define `
    (Sb = Sb') /\
    (Al = Al'))`;
 
-
+*)
 (* Let true rule *)
 
 val sapic_position_let_true_transition_def = Define `
-                                  sapic_position_let_true_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Q t1 t2 i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessComb (Let t1 t2) P Q|})) /\
+                                  sapic_position_let_true_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Q t1 t2.
+   (Pro = ProcessComb (Let t1 t2) P Q) /\
    (t1 = t2) /\
-   (Pnew = (BAG_UNION Ps {|P|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessComb (Let t1 t2) P Q)) /\
-   ((position Pro (i+1)) = (apply P Re)) /\
+   (Pro' = P) /\
    (Ev = []) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`;
+   (Re' = (sapic_renaming_update Re ((Var "crypto" 0), SOME t2))) ∧
+   (i' = i+1) /\
+   (NRe = NRe'))`; 
                                 
 
 (* Let false rule *)
 
 val sapic_position_let_false_transition_def = Define `
-                                  sapic_position_let_false_transition (Pro:Process_t) (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
-(∃Ps P Q t1 t2 i (Re: sapic_renaming_t).
-   (Pold = (BAG_UNION Ps {|ProcessComb (Let t1 t2) P Q|})) /\
+                                  sapic_position_let_false_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Q t1 t2.
+   (Pro = ProcessComb (Let t1 t2) P Q) /\
    (t1 ≠ t2) /\
-   (Pnew = (BAG_UNION Ps {|Q|})) /\
-   (BAG_IN Pro Ps) /\
-   ((apply (position Pro i) Re) = (ProcessComb (Let t1 t2) P Q)) /\
-   ((position Pro (i+1)) = (apply Q Re)) /\    
+   (Pro' = P) /\
    (Ev = []) /\
-   (Ns = Ns') /\
-   (St = St') /\
-   (Sb = Sb') /\
-   (Al = Al'))`; 
+   (Re' = (sapic_renaming_update Re ((Var "crypto" 0), SOME t2))) ∧
+   (i' = i+1) /\
+   (NRe = NRe'))`; 
 
 
                  
 (* Transition relation *)
-
+(*
 val sapic_position_transition_def = Define `
 (sapic_position_transition Pro C Ev C' = (
   if ((C = C') ∧ (Ev = [])) then (T) else
@@ -1043,8 +1008,46 @@ val sapic_position_transition_def = Define `
            (ProcessAction (New N) P) => (sapic_position_new_transition Pro C Ev C')
          | _ => (F)
      ))
-)))`;
+    )))`;
 
+                
+val sapic_position_transition_def = Define `
+(sapic_position_transition Pro C Ev C' = (
+  if ((C = C') ∧ (Ev = [])) then (T) else
+    (case Pro of
+           (ProcessNull) => (sapic_position_null_transition Pro C Ev C')
+         | (ProcessComb Parallel P Q) => (sapic_position_parallel_transition Pro C Ev C')
+         | (ProcessAction Rep P) => (sapic_position_replication_transition Pro C Ev C')
+         | (ProcessAction (Event Fc) P) => (sapic_position_event_transition Pro C Ev C')
+         | (ProcessComb (Cond t) P Q) => ((sapic_position_conditional_true_transition Pro C Ev C') ∨ (sapic_position_conditional_false_transition Pro C Ev C'))
+         | (ProcessComb (CondEq t1 t2) P Q) => ((sapic_position_conditional_eq_true_transition Pro C Ev C') ∨ (sapic_position_conditional_eq_false_transition Pro C Ev C'))
+         | (ProcessAction (Delete t) P) => (sapic_position_delete_transition Pro C Ev C')
+         | (ProcessAction (Insert t1 t2) P) => (sapic_position_insert_transition Pro C Ev C')
+         | (ProcessAction (Lock t) P) => (sapic_position_lock_transition Pro C Ev C')
+         | (ProcessAction (Unlock t) P) => (sapic_position_unlock_transition Pro C Ev C')
+         | (ProcessComb (Lookup t x) P Q) => ((sapic_position_lookup_false_transition Pro C Ev C') ∨ (sapic_position_lookup_true_transition Pro C Ev C'))
+         | (ProcessAction (ChIn (SOME t) (TVar x)) P) => (sapic_position_in_transition Pro C Ev C')
+         | (ProcessAction (ChOut (SOME t1) t2) P) => (sapic_position_out_transition Pro C Ev C')
+         | (ProcessAction (ChOut (SOME t1) t2) (ProcessAction (ChIn (SOME t) (TVar x)) P)) => (sapic_position_out_in_transition Pro C Ev C')
+         | (ProcessComb (Let t1 t2) P Q) => ((sapic_position_let_true_transition Pro C Ev C') ∨ (sapic_position_let_false_transition Pro C Ev C'))
+         | (ProcessAction (New N) P) => (sapic_position_new_transition Pro C Ev C')
+         | _ => (F)
+     ))
+)`;*)
                                     
+val sapic_position_transition_def = Define `
+(sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) = (
+  if ((Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe') ∧ (Ev = [])) then (T) else
+    (case Pro of
+           (ProcessAction Rep P) => (sapic_position_replication_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+         | (ProcessAction (Event Fc) P) => (sapic_position_event_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+         | (ProcessComb (Cond t) P Q) => ((sapic_position_conditional_true_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∨ (sapic_position_conditional_false_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))))
+         | (ProcessAction (ChIn (SOME t) (TVar x)) P) => (sapic_position_in_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+         | (ProcessAction (ChOut (SOME t1) t2) P) => (sapic_position_out_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+         | (ProcessComb (Let t1 t2) P Q) => ((sapic_position_let_true_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∨ (sapic_position_let_false_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))))
+         | (ProcessAction (New N) P) => (sapic_position_new_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+         | _ => (F)
+     ))
+)`;
 
 val _ = export_theory();

@@ -640,7 +640,10 @@ val _ = Theory.new_constant("applyName", ``:Process_t -> sapic_name_renaming_t -
 
 val _ = Datatype `sapic_position_configuration_t =
    Pconfig (Process_t # real # sapic_renaming_t # sapic_name_renaming_t)
-          `;
+           `;
+
+val PConfigEq = new_axiom ("PConfigEq",
+                            ``∀p r re nre p' r' re' nre'. (Pconfig (p,r,re,nre) = Pconfig (p',r',re',nre')) ⇒ ((r = r')∧(p = p')∧(re = re')∧(nre = nre'))``);                
  (*         
 (* Null rule *)
 
@@ -1043,5 +1046,33 @@ val sapic_position_transition_def = Define `
          | _ => (F)
      ))
 )`;
+
+val sapic_position_multi_transitions_def =
+Define `sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Eve (Pconfig (Pro',i',Re',NRe')) =
+         (case Eve of
+            [] => ((Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe'))
+          | (e::ev) => (∃Pro'' i'' Re'' NRe''. (sapic_position_multi_transitions (Pconfig (Pro'',i'',Re'',NRe'')) ev (Pconfig (Pro',i',Re',NRe')))∧(sapic_position_transition (Pconfig (Pro,i,Re,NRe)) [e] (Pconfig (Pro'',i'',Re'',NRe''))))
+         )
+        `;
+
+(* val sapic_position_multi_transitions_def = *)
+(* Define `sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Eve (Pconfig (Pro',i',Re',NRe')) = *)
+(*          (case Eve of *)
+(*             [] => ((Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe')) *)
+(*           | (e::ev) => (∃Pro'' i'' Re'' NRe''. (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) ev (Pconfig (Pro'',i'',Re'',NRe'')))∧(sapic_position_transition (Pconfig (Pro'',i'',Re'',NRe'')) [e] (Pconfig (Pro',i',Re',NRe')))) *)
+(*          ) *)
+(*         `; *)
+
+(* val sapic_position_multi_transitions_def = *)
+(* Define `sapic_position_multi_transitions C Eve C' =  *)
+(*          (case Eve of *)
+(*             [] => (C = C') *)
+(*           | (e::ev) => (∃C''. (sapic_position_multi_transitions C ev C'')∧(sapic_position_transition C'' [e] C)) *)
+(*          ) *)
+(*          `; *)
+         
+val traces_of_sapic_def  = Define`
+traces_of_sapic (Pconfig (Pro,i,Re,NRe)) (Pconfig (Pro',i',Re',NRe')) = {e| sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) e (Pconfig (Pro',i',Re',NRe'))}`;
+        
 
 val _ = export_theory();

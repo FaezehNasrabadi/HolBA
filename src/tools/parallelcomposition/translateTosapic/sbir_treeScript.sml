@@ -230,7 +230,18 @@ Define`single_step_execute_symbolic_tree tre ev tre' =
 `;  
    
 
-    
+val execute_symbolic_tree_def =
+Define`execute_symbolic_tree tre Eve tre' =
+(case Eve of
+   [] => (tre = tre')
+ | (e::ev) => (∃tre''. (execute_symbolic_tree tre'' ev tre') ∧ (single_step_execute_symbolic_tree tre e tre''))
+)
+`;
+
+
+val traces_of_tree_def  = Define`
+traces_of_tree tre tre' = {e| execute_symbolic_tree tre e tre'}`;
+
 val _ = export_theory();
 
 

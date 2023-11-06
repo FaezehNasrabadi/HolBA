@@ -680,7 +680,7 @@ val sapic_position_replication_transition_def = Define `
                                   sapic_position_replication_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
 (∃P.
    (Pro = ProcessAction Rep P) /\
-   (Pro' = ProcessAction Rep P) /\
+   (Pro' = P) /\
    (i' = i+1) /\
    (Ev = []) /\
    (Re = Re') /\
@@ -698,10 +698,6 @@ val sapic_position_event_transition_def = Define `
    (Re = Re') /\
    (NRe = NRe'))`;
 
-val termhold_def = Define 
-             `
-(termhold (TVar v) = T) /\
-(termhold _ = F)`  ;
 
 (* val _ = Theory.new_constant("termholds", ``:SapicTerm_t -> bool``); *)
 
@@ -710,7 +706,6 @@ val termhold_def = Define
 val sapic_position_conditional_true_transition_def = Define `
                                   sapic_position_conditional_true_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
 (∃P Q t.
-   (termhold t) /\
    (Pro = (ProcessComb (Cond t) P Q)) /\
    (Pro' = P) /\
    (Ev = []) /\
@@ -724,7 +719,6 @@ val sapic_position_conditional_true_transition_def = Define `
 val sapic_position_conditional_false_transition_def = Define `
                                   sapic_position_conditional_false_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
 (∃P Q t.
-   (¬(termhold t)) /\
    (Pro = (ProcessComb (Cond t) P Q)) /\
    (Pro' = Q) /\
    (Ev = []) /\

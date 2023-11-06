@@ -218,7 +218,7 @@ val single_step_execute_symbolic_tree_def = Define`
 val single_step_execute_symbolic_tree_def =
 Define`single_step_execute_symbolic_tree tre ev tre' =
 (case ev of
-   Silent => (∃ i H st. (tre = (SNode (Silent,i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
+   Silent => (∃ i H st. (tre = (SNode (Silent,i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i,H)))
  | (Event v) => (∃ i H st. (tre = (SNode ((Event v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
  | (Loop v) => (∃ i H st. (tre = (SNode ((Loop v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))
  | (P2A v) => (∃ i H st. (tre = (SNode ((P2A v),i,H) st)) ∧ (tre' = st) ∧ ((val_of_tree tre') = SOME (Silent,i+1,H)))

@@ -124,7 +124,7 @@ val sbirEvent_to_sapicFact_def = Define `
 sbirEvent_to_sapicFact e =
 (case e of
   P2A v     => (Fact OutFact [(translate_birexp_to_sapicterm (BExp_Den v))])
-| A2P v     => (Fact InFact [(translate_birexp_to_sapicterm (BExp_Den v))])
+| A2P v     => (Fact InFact [(TVar (translate_birvar_to_sapicvar v))])
 | Sync_Fr v => (Fact FreshFact [(translate_birexp_to_sapicterm (BExp_Den v))])
 | Event v   => (Fact TermFact [(translate_birexp_to_sapicterm (BExp_Den v))])
 | Crypto v  => (Fact DedFact [(translate_birexp_to_sapicterm (BExp_Den v))])
@@ -183,9 +183,10 @@ val symbtree_to_sapic_single_step_simulation_thm = store_thm(
   ``
 ∀E Tree Tree' Pro i Re NRe.
         (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Pconfig (Pro,i,Re,NRe))))
-         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))))``,                                                                                                               
+         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∧ (Ev = sbirEvent_to_sapicFact E)))``,                                                                                                               
 gen_tac >>
-Cases_on ‘E’ >- (
+  Cases_on ‘E’ >- (
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
@@ -195,7 +196,6 @@ Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
 Q.EXISTS_TAC `i'+1` >>
 Q.EXISTS_TAC `Re` >>
 Q.EXISTS_TAC `NRe` >>
-Q.EXISTS_TAC `(Fact OutFact [translate_birexp_to_sapicterm (BExp_Den b)])`>>
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []
@@ -205,7 +205,8 @@ rewrite_tac[env_of_tree_def]>>
 ASM_SIMP_TAC (srw_ss()) []
 )
 (*end of P2A*)
->-(            
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def,sapic_position_transition_def]>>
@@ -217,7 +218,6 @@ Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
 Q.EXISTS_TAC `i'+1` >>
 Q.EXISTS_TAC `Renaming f'⦇Var "Adv" 0 ↦ SOME (TVar (translate_birvar_to_sapicvar b))⦈` >>
 Q.EXISTS_TAC `NRe` >>
-Q.EXISTS_TAC `(Fact InFact [TVar (translate_birvar_to_sapicvar b)])`>>
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm >>
 ASM_SIMP_TAC (srw_ss()) []
@@ -245,7 +245,8 @@ Cases_on ‘x' = BVar "Adv" (BType_Imm Bit64)’ >>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [translate_birvar_to_sapicvar_def]
 ))))
 (*end of A2P*)
->-( 
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def,sapic_position_transition_def]>>
@@ -285,7 +286,8 @@ Cases_on ‘x' = BVar "RNG" (BType_Imm Bit64)’>>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [translate_birvar_to_sapicvar_def]
 )))))
 (*end of Sync_Fr*)
->-(
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
@@ -295,7 +297,6 @@ Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
 Q.EXISTS_TAC `i'+1` >>
 Q.EXISTS_TAC `Re` >>
 Q.EXISTS_TAC `NRe` >>
-Q.EXISTS_TAC `(Fact TermFact [translate_birexp_to_sapicterm (BExp_Den b)])`>>
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []
@@ -305,7 +306,8 @@ rewrite_tac[env_of_tree_def]>>
 ASM_SIMP_TAC (srw_ss()) []
 )
 (*end of Event*)
->-(
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def,sapic_position_transition_def]>>
@@ -345,7 +347,8 @@ Cases_on ‘x' = BVar "crypto" (BType_Imm Bit64)’>>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [translate_birvar_to_sapicvar_def]
 ))
 (*end of Crypto*)
->-(
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
@@ -364,7 +367,8 @@ rewrite_tac[env_of_tree_def]>>
 ASM_SIMP_TAC (srw_ss()) []
 )
 (*end of Loop*)      
->-(              
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]
 >-(
 IMP_RES_TAC sim_def>>
@@ -401,7 +405,8 @@ rewrite_tac[env_of_tree_def]>>
 ASM_SIMP_TAC (srw_ss()) []             
 ))
 (*end of Branch *)  
->-(
+  >-(
+    rewrite_tac[sbirEvent_to_sapicFact_def] >>
 rw[single_step_execute_symbolic_tree_def]>>
 IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
@@ -428,16 +433,16 @@ val symbtree_to_sapic_trace_simulation_thm = store_thm(
   ``
 ∀E Tree Tree' Pro i Re NRe.
         (((execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Pconfig (Pro,i,Re,NRe))))
-         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))))) ``,
+         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∧ (Ev = MAP sbirEvent_to_sapicFact E))) ``,
 
 gen_tac>>
   Induct_on ‘E’ >-(
-  rw[execute_symbolic_tree_def]>>
-  Q.EXISTS_TAC `Pro` >>
+    rewrite_tac[sbirEvent_to_sapicFact_def]>>
+    rw[execute_symbolic_tree_def]>>
+    Q.EXISTS_TAC `Pro` >>
     Q.EXISTS_TAC `i` >>
     Q.EXISTS_TAC `Re` >>
     Q.EXISTS_TAC `NRe` >>
-    Q.EXISTS_TAC `[]` >>
     ASM_SIMP_TAC (srw_ss()) []>>
     rw[sapic_position_multi_transitions_nil]    
     )>>
@@ -447,17 +452,26 @@ gen_tac>>
     PAT_X_ASSUM ``!Tree Tree' Pro i Re NRe. A`` (ASSUME_TAC o (Q.SPECL [`Tree`,`tre''`,`Pro`,`i`,`Re`,`NRe`])) >>
     RES_TAC>>
     IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm>>          
-    Q.EXISTS_TAC `Pro'''` >>
-    Q.EXISTS_TAC `i'''` >>
-    Q.EXISTS_TAC `Re'''` >>
-    Q.EXISTS_TAC `NRe'''` >>
-    Q.EXISTS_TAC `(Ev''::Ev')` >>
+    Q.EXISTS_TAC `Pro''''` >>
+    Q.EXISTS_TAC `i''''` >>
+    Q.EXISTS_TAC `Re''''` >>
+    Q.EXISTS_TAC `NRe''''` >>
     ASM_SIMP_TAC (srw_ss()) []>>
     metis_tac[sapic_position_multi_transitions_move]      
-)
+);
 
 
-
+val trace_sim_def =
+Define`
+      (trace_sim Tev Pev =
+       (∀Tree Tree' Pro i Re NRe.
+          (((execute_symbolic_tree Tree Tev Tree' ) ∧
+            (sim Tree (Pconfig (Pro,i,Re,NRe))))
+           ⇒
+           (∃Pro' i' Re' NRe'.
+              (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧
+              (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Pev (Pconfig (Pro',i',Re',NRe')))))
+       ))`; 
 (*
 
 
@@ -640,13 +654,23 @@ val symbtree_to_sapic_single_step_simulation_thm = store_thm(
   ((execute_symbolic_tree T0 Tev Tree) ∧
   (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (MAP sbirEvent_to_sapicFact Tev) (Pconfig (Pro,i,Re,NRe)))∧
   (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))))
-  ⇒ ((traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe))) = IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0 Tree))``,
+  ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0 Tree)) = (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe))))``,
+
+
+∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
+  (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)))
+  ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0 Tree)) = (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe))))
+
+
+  
   rewrite_tac[traces_of_tree_def,traces_of_sapic_def,EXTENSION,IMAGE_DEF]
-  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-  rw[]
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symbtree_to_sapic_trace_simulation_thm]
+  rw[symbtree_to_sapic_trace_simulation_thm]
 
     eq_tac >-(
     rpt strip_tac
+    Cases_on ‘x = (MAP sbirEvent_to_sapicFact Tev)’
+    IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm
     Q.EXISTS_TAC `Tev`
     ASM_SIMP_TAC (srw_ss()) []
     metis_tac[PTransEq]
@@ -656,40 +680,59 @@ val symbtree_to_sapic_single_step_simulation_thm = store_thm(
     metis_tac[TreeTransEq]
 
 
+ metis_tac[symbtree_to_sapic_trace_simulation_thm,symbtree_to_sapic_initial_state_simulation_thm,symbtree_to_sapic_single_step_simulation_thm,sbirEvent_to_sapicFact_def]  
+
+ 
 
 
-
-
-
-∀Tev T0 Tree. Tev ∈ (traces_of_tree T0 Tree) ⇒
-(∃Pev Re0 NRe0 Pro i Re NRe. (Pev ∈ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe)))) ∧ (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))) ⇒
-(trace_sim Tev Pev)
+∀Tev Tree Tree. Tev ∈ (traces_of_tree Tree Tree') ⇒
+(∃Pev Pro i Re NRe Pro' i' Re' NRe'. (Pev ∈ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe)))))
 )
+
+∀Tev T0 Tree Re0 NRe0. (Tev ∈ (traces_of_tree T0 Tree)) ∧ (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))) ⇒
+(∃Pev Pro i Re NRe. (Pev ∈ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe)))) ∧ (trace_sim Tev Pev)
+)
+        
 
 rewrite_tac[trace_sim_def]>>
 rewrite_tac[traces_of_sapic_def]>>
 rewrite_tac[traces_of_tree_def]>>
  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
- gen_tac>>
-Cases_on ‘Tev’>-(
+rw[]>>
+Induct_on ‘Tev’>-(
 rw[ execute_symbolic_tree_def]>>
     Q.EXISTS_TAC `[]` >>
-    Q.EXISTS_TAC `Re0` >>
-    Q.EXISTS_TAC `NRe0` >>
     Q.EXISTS_TAC `symbtree_to_sapic T0` >>
-    Q.EXISTS_TAC `0` >>
+    Q.EXISTS_TAC `0` >>            
     Q.EXISTS_TAC `Re0` >>
     Q.EXISTS_TAC `NRe0` >>
-    rw[sapic_position_multi_transitions_def]>>
-    Q.EXISTS_TAC `T0` >>
-    Q.EXISTS_TAC `symbtree_to_sapic T0` >>
-    Q.EXISTS_TAC `0` >>
-    Q.EXISTS_TAC `Re0` >>
-    Q.EXISTS_TAC `NRe0` >>
-    ASM_SIMP_TAC (srw_ss()) []
+rw[sapic_position_multi_transitions_nil]   >>
+    Q.EXISTS_TAC `Pro` >>
+    Q.EXISTS_TAC `i` >>            
+    Q.EXISTS_TAC `Re` >>
+    Q.EXISTS_TAC `NRe` >>
+    ASM_SIMP_TAC (srw_ss()) [sapic_position_multi_transitions_nil]
     )
- rpt strip_tac
- IMP_RES_TAC  execute_symbolic_tree_def
+ rpt strip_tac>>
+ IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm>>
+ Q.EXISTS_TAC `Ev` >>
+    Q.EXISTS_TAC `Pro'` >>
+    Q.EXISTS_TAC `i'` >>
+    Q.EXISTS_TAC `Re'` >>
+    Q.EXISTS_TAC `NRe'` >>
+ASM_SIMP_TAC (srw_ss()) []
+rw[]
+IMP_RES_TAC execute_symbolic_tree_def>>
+    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm
+
+ Q.EXISTS_TAC `Pro'''''` >>
+    Q.EXISTS_TAC `i'''''` >>
+    Q.EXISTS_TAC `Re'''''` >>
+    Q.EXISTS_TAC `NRe'''''` >>
+    ASM_SIMP_TAC (srw_ss()) []           
+ metis_tac[symbtree_to_sapic_trace_simulation_thm,symbtree_to_sapic_initial_state_simulation_thm,symbtree_to_sapic_single_step_simulation_thm]     
+    
  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
  Q.EXISTS_TAC `(pe::pev)` >>
     Q.EXISTS_TAC `Re0` >>
@@ -713,8 +756,12 @@ val trace_sim_def = Define`
                                        )))
 `; 
 
-
-
-     *)      
+rewrite_tac[sbirEvent_to_sapicFact_def]
+∀E Tree Tree' Pro i Re NRe.
+        (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Pconfig (Pro,i,Re,NRe))))
+         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∧ (Ev = sbirEvent_to_sapicFact E)))
+gen_tac
+reverse(Cases_on‘E’)
+          *)      
   
 val _ = export_theory();

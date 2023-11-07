@@ -240,7 +240,7 @@ Define`execute_symbolic_tree tre Eve tre' =
 
 
 val traces_of_tree_def  = Define`
-traces_of_tree tre tre' = {e| execute_symbolic_tree tre e tre'}`;
+traces_of_tree tre = {e| ∃tre'. (execute_symbolic_tree tre e tre')}`;
 
 val _ = export_theory();
 

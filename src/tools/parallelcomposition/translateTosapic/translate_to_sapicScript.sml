@@ -13,6 +13,7 @@ open optionTheory;
 open updateTheory;
 open pred_setTheory;
 open symb_interpretTheory;
+open listTheory;
 
 val _ = new_theory "translate_to_sapic";                
 
@@ -461,307 +462,36 @@ gen_tac>>
 );
 
 
-val trace_sim_def =
-Define`
-      (trace_sim Tev Pev =
-       (∀Tree Tree' Pro i Re NRe.
-          (((execute_symbolic_tree Tree Tev Tree' ) ∧
-            (sim Tree (Pconfig (Pro,i,Re,NRe))))
-           ⇒
-           (∃Pro' i' Re' NRe'.
-              (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧
-              (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Pev (Pconfig (Pro',i',Re',NRe')))))
-       ))`; 
-(*
+val symbtree_to_sapic_trace_inclusion_thm = store_thm(
+  "symbtree_to_sapic_trace_inclusion_thm",
+  ``∀T0 H0 Re0 NRe0.
+    (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)))
+    ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0)) ⊆ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))))``,
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [traces_of_tree_def,traces_of_sapic_def,EXTENSION,IMAGE_DEF,SUBSET_DEF]>>
+     rw[] >>
+     Induct_on‘x'’>-(
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [MAP,sbirEvent_to_sapicFact_def]>>
+      rw[]>>
+      Q.EXISTS_TAC `symbtree_to_sapic T0` >>
+      Q.EXISTS_TAC `0` >>            
+      Q.EXISTS_TAC `Re0` >>
+      Q.EXISTS_TAC `NRe0` >>
+      metis_tac[sapic_position_multi_transitions_nil]
+      )
+     >-(
+      rpt strip_tac>>
+      IMP_RES_TAC execute_symbolic_tree_def>>
+      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
+      IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm>>
+      IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm>>
+      Q.EXISTS_TAC `Pro''''''` >>
+      Q.EXISTS_TAC `i''''''` >>
+      Q.EXISTS_TAC `Re''''''` >>
+      Q.EXISTS_TAC `NRe''''''` >>
+      metis_tac[sapic_position_multi_transitions_move]
+      )
+  );
 
-
-DISCH_TAC        
-metis_tac[sapic_position_multi_transitions_ind,sapic_position_multi_transitions_def]
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [sapic_position_multi_transitions_def]
-
-        
-val symbtree_to_sapic_single_step_simulation_thm = store_thm(
-  "symbtree_to_sapic_single_step_simulation_thm",
-  ``
-∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
-  ((val_of_tree T0 = SOME (Silent,0,H0))∧
-  (symb_interpr_dom H0 = ∅) ∧
-  (sapic_renaming_dom Re0 = ∅) ∧
-  (execute_symbolic_tree T0 Tev Tree) ∧ (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (MAP sbirEvent_to_sapicFact Tev) (Pconfig (Pro,i,Re,NRe))))
-  ⇒ (sim Tree (Pconfig (Pro,i,Re,NRe)))``,
-gen_tac>>
-  Cases_on ‘Tev’ >-(
-    rw[execute_symbolic_tree_def]>>
-    IMP_RES_TAC sapic_position_multi_transitions_def>>
-    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [sapic_position_multi_transitions_def]>>
-                  metis_tac[symbtree_to_sapic_initial_state_simulation_thm]
-)
->-(
-rpt strip_tac
-IMP_RES_TAC execute_symbolic_tree_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC sapic_position_multi_transitions_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm
-
-         
-
-val symbtree_to_sapic_single_step_simulation_thm = store_thm(
-  "symbtree_to_sapic_single_step_simulation_thm",
-  ``
-∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
-  ((sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)))∧
-  (execute_symbolic_tree T0 Tev Tree) ∧
-  (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (MAP sbirEvent_to_sapicFact Tev) (Pconfig (Pro,i,Re,NRe))))
-  ⇒ (sim Tree (Pconfig (Pro,i,Re,NRe)))``,
-gen_tac>>
-  Cases_on ‘Tev’ >-(
-    rw[execute_symbolic_tree_def]>>
-    IMP_RES_TAC sapic_position_multi_transitions_def>>
-    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [sapic_position_multi_transitions_def]>>
-                  metis_tac[symbtree_to_sapic_initial_state_simulation_thm]
-)
->-(
-rpt strip_tac
-IMP_RES_TAC execute_symbolic_tree_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC sapic_position_multi_transitions_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm
-
-            metis_tac[symbtree_to_sapic_single_step_simulation_thm]
-
-)        
-)
-
-
-
-
-
-
-
-
-
-
-        
-val symbtree_to_sapic_single_step_simulation_thm = store_thm(
-  "symbtree_to_sapic_single_step_simulation_thm",
-  ``
-∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
-  ((val_of_tree T0 = SOME (Silent,0,H0))∧
-  (symb_interpr_dom H0 = ∅) ∧
-  (sapic_renaming_dom Re0 = ∅) ∧
-  (execute_symbolic_tree T0 Tev Tree) ∧ (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (MAP sbirEvent_to_sapicFact Tev) (Pconfig (Pro,i,Re,NRe))))
-  ⇒ (sim Tree (Pconfig (Pro,i,Re,NRe)))``,
-gen_tac>>
-  Cases_on ‘Tev’ >-(
-    rw[execute_symbolic_tree_def]>>
-    IMP_RES_TAC sapic_position_multi_transitions_def>>
-    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [sapic_position_multi_transitions_def]>>
-                  metis_tac[symbtree_to_sapic_initial_state_simulation_thm]
-)
->-(
-rpt strip_tac
-IMP_RES_TAC execute_symbolic_tree_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC sapic_position_multi_transitions_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm
-PAT_X_ASSUM ``!i Re Pro NRe. A`` (ASSUME_TAC o (Q.SPECL [`i'`,`Re'`,`Pro'`,`NRe'`])) >>
-        RES_TAC
-)        
-)
-
-
-
-val symbtree_to_sapic_single_step_simulation_thm = store_thm(
-  "symbtree_to_sapic_single_step_simulation_thm",
-  ``
-∀Tev T0 Tree H0 Re0 NRe0.
-  ((execute_symbolic_tree T0 Tev Tree) ∧
-  (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))))
-  ⇒
-  (∃Pro i Re NRe Pev. (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) Pev (Pconfig (Pro,i,Re,NRe))) ∧
-  (sim Tree (Pconfig (Pro,i,Re,NRe))))``,
-gen_tac>>
-  Cases_on ‘Tev’ >-(
-    rw[execute_symbolic_tree_def]>>
-    Q.EXISTS_TAC `symbtree_to_sapic T0` >>
-    Q.EXISTS_TAC `0` >>
-    Q.EXISTS_TAC `Re0` >>
-    Q.EXISTS_TAC `NRe0` >>
-    Q.EXISTS_TAC `[]` >>
-    rw[sapic_position_multi_transitions_def]    
-)
->-(
-rpt strip_tac
-IMP_RES_TAC execute_symbolic_tree_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm
-rewrite_tac[sapic_position_multi_transitions_def]
-    Q.EXISTS_TAC `Pro'` >>
-    Q.EXISTS_TAC `i'` >>
-    Q.EXISTS_TAC `Re'` >>
-    Q.EXISTS_TAC `NRe'` >>
-    Q.EXISTS_TAC `e::ev` >>
-    ASM_SIMP_TAC (srw_ss()) []
-)        
-)
-
-
-
-
-
-
-
-rpt strip_tac
-IMP_RES_TAC execute_symbolic_tree_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC sapic_position_multi_transitions_def
-FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-IMP_RES_TAC symbtree_to_sapic_single_step_simulation_thm
-metis_tac[symbtree_to_sapic_single_step_simulation_thm]
-PAT_X_ASSUM ``!i Re Pro NRe. A`` (ASSUME_TAC o (Q.SPECL [`i'`,`Re'`,`Pro'`,`NRe'`])) >>
-        RES_TAC
-        
-val TreeTransNil = new_axiom ("TreeTransNil",
-                            ``∀T e. (execute_symbolic_tree T e T) ⇒
-                            (e = [])``);        
-val PTransEq = new_axiom ("PTransEq",
-                            ``∀C C' e e'. (sapic_position_multi_transitions C e C') ∧ (sapic_position_multi_transitions C e' C') ⇒ (e = e')``);
-
-val TreeTransEq = new_axiom ("TreeTransEq",
-                            ``∀e e' T T'. (execute_symbolic_tree T e T') ∧ (execute_symbolic_tree T e' T') ⇒ (e = e')``
-                           gen_tac
-                           gen_tac
-Cases_on  ‘e = e'’                           
-metis_tac[]
-
-       Cases_on ‘e’
-       rpt strip_tac
-       IMP_RES_TAC execute_symbolic_tree_def
-       FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
-       metis_tac[TreeTransNil]
-
-       
-       
-);
-                                                        
-val symbtree_to_sapic_single_step_simulation_thm = store_thm(
-  "symbtree_to_sapic_single_step_simulation_thm",
-  ``
-∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
-  ((execute_symbolic_tree T0 Tev Tree) ∧
-  (sapic_position_multi_transitions (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (MAP sbirEvent_to_sapicFact Tev) (Pconfig (Pro,i,Re,NRe)))∧
-  (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))))
-  ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0 Tree)) = (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe))))``,
-
-
-∀Tev Pev T0 Tree H0 Re0 NRe0 Pro i Re NRe.
-  (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)))
-  ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0 Tree)) = (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe))))
-
-
-  
-  rewrite_tac[traces_of_tree_def,traces_of_sapic_def,EXTENSION,IMAGE_DEF]
-  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symbtree_to_sapic_trace_simulation_thm]
-  rw[symbtree_to_sapic_trace_simulation_thm]
-
-    eq_tac >-(
-    rpt strip_tac
-    Cases_on ‘x = (MAP sbirEvent_to_sapicFact Tev)’
-    IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm
-    Q.EXISTS_TAC `Tev`
-    ASM_SIMP_TAC (srw_ss()) []
-    metis_tac[PTransEq]
-    )
-   rpt strip_tac
-   ASM_SIMP_TAC (srw_ss()) []
-    metis_tac[TreeTransEq]
-
-
- metis_tac[symbtree_to_sapic_trace_simulation_thm,symbtree_to_sapic_initial_state_simulation_thm,symbtree_to_sapic_single_step_simulation_thm,sbirEvent_to_sapicFact_def]  
-
- 
-
-
-∀Tev Tree Tree. Tev ∈ (traces_of_tree Tree Tree') ⇒
-(∃Pev Pro i Re NRe Pro' i' Re' NRe'. (Pev ∈ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe)))))
-)
-
-∀Tev T0 Tree Re0 NRe0. (Tev ∈ (traces_of_tree T0 Tree)) ∧ (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))) ⇒
-(∃Pev Pro i Re NRe. (Pev ∈ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)) (Pconfig (Pro,i,Re,NRe)))) ∧ (trace_sim Tev Pev)
-)
-        
-
-rewrite_tac[trace_sim_def]>>
-rewrite_tac[traces_of_sapic_def]>>
-rewrite_tac[traces_of_tree_def]>>
- FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
-rw[]>>
-Induct_on ‘Tev’>-(
-rw[ execute_symbolic_tree_def]>>
-    Q.EXISTS_TAC `[]` >>
-    Q.EXISTS_TAC `symbtree_to_sapic T0` >>
-    Q.EXISTS_TAC `0` >>            
-    Q.EXISTS_TAC `Re0` >>
-    Q.EXISTS_TAC `NRe0` >>
-rw[sapic_position_multi_transitions_nil]   >>
-    Q.EXISTS_TAC `Pro` >>
-    Q.EXISTS_TAC `i` >>            
-    Q.EXISTS_TAC `Re` >>
-    Q.EXISTS_TAC `NRe` >>
-    ASM_SIMP_TAC (srw_ss()) [sapic_position_multi_transitions_nil]
-    )
- rpt strip_tac>>
- IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm>>
- Q.EXISTS_TAC `Ev` >>
-    Q.EXISTS_TAC `Pro'` >>
-    Q.EXISTS_TAC `i'` >>
-    Q.EXISTS_TAC `Re'` >>
-    Q.EXISTS_TAC `NRe'` >>
-ASM_SIMP_TAC (srw_ss()) []
-rw[]
-IMP_RES_TAC execute_symbolic_tree_def>>
-    FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []>>
-IMP_RES_TAC symbtree_to_sapic_trace_simulation_thm
-
- Q.EXISTS_TAC `Pro'''''` >>
-    Q.EXISTS_TAC `i'''''` >>
-    Q.EXISTS_TAC `Re'''''` >>
-    Q.EXISTS_TAC `NRe'''''` >>
-    ASM_SIMP_TAC (srw_ss()) []           
- metis_tac[symbtree_to_sapic_trace_simulation_thm,symbtree_to_sapic_initial_state_simulation_thm,symbtree_to_sapic_single_step_simulation_thm]     
-    
- FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) []
- Q.EXISTS_TAC `(pe::pev)` >>
-    Q.EXISTS_TAC `Re0` >>
-    Q.EXISTS_TAC `NRe0` >>
-    Q.EXISTS_TAC `Pro` >>
-    Q.EXISTS_TAC `i` >>
-    Q.EXISTS_TAC `Re` >>
-    Q.EXISTS_TAC `NRe` >>
-    rw[sapic_position_multi_transitions_def]
-
-
-
-val trace_sim_def = Define`
-                   ( trace_sim Tev Pev =
-                   (∃tre tre' Pro i Re NRe Pro' i' Re' NRe'.
-                   (execute_symbolic_tree tre Tev tre')∧
-                   (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) Pev (Pconfig (Pro',i',Re',NRe'))) ∧
-                     ((sim tre (Pconfig (Pro,i,Re,NRe))) ∧
-                       (sim tre' (Pconfig (Pro',i',Re',NRe'))) 
-
-                                       )))
-`; 
-
-rewrite_tac[sbirEvent_to_sapicFact_def]
-∀E Tree Tree' Pro i Re NRe.
-        (((single_step_execute_symbolic_tree Tree E Tree' ) ∧ (sim Tree (Pconfig (Pro,i,Re,NRe))))
-         ⇒ (∃Pro' i' Re' NRe' Ev. (sim Tree' (Pconfig (Pro',i',Re',NRe'))) ∧ (sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe'))) ∧ (Ev = sbirEvent_to_sapicFact E)))
-gen_tac
-reverse(Cases_on‘E’)
-          *)      
+   
   
 val _ = export_theory();

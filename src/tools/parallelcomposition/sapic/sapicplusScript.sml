@@ -1089,7 +1089,7 @@ End
             
          
 val traces_of_sapic_def  = Define`
-traces_of_sapic (Pconfig (Pro,i,Re,NRe)) (Pconfig (Pro',i',Re',NRe')) = {e| sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) e (Pconfig (Pro',i',Re',NRe'))}`;
+traces_of_sapic (Pconfig (Pro,i,Re,NRe)) = {e| ∃Pro' i' Re' NRe'. (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) e (Pconfig (Pro',i',Re',NRe')))}`;
         
 
 val _ = export_theory();

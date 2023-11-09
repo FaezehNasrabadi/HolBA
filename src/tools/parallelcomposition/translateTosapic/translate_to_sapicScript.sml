@@ -15,6 +15,7 @@ open pred_setTheory;
 open symb_interpretTheory;
 open listTheory;
 
+
 val _ = new_theory "translate_to_sapic";                
 
 (*****************start translation Bir Exp to Sapic Term**********************)
@@ -464,7 +465,7 @@ gen_tac>>
 
 val symbtree_to_sapic_trace_inclusion_thm = store_thm(
   "symbtree_to_sapic_trace_inclusion_thm",
-  ``∀T0 H0 Re0 NRe0.
+  ``∀T0 Re0 NRe0.
     (sim T0 (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)))
     ⇒ ((IMAGE (MAP sbirEvent_to_sapicFact) (traces_of_tree T0)) ⊆ (traces_of_sapic (Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0))))``,
   FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [traces_of_tree_def,traces_of_sapic_def,EXTENSION,IMAGE_DEF,SUBSET_DEF]>>

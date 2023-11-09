@@ -6,6 +6,7 @@ open listTheory;
 open tautLib;
 open interleavingemptyTheory;
 open parallelcompositionemptydeductionTheory;
+
 val _ = new_theory "derived_rules_emptydeduction";
 
 val traces_def =

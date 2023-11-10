@@ -12,6 +12,7 @@ open bir_block_collectionLib;
 open bir_programSyntax;
 open bir_valuesSyntax;
 open bir_immSyntax;
+open bir_expSyntax;
 open bir_exec_typingLib;
 open commonBalrobScriptLib;
 open binariesDefsLib;
@@ -22,9 +23,12 @@ open Redblackmap;
 open bir_symbexec_oracleLib;
 open sbir_treeLib;
 open sapicplusTheory;
+open sapicplusSyntax;
 open translate_to_sapicTheory;
 open rich_listTheory;
-
+open translate_to_sapicLib;
+open messagesTheory;
+open messagesSyntax;
 
 (*Server*)   (*  
 val lbl_tm = ``BL_Address (Imm64 4203632w)``;
@@ -178,20 +182,33 @@ val holtree = (snd o dest_eq o concl) symbtree_def;
 
 
 (fst o dest_BVar_string) ``BVar "57_assert_false_cnd" BType_Bool``
-val symbtree_to_sapic_def = Define `
-    symbtree_to_sapic holtree  =
-case holtree of
-SLeaf => ProcessNull
-| SBranch a b lstr rstr  => ProcessComb (Cond (translate_birexp_to_sapicterm b)) (symbtree_to_sapic lstr) (symbtree_to_sapic rstr)
-| SNode (BVar name type) b str  =>  (
-if ((IS_SUFFIX name "assert_true_cnd") /\ (IS_SUFFIX name "assert_false_cnd") /\ (IS_SUFFIX name "cjmp_false_cnd")) then (symbtree_to_sapic str)
-else (ProcessComb  (Let (translate_birvar_to_sapicterm (BVar name type)) (translate_birexp_to_sapicterm b)) (symbtree_to_sapic str) (ProcessNull)) 
-)
-`;
+ *)
+fun sapic_term_to_name trm =
+    if (is_TVar trm)
+    then (mk_Name (FreshName_tm, ((fst o dest_Var o dest_TVar) trm)))
+    else if (is_Con trm)
+    then (dest_Con trm)
+    else  (mk_Name (PubName_tm, “"0"”))		       
+	
+fun sbir_tree_sapic_process tree =
+    case tree of
+VLeaf => ProcessNull_tm
+| VBranch ((a,b),lstr,rstr)  => mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process lstr),(sbir_tree_sapic_process rstr))
+| VNode ((a,b),str)  =>  (
+  let
+      val (name,bir_type) = dest_BVar a;
+      val namestr = stringSyntax.fromHOLstring name;
+  in
+      if ((String.isSuffix "assert_true_cnd" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr)) then (sbir_tree_sapic_process str)
+      else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) ) then  (mk_ProcessAction ((mk_New ((sapic_term_to_name o fst o bir_exp_to_sapic_term o mk_BExp_Den) a)),(sbir_tree_sapic_process str)))
+else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process str),(ProcessNull_tm)) 
+       )
+  end)
+(*
 (String.isSuffix "false_cnd"  ((fst o dest_BVar_string) a))
 (String.isSuffix "event_false_cnd"  "60_event_false_cnd")
 EVAL ``symbtree_to_sapic (^holtree)``
-
+val a = “BVar "48_OTP" BType_Bool”
 EVAL ``IS_SUFFIX ((FST o dest_BVar_string) BVar "57_assert_false_cnd" BType_Bool) "assert_true_cnd" ``
 EVAL ``rich_list$IS_SUFFIX "51_assert_true_cnd" "assert_true_cnd"``
 EVAL ``list$REV "57_assert_true_cnd" ""``
@@ -200,10 +217,10 @@ is_substring
 open stringSyntax;
  HOL_Interactive.toggle_quietdec();
  
-
-val holtree = smltree_to_holtree valtr;*)
+*)
+val sapic_process = sbir_tree_sapic_process valtr;
 
 val _ = print "\n";     
-val _ = print ("built a hol tree with value");
+val _ = print ("sapic_process");
 val _ = print "\n";
     

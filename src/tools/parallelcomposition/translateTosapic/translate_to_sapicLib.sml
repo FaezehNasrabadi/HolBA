@@ -270,13 +270,34 @@ val exp = ``BExp_Const (Imm64 112w)``;
 		(sp_fun,to_st_thm)
             end
             handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_store" e
+	else if (identical exp “bir_exp_true”)
+	then
+		(mk_Con (mk_Name (PubName_tm, “"1"”)),(Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL))
 	else
-            raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
+	    let
+		val (name,trms) = strip_comb exp;
+		val trm_list1 = map (fst o bir_exp_to_sapic_term o mk_BExp_Den) trms;
+		val trm_list2 = (listSyntax.mk_list (trm_list1,SapicTerm_t_ty));
+		val thm_list = map (snd o bir_exp_to_sapic_term o mk_BExp_Den) trms;
+		val namestr = stringSyntax.fromMLstring (Parse.term_to_string name);
+		val thm0 =  (SIMP_CONV (srw_ss()) []) “(int_of_num o LENGTH) ^trm_list2”;
+		val trmlng = (snd o dest_eq o concl) thm0;
+		val fun_sig = pairSyntax.list_mk_pair[namestr,trmlng,Public_tm, Constructor_tm]
+		val sp_fun = mk_FAPP (fun_sig,trm_list2);
+		val to_st_thm =  CONJ (hd thm_list) thm0;
+	    in
+		(sp_fun,to_st_thm)
+	    end
+           handle e => raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
     end; 
 
 
 (*
-
+Arith_cons.term_of_int (List.length trm_list1);
+HOL_Interactive.toggle_quietdec();
+open mlibArbint;
+HOL_Interactive.toggle_quietdec();
+val exp = “conc1 (BVar "48_OTP" (BType_Imm Bit64))”
  val exp = “BExp_Store
             (BExp_Store
                  (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))

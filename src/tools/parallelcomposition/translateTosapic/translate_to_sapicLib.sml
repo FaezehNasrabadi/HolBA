@@ -22,7 +22,6 @@ local
     open intSyntax;
     open Term;
     open translate_to_sapicTheory;
-
     val ERR = mk_HOL_ERR "translate_to_sapicLib";
     val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
@@ -35,8 +34,7 @@ local
 
 
 in
-
-
+	  
 fun bir_exp_to_sapic_term exp =
     let
 	val _ = ()
@@ -291,7 +289,13 @@ val exp = ``BExp_Const (Imm64 112w)``;
            handle e => raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
     end; 
 
+    
 
+
+
+
+
+	  
 (*
 Arith_cons.term_of_int (List.length trm_list1);
 HOL_Interactive.toggle_quietdec();

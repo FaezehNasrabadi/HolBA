@@ -9,6 +9,7 @@ local
     open simpLib;
     open bossLib;
     open bir_symbexec_stateLib;
+    open Option;
 
   val ERR      = Feedback.mk_HOL_ERR "sbir_treeLib"
   val wrap_exn = Feedback.wrap_exn   "sbir_treeLib"
@@ -123,7 +124,22 @@ fun tree_with_value tr sort_vals =
       | Branch (bv, subtr1, subtr2) => VBranch ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr1 sort_vals), (tree_with_value subtr2 sort_vals))
 
 
+fun hd_of_tree tr =
+    case tr of
+	VLeaf => NONE
+      | VNode ((bv,be), subtr) => SOME (bv,be)
+      | VBranch ((bv,be), subtr1, subtr2) => SOME (bv,be)
 
+
+fun purge_tree tr =
+    case tr of
+	VLeaf => VLeaf
+      | VNode ((bv,be), subtr) => if (isSome (hd_of_tree subtr)) then
+				      if ((identical ((fst o valOf o hd_of_tree) subtr) bv) andalso (identical ((snd o valOf o hd_of_tree) subtr) be))
+				      then (purge_tree subtr)
+				      else VNode ((bv,be), (purge_tree subtr))
+				  else VNode ((bv,be), (purge_tree subtr))
+      | VBranch ((bv,be), subtr1, subtr2) => VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))					     
 
 (* define a symbolic tree hol datatype 
 val _ = Datatype `stree =
@@ -140,7 +156,7 @@ fun smltree_to_holtree tree =
       mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``);
 
 
-				       
+purge_tree valtr				       
 
 
 val holtree = smltree_to_holtree smltree;

@@ -8,7 +8,8 @@ local
     open sapicplusSyntax;
     open messagesTheory;
     open messagesSyntax;
-
+    open optionSyntax;
+	 
     val ERR = mk_HOL_ERR "sapic_to_fileLib";
     val wrap_exn = Feedback.wrap_exn "sapic_to_fileLib";
 end
@@ -44,7 +45,7 @@ fun var_to_string V =
 (* print Term
 
 val trm = “FAPP ("conc",2,Public,Constructor) [TVar (Var "OTP1" 0);TVar (Var "OTP2" 0)]”;*)	
-fun term_to_name trm =
+fun sapicterm_to_string trm =
     if (is_TVar trm)
     then ((var_to_string o dest_TVar) trm)
     else if (is_Con trm)
@@ -56,15 +57,91 @@ fun term_to_name trm =
 	    val (trm_list,_) = listSyntax.dest_list fun_vals;
 	    val name = (stringSyntax.fromHOLstring o hd o pairSyntax.strip_pair) fun_sig;
 	in
-	    (name ^ "(" ^ ((term_to_name (hd trm_list))^(List.foldr (fn (x,s) => s ^ (term_to_name x)) "," (tl trm_list)) ^ ")"))	   
+	    (name ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^ (sapicterm_to_string x)) "," (tl trm_list)) ^ ")"))	   
 	end	
-    else raise ERR "term_to_name" ("Don't know Sapic Term: " ^ (term_to_string trm))
+    else raise ERR "term_to_string" ("Don't know Sapic Term: " ^ (term_to_string trm))
+
+	       
+(* print FactTag
+
+val fctTag = “TermFact”;*)	
+fun factTag_to_string fctTag =
+    if (is_KUFact fctTag) then "KU"
+    else if (is_KDFact fctTag) then "KD"
+    else if (is_DedFact fctTag) then "Ded"
+    else if (is_InFact fctTag) then "In"
+    else if (is_OutFact fctTag) then "Out"
+    else if (is_FreshFact fctTag) then  "Fr"
+    else if (is_TermFact fctTag) then "Term"
+    else raise ERR "factTag_to_string" ("Don't know Sapic Fact: " ^ (term_to_string fctTag))
+	       
+(* print Fact
+
+val fct = “Fact TermFact [TVar (Var "OTP1" 0);TVar (Var "OTP2" 0)]”;*)	
+fun fact_to_string fct =
+    let
+	    val (tag,fct_vals) = dest_Fact fct;
+	    val (trm_list,_) = listSyntax.dest_list fct_vals;
+	in
+	    ((factTag_to_string tag) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^ (sapicterm_to_string x)) "," (tl trm_list)) ^ ")"))	     
+    end	
+   
+(* print Action
+val act = “ChIn (SOME (TVar (Var "C" 0))) (TVar (Var "OTP" 0))”
+val act = “New (Name FreshName "49_otp")”;*)
+fun action_to_string act =
+    if (is_New act) then "new "^((name_to_string o dest_New) act)
+    else if (is_Rep act) then "!"
+    else if (is_ChIn act) then
+	let
+	    val (c,t) = dest_ChIn act;
+	in
+	    if (is_some c) then "in(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
+	    else "in(" ^ (sapicterm_to_string t) ^ ")"
+	end
+    else if (is_ChOut act) then
+	let
+	    val (c,t) = dest_ChOut act;
+	in
+	    if (is_some c) then "out(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
+	    else "out(" ^ (sapicterm_to_string t) ^ ")"
+	end	    
+    else if (is_Insert act)  then "insert " ^ ((sapicterm_to_string o fst o dest_Insert) act) ^ ","  ^ ((sapicterm_to_string o snd o dest_Insert) act)
+    else if (is_Delete act)  then "delete " ^ ((sapicterm_to_string o dest_Delete) act)
+    else if (is_Lock act)  then "lock "  ^ ((sapicterm_to_string o dest_Lock) act)
+    else if (is_Unlock act)  then "unlock " ^ ((sapicterm_to_string o dest_Unlock) act)
+    else if (is_Event act)  then "event " ^ ((fact_to_string o dest_Event) act)
+    else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))			     
+(* print Combinator
+val comb = “Lookup (TVar (Var "C" 0)) (Var "OTP" 0)”
+val comb = “ProcessCall "tst" [(TVar (Var "C" 0))]”;*)
+fun combinator_to_string comb =
+if (is_Parallel comb) then "|"
+else if (is_NDC comb) then "+"
+else if (is_Cond comb) then "if "^ ((sapicterm_to_string o dest_Cond) comb)
+else if (is_CondEq comb) then "if "^ ((sapicterm_to_string o fst o dest_CondEq) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_CondEq) comb)
+else if (is_Let comb) then "let "^ ((sapicterm_to_string o fst o dest_Let) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_Let) comb)
+else if (is_Lookup comb) then "lookup "^ ((sapicterm_to_string o fst o dest_Lookup) comb) ^ " as "  ^ ((var_to_string o snd o dest_Lookup) comb)
+else if (is_ProcessCall comb) then
+    let
+	val (s,vals) = dest_ProcessCall comb;
+	val (trm_list,_) = listSyntax.dest_list vals;
+    in
+    ((stringSyntax.fromHOLstring s) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^ (sapicterm_to_string x)) "," (tl trm_list)) ^ ")"))
+    end
+ else raise ERR "combinator_to_string" ("Don't know Sapic Combinator: " ^ (term_to_string comb))   
 
 
-
+(* print Process
+WIP*)
+fun process_to_string pro =
+    if (is_ProcessNull pro) then "0"
+    else if (is_ProcessComb pro) then (* ProcessCombinator_t Process_t Process_t *)
+    else if (is_ProcessAction pro) then (* SapicAction_t Process_t *)
+    else raise ERR "process_to_string" ("Don't know Sapic Process: " ^ (term_to_string pro))   	    
 (*
  HOL_Interactive.toggle_quietdec();
-open pairSyntax;
+open optionSyntax;
  HOL_Interactive.toggle_quietdec();
  *)
     

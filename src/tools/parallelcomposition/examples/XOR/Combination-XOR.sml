@@ -30,6 +30,7 @@ open translate_to_sapicLib;
 open messagesTheory;
 open messagesSyntax;
 open tree_to_processLib;
+open  sapic_to_fileLib;
 (*Server*)   (*  
 val lbl_tm = ``BL_Address (Imm64 4203632w)``;
 
@@ -201,9 +202,13 @@ open stringSyntax;
 			 
 val sapic_process = sbir_tree_sapic_process (purge_tree valtr);
 
-    
 
 val _ = print "\n";     
 val _ = print ("sapic_process");
 val _ = print "\n";
     
+val _ =  ( write_sapic_to_file o process_to_string) sapic_process
+
+val _ = print "\n";     
+val _ = print ("wrote into file");
+val _ = print "\n";

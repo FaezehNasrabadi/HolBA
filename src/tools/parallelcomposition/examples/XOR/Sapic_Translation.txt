@@ -1,0 +1,5 @@
+new ~'49_otp';
+let 48_OTP = ~'49_otp' in 
+let 66_Conc1 = conc1(48_OTP) in 
+let 70_XOR = exclusive_or(66_Conc1,69_pad) in 
+out(70_XOR)

@@ -1,6 +1,7 @@
-signature gcc_supportLib = sig
+(* Some code connecting with the GCC tools. *)
+open bir_inst_liftingLibTypes;
 
-  (* Parser for GCC and generate structures for lifter. *)
+signature gcc_supportLib = sig
 
   (* Parse objdump disassembly. This format contains
 
@@ -103,17 +104,17 @@ signature gcc_supportLib = sig
     (string -> string -> bool) ->
     (string -> string -> bool) ->
     string ->
-    (string * string * Arbnum.num) list * bir_inst_liftingLibTypes.bir_inst_lifting_mem_region list
+    (string * string * num) list * bir_inst_lifting_mem_region list
 
   (* Parse file, filter sections and regions and convert to label list and mem regions *)
   val read_disassembly_file_regions_filter :
     (string -> string -> bool) ->
     string ->
-    (string * string * Arbnum.num) list * bir_inst_liftingLibTypes.bir_inst_lifting_mem_region list
+    (string * string * num) list * bir_inst_lifting_mem_region list
 
   (* Parse file and convert to label list and mem regions *)
   val read_disassembly_file_regions :
     string ->
-    (string * string * Arbnum.num) list * bir_inst_liftingLibTypes.bir_inst_lifting_mem_region list
+    (string * string * num) list * bir_inst_lifting_mem_region list
 
 end

@@ -17,35 +17,35 @@ in(*local*)
 
 (* print Name
 
-val N = “Name FreshName "OTP"”*)
+val N = “Name FreshName "49_OTP"”*)
 
 fun name_to_string N =
     let
 	val (tag,str) = dest_Name N;
     in
 	if (is_FreshName tag)
-	then ("~'" ^ (stringSyntax.fromHOLstring str) ^ "'")
+	then ("~'" ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
 	else if (is_PubName tag)
-	then ("'"  ^ (stringSyntax.fromHOLstring str) ^ "'")
+	then ("'"  ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
 	else if (is_NodeName tag)
-	then ("#'" ^ (stringSyntax.fromHOLstring str) ^ "'")
+	then ("#'" ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
 	else raise ERR "name_to_string" ("Don't know Sapic Name: " ^ (term_to_string N))
     end;
 
 (* print Var
 
-val V = “Var "X" 0”;*)		 
+val V = “Var "1_X" 0”;*)		 
 
 fun var_to_string V =
     let
 	val (str,id) = dest_Var V;
     in
-	(stringSyntax.fromHOLstring str)
+	bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str)
     end;
 
 (* print Term
 
-val trm = “FAPP ("conc",2,Public,Constructor) [TVar (Var "OTP1" 0);TVar (Var "OTP2" 0)]”;*)	
+val trm = “FAPP ("conc",2,Public,Constructor) [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;*)	
 fun sapicterm_to_string trm =
     if (is_TVar trm)
     then ((var_to_string o dest_TVar) trm)
@@ -78,7 +78,7 @@ fun factTag_to_string fctTag =
 	       
 (* print Fact
 
-val fct = “Fact TermFact [TVar (Var "OTP1" 0);TVar (Var "OTP2" 0)]”;*)	
+val fct = “Fact TermFact [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;*)	
 fun fact_to_string fct =
     let
 	    val (tag,fct_vals) = dest_Fact fct;

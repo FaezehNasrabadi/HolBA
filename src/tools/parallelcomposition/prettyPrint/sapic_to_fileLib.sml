@@ -24,11 +24,11 @@ fun name_to_string N =
 	val (tag,str) = dest_Name N;
     in
 	if (is_FreshName tag)
-	then ("~'" ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
+	then ("~'" ^ (stringSyntax.fromHOLstring str) ^ "'")
 	else if (is_PubName tag)
-	then ("'"  ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
+	then ("'"  ^ (stringSyntax.fromHOLstring str) ^ "'")
 	else if (is_NodeName tag)
-	then ("#'" ^ bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str) ^ "'")
+	then ("#'" ^ (stringSyntax.fromHOLstring str) ^ "'")
 	else raise ERR "name_to_string" ("Don't know Sapic Name: " ^ (term_to_string N))
     end;
 
@@ -40,7 +40,7 @@ fun var_to_string V =
     let
 	val (str,id) = dest_Var V;
     in
-	bir_symbexec_treeLib.rev_name(stringSyntax.fromHOLstring str)
+	(stringSyntax.fromHOLstring str)
     end;
 
 (* print Term

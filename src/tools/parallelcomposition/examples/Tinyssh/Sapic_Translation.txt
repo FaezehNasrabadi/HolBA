@@ -1,0 +1,30 @@
+let 52_cjmp_true_cnd = Equal(LowCast(51_R1,'32'),'0') in 
+let 55_cjmp_true_cnd = Equal(LowCast(54_R2,'32'),'0') in 
+in(63_a);
+let 122_cjmp_true_cnd = 121_ProcState_Z in 
+let 145_cjmp_true_cnd = 144_ProcState_Z in 
+let 178_cjmp_true_cnd = Equal(LowCast(173_R0,'32'),'0') in 
+let 277_cjmp_true_cnd = Equal(LowCast(276_R15,'32'),'0') in 
+in(432_a);
+!(in(491_a);
+let 544_RepEnd = 544_RepEnd in 
+new ~'777_kAB';
+let 773_SKey = ~'777_kAB' in 
+out(775_sk);
+let 777_kAB = kgen(491_a,773_SKey) in 
+new ~'777_kAB';
+let 773_SKey = ~'777_kAB' in 
+let 775_sk = kgen(g,773_SKey) in 
+let 783_HMAC = hash3(491_a,pkS,775_sk) in 
+event Term('1');
+let 789_signature = sign(inputs,skS) in 
+out(sign(inputs,skS));
+let 793_kPS = kdfPtoS(777_kAB,783_HMAC) in 
+let 792_PtoS = 793_kPS in 
+let 797_kSP = kdfStoP(777_kAB,783_HMAC) in 
+in(801_a);
+let 802_Dec = dec(801_a,793_kPS) in 
+let 805_Enc = enc(802_Dec,797_kSP) in 
+out(805_Enc);
+let 1067_cjmp_true_cnd = 1064_ProcState_Z in 
+0)

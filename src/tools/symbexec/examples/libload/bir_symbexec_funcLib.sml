@@ -22,13 +22,13 @@ val _ = Theory.new_constant("enc", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("enc1", ``:bir_var_t -> bir_var_t -> bir_var_t -> bir_exp_t``);    
 
-val _ = Theory.new_constant("sign", ``:bir_var_t list -> bir_var_t -> bir_exp_t``);
+val _ = Theory.new_constant("sign", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
-val _ = Theory.new_constant("verify", ``:bir_var_t list -> bir_var_t -> bir_exp_t``);
+val _ = Theory.new_constant("verify", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
     
 val _ = Theory.new_constant("dec", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
-val _ = Theory.new_constant("concatenate", ``:bir_var_t list -> bir_exp_t``);
+val _ = Theory.new_constant("concatenate", ``:bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("conc1", ``:bir_var_t -> bir_exp_t``);
 (*
@@ -115,7 +115,7 @@ fun encrypt inputs kSP =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 			(enc
 			     (message)
-			     (SK))``;
+			     (BVar "SK" (BType_Imm Bit64)))``;
 
     in
 	dest_BStmt_Assign stmt
@@ -126,7 +126,7 @@ fun Encrypt input1 input2 input3 =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (enc1
 			  ( ^input1)
-			  ( pkA)
+			  (BVar "pkA" (BType_Imm Bit64))
 			  ( ^input3))``;
 
     in
@@ -148,8 +148,8 @@ fun Sign inputs skS =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 			(sign
-			     (inputs)
-			     (skS))``;
+			     (BVar "inputs" (BType_Imm Bit64))
+			     (BVar "skS" (BType_Imm Bit64)))``;
 
     in
 	dest_BStmt_Assign stmt
@@ -160,7 +160,7 @@ fun ver input pkP =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 			(verify
 			     ( ^input)
-			     (pkP))``;
+			     (BVar "pkP" (BType_Imm Bit64)))``;
 
     in
 	dest_BStmt_Assign stmt
@@ -194,7 +194,7 @@ fun XOR input pad =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (exclusive_or
 			  ( ^input)
-			  ( pad))``;
+			  (BVar "pad" (BType_Imm Bit64)))``;
 
     in
 	dest_BStmt_Assign stmt
@@ -204,7 +204,7 @@ fun CON inputs =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (concatenate
-			  (inputs))``;
+			  (BVar "inputs" (BType_Imm Bit64)))``;
 
     in
 	dest_BStmt_Assign stmt
@@ -232,7 +232,7 @@ fun HMac2 inputs key =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (hash2
 			  ( ^inputs)
-			  ( keyAB))``;
+			  ((BVar "keyAB" (BType_Imm Bit64)))``;
     in
 	dest_BStmt_Assign stmt
     end;
@@ -244,7 +244,7 @@ fun HMac3 input1 input2 key =
 		     (hash3
 			  ( ^input1)
 			  ( ^input2)
-			  ( pkS))``;
+			  (BVar "pkS" (BType_Imm Bit64)))``;
     in
 	dest_BStmt_Assign stmt
     end;
@@ -264,7 +264,7 @@ fun Conc11 input1 input2 =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (conc1
 			  ( ^input1)
-			  ( hostA))``;
+			  (BVar "hostA" (BType_Imm Bit64)))``;
     in
 	dest_BStmt_Assign stmt
     end;
@@ -273,7 +273,7 @@ fun Conc2 input1 input2 =
 
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (conc2
-			  ( clientID)
+			  (BVar "clientID" (BType_Imm Bit64))
 			  ( ^input2))``;
     in
 	dest_BStmt_Assign stmt
@@ -296,7 +296,7 @@ fun Conc3 input1 input2 input3 =
 		     (conc3
 			  ( ^input1)
 			  ( ^input2)
-			  ( hostB))``;
+			 (BVar "hostB" (BType_Imm Bit64)))``;
     in
 	dest_BStmt_Assign stmt
     end;    
@@ -388,7 +388,7 @@ fun Kgen2 input1 input2 =
 
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (kgen
-			  ( g)
+			  (BVar "g" (BType_Imm Bit64))
 			  ( ^input2))``;
     in
 	dest_BStmt_Assign stmt
@@ -487,6 +487,7 @@ fun update_path bv syst =
     let
 	 val Fr_bv = Fr bv;
 	 val syst = SYST_update_pred ((Fr_bv)::(SYST_get_pred syst)) syst;
+	 
     in
 	syst
     end;

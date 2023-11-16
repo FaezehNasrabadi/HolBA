@@ -456,7 +456,9 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 
 			       val bv_repend = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RepEnd", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
-			       val syst =  bir_symbexec_funcLib.update_path bv_repend syst;
+			       val Fr_bv =  bir_symbexec_funcLib.Fr bv_repend;
+			       val syst =  SYST_update_pred ((Fr_bv)::(SYST_get_pred syst)) syst;
+			       val syst =  bir_symbexec_funcLib.update_symbval (mk_BExp_Den bv_repend) Fr_bv syst; (* update symbolic value *)
 
 			       val systs_processed = abpfun ([syst]);
 				   
@@ -472,8 +474,10 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 
 			       val bv_rep = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Rep", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
-			       val syst =  bir_symbexec_funcLib.update_path bv_rep syst;
-
+			       val Fr_bv =  bir_symbexec_funcLib.Fr bv_rep;
+			       val syst =  SYST_update_pred ((Fr_bv)::(SYST_get_pred syst)) syst;
+			       val syst =  bir_symbexec_funcLib.update_symbval (mk_BExp_Den bv_rep) Fr_bv syst; (* update symbolic value *)
+				   
 			       val syst = state_exec_loop_true bl_dict syst;
 				   
 			       val syst = SYST_update_status BST_InLoop_tm syst;

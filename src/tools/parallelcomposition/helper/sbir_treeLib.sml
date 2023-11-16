@@ -37,28 +37,38 @@ val c = listsToTree a b;
     
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs;
+
+compareHeads [[]]
  *)
     
 fun allHeadsEqual ([]: term list list) = false
-| allHeadsEqual (lst: term list list) =
+  | allHeadsEqual ([[]]: term list list) = false
+  | allHeadsEqual (lst: term list list) =
   let
-    val hdOfFirstList = hd lst
-    fun compareHeads ([]: term list list) = true
-      | compareHeads ((h: term list)::t) = if (identical (hd hdOfFirstList) (hd h)) then compareHeads t else false
+      (* val _ = print "1\n" *)
+      val hdOfFirstList = hd lst
+      (* val _ = print "2\n" *)
+      fun compareHeads ([]: term list list) = true
+	| compareHeads ([[]]: term list list) = true
+	| compareHeads ((h: term list)::t) = if (identical (hd hdOfFirstList) (hd h)) then compareHeads t else false
+    (* val _ = print "3\n" *)
   in
     compareHeads lst
   end;
 
 
 fun HeadsEqual ([]: term list) = false
-| HeadsEqual (lst: term list) =
-  let
-    val hdOfFirstList = hd lst
-    fun compareHeads ([]: term list) = true
-      | compareHeads ((h: term)::t) = if (identical hdOfFirstList h) then compareHeads t else false
-  in
-    compareHeads lst
-  end;    
+  | HeadsEqual (lst: term list) =
+    let
+	(* val _ = print "4\n" *)
+	val hdOfFirstList = hd lst
+	(* val _ = print "5\n" *)
+	fun compareHeads ([]: term list) = true
+	  | compareHeads ((h: term)::t) = if (identical hdOfFirstList h) then compareHeads t else false
+	(* val _ = print "6\n" *)
+    in
+	compareHeads lst
+    end;    
 
 
 (*
@@ -80,7 +90,8 @@ val lst =[  [
      “BVar "57_assert_false_cnd" BType_Bool”]];
 
 
-    
+ val lst = [[“BVar "57_assert_false_cnd" BType_Bool”],[“BVar "57_assert_false_cnd" BType_Bool”]]  
+val  
 val smltree = predlist_to_tree lst;
 
 *)
@@ -89,12 +100,21 @@ datatype 'a tree = Leaf | Node of 'a * 'a tree | Branch of 'a * 'a tree * 'a tre
 
 	 
 fun predlist_to_tree ([[]]: term list list) = Leaf
+  | predlist_to_tree ([]: term list list) = Leaf
   | predlist_to_tree (lst: term list list) =    
     if allHeadsEqual lst then
-	Node ((hd (hd lst)), (predlist_to_tree (List.map (fn ls => (tl ls)) lst)))
+	let
+	    (* val _ = print "7\n"; *)
+	in
+	    Node ((hd (hd lst)), ((predlist_to_tree (List.map (fn ls => (tl ls)) lst))handle _ =>Leaf))
+	end
     else
-	(let val (head_noteq, head_eq) = List.partition (HeadsEqual) lst in
-	    Branch ((hd (hd head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq)))	
+	(let
+	     (* val _ = print "7.5\n" *)
+	     val (head_noteq, head_eq) = List.partition (HeadsEqual) lst
+	     (* val _ = print "8\n" *)
+	 in
+	    Branch ((hd (hd head_eq)),((predlist_to_tree (List.map (fn ls => (tl ls)) head_eq))handle _ =>Leaf),((predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq))handle _ =>Leaf))	
 	 end)
 
 
@@ -103,7 +123,7 @@ fun predlist_to_tree ([[]]: term list list) = Leaf
 fun find_be_val vals_list bv =
     let
 	val find_val = List.find (fn (a,_) => Term.term_eq a bv) vals_list;
-	val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" "cannot find symbolic value";
+	val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" ("cannot find symbolic value for "^(term_to_string bv)^"\n");
 	val exp =
 	    case symbv of
 		SymbValBE (x, _) => x

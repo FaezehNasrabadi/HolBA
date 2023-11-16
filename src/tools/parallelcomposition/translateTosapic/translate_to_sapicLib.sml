@@ -286,7 +286,11 @@ val exp = ``BExp_Const (Imm64 112w)``;
 	    in
 		(sp_fun,to_st_thm)
 	    end
-           handle e => raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
+            handle e =>
+		   if (is_BVar exp)
+		   then (bir_exp_to_sapic_term o mk_BExp_Den) exp
+		   else
+		   raise ERR "bir_exp_to_sapic_term" ("Don't know BIR expression: " ^ (term_to_string exp))
     end; 
 
     

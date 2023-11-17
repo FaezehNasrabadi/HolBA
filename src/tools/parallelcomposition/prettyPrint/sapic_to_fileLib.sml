@@ -168,7 +168,7 @@ fun process_to_string pro =
 	    val (a,p) = dest_ProcessAction pro;
 	in
 	    if (is_Rep a)
-	    then (action_to_string a)^"("^(process_to_string p)^")"
+	    then (action_to_string a)^" "^(process_to_string p)
 	    else if (is_ProcessNull p)
 	    then (action_to_string a)
 	    else (action_to_string a)^";\n"^(process_to_string p)

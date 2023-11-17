@@ -1416,9 +1416,11 @@ fun DH_key vn syst =
 	    
 	val (s_bv, s_be) = Kgen3 be_adv vn; (* generate key based on a seed *)
 
-	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("kAB", “BType_Imm Bit64”)); (* generate a fresh name *)
+	val Fr_vn  = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("kAB", “BType_Imm Bit64”)); (* generate a fresh name *)
 
-	val syst = store_mem_r0 s_be Fr_vn syst; (* update syst *) 
+	val syst = store_mem_r0 s_be Fr_vn syst; (* update syst *)
+
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Kab", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
 	val syst = update_key Fr_vn vn syst;
 
@@ -1431,7 +1433,11 @@ fun session_key syst =
 
 	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
-	val syst = update_path vn syst;  (*update path condition *)
+	val syst = update_path vn syst; (* update path condition *)
+
+	val Fr_vn  = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("skey", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	val syst = update_with_fresh_name Fr_vn vn syst;
 
 	val g = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("g", “BType_Imm Bit64”)); (* generate a fresh name *)
 	    
@@ -1439,11 +1445,12 @@ fun session_key syst =
 
 	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("sk", “BType_Imm Bit64”)); (* generate a fresh name *)
 
+	val syst = store_mem_r0 s_be Fr_vn syst; (* update syst *)
+	    
 	val syst = add_knowledge_r0 Fr_vn syst;  (*The adversary has a right to know *)    
 
 	val syst = DH_key vn syst;
 
-	val syst = store_mem_r0 s_be Fr_vn syst; (* update syst *)
 
     in
 	syst

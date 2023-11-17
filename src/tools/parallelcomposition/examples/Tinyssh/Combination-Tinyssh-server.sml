@@ -36,8 +36,10 @@ open  sapic_to_fileLib;
 
 (******Start******)
 
-val lbl_tm = ``BL_Address (Imm64 4209952w)``;
-val stop_lbl_tms = [``BL_Address (Imm64 4212628w)``];
+(* val lbl_tm = ``BL_Address (Imm64 4209952w)``; *)
+val lbl_tm = ``BL_Address (Imm64 0x403D20w)``;
+(* val stop_lbl_tms = [``BL_Address (Imm64 4212628w)``]; *)
+val stop_lbl_tms = [``BL_Address (Imm64 0x404794w)``];
 
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
@@ -65,17 +67,20 @@ val _ = print "finished exploration of all paths.\n\n";
 val _ = print ("number of paths found: " ^ (Int.toString (length systs)));
 val _ = print "\n\n";
 
-val (systs_noassertfailed, systs_assertfailed) =
+val (systs_noassertfailedOne, systs_assertfailedOne) =
   List.partition (fn syst => not (identical (SYST_get_status syst) BST_AssertionViolated_tm)) systs;
-val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
+val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailedOne)));
 val _ = print "\n\n";
-val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
+val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailedOne)));
 val _ = print "\n\n";
    
 (************)
     
-val lbl_tm = ``BL_Address (Imm64 4204336w)``;
-val stop_lbl_tms = [``BL_Address (Imm64 4206916w)``];
+(* val lbl_tm = ``BL_Address (Imm64 4204336w)``; *)
+val lbl_tm = ``BL_Address (Imm64 0x402730w)``;
+(* val stop_lbl_tms = [``BL_Address (Imm64 4206916w)``]; *)
+val stop_lbl_tms = [``BL_Address (Imm64 0x403160w)``];
+    
 val b = [];
 val systs =  List.map (fn s => if (identical ``BVar "sy_key" (BType_Imm Bit64)`` (find_bv_val "err" (SYST_get_env s) ``BVar "key" (BType_Imm Bit64)``)) then b else s::b) systs;
 val systs = [((hd o rev)(List.concat systs))];
@@ -100,11 +105,21 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 
-   
+    (*
+val m = “BVar "45_Ver" BType_Bool”;
+	
+fun fm m = String.isSuffix "Ver" ((fst o dest_BVar_string) m)
+
+(* (List.map (fn ls => ("\n"^((int_to_string o List.length) ls))) predlists) *)
+    exists
+	(List.map (fn ls => (exists (fm) ls)) (bir_symbexec_sortLib.sort_pred_lists predlists))
+    val predlists =  (List.map (fn ls => (filter (fm) ls)) predlists)
+
+*)
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 
-val tr = predlist_to_tree predlists;
+val tr = predlist_to_tree (bir_symbexec_sortLib.sort_pred_lists predlists);
 
 val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
     

@@ -79,7 +79,58 @@ fun qsort_m A = quicksort_m(A,0,Array.length A - 1);
 
 fun arrayToList_m arr = Array.foldr (op ::) [] arr;
 
+(* sort of list of preds based on its length*)
 
+fun partition1_l(A,lo,hi)=
+    let 
+        fun partition'(A,lo,hi,pivot) = 
+            let 
+                val i = firstAfter_m(A,lo,fn k => (List.length)k >= pivot);
+                val j = lastBefore_m(A,hi,fn k => (List.length)k <= pivot);
+            in
+                if i >= j then 
+                    j
+                else
+                (
+                    swap_m(A,i,j);
+                    partition'(A,i+1,j-1,pivot)
+                 )
+             end
+   in
+      partition'(A,lo,hi,(List.length)(Array.sub(A,lo)))
+    end;
+
+fun quicksort_l(A,lo,hi) = 
+    if hi <= lo then
+        ()
+    else
+        let
+            val p = partition1_l(A,lo,hi)
+        in
+            (
+                quicksort_l(A,lo,p);
+                quicksort_l(A,p+1,hi)
+             )
+        end;
+
+fun qsort_l A = quicksort_l(A,0,Array.length A - 1);
+
+fun arrayToList_l arr = Array.foldr (op ::) [] arr;
+
+    (* val pred = [["b","c"],["a"]]  *)
+fun sort_pred_lists pred =
+    let
+
+	val A = Array.fromList pred;
+
+	val _ = qsort_l A;
+
+	val sort_pred = arrayToList_l A;
+  
+    in
+	sort_pred
+    end;
+    
 (*sort pred*)
 
 fun sint_of_bv_m tm =

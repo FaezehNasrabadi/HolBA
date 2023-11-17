@@ -10,6 +10,7 @@ local
     open bossLib;
     open bir_symbexec_stateLib;
     open Option;
+    open List;
 
   val ERR      = Feedback.mk_HOL_ERR "sbir_treeLib"
   val wrap_exn = Feedback.wrap_exn   "sbir_treeLib"
@@ -37,88 +38,184 @@ val c = listsToTree a b;
     
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs;
-
+ 
+ ((List.foldl (fn (true,ls) => if (is_true (identical (hd hdOfFirstList) (hd ls))) then true else raise ERR "" "") true lst)handle _ => false)
+  
 compareHeads [[]]
  *)
-    
+
+
+fun is_true b = ((lift_bool “:bool” b) ~~ T)
+fun is_false b = ((lift_bool “:bool” b) ~~ F)
+
+fun is_true_list [] = true
+  | is_true_list (h::t) =
+    if (is_true h)
+    then (is_true_list t)
+    else false		 
+		
 fun allHeadsEqual ([]: term list list) = false
-  | allHeadsEqual ([[]]: term list list) = false
   | allHeadsEqual (lst: term list list) =
-  let
-      (* val _ = print "1\n" *)
-      val hdOfFirstList = hd lst
-      (* val _ = print "2\n" *)
-      fun compareHeads ([]: term list list) = true
-	| compareHeads ([[]]: term list list) = true
-	| compareHeads ((h: term list)::t) = if (identical (hd hdOfFirstList) (hd h)) then compareHeads t else false
-    (* val _ = print "3\n" *)
-  in
-    compareHeads lst
-  end;
+  if ((not o null o hd) lst)
+  then
+      let
+	  (* val _ = print "1\n" *)
+	  val hdOfFirstList = hd lst
+	  (* val _ = print "2\n" *)
+				val result = ((List.map (fn ls => if (is_true (identical (hd hdOfFirstList) (hd ls))) then true else raise ERR "" "") lst) handle _ => [false]);
 
+	(*		     
+	  fun compareHeads ([]: term list list) = true
+	    | compareHeads ((h: term list)::t) = if (identical (hd hdOfFirstList) (hd h)) then compareHeads t else false*)
+      (* val _ = print "3\n" *)
+      in
+      (* compareHeads lst *)
+	  if (is_false (hd result))
+	  then false
+	  else true
+      end
+  else false;
+ 
 
-fun HeadsEqual ([]: term list) = false
-  | HeadsEqual (lst: term list) =
+(*
+fun HeadsEqual fulllist ([]: term list) = false
+  | HeadsEqual fulllist (lst: term list) =
     let
 	(* val _ = print "4\n" *)
 	val hdOfFirstList = hd lst
+			    
 	(* val _ = print "5\n" *)
-	fun compareHeads ([]: term list) = true
-	  | compareHeads ((h: term)::t) = if (identical hdOfFirstList h) then compareHeads t else false
-	(* val _ = print "6\n" *)
+	val result = ((List.map (fn ls => if (is_true (identical hdOfFirstList (hd ls))) then true else raise ERR "" "") fulllist) handle _ => [false]);
+	    
+	(* fun compareHeads ([]: term list list) = true *)
+	(*   | compareHeads ((h: term list )::t) = if (identical hdOfFirstList (hd h)) then compareHeads t else false *)
+    (* val _ = print "6\n" *)
     in
-	compareHeads lst
-    end;    
+	compareHeads fulllist
+    end;
 
 
-(*
+
+fun fnd_dif m =
+ (identical ((hd o hd) lst) (hd m))
+
+
+val fulllist = lst;
+val lst = [“BVar "7427_Ver" BType_Bool”];
 val lst =[  [
      “BVar "31_assert_true_cnd" BType_Bool”,
      “BVar "34_assert_true_cnd" BType_Bool”,
      “BVar "39_assert_true_cnd" BType_Bool”,
-     “BVar "44_assert_true_cnd" BType_Bool”, “BVar "48_OTP" BType_Bool”,
+     “BVar "44_assert_true_cnd" BType_Bool”,
      “BVar "48_OTP" BType_Bool”, “BVar "50_T" BType_Bool”,
      “BVar "51_assert_true_cnd" BType_Bool”,
      “BVar "54_assert_false_cnd" BType_Bool”],
-    [“BVar "31_assert_true_cnd" BType_Bool”,
-     “BVar "34_assert_true_cnd" BType_Bool”,
-     “BVar "39_assert_true_cnd" BType_Bool”,
-     “BVar "44_assert_true_cnd" BType_Bool”, “BVar "48_OTP" BType_Bool”,
-     “BVar "48_OTP" BType_Bool”, “BVar "50_T" BType_Bool”,
+    [“BVar "50_T" BType_Bool”,
      “BVar "51_assert_true_cnd" BType_Bool”,
      “BVar "53_assert_true_cnd" BType_Bool”,
      “BVar "57_assert_false_cnd" BType_Bool”]];
 
 
- val lst = [[“BVar "57_assert_false_cnd" BType_Bool”],[“BVar "57_assert_false_cnd" BType_Bool”]]  
+ val lst = [[],[“BVar "57_assert_false_cnd" BType_Bool”]]
+val lst = [[“BVar "57_assert_false_cnd" BType_Bool”],[“BVar "57_assert_false_cnd" BType_Bool”,“BVar "59_assert_false_cnd" BType_Bool”]]  
+tl 
+val ls = [“BVar "57_assert_false_cnd" BType_Bool”]
+val head_eq = [[“BVar "59_assert_false_cnd" BType_Bool”],[“BVar "59_assert_false_cnd" BType_Bool”,“BVar "60_assert_false_cnd" BType_Bool”]] 
+predlist_to_tree lst
 val  
 val smltree = predlist_to_tree lst;
+val lst =  [[]]
+tl lst
+val lst = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+    [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+    [], [], [], [], [], [], [], [], [], [], [], [], [], [], [],
+    [“BVar "7427_Ver" BType_Bool”], [“BVar "7427_Ver" BType_Bool”],
+    [“BVar "7427_Ver" BType_Bool”], [“BVar "7427_Ver" BType_Bool”],
+    [“BVar "7944_Ver" BType_Bool”], [“BVar "7944_Ver" BType_Bool”],
+    [“BVar "7944_Ver" BType_Bool”], [“BVar "7944_Ver" BType_Bool”]];
+raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.concat(List.map (fn ls => (List.map (fn l => ("\n"^(term_to_string l))) ls)) lst))))
 
+)handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("\n"^((int_to_string o List.length) ls))) lst)))
+val lst = head_noteq;
 *)
 (* Define a datatype for trees *)
 datatype 'a tree = Leaf | Node of 'a * 'a tree | Branch of 'a * 'a tree * 'a tree;
+
+(*	 
+fun predlist_to_tree ([[]]: term list list) = Leaf
+  | predlist_to_tree ([]: term list list) = Leaf
+  | predlist_to_tree (lst: term list list) =    
+    if (allHeadsEqual lst) then
+	if ((not o null o hd) lst)
+	then
+	(Node ((hd (hd lst)), (predlist_to_tree (List.map (fn ls => (tl ls)) lst))))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("\n"^((int_to_string o List.length) ls))) lst)))
+
+	else predlist_to_tree (tl lst)
+    else 
+	(let
+	     (* val _ = print "7.5\n" *)
+	     val (head_noteq, head_eq) = List.partition (fn ls => (identical ((hd o hd) lst) (hd ls))) lst
+
+	(* val _  = if ((not o null o hd) head_eq) *)
+	(* 	 then print "not empty\n" *)
+	(* 	 else print "empty\n" *)
+		     
+		     
+	 in
+	     if ((not o null) head_eq) then
+		 if ((not o null o hd) head_eq)
+		 then
+		     Branch ((hd (hd head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq)))
+		 else predlist_to_tree head_noteq
+	     else predlist_to_tree head_noteq
+	 end)
+
+
+
+then
+		if ((not o null o hd) head_eq)
+		then
+		    if (is_true_list (List.map (fn ls => ((null o tl) ls)) head_eq))
+		    then (Node ((hd (hd head_eq)), Leaf))
+		    else
+			if ((exists is_false (List.map (fn ls => ((null o tl) ls)) head_eq)) andalso (exists is_true (List.map (fn ls => ((null o tl) ls)) head_eq)))
+			then
+			    let
+				
+		    else
+     
+ *)
 
 	 
 fun predlist_to_tree ([[]]: term list list) = Leaf
   | predlist_to_tree ([]: term list list) = Leaf
   | predlist_to_tree (lst: term list list) =    
-    if allHeadsEqual lst then
-	let
-	    (* val _ = print "7\n"; *)
-	in
-	    Node ((hd (hd lst)), ((predlist_to_tree (List.map (fn ls => (tl ls)) lst))handle _ =>Leaf))
-	end
+    if (is_true_list (List.map (fn ls => (null ls)) lst)) then Leaf
     else
-	(let
-	     (* val _ = print "7.5\n" *)
-	     val (head_noteq, head_eq) = List.partition (HeadsEqual) lst
-	     (* val _ = print "8\n" *)
-	 in
-	    Branch ((hd (hd head_eq)),((predlist_to_tree (List.map (fn ls => (tl ls)) head_eq))handle _ =>Leaf),((predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq))handle _ =>Leaf))	
-	 end)
+	let
+	val (empty, notempty) =
+	    if ((exists is_false (List.map (fn ls => (null ls)) lst)) andalso (exists is_true (List.map (fn ls => (null ls)) lst)))
+	    then List.partition (fn ls => (null ls)) lst
+	    else ([[]],lst)
+		    
+	val (head_eq, head_noteq) = if ((not o null o hd) notempty)
+				    then List.partition (fn ls => (identical ((hd o hd) notempty) (hd ls))) notempty
+				    else List.partition (fn ls => (identical ((hd o hd o rev) notempty) (hd ls))) notempty;
+    in
+	    if (null head_noteq)
+	    then
+		    (Node ((hd (hd head_eq)), (predlist_to_tree (List.map (fn ls => (tl ls)) head_eq))))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("\n"^((int_to_string o List.length) ls))) head_eq)))
+	    else
+		if ((not o null) head_eq) then
+		    if ((not o null o hd) head_eq)
+		    then
+			Branch ((hd (hd head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_eq)),(predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq)))
+		    else predlist_to_tree head_noteq
+		else predlist_to_tree head_noteq
+		     
+    end
 
-
-
+	
 (*Find bir expression*)
 fun find_be_val vals_list bv =
     let
@@ -175,6 +272,9 @@ fun smltree_to_holtree tree =
       | VNode ((a,b), subtree) => (mk_comb (mk_comb (mk_comb (mk_const ("SNode",``:bir_var_t -> bir_exp_t -> (bir_var_t,bir_exp_t) stree -> (bir_var_t,bir_exp_t) stree``), a),b), smltree_to_holtree subtree)) handle HOL_ERR {message = "incompatible types", ...} =>
       mk_const ("SLeaf",``:(bir_var_t,bir_exp_t) stree``);
 
+HOL_Interactive.toggle_quietdec();
+open List;
+HOL_Interactive.toggle_quietdec(); 
 
 purge_tree valtr				       
 

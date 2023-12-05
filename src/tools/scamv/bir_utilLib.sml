@@ -15,16 +15,6 @@ local
 
 in
 
-fun printv n str =
-    if (#verbosity (scamv_configLib.scamv_getopt_config ()) >= n)
-    then print str
-    else ();
-
-fun min_verb n f =
-    if (#verbosity (scamv_configLib.scamv_getopt_config ()) >= n)
-    then f ()
-    else ();
-
 fun stateful_tabulate f =
     let val current = ref 0;
         fun next () =
@@ -152,11 +142,13 @@ fun to_sml_Arbnums model =
       ) (machstate_empty Arbnum.zero) model
     end;
 
-fun remove_suffix suff str =
-    if String.isSuffix suff str then
-      (String.extract(str, 0, SOME((String.size str) - (String.size suff))))
+fun remove_prime str =
+    if String.isSuffix "_" str then
+      (String.extract(str, 0, SOME((String.size str) - 1)))
     else
-      raise ERR "remove_suffix" ("there was no suffix '" ^ suff ^ "' where there should be one");
+      raise ERR "remove_prime" "there was no prime where there should be one";
+
+fun isPrimedRun s = String.isSuffix "_" s;
 
 fun bir_free_vars exp =
     let

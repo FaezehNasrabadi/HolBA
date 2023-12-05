@@ -17,6 +17,7 @@ local
     open translate_to_sapicLib;
     open messagesTheory;
     open messagesSyntax;
+    open bir_symbexec_treeLib; 
 in
 
 
@@ -27,8 +28,24 @@ fun sapic_term_to_name trm =
     then (dest_Con trm)
     else  (mk_Name (PubName_tm, “"0"”))
 
-
-	  
+fun read_events pred =
+    let
+	val event_names = bir_symbexec_oracleLib.read_fun_names "Event-Names";
+	val pred_name = if (String.isSuffix "event_false_cnd" pred) then ("bad"^" "^(hd(event_names)))
+			else if ((String.isSuffix "event_true_cnd" pred) orelse (String.isSuffix "event1" pred))
+			then (List.nth (event_names, 1))
+			else if (String.isSuffix "event2" pred)
+			then (List.nth (event_names, 2))
+			else if (String.isSuffix "event3" pred)
+			then (List.nth (event_names, 3))
+			else raise ERR "read_events" "cannot handle this pred";
+	val namestr = stringSyntax.fromMLstring pred_name;
+	val trm = mk_TVar (mk_Var (namestr,“0:int”));
+    in
+	trm
+    end;
+	    
+	    
 fun sbir_tree_sapic_process tree =
     case tree of
 	VLeaf => ProcessNull_tm
@@ -38,7 +55,7 @@ fun sbir_tree_sapic_process tree =
 	    val (name,bir_type) = dest_BVar a;
 	    val namestr = stringSyntax.fromHOLstring name;
 	in
-	    if ((String.isSuffix "assert_true_cnd" namestr) orelse (String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr))
+	    if ((String.isSuffix "assert_true_cnd" namestr) orelse (String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr) orelse (String.isSuffix "RepEnd" namestr))
 	    then (sbir_tree_sapic_process str)
 		 else if ((String.isSuffix "comp_true_cnd" namestr) orelse (String.isSuffix "cjmp_true_cnd" namestr))
 	    then mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process str),(ProcessNull_tm))
@@ -51,12 +68,11 @@ fun sbir_tree_sapic_process tree =
 	    else if (String.isSuffix "Adv" namestr)
 	    then (mk_ProcessAction ((mk_ChIn (mk_none(SapicTerm_t_ty),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process str)))
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
-	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process str)))
+	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(read_events namestr)],SapicTerm_t_ty))))),(sbir_tree_sapic_process str)))
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process str),(ProcessNull_tm)))
 	end)
 			 
-
-    
+  
 end(*local*)
 
 end (* struct *)

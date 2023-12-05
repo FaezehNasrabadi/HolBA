@@ -28,7 +28,6 @@ val mu_b = Arbnum.fromInt 0; (* Memory starts at address 0x0 *)
 val mu_e = Arbnum.fromInt 0x1000000; (* Memory ends at address 0x1000000 *)
 val pc =   Arbnum.fromInt 0x10030; (* Program counter is at address 0x10030 *)
 
-
 (******************************)
 (* Shorthands from test_RISCV *)
 (******************************)

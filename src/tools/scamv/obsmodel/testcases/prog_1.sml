@@ -2,17 +2,12 @@
 
 val prog_1 = ``
 BirProgram []
-:'obs_type bir_program_t
+:bir_val_t bir_program_t
 ``;
 
 val prog_1_mem_address_pc = ``
 BirProgram []
 :bir_val_t bir_program_t
-``;
-
-val prog_1_mem_address_pc_lspc = ``
-BirProgram []
-:load_store_pc_t bir_program_t
 ``;
 
 val prog_1_cache_tag_index = ``
@@ -51,7 +46,6 @@ F
 val prog_1_test =
   ("prog_1 - empty program", prog_1,
      (prog_1_mem_address_pc,
-      prog_1_mem_address_pc_lspc,
       prog_1_cache_tag_index,
       prog_1_cache_tag_only,
       prog_1_cache_index_only,

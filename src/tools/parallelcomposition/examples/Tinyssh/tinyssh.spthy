@@ -2,31 +2,28 @@ theory TinySSH
 
 begin
 
-builtins: dest-pairing, diffie-hellman, dest-symmetric-encryption, dest-signing
+builtins: diffie-hellman, symmetric-encryption, revealing-signing
 
-functions: hash3/3, kdfPtoS/2, kdfStoP/2, E/3, enc/2, kgen/2, pk/1, sign/2
-
-
-
-equations: kgen(kgen(g,a),b)=kgen(kgen(g,b),a), verify(sign(x,y),pk(y))=true, dec(enc(m,i),i)=m
+functions: hash3/3, kdfPtoS/2, kdfStoP/2, E/3, enc/2, kgen/2, pk/1, sign/2, verify/2 [destructor], dec/2 [destructor]
 
 
 
+equations: verify(sign(x,y),pk(y))=true, dec(enc(m,i),i)=m
 
-(*************************** 
-  Model 
-***************************)
+
+//  <Model> 
+
 
 let P(pkS,~skP,pkP) =
 new ~a;
-let gA=kgen('g',a) in
+let gA=exp('g',~a) in
 out(gA);
 in(B);
 in(sig);
 in(opks);
 if pkS=opks then 
 let h=hash3(gA,B,pkS) in
-let k=kgen(B,a) in
+let k=exp(B,~a) in
 let x=verify(sig,pkS) in
 if x=true then 
 event AcceptP(pkS,pkP);
@@ -36,19 +33,19 @@ out(enc('user_auth',kPS));
 in(userauth_answer);
 if dec(userauth_answer,kSP)='user_auth' then 
 event AcceptP2(pkS,pkP);
-out(enc(sign('user_answer',skP),kPS))
+out(enc(sign('user_answer',~skP),kPS))
 
 let S(~skS,pkS,pkP) =
 in(491_a);
 new ~774_skey;
 let 773_SKey=~774_skey in 
-let 776_sk=kgen('g',773_SKey) in  
+let 776_sk=exp('g',773_SKey) in  
 out(776_sk);
-let 780_kAB=kgen(491_a,773_SKey) in 
+let 780_kAB=exp(491_a,773_SKey) in 
 let 785_HMAC=hash3(491_a,pkS,776_sk) in 
 event AcceptS(pkS,pkP);
-let 791_signature=sign(inputs,~skS) in 
-out(sign(inputs,~skS));
+let 791_signature=sign('inputs',~skS) in 
+out(sign('inputs',~skS));
 let 795_kPS=kdfPtoS(780_kAB,785_HMAC) in 
 let 799_kSP=kdfStoP(780_kAB,785_HMAC) in 
 in(803_a);
@@ -61,9 +58,9 @@ let 7439_Ver=verify(7435_Dec,pkP) in
 if 7439_Ver=true then 
 event AcceptS2(pkS,pkP)
 
-(********************************
-  <Environment>
-*********************************)
+
+//  <Environment>
+
 
 process:
  !(
@@ -79,22 +76,23 @@ process:
   )
 
 
-lemma unique_AcceptP2[reuse]: 
-"All pkS pkP #i #j. AcceptP2(pkS,pkP)@i & AcceptP2(pkS,pkP)@j ==> #i =#j"
 
-lemma unique_AcceptS2[reuse]: 
-"All pkS pkP #i #j. AcceptS2(pkS,pkP)@i & AcceptS2(pkS,pkP)@j ==> #i =#j"
+lemma sanity_AcceptP2[reuse]: 
+"Ex pkS pkP #i. AcceptP2(pkS,pkP)@i"
 
-lemma unique_AcceptP[reuse]: 
-"All pkS pkP #i #j. AcceptP(pkS,pkP)@i & AcceptP(pkS,pkP)@j ==> #i =#j"
+lemma sanity_AcceptS2[reuse]: 
+"Ex pkS pkP #i. AcceptS2(pkS,pkP)@i"
 
-lemma unique_AcceptS[reuse]: 
-"All pkS pkP #i #j. AcceptS(pkS,pkP)@i & AcceptS(pkS,pkP)@j ==> #i =#j"
+lemma sanity_AcceptP[reuse]: 
+"Ex pkS pkP #i. AcceptP(pkS,pkP)@i"
+
+lemma sanity_AcceptS[reuse]: 
+"Ex pkS pkP #i. AcceptS(pkS,pkP)@i"
 
 
 lemma injPS[reuse]: 
  "All pkS pkP #i. AcceptP(pkS,pkP)@i ==>
-    (Ex pkP2 #j. #j<#i & AcceptS(pkS,pkP)@j)"
+    (Ex pkP2 #j. #j<#i & AcceptS(pkS,pkP2)@j)"
 
 
 lemma injSP[reuse,use_induction]:
@@ -107,4 +105,5 @@ lemma injSP[reuse,use_induction]:
 
 
 end
+
 

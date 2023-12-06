@@ -52,6 +52,8 @@ val _ = Theory.new_constant("kgen1", ``:bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("kgen", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
+val _ = Theory.new_constant("exp", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
+
 val _ = Theory.new_constant("kdfPtoS", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("kdfStoP", ``:bir_var_t -> bir_var_t -> bir_exp_t``);    
@@ -387,7 +389,7 @@ fun Kgen2 input1 input2 =
     let
 
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (kgen
+		     (exp
 			  (BVar "g" (BType_Imm Bit64))
 			  ( ^input2))``;
     in
@@ -398,7 +400,7 @@ fun Kgen3 input1 input2 =
     let
 
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (kgen
+		     (exp
 			  ( ^input1)
 			  ( ^input2))``;
     in

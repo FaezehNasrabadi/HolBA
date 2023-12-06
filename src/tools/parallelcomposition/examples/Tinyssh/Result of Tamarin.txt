@@ -1,0 +1,638 @@
+tamarin-troop.py -to 120 -file tinyssh.spthy -t
+Executing 'tamarin-prover tinyssh.spthy --prove'
+Finished 'tamarin-prover tinyssh.spthy --prove' after 1.8464 seconds: proof
+==========================================================================================
+Reporting result:
+
+Finished 'tamarin-prover tinyssh.spthy --prove' after 1.8464 seconds: proof
+
+tamarin-prover --prove tinyssh.spthy
+maude tool: 'maude'
+ checking version: 2.7.1. OK.
+ checking installation: OK.
+theory TinySSH begin
+
+// Function signature and definition of the equational theory E
+
+builtins: diffie-hellman
+functions: E/3, dec/2[destructor], enc/2, fst/1, getMessage/1, hash3/3,
+           kdfPtoS/2, kdfStoP/2, kgen/2, pair/2, pk/1, revealSign/2, revealVerify/3,
+           sdec/2, senc/2, sign/2, snd/1, true/0, verify/2[destructor]
+equations:
+    dec(enc(m, i), i) = m,
+    fst(<x.1, x.2>) = x.1,
+    getMessage(revealSign(x.1, x.2)) = x.1,
+    revealVerify(revealSign(x.1, x.2), x.1, pk(x.2)) = true,
+    sdec(senc(x.1, x.2), x.2) = x.1,
+    snd(<x.1, x.2>) = x.2,
+    verify(sign(x, y), pk(y)) = true
+
+
+
+heuristic: p
+
+
+
+
+
+
+
+
+
+
+
+
+
+lemma sanity_AcceptP2 [reuse]:
+  all-traces "∃ pkS pkP #i. AcceptP2( pkS, pkP ) @ #i"
+/*
+guarded formula characterizing all counter-examples:
+"∀ pkS pkP #i. (AcceptP2( pkS, pkP ) @ #i) ⇒ ⊥"
+*/
+induction
+  case empty_trace
+  simplify
+  SOLVED // trace found
+qed
+
+lemma sanity_AcceptS2 [reuse]:
+  all-traces "∃ pkS pkP #i. AcceptS2( pkS, pkP ) @ #i"
+/*
+guarded formula characterizing all counter-examples:
+"∀ pkS pkP #i. (AcceptS2( pkS, pkP ) @ #i) ⇒ ⊥"
+*/
+induction
+  case empty_trace
+  simplify
+  SOLVED // trace found
+qed
+
+lemma sanity_AcceptP [reuse]:
+  all-traces "∃ pkS pkP #i. AcceptP( pkS, pkP ) @ #i"
+/*
+guarded formula characterizing all counter-examples:
+"∀ pkS pkP #i. (AcceptP( pkS, pkP ) @ #i) ⇒ ⊥"
+*/
+induction
+  case empty_trace
+  simplify
+  SOLVED // trace found
+qed
+
+lemma sanity_AcceptS [reuse]:
+  all-traces "∃ pkS pkP #i. AcceptS( pkS, pkP ) @ #i"
+/*
+guarded formula characterizing all counter-examples:
+"∀ pkS pkP #i. (AcceptS( pkS, pkP ) @ #i) ⇒ ⊥"
+*/
+induction
+  case empty_trace
+  simplify
+  SOLVED // trace found
+qed
+
+lemma injPS [reuse]:
+  all-traces
+  "∀ pkS pkP #i.
+    (AcceptP( pkS, pkP ) @ #i) ⇒
+    (∃ pkP2 #j. (#j < #i) ∧ (AcceptS( pkS, pkP2 ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkS pkP #i.
+  (AcceptP( pkS, pkP ) @ #i)
+ ∧
+  ∀ pkP2 #j. (AcceptS( pkS, pkP2 ) @ #j) ⇒ ¬(#j < #i)"
+*/
+simplify
+by solve( AcceptP( pkS, pkP ) @ #i )
+
+lemma injSP [reuse, use_induction]:
+  all-traces
+  "∀ pkS pkP #i.
+    (AcceptS2( pkS, pkP ) @ #i) ⇒
+    (∃ #j. (#j < #i) ∧ (AcceptP2( pkS, pkP ) @ #j))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ pkS pkP #i.
+  (AcceptS2( pkS, pkP ) @ #i)
+ ∧
+  ∀ #j. (AcceptP2( pkS, pkP ) @ #j) ⇒ ¬(#j < #i)"
+*/
+induction
+  case empty_trace
+  by contradiction /* from formulas */
+next
+  case non_empty_trace
+  simplify
+  solve( (last(#i))  ∥
+         (∃ #j. (AcceptP2( pkS, pkP ) @ #j) ∧ (¬(last(#j))) ∧ (#j < #i)) )
+    case case_1
+    by solve( AcceptS2( pkS, pkP ) @ #i )
+  next
+    case case_2
+    by contradiction /* from formulas */
+  qed
+qed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rule (modulo E) Init[color=#ffffff, process="!"]:
+   [ ] --[ Init( ) ]-> [ !Semistate_1( ) ]
+
+  /* has exactly the trivial AC variant */
+
+rule (modulo E) p_1_[color=#ffffff, process="!"]:
+   [ !Semistate_1( ), Fr( ~skS.1 ) ]
+  -->
+   [ !Semistate_1111( ~skS.1 ), Out( pk(~skS.1) ) ]
+
+  /*
+  rule (modulo AC) p_1_[color=#ffffff, process="!"]:
+     [ !Semistate_1( ), Fr( ~skS ) ]
+    -->
+     [ !Semistate_1111( ~skS ), Out( pk(~skS) ) ]
+  */
+
+rule (modulo E) p_1_111[color=#ffffff, process="!"]:
+   [ !Semistate_1111( ~skS.1 ), Fr( ~skP.1 ) ]
+  -->
+   [ !Semistate_1111111( ~skP.1, ~skS.1 ), Out( pk(~skP.1) ) ]
+
+  /*
+  rule (modulo AC) p_1_111[color=#ffffff, process="!"]:
+     [ !Semistate_1111( ~skS ), Fr( ~skP ) ]
+    -->
+     [ !Semistate_1111111( ~skP, ~skS ), Out( pk(~skP) ) ]
+  */
+
+rule (modulo E) newa_0_111111111[color=#408051, process="new ~a.1;"]:
+   [ State_111111111( ~skP.1, ~skS.1 ), Fr( ~a.1 ) ]
+  -->
+   [ State_11111111111( ~a.1, ~skP.1, ~skS.1 ), Out( 'g'^~a.1 ) ]
+
+  /*
+  rule (modulo AC) newa_0_111111111[color=#408051, process="new ~a.1;"]:
+     [ State_111111111( ~skP, ~skS ), Fr( ~a ) ]
+    -->
+     [ State_11111111111( ~a, ~skP, ~skS ), Out( 'g'^~a ) ]
+  */
+
+rule (modulo E) inB_0_11111111111[color=#408051, process="in(B.1);"]:
+   [
+   State_11111111111( ~a.1, ~skP.1, ~skS.1 ), In( B.1 ), In( sig.1 ),
+   In( opks.1 )
+   ]
+  -->
+   [ State_11111111111111( ~a.1, ~skP.1, ~skS.1, B.1, opks.1, sig.1 ) ]
+
+  /*
+  rule (modulo AC) inB_0_11111111111[color=#408051, process="in(B.1);"]:
+     [ State_11111111111( ~a, ~skP, ~skS ), In( B ), In( sig ), In( opks ) ]
+    -->
+     [ State_11111111111111( ~a, ~skP, ~skS, B, opks, sig ) ]
+  */
+
+rule (modulo E) ifpkskSopks_0_11111111111111[color=#408051,
+                                             process="if pk(~skS.1)=opks.1"]:
+   [ State_11111111111111( ~a.1, ~skP.1, ~skS.1, B.1, opks.1, sig.1 ) ]
+  --[ Pred_Eq( pk(~skS.1), opks.1 ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ifpkskSopks_0_11111111111111[color=#408051,
+                                                process="if pk(~skS.1)=opks.1"]:
+     [ State_11111111111111( ~a, ~skP, ~skS, B, opks, sig ) ]
+    --[ Pred_Eq( pk(~skS), opks ) ]->
+     [ ]
+  */
+
+rule (modulo E) ifpkskSopks_1_11111111111111[color=#408051,
+                                             process="if pk(~skS.1)=opks.1"]:
+   [ State_11111111111111( ~a.1, ~skP.1, ~skS.1, B.1, opks.1, sig.1 ) ]
+  --[ Pred_Not_Eq( pk(~skS.1), opks.1 ) ]->
+   [ ]
+
+  /*
+  rule (modulo AC) ifpkskSopks_1_11111111111111[color=#408051,
+                                                process="if pk(~skS.1)=opks.1"]:
+     [ State_11111111111111( ~a, ~skP, ~skS, B, opks, sig ) ]
+    --[ Pred_Not_Eq( pk(~skS), opks ) ]->
+     [ ]
+  */
+
+rule (modulo E) p_1_111111[color=#ffffff, process="!"]:
+   [ !Semistate_1111111( ~skP.1, ~skS.1 ) ]
+  -->
+   [ State_111111121( ~skP.1, ~skS.1 ), State_111111111( ~skP.1, ~skS.1 ) ]
+
+  /*
+  rule (modulo AC) p_1_111111[color=#ffffff, process="!"]:
+     [ !Semistate_1111111( ~skP, ~skS ) ]
+    -->
+     [ State_111111121( ~skP, ~skS ), State_111111111( ~skP, ~skS ) ]
+  */
+
+rule (modulo E) ina_0_111111121[color=#408051, process="in(491_a.1);"]:
+   [ State_111111121( ~skP.1, ~skS.1 ), In( 491_a.1 ), Fr( ~774_skey.1 ) ]
+  -->
+   [
+   State_111111121111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1 ),
+   Out( 'g'^~774_skey.1 )
+   ]
+
+  /*
+  rule (modulo AC) ina_0_111111121[color=#408051, process="in(491_a.1);"]:
+     [ State_111111121( ~skP, ~skS ), In( 491_a ), Fr( ~774_skey ) ]
+    -->
+     [
+     State_111111121111( ~774_skey, ~skP, ~skS, 491_a ), Out( 'g'^~774_skey )
+     ]
+  */
+
+rule (modulo E) eventAcceptSpkskSpkskP_0_111111121111[color=#408051,
+                                                      process="event AcceptS( pk(~skS.1), pk(~skP.1) );"]:
+   [ State_111111121111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1 ) ]
+  --[ AcceptS( pk(~skS.1), pk(~skP.1) ) ]->
+   [
+   State_11111112111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1 ),
+   Out( sign('inputs', ~skS.1) )
+   ]
+
+  /*
+  rule (modulo AC) eventAcceptSpkskSpkskP_0_111111121111[color=#408051,
+                                                         process="event AcceptS( pk(~skS.1), pk(~skP.1) );"]:
+     [ State_111111121111( ~774_skey, ~skP, ~skS, 491_a ) ]
+    --[ AcceptS( pk(~skS), pk(~skP) ) ]->
+     [
+     State_11111112111111( ~774_skey, ~skP, ~skS, 491_a ),
+     Out( sign('inputs', ~skS) )
+     ]
+  */
+
+rule (modulo E) ina_0_11111112111111[color=#408051,
+                                     process="in(803_a.1);"]:
+   [
+   State_11111112111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1 ),
+   In( 803_a.1 )
+   ]
+  -->
+   [
+   Let_1111111211111111( <803_a.1, 
+                          kdfPtoS(491_a.1^~774_skey.1, hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1))
+                         >,
+                         ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 803_a.1
+   )
+   ]
+
+  /*
+  rule (modulo AC) ina_0_11111112111111[color=#408051,
+                                        process="in(803_a.1);"]:
+     [ State_11111112111111( ~774_skey, ~skP, ~skS, 491_a ), In( 803_a ) ]
+    -->
+     [
+     Let_1111111211111111( <803_a, 
+                            kdfPtoS(z, hash3(491_a, pk(~skS), 'g'^~774_skey))>,
+                           ~774_skey, ~skP, ~skS, 491_a, 803_a
+     )
+     ]
+    variants (modulo AC)
+    1. ~774_skey
+             = ~774_skey.16
+       491_a = 491_a.19
+       z     = 491_a.19^~774_skey.16
+    
+    2. ~774_skey
+             = ~774_skey.18
+       491_a = z.23^inv(~774_skey.18)
+       z     = z.23
+    
+    3. ~774_skey
+             = ~774_skey.42
+       491_a = x.80^x.81
+       z     = x.80^(~774_skey.42*x.81)
+    
+    4. ~774_skey
+             = ~774_skey.45
+       491_a = x.86^inv((~774_skey.45*x.87))
+       z     = x.86^inv(x.87)
+    
+    5. ~774_skey
+             = ~774_skey.45
+       491_a = x.86^(x.87*inv(~774_skey.45))
+       z     = x.86^x.87
+    
+    6. ~774_skey
+             = ~774_skey.46
+       491_a = x.87^(x.88*inv((~774_skey.46*x.89)))
+       z     = x.87^(x.88*inv(x.89))
+    
+    7. 491_a = DH_neutral
+       z     = DH_neutral
+  */
+
+rule (modulo E) letDecdecakdfPtoSaskeyhashapkskSgskey_1_111111121111111[color=#ffffff,
+                                                                        process="let 804_Dec.1=dec(803_a.1,
+    kdfPtoS(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1)))"]:
+   [
+   Let_1111111211111111( <enc(804_Dec.1, i), i>, ~774_skey.1, ~skP.1,
+                         ~skS.1, 491_a.1, 803_a.1
+   )
+   ]
+  -->
+   [
+   State_1111111211111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 803_a.1,
+                           804_Dec.1
+   )
+   ]
+
+  /*
+  rule (modulo AC) letDecdecakdfPtoSaskeyhashapkskSgskey_1_111111121111111[color=#ffffff,
+                                                                           process="let 804_Dec.1=dec(803_a.1,
+    kdfPtoS(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1)))"]:
+     [
+     Let_1111111211111111( <enc(804_Dec, i), i>, ~774_skey, ~skP, ~skS, 491_a,
+                           803_a
+     )
+     ]
+    -->
+     [ State_1111111211111111( ~774_skey, ~skP, ~skS, 491_a, 803_a, 804_Dec )
+     ]
+  */
+
+rule (modulo E) outencDeckdfStoPaskeyhashapkskSgskey_0_1111111211111111[color=#408051,
+                                                                        process="out(enc(804_Dec.1,
+    kdfStoP(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1))));"]:
+   [
+   State_1111111211111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 803_a.1,
+                           804_Dec.1
+   )
+   ]
+  -->
+   [
+   State_11111112111111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 803_a.1,
+                            804_Dec.1
+   ),
+   Out( enc(804_Dec.1,
+            kdfStoP(491_a.1^~774_skey.1,
+                    hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1)))
+   )
+   ]
+
+  /*
+  rule (modulo AC) outencDeckdfStoPaskeyhashapkskSgskey_0_1111111211111111[color=#408051,
+                                                                           process="out(enc(804_Dec.1,
+    kdfStoP(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1))));"]:
+     [ State_1111111211111111( ~774_skey, ~skP, ~skS, 491_a, 803_a, 804_Dec )
+     ]
+    -->
+     [
+     State_11111112111111111( ~774_skey, ~skP, ~skS, 491_a, 803_a, 804_Dec ),
+     Out( enc(804_Dec, kdfStoP(z, hash3(491_a, pk(~skS), 'g'^~774_skey))) )
+     ]
+    variants (modulo AC)
+    1. ~774_skey
+             = ~774_skey.17
+       491_a = 491_a.20
+       z     = 491_a.20^~774_skey.17
+    
+    2. ~774_skey
+             = ~774_skey.20
+       491_a = z.26^inv(~774_skey.20)
+       z     = z.26
+    
+    3. ~774_skey
+             = ~774_skey.46
+       491_a = x.88^x.89
+       z     = x.88^(~774_skey.46*x.89)
+    
+    4. ~774_skey
+             = ~774_skey.49
+       491_a = x.94^inv((~774_skey.49*x.95))
+       z     = x.94^inv(x.95)
+    
+    5. ~774_skey
+             = ~774_skey.49
+       491_a = x.94^(x.95*inv(~774_skey.49))
+       z     = x.94^x.95
+    
+    6. ~774_skey
+             = ~774_skey.50
+       491_a = x.95^(x.96*inv((~774_skey.50*x.97)))
+       z     = x.95^(x.96*inv(x.97))
+    
+    7. 491_a = DH_neutral
+       z     = DH_neutral
+  */
+
+rule (modulo E) ina_0_11111112111111111[color=#408051,
+                                        process="in(7434_a.1);"]:
+   [
+   State_11111112111111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 803_a.1,
+                            804_Dec.1
+   ),
+   In( 7434_a.1 )
+   ]
+  -->
+   [
+   Let_1111111211111111111( <7434_a.1, 
+                             kdfPtoS(491_a.1^~774_skey.1, hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1))
+                            >,
+                            ~774_skey.1, ~skP.1, ~skS.1, 491_a.1, 7434_a.1, 803_a.1, 804_Dec.1
+   )
+   ]
+
+  /*
+  rule (modulo AC) ina_0_11111112111111111[color=#408051,
+                                           process="in(7434_a.1);"]:
+     [
+     State_11111112111111111( ~774_skey, ~skP, ~skS, 491_a, 803_a, 804_Dec ),
+     In( 7434_a )
+     ]
+    -->
+     [
+     Let_1111111211111111111( <7434_a, 
+                               kdfPtoS(z, hash3(491_a, pk(~skS), 'g'^~774_skey))>,
+                              ~774_skey, ~skP, ~skS, 491_a, 7434_a, 803_a, 804_Dec
+     )
+     ]
+    variants (modulo AC)
+    1. ~774_skey
+             = ~774_skey.18
+       491_a = 491_a.21
+       z     = 491_a.21^~774_skey.18
+    
+    2. ~774_skey
+             = ~774_skey.22
+       491_a = z.29^inv(~774_skey.22)
+       z     = z.29
+    
+    3. ~774_skey
+             = ~774_skey.50
+       491_a = x.96^x.97
+       z     = x.96^(~774_skey.50*x.97)
+    
+    4. ~774_skey
+             = ~774_skey.53
+       491_a = x.102^inv((~774_skey.53*x.103))
+       z     = x.102^inv(x.103)
+    
+    5. ~774_skey
+             = ~774_skey.53
+       491_a = x.102^(x.103*inv(~774_skey.53))
+       z     = x.102^x.103
+    
+    6. ~774_skey
+             = ~774_skey.54
+       491_a = x.103^(x.104*inv((~774_skey.54*x.105)))
+       z     = x.103^(x.104*inv(x.105))
+    
+    7. 491_a = DH_neutral
+       z     = DH_neutral
+  */
+
+rule (modulo E) letDecdecakdfPtoSaskeyhashapkskSgskey_1_111111121111111111[color=#ffffff,
+                                                                           process="let 7435_Dec.1=dec(7434_a.1,
+    kdfPtoS(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1)))"]:
+   [
+   Let_1111111211111111111( <enc(7435_Dec.1, i), i>, ~774_skey.1, ~skP.1,
+                            ~skS.1, 491_a.1, 7434_a.1, 803_a.1, 804_Dec.1
+   )
+   ]
+  -->
+   [
+   State_1111111211111111111( ~774_skey.1, ~skP.1, ~skS.1, 491_a.1,
+                              7434_a.1, 7435_Dec.1, 803_a.1, 804_Dec.1
+   )
+   ]
+
+  /*
+  rule (modulo AC) letDecdecakdfPtoSaskeyhashapkskSgskey_1_111111121111111111[color=#ffffff,
+                                                                              process="let 7435_Dec.1=dec(7434_a.1,
+    kdfPtoS(491_a.1^~774_skey.1,
+            hash3(491_a.1, pk(~skS.1), 'g'^~774_skey.1)))"]:
+     [
+     Let_1111111211111111111( <enc(7435_Dec, i), i>, ~774_skey, ~skP, ~skS,
+                              491_a, 7434_a, 803_a, 804_Dec
+     )
+     ]
+    -->
+     [
+     State_1111111211111111111( ~774_skey, ~skP, ~skS, 491_a, 7434_a,
+                                7435_Dec, 803_a, 804_Dec
+     )
+     ]
+  */
+
+restriction predicate_eq:
+  "∀ #i a b. (Pred_Eq( a, b ) @ #i) ⇒ (a = b)"
+  // safety formula
+
+restriction predicate_not_eq:
+  "∀ #i a b. (Pred_Not_Eq( a, b ) @ #i) ⇒ (¬(a = b))"
+  // safety formula
+
+restriction single_session:
+  "∀ #i #j. ((Init( ) @ #i) ∧ (Init( ) @ #j)) ⇒ (#i = #j)"
+  // safety formula
+
+/*
+WARNING: the following wellformedness checks failed!
+
+Inexistant lemma actions
+========================
+
+  lemma `sanity_AcceptP2' references action 
+    fact "AcceptP2" (arity 2, Linear) 
+  but no rule has such an action.
+  
+  lemma `sanity_AcceptS2' references action 
+    fact "AcceptS2" (arity 2, Linear) 
+  but no rule has such an action.
+  
+  lemma `sanity_AcceptP' references action 
+    fact "AcceptP" (arity 2, Linear) 
+  but no rule has such an action.
+  
+  lemma `injPS' references action 
+    fact "AcceptP" (arity 2, Linear) 
+  but no rule has such an action.
+  
+  lemma `injSP' references action 
+    fact "AcceptP2" (arity 2, Linear) 
+  but no rule has such an action.
+  
+  lemma `injSP' references action 
+    fact "AcceptS2" (arity 2, Linear) 
+  but no rule has such an action.
+*/
+
+/*
+Generated from:
+Tamarin version 1.8.0
+Maude version 2.7.1
+Git revision: UNKNOWN, branch: UNKNOWN
+Compiled at: 2023-08-30 19:02:12.455846 UTC
+*/
+
+end
+
+==============================================================================
+summary of summaries:
+
+analyzed: tinyssh.spthy
+
+  processing time: 1.47s
+  
+  WARNING: 6 wellformedness check failed!
+           The analysis results might be wrong!
+  
+  sanity_AcceptP2 (all-traces): falsified - found trace (3 steps)
+  sanity_AcceptS2 (all-traces): falsified - found trace (3 steps)
+  sanity_AcceptP (all-traces): falsified - found trace (3 steps)
+  sanity_AcceptS (all-traces): falsified - found trace (3 steps)
+  injPS (all-traces): verified (2 steps)
+  injSP (all-traces): verified (6 steps)
+
+==============================================================================
+

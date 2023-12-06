@@ -10,9 +10,9 @@ in(432_a);
 new ~774_skey;
 let 773_SKey=~774_skey in 
 out(776_sk);
-let 778_kAB=kgen(491_a,773_SKey) in 
+let 778_kAB=exp(491_a,773_SKey) in 
 let 781_Kab=778_kAB in 
-let 776_sk=kgen(g,773_SKey) in 
+let 776_sk=exp(g,773_SKey) in 
 let 785_HMAC=hash3(491_a,pkS,776_sk) in 
 event AcceptS(pkS,pkP);
 let 791_signature=sign(inputs,skS) in 

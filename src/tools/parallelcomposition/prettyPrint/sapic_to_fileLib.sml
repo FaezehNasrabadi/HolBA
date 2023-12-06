@@ -24,11 +24,11 @@ fun name_to_string N =
 	val (tag,str) = dest_Name N;
     in
 	if (is_FreshName tag)
-	then ("~'" ^ (stringSyntax.fromHOLstring str) ^ "'")
+	then ("~" ^ (stringSyntax.fromHOLstring str))
 	else if (is_PubName tag)
 	then ("'"  ^ (stringSyntax.fromHOLstring str) ^ "'")
 	else if (is_NodeName tag)
-	then ("#'" ^ (stringSyntax.fromHOLstring str) ^ "'")
+	then ("#" ^ (stringSyntax.fromHOLstring str))
 	else raise ERR "name_to_string" ("Don't know Sapic Name: " ^ (term_to_string N))
     end;
 
@@ -83,8 +83,10 @@ fun fact_to_string fct =
     let
 	    val (tag,fct_vals) = dest_Fact fct;
 	    val (trm_list,_) = listSyntax.dest_list fct_vals;
-	in
-	    ((factTag_to_string tag) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)) ^ ")"))	     
+    in
+	if (is_TermFact tag)
+	then ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)))
+	else ((factTag_to_string tag) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)) ^ ")"))	     
     end	
    
 (* print Action
@@ -120,8 +122,8 @@ fun combinator_to_string comb =
 if (is_Parallel comb) then "|"
 else if (is_NDC comb) then "+"
 else if (is_Cond comb) then "if "^ ((sapicterm_to_string o dest_Cond) comb) ^ " then "
-else if (is_CondEq comb) then "if "^ ((sapicterm_to_string o fst o dest_CondEq) comb) ^ " = "  ^ ((sapicterm_to_string o snd o dest_CondEq) comb) ^ " then "
-else if (is_Let comb) then "let "^ ((sapicterm_to_string o fst o dest_Let) comb) ^ " = "  ^ ((sapicterm_to_string o snd o dest_Let) comb)^ " in "
+else if (is_CondEq comb) then "if "^ ((sapicterm_to_string o fst o dest_CondEq) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_CondEq) comb) ^ " then "
+else if (is_Let comb) then "let "^ ((sapicterm_to_string o fst o dest_Let) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_Let) comb)^ " in "
 else if (is_Lookup comb) then "lookup "^ ((sapicterm_to_string o fst o dest_Lookup) comb) ^ " as "  ^ ((var_to_string o snd o dest_Lookup) comb)^ " in "
 else if (is_ProcessCall comb) then
     let

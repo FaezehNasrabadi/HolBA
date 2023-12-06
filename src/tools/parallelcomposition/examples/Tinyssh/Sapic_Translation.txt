@@ -7,23 +7,22 @@ if Equal(LowCast(173_R0,'32'),'0') then
 if Equal(LowCast(276_R15,'32'),'0') then 
 in(432_a);
 ! in(491_a);
-let 544_RepEnd = 544_RepEnd in 
-new ~'774_skey';
-let 773_SKey = ~'774_skey' in 
-let 776_sk = kgen(g,773_SKey) in 
+new ~774_skey;
+let 773_SKey=~774_skey in 
 out(776_sk);
-let 780_kAB = kgen(491_a,773_SKey) in 
-let 783_Kab = 780_kAB in 
-let 785_HMAC = hash3(491_a,pkS,780_kAB) in 
-event Term('1');
-let 791_signature = sign(inputs,skS) in 
+let 778_kAB=kgen(491_a,773_SKey) in 
+let 781_Kab=778_kAB in 
+let 776_sk=kgen(g,773_SKey) in 
+let 785_HMAC=hash3(491_a,pkS,776_sk) in 
+event AcceptS(pkS,pkP);
+let 791_signature=sign(inputs,skS) in 
 out(sign(inputs,skS));
-let 795_kPS = kdfPtoS(780_kAB,785_HMAC) in 
-let 794_PtoS = 795_kPS in 
-let 799_kSP = kdfStoP(780_kAB,785_HMAC) in 
+let 795_kPS=kdfPtoS(778_kAB,785_HMAC) in 
+let 794_PtoS=795_kPS in 
+let 799_kSP=kdfStoP(778_kAB,785_HMAC) in 
 in(803_a);
-let 804_Dec = dec(803_a,795_kPS) in 
-let 807_Enc = enc(804_Dec,799_kSP) in 
+let 804_Dec=dec(803_a,795_kPS) in 
+let 807_Enc=enc(804_Dec,799_kSP) in 
 out(807_Enc);
 if 1066_ProcState_Z then 
 in(5758_a);
@@ -51,8 +50,7 @@ else if And(6133_ProcState_C,Not(6136_ProcState_Z)) then
 0
 else if Not(Equal(LowCast(6192_R0,'32'),'0')) then 
 0
-else let 6223_RepEnd = 6223_RepEnd in 
-if Not(Equal(LowCast(6270_R0,'32'),'0')) then 
+else if Not(Equal(LowCast(6270_R0,'32'),'0')) then 
 if Not(Equal(LowCast(6465_R10,'32'),'0')) then 
 0
 else if Not(6521_ProcState_Z) then 
@@ -77,10 +75,10 @@ if Not(7299_ProcState_Z) then
 else if Not(7365_ProcState_Z) then 
 0
 else in(7434_a);
-let 7435_Dec = dec(7434_a,795_kPS) in 
-let 7439_Ver = verify(7435_Dec,pkP) in 
+let 7435_Dec=dec(7434_a,795_kPS) in 
+let 7439_Ver=verify(7435_Dec,pkP) in 
 if Equal(7439_Ver,'1') then 
-event Term('1');
+event AcceptS2(pkS,pkP);
 if '1' then 
 if Not(7518_ProcState_Z) then 
 0
@@ -99,10 +97,10 @@ if Not(7816_ProcState_Z) then
 else if Not(7882_ProcState_Z) then 
 0
 else in(7951_a);
-let 7952_Dec = dec(7951_a,795_kPS) in 
-let 7956_Ver = verify(7952_Dec,pkP) in 
+let 7952_Dec=dec(7951_a,795_kPS) in 
+let 7956_Ver=verify(7952_Dec,pkP) in 
 if Equal(7956_Ver,'1') then 
-event Term('1');
+event AcceptS2(pkS,pkP);
 if '0' then 
 if Not(7988_ProcState_Z) then 
 0

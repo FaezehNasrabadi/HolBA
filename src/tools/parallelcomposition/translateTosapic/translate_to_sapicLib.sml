@@ -22,16 +22,12 @@ local
     open intSyntax;
     open Term;
     open translate_to_sapicTheory;
-    val ERR = mk_HOL_ERR "translate_to_sapicLib";
-    val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
-
-
     open simpLib;
-
-
     open Type;
     open wordsSyntax;
-
+	 
+    val ERR = mk_HOL_ERR "translate_to_sapicLib";
+    val wrap_exn = Feedback.wrap_exn "translate_to_sapicLib";
 
 in
 	  
@@ -274,9 +270,13 @@ val exp = ``BExp_Const (Imm64 112w)``;
 	else
 	    let
 		val (name,trms) = strip_comb exp;
-		val trm_list1 = map (fst o bir_exp_to_sapic_term o mk_BExp_Den) trms;
+		val trm_list1 = map (fn x => if (is_BVar x)
+					     then ((fst o bir_exp_to_sapic_term o mk_BExp_Den) x)
+					     else ((fst o bir_exp_to_sapic_term) x)) trms;
 		val trm_list2 = (listSyntax.mk_list (trm_list1,SapicTerm_t_ty));
-		val thm_list = map (snd o bir_exp_to_sapic_term o mk_BExp_Den) trms;
+		val thm_list = map (fn x => if (is_BVar x)
+					     then ((snd o bir_exp_to_sapic_term o mk_BExp_Den) x)
+					     else ((snd o bir_exp_to_sapic_term) x)) trms;
 		val namestr = stringSyntax.fromMLstring (Parse.term_to_string name);
 		val thm0 =  (SIMP_CONV (srw_ss()) []) “(int_of_num o LENGTH) ^trm_list2”;
 		val trmlng = (snd o dest_eq o concl) thm0;
@@ -301,6 +301,10 @@ val exp = ``BExp_Const (Imm64 112w)``;
 
 	  
 (*
+
+val exp = “dec (BVar "4709_a" (BType_Imm Bit64))
+     (pars1 (BVar "4576_KDF" (BType_Imm Bit64)))”
+
 Arith_cons.term_of_int (List.length trm_list1);
 HOL_Interactive.toggle_quietdec();
 open mlibArbint;

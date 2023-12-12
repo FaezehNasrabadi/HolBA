@@ -23,6 +23,16 @@ open bir_symbexec_driverLib;
 open Redblackmap;
 open bir_symbexec_oracleLib;
 open bir_symbexec_loopLib;
+open sbir_treeLib;
+open sapicplusTheory;
+open sapicplusSyntax;
+open translate_to_sapicTheory;
+open rich_listTheory;
+open translate_to_sapicLib;
+open messagesTheory;
+open messagesSyntax;
+open tree_to_processLib;
+open  sapic_to_fileLib;
 (* HOL_Interactive.toggle_quietdec(); *)
 
 (******wg_noise_handshake_consume_initiation******)
@@ -84,5 +94,33 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 
-   
-val Acts = bir_symbexec_treeLib.sym_exe_to_IML systs_noassertfailed;
+val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
+                         systs_noassertfailed;
+    
+val tr = predlist_to_tree (bir_symbexec_sortLib.sort_pred_lists predlists);
+
+val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
+    
+val sort_vals = bir_symbexec_sortLib.refine_symb_val_list vals_list;
+
+
+val valtr =  tree_with_value tr sort_vals;
+
+val _ = print "\n";     
+val _ = print ("built a symbolic tree with value");
+val _ = print "\n";
+
+
+val sapic_process = sbir_tree_sapic_process (purge_tree valtr);
+
+
+val _ = print "\n";     
+val _ = print ("sapic_process");
+val _ = print "\n";
+    
+val _ =  ( write_sapic_to_file o process_to_string) sapic_process
+
+val _ = print "\n";     
+val _ = print ("wrote into file");
+val _ = print "\n";
+    

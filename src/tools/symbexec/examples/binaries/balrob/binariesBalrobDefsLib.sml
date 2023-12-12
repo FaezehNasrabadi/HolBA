@@ -209,7 +209,7 @@ struct
      "main"
  ];
 
-*)
+
 (* WireGuard-Initiator *)
 val symbs_sec_text = [
     "wait_for_random_bytes",
@@ -236,7 +236,7 @@ val symbs_sec_text = [
     "wg_noise_handshake_consume_response"
 ];
 
-(*
+*)
 (* WireGuard-Respondor *)
  val symbs_sec_text = [
      "wait_for_random_bytes",
@@ -263,7 +263,7 @@ val symbs_sec_text = [
      "wg_noise_handshake_create_response"
  ];
 
-
+(*
 
 (* TinySSH *)
 val symbs_sec_text = [

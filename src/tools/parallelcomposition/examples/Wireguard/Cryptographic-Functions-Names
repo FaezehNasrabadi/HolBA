@@ -7,7 +7,6 @@ message_decrypt
 
 
 
-__stack_chk_fail
 
 
 
@@ -15,7 +14,8 @@ __stack_chk_fail
 
 
 
-mix_psk
+
+mix_precomputed_dh
 
 
 
@@ -28,7 +28,7 @@ mix_dh
 
 handshake_init
 
-mix_precomputed_dh
+mix_psk
 
 
 

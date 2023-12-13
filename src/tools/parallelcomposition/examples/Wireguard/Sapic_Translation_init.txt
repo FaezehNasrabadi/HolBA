@@ -44,7 +44,7 @@ let 4783_HMAC=hash2(4489_HMAC,4780_Pars2) in
 let 4786_Pars3=pars33(4772_KDF,'32') in 
 let 4793_Dec=dec(139_R20,4786_Pars3) in 
 let 4796_HMAC=hash2(4783_HMAC,139_R20) in 
-event InitAccept(Init,Resp,Spub_i,Spub_r);
+event InitAccept(Init,Resp,Spub_i,Spub_r,Spriv_i);
 if 4803_ProcState_Z then 
 if Not(4893_ProcState_Z) then 
 0
@@ -97,7 +97,7 @@ let 3527_HMAC=hash2(3233_HMAC,3524_Pars2) in
 let 3530_Pars3=pars33(3516_KDF,'32') in 
 let 3537_Dec=dec(203_R20,3530_Pars3) in 
 let 3540_HMAC=hash2(3527_HMAC,203_R20) in 
-event InitAccept(Init,Resp,Spub_i,Spub_r);
+event InitAccept(Init,Resp,Spub_i,Spub_r,Spriv_i);
 if 3547_ProcState_Z then 
 if Not(3637_ProcState_Z) then 
 0
@@ -106,19 +106,19 @@ if Not(3945_ProcState_Z) then
 0
 else if Not(3831_ProcState_Z) then 
 0
-else let 222_Enc=AEAD(169_Pars2,155_HMAC,Spub_i) in 
+else let 222_Enc=AEAD(169_Pars2,Spub_i,155_HMAC) in 
 let 225_HMAC=hash2(155_HMAC,222_Enc) in 
 let 230_DH=DH(Spriv_i,88_a) in 
 let 233_KDF=kdf2(168_Pars1,230_DH) in 
 let 238_pair (BVar "236_c" (BType_Imm Bit64)) (BVar "237_k" (BType_Imm Bit64))=233_KDF in 
 let 239_Pars1=pars12(233_KDF,'32') in 
 let 240_Pars2=pars22(233_KDF,'32') in 
-let 243_Enc=AEAD(240_Pars2,225_HMAC,ts_i) in 
+let 243_Enc=AEAD(240_Pars2,ts_i,225_HMAC) in 
 let 246_HMAC=hash2(225_HMAC,243_Enc) in 
 let 249_triple (BVar "102_Epub_i" (BType_Imm Bit64))
   (BVar "222_Enc" (BType_Imm Bit64)) (BVar "243_Enc" (BType_Imm Bit64))=246_HMAC in 
 out(246_HMAC);
-event InitStart(Init,Resp,Spub_i,Spub_r);
+event InitStart(Init,Resp,Spub_i,Spub_r,Spriv_i);
 in(253_a);
 let 254_Pars1=pars12(253_a,'32') in 
 in(254_Pars1);
@@ -160,7 +160,7 @@ let 1019_HMAC=hash2(727_HMAC,1016_Pars2) in
 let 1022_Pars3=pars33(1008_KDF,'32') in 
 let 1029_Dec=dec(258_Pars2,1022_Pars3) in 
 let 1032_HMAC=hash2(1019_HMAC,258_Pars2) in 
-event InitAccept(Init,Resp,Spub_i,Spub_r);
+event InitAccept(Init,Resp,Spub_i,Spub_r,Spriv_i);
 if 1039_ProcState_Z then 
 if Not(1128_ProcState_Z) then 
 0
@@ -205,7 +205,7 @@ let 2271_HMAC=hash2(1977_HMAC,2268_Pars2) in
 let 2274_Pars3=pars33(2260_KDF,'32') in 
 let 2281_Dec=dec(293_R20,2274_Pars3) in 
 let 2284_HMAC=hash2(2271_HMAC,293_R20) in 
-event InitAccept(Init,Resp,Spub_i,Spub_r);
+event InitAccept(Init,Resp,Spub_i,Spub_r,Spriv_i);
 if 2291_ProcState_Z then 
 if Not(2381_ProcState_Z) then 
 0

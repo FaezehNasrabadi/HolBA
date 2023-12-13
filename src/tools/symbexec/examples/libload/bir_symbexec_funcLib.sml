@@ -3049,7 +3049,7 @@ fun KeyDF syst =
 
 	val spriv = (bir_envSyntax.mk_BVar_string ("Spriv_r", “BType_Imm Bit64”));
 	    
-	val (e_bv, e_be) = dh beadv spriv;
+	val (e_bv, e_be) = dh spriv beadv;
 	    
 	val Fr_dh = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("DH", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
@@ -3117,7 +3117,7 @@ fun Encryption syst =
 	val sk = find_bv_val ("Encryption::bv in env not found")
                               env ``BVar "R7" (BType_Imm Bit64)``;
 	    
-	val (C_bv, C_be) = aead1 sk epsilon input;
+	val (C_bv, C_be) = aead1 sk input epsilon;
 
 	val Fr_Enc = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Enc", “BType_Imm Bit64”))); (* generate a fresh variable *)
 

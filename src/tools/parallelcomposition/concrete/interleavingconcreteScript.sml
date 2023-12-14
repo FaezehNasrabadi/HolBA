@@ -10,7 +10,7 @@ val _ = new_theory "interleavingconcrete";
 
 val traces_def =
 Define`
-      traces (MTrn:('event, 'state) mctrel) (S: 'state) (S': 'state) = {t| (MTrn S t S')}
+      traces (MTrn:('cevent, 'cstate) mctrel) (S: 'cstate) (S': 'cstate) = {t| (MTrn S t S')}
                                                                                                                                                                         `;
  val comptraces_def =
 Define`
@@ -18,11 +18,11 @@ Define`
                                                                                                                                                            `;
 
 val TranRelNil = new_axiom ("TranRelNil",
-                            ``∀(MTrn:('event, 'state) mctrel) s. MTrn s [] s``);
+                            ``∀(MTrn:('cevent, 'cstate) mctrel) s. MTrn s [] s``);
 val TranRelConfigEq = new_axiom ("TranRelConfigEq",
-                            ``∀(MTrn:('event, 'state) mctrel) s s'. (MTrn s [] s') ⇒ ((s = s'))``);
+                            ``∀(MTrn:('cevent, 'cstate) mctrel) s s'. (MTrn s [] s') ⇒ ((s = s'))``);
 val TranRelSnoc = new_axiom ("TranRelSnoc",
-                             ``∀(MTrn:('event, 'state) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
+                             ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
 
 val IMAGEOUT = new_axiom ("IMAGEOUT",
                           ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);
@@ -47,24 +47,24 @@ new_axiom ("TranRelSnocRevSync",
 (* Binary interleaving of traces *)
 Inductive binterl:
 [~nil:]
-  (binterl [] [] []) /\
+  (binterl ([]:('cevent1 + 'ceventS) list) ([]:('cevent2 + 'ceventS) list) ([]:(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list)) /\
 [~left:]
-  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl (t1':('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) (t':(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~right:]                                                                        
-  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl (t1:('cevent1 + 'ceventS) list) (t2':('cevent2 + 'ceventS) list) (t':(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~syncR:]                                                                        
-  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl (t1':('cevent1 + 'ceventS) list) (t2':('cevent2 + 'ceventS) list) (t':(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~syncL:]                                                                        
-  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl (t1':('cevent1 + 'ceventS) list) (t2':('cevent2 + 'ceventS) list) (t':(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list)))
 /\
 [~movesL:]                                                                        
-  ((binterl ((INL e1)::(t1:('cevent1 + 'ceventS) list)) (t2:('cevent2 + 'ceventS) list) (INL (INL e1)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl ((INL e1)::(t1:('cevent1 + 'ceventS) list)) (t2:('cevent2 + 'ceventS) list) (INL (INL e1)::t)) ==> (binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) (t:(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~movesR:]                                                                        
-  ((binterl (t1:('cevent1 + 'ceventS) list) ((INL e2)::(t2:('cevent2 + 'ceventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl (t1:('cevent1 + 'ceventS) list) ((INL e2)::(t2:('cevent2 + 'ceventS) list)) (INR (INL e2)::t)) ==> (binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) (t:(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~movesSL:]                                                                        
-  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INL (INR e)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INL (INR e)::t)) ==> (binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) (t:(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list))) /\
 [~movesSR:]                                                                        
-  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INR (INR e)::t)) ==> (binterl t1 t2 t))  
+  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INR (INR e)::t)) ==> (binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) (t:(('cevent1+'ceventS) + ('cevent2 +'ceventS)) list)))  
 End
 
 val binterl_Empty = new_axiom ("binterl_Empty",
@@ -90,7 +90,7 @@ val binterl_moveAR = new_axiom ("binterl_moveAR",
   
 
 Definition binterleave_ts:
-  binterleave_ts ts1 ts2 = {t| ∃t1 t2. (t1 ∈ ts1) ∧ (t2 ∈ ts2) ∧ (binterl t1 t2 t)}
+  binterleave_ts (ts1:('cevent1 + 'ceventS) list set) (ts2:('cevent2 + 'ceventS) list set) = {t| ∃t1 t2. (t1 ∈ ts1) ∧ (t2 ∈ ts2) ∧ (binterl t1 t2 t)}
 End
 
 val binterleave_trace_comp_to_decomp_concrete_thm = store_thm(

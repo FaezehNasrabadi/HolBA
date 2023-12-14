@@ -2,45 +2,45 @@ open HolKernel Parse boolLib bossLib;
 open sumTheory;
 open pred_setTheory;
 open listTheory;
-open parallelcompositionTheory;
+open parallelcompositionconcreteTheory;
 open pairTheory wordsTheory set_sepTheory;
 open quantHeuristicsTheory;
 
-val _ = new_theory "interleaving";
+val _ = new_theory "interleavingconcrete";
 
 val traces_def =
 Define`
-      traces (MTrn:('event, 'state) mtrel) (S: 'state) (S': 'state) = {t| (MTrn S t S')}
+      traces (MTrn:('event, 'state) mctrel) (S: 'state) (S': 'state) = {t| (MTrn S t S')}
                                                                                                                                                                         `;
  val comptraces_def =
 Define`
-      comptraces (CMTrn:((('event1+'eventS) + ('event2 +'eventS)), 'state1#'state2) mtrel) ((S1: 'state1),(S2: 'state2)) ((S1': 'state1),(S2': 'state2)) = {t| (CMTrn (S1,S2) t (S1',S2'))}
+      comptraces (CMTrn:((('cevent1+'ceventS) + ('cevent2 +'ceventS)), 'cstate1#'cstate2) mctrel) ((S1: 'cstate1),(S2: 'cstate2)) ((S1': 'cstate1),(S2': 'cstate2)) = {t| (CMTrn (S1,S2) t (S1',S2'))}
                                                                                                                                                            `;
 
 val TranRelNil = new_axiom ("TranRelNil",
-                            ``∀(MTrn:('event, 'state) mtrel) s. MTrn s [] s``);
+                            ``∀(MTrn:('event, 'state) mctrel) s. MTrn s [] s``);
 val TranRelConfigEq = new_axiom ("TranRelConfigEq",
-                            ``∀(MTrn:('event, 'state) mtrel) s s'. (MTrn s [] s') ⇒ ((s = s'))``);
+                            ``∀(MTrn:('event, 'state) mctrel) s s'. (MTrn s [] s') ⇒ ((s = s'))``);
 val TranRelSnoc = new_axiom ("TranRelSnoc",
-                             ``∀(MTrn:('event, 'state) mtrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
+                             ``∀(MTrn:('event, 'state) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
 
 val IMAGEOUT = new_axiom ("IMAGEOUT",
                           ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);
 
 val TranRelSnocRevAsyncL =
 new_axiom ("TranRelSnocRevAsyncL",
-           ``∀(MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel) S1 S2 S1' S2' t1 t2 e.
+           ``∀(MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel) S1 S2 S1' S2' t1 t2 e.
                                                                         ((MTrn1 S1 (INL e::t1) S1') ∧ (MTrn2 S2 t2 S2')) ⇒ (∃S1''. (MTrn1 S1 t1 S1'') ∧ (MTrn1 S1'' [INL e] S1') ∧ (MTrn2 S2 t2 S2') ∧ (MTrn2 S2' [] S2'))``);                                   
 
 
 val TranRelSnocRevAsyncR =
 new_axiom ("TranRelSnocRevAsyncR",
-           ``∀(MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel) S1 S2 S1' S2' t1 t2 e.
+           ``∀(MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel) S1 S2 S1' S2' t1 t2 e.
                                                                         ((MTrn1 S1 t1 S1') ∧ (MTrn2 S2 (INL e::t2) S2')) ⇒ (∃S2''. (MTrn1 S1 t1 S1') ∧ (MTrn1 S1' [] S1') ∧ (MTrn2 S2 t2 S2'') ∧ (MTrn2 S2'' [INL e] S2'))``);
 
 val TranRelSnocRevSync =
 new_axiom ("TranRelSnocRevSync",
-           ``∀(MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel) S1 S2 S1' S2' t1 t2 e.
+           ``∀(MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel) S1 S2 S1' S2' t1 t2 e.
                                                                         ((MTrn1 S1 (INR e::t1) S1') ∧ (MTrn2 S2 (INR e::t2) S2')) ⇒ (∃S1'' S2''. (MTrn1 S1 t1 S1'') ∧ (MTrn1 S1'' [INR e] S1') ∧ (MTrn2 S2 t2 S2'') ∧ (MTrn2 S2'' [INR e] S2'))``);                                                                        
 
                     
@@ -49,22 +49,22 @@ Inductive binterl:
 [~nil:]
   (binterl [] [] []) /\
 [~left:]
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INL e1)::t1)) /\ (t' = ((INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
 [~right:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t2' = ((INL e2)::t2)) /\ (t' = ((INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
 [~syncR:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
 [~syncL:]                                                                        
-  (((binterl (t1:('event1 + 'eventS) list) (t2:('event2 + 'eventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))
+  (((binterl (t1:('cevent1 + 'ceventS) list) (t2:('cevent2 + 'ceventS) list) t) /\ (t1' = ((INR e)::t1)) /\ (t2' = ((INR e)::t2)) /\ (t' = ((INL (INR e))::t))) ==> (binterl t1' t2' t'))
 /\
 [~movesL:]                                                                        
-  ((binterl ((INL e1)::(t1:('event1 + 'eventS) list)) (t2:('event2 + 'eventS) list) (INL (INL e1)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl ((INL e1)::(t1:('cevent1 + 'ceventS) list)) (t2:('cevent2 + 'ceventS) list) (INL (INL e1)::t)) ==> (binterl t1 t2 t)) /\
 [~movesR:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) list) ((INL e2)::(t2:('event2 + 'eventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl (t1:('cevent1 + 'ceventS) list) ((INL e2)::(t2:('cevent2 + 'ceventS) list)) (INR (INL e2)::t)) ==> (binterl t1 t2 t)) /\
 [~movesSL:]                                                                        
-  ((binterl ((INR e)::(t1:('event1 + 'eventS) list)) ((INR e)::(t2:('event2 + 'eventS) list)) (INL (INR e)::t)) ==> (binterl t1 t2 t)) /\
+  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INL (INR e)::t)) ==> (binterl t1 t2 t)) /\
 [~movesSR:]                                                                        
-  ((binterl ((INR e)::(t1:('event1 + 'eventS) list)) ((INR e)::(t2:('event2 + 'eventS) list)) (INR (INR e)::t)) ==> (binterl t1 t2 t))  
+  ((binterl ((INR e)::(t1:('cevent1 + 'ceventS) list)) ((INR e)::(t2:('cevent2 + 'ceventS) list)) (INR (INR e)::t)) ==> (binterl t1 t2 t))  
 End
 
 val binterl_Empty = new_axiom ("binterl_Empty",
@@ -96,7 +96,7 @@ End
 val binterleave_trace_comp_to_decomp_concrete_thm = store_thm(
   "binterleave_trace_comp_to_decomp_concrete",
   ``
-  ∀t S1 S2 S1' S2' (MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel). 
+  ∀t S1 S2 S1' S2' (MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel). 
     ((MTrn1 || MTrn2) (S1,S2) t (S1',S2'))
     ⇒
     (∃t1 t2. (MTrn1 S1 t1 S1') ∧ (MTrn2 S2 t2 S2') ∧ (binterl t1 t2 t))
@@ -153,7 +153,7 @@ val binterleave_trace_comp_to_decomp_concrete_thm = store_thm(
 
 val binterleave_trace_decomp_to_comp_concrete_thm = store_thm(
   "binterleave_trace_decomp_to_comp_concrete",
-  ``∀t S1 S2 S1' S2' (MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel). 
+  ``∀t S1 S2 S1' S2' (MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel). 
        (∃t1 t2. (MTrn1 S1 t1 S1') ∧ (MTrn2 S2 t2 S2') ∧ (binterl t1 t2 t))
      ⇒
       ((MTrn1 || MTrn2) (S1,S2) t (S1',S2'))
@@ -216,7 +216,7 @@ val binterleave_trace_decomp_to_comp_concrete_thm = store_thm(
 
 val binterleave_trace_concrete_thm = store_thm(
   "binterleave_trace_concrete",
-  ``∀t S1 S2 S1' S2' (MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel). 
+  ``∀t S1 S2 S1' S2' (MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel). 
          ((MTrn1 || MTrn2) (S1,S2) t (S1',S2'))
     ⇔
     (∃t1 t2. (MTrn1 S1 t1 S1') ∧ (MTrn2 S2 t2 S2') ∧ (binterl t1 t2 t))
@@ -229,7 +229,7 @@ val binterleave_trace_concrete_thm = store_thm(
 
 val binterleave_composition_concrete_thm = store_thm(
   "binterleave_composition_concrete", ``
-  ∀t S1 S2 S1' S2' (MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel). 
+  ∀t S1 S2 S1' S2' (MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel). 
    (comptraces (MTrn1 || MTrn2) (S1,S2) (S1',S2'))                           
   = (binterleave_ts (traces MTrn1 S1 S1') (traces MTrn2 S2 S2'))
 ``,
@@ -241,7 +241,7 @@ rewrite_tac[binterleave_trace_concrete_thm]
 
 val compose_vs_modules_concrete_thm = store_thm(
   "compose_vs_modules_concrete_thm", ``
-                          !S1 S1' S1'' S1''' S2 S2' S2'' S2''' (MTrn1:('event1 + 'eventS, 'state1) mtrel) (MTrn1':('event1 + 'eventS, 'state1) mtrel) (MTrn2:('event2 + 'eventS, 'state2) mtrel) (MTrn2':('event2 + 'eventS, 'state2) mtrel).
+                          !S1 S1' S1'' S1''' S2 S2' S2'' S2''' (MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn1':('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel) (MTrn2':('cevent2 + 'ceventS, 'cstate2) mctrel).
                              (((traces MTrn1 S1 S1') ⊆ (traces MTrn1' S1'' S1''')) ∧ ((traces MTrn2 S2 S2') ⊆ (traces MTrn2' S2'' S2'''))
                              ) ==> ((comptraces (MTrn1 || MTrn2) (S1,S2) (S1',S2')) ⊆ (comptraces (MTrn1' || MTrn2') (S1'',S2'') (S1''',S2'''))) ``
   ,

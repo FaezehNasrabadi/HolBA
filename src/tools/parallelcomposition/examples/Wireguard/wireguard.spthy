@@ -145,6 +145,42 @@ lemma sanity_RespRecv[reuse]:
 lemma sanity_RespAnsw[reuse]: 
 "Ex Spub_i Spub_r Spriv_r #k. RespAnsw('Init','Resp',Spub_i,Spub_r,Spriv_r)@k"
 
+lemma key_secrecy[reuse]:
+    "(All Spub_i Spub_r Spriv_r Spriv_i #i #i2.
+        /* If I and R agree on keys */
+        InitAccept('Init','Resp',Spub_i,Spub_r,Spriv_i) @ i & RespAnsw('Init','Resp',Spub_i,Spub_r,Spriv_r) @ i2
+    ==>
+        (/* No Compromised Keys */
+	not(Ex #j. K(Spub_i) @ j) & not(Ex #j. K(Spub_r) @ j) & not(Ex #j. K(Spriv_i) @ j) & not(Ex #j. K(Spriv_r) @ j))
+        |
+        (/* Compromised Static Keys */
+	(Ex #j. K(Spub_i) @ j) | (Ex #j. K(Spub_r) @ j) | (Ex #j #j2. K(Spub_i) @ j & K(Spub_r) @ j2))
+        |
+	(/* Compromised Ephemeral Keys */
+	(Ex #j. K(Spriv_i) @ j) | (Ex #j. K(Spriv_r) @ j) | (Ex #j #j2. K(Spriv_i) @ j & K(Spriv_r) @ j2))
+        |
+	(/* Compromised Static Key & Ephemeral Key */
+           (Ex #j #j2. K(Spub_i) @ j & K(Spriv_r) @ j2)
+         | (Ex #j #j2. K(Spub_r) @ j & K(Spriv_i) @ j2))
+	 |
+	(/* Forward Secrecy */
+          ((Ex #j. K(Spub_i) @ j) | (Ex #j. K(Spub_r) @ j) | (Ex #j #j2. K(Spub_i) @ j & K(Spub_r) @ j2))
+        & (not(Ex #j. K(Spriv_i) @ j) | not(Ex #j. K(Spriv_r) @ j)))
+)"
 
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+

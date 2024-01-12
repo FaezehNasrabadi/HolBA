@@ -178,6 +178,63 @@ guarded formula characterizing all counter-examples:
 simplify
 SOLVED // trace found
 
+lemma key_secrecy [reuse]:
+  all-traces
+  "∀ Spub_i Spub_r Spriv_r Spriv_i #i #i2.
+    ((InitAccept( 'Init', 'Resp', Spub_i, Spub_r, Spriv_i ) @ #i) ∧
+     (RespAnsw( 'Init', 'Resp', Spub_i, Spub_r, Spriv_r ) @ #i2)) ⇒
+    ((((((((¬(∃ #j. K( Spub_i ) @ #j)) ∧ (¬(∃ #j. K( Spub_r ) @ #j))) ∧
+          (¬(∃ #j. K( Spriv_i ) @ #j))) ∧
+         (¬(∃ #j. K( Spriv_r ) @ #j))) ∨
+        (((∃ #j. K( Spub_i ) @ #j) ∨ (∃ #j. K( Spub_r ) @ #j)) ∨
+         (∃ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spub_r ) @ #j2)))) ∨
+       (((∃ #j. K( Spriv_i ) @ #j) ∨ (∃ #j. K( Spriv_r ) @ #j)) ∨
+        (∃ #j #j2. (K( Spriv_i ) @ #j) ∧ (K( Spriv_r ) @ #j2)))) ∨
+      ((∃ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spriv_r ) @ #j2)) ∨
+       (∃ #j #j2. (K( Spub_r ) @ #j) ∧ (K( Spriv_i ) @ #j2)))) ∨
+     ((((∃ #j. K( Spub_i ) @ #j) ∨ (∃ #j. K( Spub_r ) @ #j)) ∨
+       (∃ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spub_r ) @ #j2))) ∧
+      ((¬(∃ #j. K( Spriv_i ) @ #j)) ∨ (¬(∃ #j. K( Spriv_r ) @ #j)))))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ Spub_i Spub_r Spriv_r Spriv_i #i #i2.
+  (InitAccept( 'Init', 'Resp', Spub_i, Spub_r, Spriv_i ) @ #i) ∧
+  (RespAnsw( 'Init', 'Resp', Spub_i, Spub_r, Spriv_r ) @ #i2)
+ ∧
+  (((∃ #j. (K( Spub_i ) @ #j)) ∨
+    (∃ #j. (K( Spub_r ) @ #j)) ∨
+    (∃ #j. (K( Spriv_i ) @ #j)) ∨
+    (∃ #j. (K( Spriv_r ) @ #j)))) ∧
+  (∀ #j. (K( Spub_i ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (K( Spub_r ) @ #j) ⇒ ⊥) ∧
+  (∀ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spub_r ) @ #j2) ⇒ ⊥) ∧
+  (∀ #j. (K( Spriv_i ) @ #j) ⇒ ⊥) ∧
+  (∀ #j. (K( Spriv_r ) @ #j) ⇒ ⊥) ∧
+  (∀ #j #j2. (K( Spriv_i ) @ #j) ∧ (K( Spriv_r ) @ #j2) ⇒ ⊥) ∧
+  (∀ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spriv_r ) @ #j2) ⇒ ⊥) ∧
+  (∀ #j #j2. (K( Spub_r ) @ #j) ∧ (K( Spriv_i ) @ #j2) ⇒ ⊥) ∧
+  ((((∀ #j. (K( Spub_i ) @ #j) ⇒ ⊥) ∧
+     (∀ #j. (K( Spub_r ) @ #j) ⇒ ⊥) ∧
+     (∀ #j #j2. (K( Spub_i ) @ #j) ∧ (K( Spub_r ) @ #j2) ⇒ ⊥)) ∨
+    ((∃ #j. (K( Spriv_i ) @ #j)) ∧ (∃ #j. (K( Spriv_r ) @ #j)))))"
+*/
+simplify
+solve( (∃ #j. (K( 'g'^~Spriv_i ) @ #j))  ∥
+       (∃ #j. (K( 'g'^~Spriv_r ) @ #j))  ∥ (∃ #j. (K( ~Spriv_i ) @ #j))  ∥
+       (∃ #j. (K( ~Spriv_r ) @ #j)) )
+  case case_1
+  by contradiction /* from formulas */
+next
+  case case_2
+  by contradiction /* from formulas */
+next
+  case case_3
+  by contradiction /* from formulas */
+next
+  case case_4
+  by contradiction /* from formulas */
+qed
+
 
 
 
@@ -2356,9 +2413,9 @@ end
 ==============================================================================
 summary of summaries:
 
-analyzed: wireguard.spthy
+analyzed: Desktop/wireguard.spthy
 
-  processing time: 0.66s
+  processing time: 1.32s
   
   injIP (all-traces): verified (2 steps)
   injPI (all-traces): verified (6 steps)
@@ -2366,5 +2423,6 @@ analyzed: wireguard.spthy
   sanity_InitAccept (all-traces): falsified - found trace (2 steps)
   sanity_RespRecv (all-traces): falsified - found trace (2 steps)
   sanity_RespAnsw (all-traces): falsified - found trace (2 steps)
+  key_secrecy (all-traces): verified (6 steps)
 
 ==============================================================================

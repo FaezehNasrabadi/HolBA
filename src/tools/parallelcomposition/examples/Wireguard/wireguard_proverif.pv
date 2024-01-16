@@ -26,7 +26,6 @@ event eInitAccept(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eInitStart(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eRespAnsw(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eRespRecv(bitstring,bitstring,bitstring,bitstring,bitstring).
-event Sec(bitstring).
 equation forall x_1:bitstring, x_2:bitstring;   fst(pair(x_1, x_2)) = x_1.
 equation forall x_1:bitstring, x_2:bitstring;   snd(pair(x_1, x_2)) = x_2.
 reduc forall a:bitstring, k:bitstring, p:bitstring;   dec(AEAD(k, p, a), k) = p.

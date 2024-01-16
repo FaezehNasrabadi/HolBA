@@ -2413,7 +2413,7 @@ end
 ==============================================================================
 summary of summaries:
 
-analyzed: Desktop/wireguard.spthy
+analyzed: wireguard.spthy
 
   processing time: 1.32s
   

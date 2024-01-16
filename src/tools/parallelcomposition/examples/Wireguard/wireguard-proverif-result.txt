@@ -114,99 +114,103 @@ Process 0 (that is, the initial process):
     {95}event eRespAnsw(sInit,sResp,a42_a_1,Spub_r_1,Spriv_r)
 )
 
---  Process 1 (that is, process 0, with let moved downwards):
+--  Process 1 (that is, process 0, encoded for secret Spriv_r,Spriv_r_1, secret Spriv_i,Spriv_i_1, with let moved downwards):
 {1}!
 {2}new Spriv_i_1: bitstring;
-{3}let Spub_i_1: bitstring = exp(g,Spriv_i_1) in
-{4}out(att, Spub_i_1);
-{5}!
-{6}new Spriv_r_1: bitstring;
-{7}let Spub_r_1: bitstring = exp(g,Spriv_r_1) in
-{8}out(att, Spub_r_1);
+{3}event Spriv_i_1_contains(Spriv_i_1);
+{4}let Spub_i_1: bitstring = exp(g,Spriv_i_1) in
+{5}out(att, Spub_i_1);
+{6}!
+{7}new Spriv_r_1: bitstring;
+{8}event Spriv_r_1_contains(Spriv_r_1);
+{9}let Spub_r_1: bitstring = exp(g,Spriv_r_1) in
+{10}out(att, Spub_r_1);
 (
-    {9}!
-    {11}in(att, a88_a_1: bitstring);
-    {13}new a92_sid_i_1: bitstring;
-    {17}new a100_Epriv_i_1: bitstring;
-    {18}let a99_Epriv_i_1: bitstring = a100_Epriv_i_1 in
-    {22}let a59_DH_1: bitstring = DH(a99_Epriv_i_1,a88_a_1) in
-    {19}let a02_Epub_i_1: bitstring = exp(g,a99_Epriv_i_1) in
-    {12}let a90_Ci_1: bitstring = hash1(sConstruction) in
-    {20}let a54_Cii_1: bitstring = kdf1(a90_Ci_1,a02_Epub_i_1) in
-    {23}let a62_KDF_1: bitstring = kdf2(a54_Cii_1,a59_DH_1) in
-    {24}let a68_Pars1_1: bitstring = pars12(a62_KDF_1,s32) in
-    {25}let a69_Pars2_1: bitstring = pars22(a62_KDF_1,s32) in
-    {10}let Spriv_i: bitstring = Spriv_i_1 in
-    {28}let a230_DH_1: bitstring = DH(Spriv_i,a88_a_1) in
-    {29}let a233_KDF_1: bitstring = kdf2(a68_Pars1_1,a230_DH_1) in
-    {30}let a239_Pars1_1: bitstring = pars12(a233_KDF_1,s32) in
-    {31}let a240_Pars2_1: bitstring = pars22(a233_KDF_1,s32) in
-    {14}let a91_sid_i_1: bitstring = a92_sid_i_1 in
-    {15}let a93_HMAC_1: bitstring = hash2(a90_Ci_1,a91_sid_i_1) in
-    {16}let a96_HMAC_1: bitstring = hash2(a93_HMAC_1,a88_a_1) in
-    {21}let a55_HMAC_1: bitstring = hash2(a96_HMAC_1,a02_Epub_i_1) in
-    {26}let a222_Enc_1: bitstring = AEAD(a69_Pars2_1,Spub_i_1,a55_HMAC_1) in
-    {27}let a225_HMAC_1: bitstring = hash2(a55_HMAC_1,a222_Enc_1) in
-    {32}let a243_Enc_1: bitstring = AEAD(a240_Pars2_1,sts_i,a225_HMAC_1) in
-    {34}out(att, triple(a02_Epub_i_1,a222_Enc_1,a243_Enc_1));
-    {35}event eInitStart(sInit,sResp,Spub_i_1,a88_a_1,Spriv_i);
-    {36}in(att, a253_a_1: bitstring);
-    {37}let a254_Pars1_1: bitstring = pars12(a253_a_1,s32) in
-    {38}let a258_Pars2_1: bitstring = pars22(a253_a_1,s32) in
-    {41}let a733_DH_1: bitstring = DH(a99_Epriv_i_1,a254_Pars1_1) in
-    {39}let a726_Cii_1: bitstring = kdf1(a239_Pars1_1,a254_Pars1_1) in
-    {42}let a736_KDF_1: bitstring = kdf2(a726_Cii_1,a733_DH_1) in
-    {43}let a742_Pars1_1: bitstring = pars12(a736_KDF_1,s32) in
-    {44}let a743_Pars2_1: bitstring = pars22(a736_KDF_1,s32) in
-    {45}let a870_DH_1: bitstring = DH(Spriv_i,a254_Pars1_1) in
-    {46}let a873_KDF_1: bitstring = kdf2(a742_Pars1_1,a870_DH_1) in
-    {47}let a879_Pars1_1: bitstring = pars12(a873_KDF_1,s32) in
-    {48}let a880_Pars2_1: bitstring = pars22(a873_KDF_1,s32) in
-    {49}let a008_KDF_1: bitstring = kdf3(a879_Pars1_1,sQ) in
-    {50}let a015_Pars1_1: bitstring = pars13(a008_KDF_1,s32) in
-    {51}let a016_Pars2_1: bitstring = pars23(a008_KDF_1,s32) in
-    {53}let a2022_Pars3_1: bitstring = pars33(a008_KDF_1,s32) in
-    {54}let a029_Dec_1: bitstring = dec(a258_Pars2_1,a2022_Pars3_1) in
-    {56}event eInitAccept(sInit,sResp,Spub_i_1,a88_a_1,Spriv_i)
+    {11}!
+    {12}let Spriv_i: bitstring = Spriv_i_1 in
+    {13}event Spriv_i_1_contains(Spriv_i);
+    {14}in(att, a88_a_1: bitstring);
+    {16}new a92_sid_i_1: bitstring;
+    {20}new a100_Epriv_i_1: bitstring;
+    {21}let a99_Epriv_i_1: bitstring = a100_Epriv_i_1 in
+    {25}let a59_DH_1: bitstring = DH(a99_Epriv_i_1,a88_a_1) in
+    {22}let a02_Epub_i_1: bitstring = exp(g,a99_Epriv_i_1) in
+    {15}let a90_Ci_1: bitstring = hash1(sConstruction) in
+    {23}let a54_Cii_1: bitstring = kdf1(a90_Ci_1,a02_Epub_i_1) in
+    {26}let a62_KDF_1: bitstring = kdf2(a54_Cii_1,a59_DH_1) in
+    {27}let a68_Pars1_1: bitstring = pars12(a62_KDF_1,s32) in
+    {28}let a69_Pars2_1: bitstring = pars22(a62_KDF_1,s32) in
+    {31}let a230_DH_1: bitstring = DH(Spriv_i,a88_a_1) in
+    {32}let a233_KDF_1: bitstring = kdf2(a68_Pars1_1,a230_DH_1) in
+    {33}let a239_Pars1_1: bitstring = pars12(a233_KDF_1,s32) in
+    {34}let a240_Pars2_1: bitstring = pars22(a233_KDF_1,s32) in
+    {17}let a91_sid_i_1: bitstring = a92_sid_i_1 in
+    {18}let a93_HMAC_1: bitstring = hash2(a90_Ci_1,a91_sid_i_1) in
+    {19}let a96_HMAC_1: bitstring = hash2(a93_HMAC_1,a88_a_1) in
+    {24}let a55_HMAC_1: bitstring = hash2(a96_HMAC_1,a02_Epub_i_1) in
+    {29}let a222_Enc_1: bitstring = AEAD(a69_Pars2_1,Spub_i_1,a55_HMAC_1) in
+    {30}let a225_HMAC_1: bitstring = hash2(a55_HMAC_1,a222_Enc_1) in
+    {35}let a243_Enc_1: bitstring = AEAD(a240_Pars2_1,sts_i,a225_HMAC_1) in
+    {37}out(att, triple(a02_Epub_i_1,a222_Enc_1,a243_Enc_1));
+    {38}event eInitStart(sInit,sResp,Spub_i_1,a88_a_1,Spriv_i);
+    {39}in(att, a253_a_1: bitstring);
+    {40}let a254_Pars1_1: bitstring = pars12(a253_a_1,s32) in
+    {41}let a258_Pars2_1: bitstring = pars22(a253_a_1,s32) in
+    {44}let a733_DH_1: bitstring = DH(a99_Epriv_i_1,a254_Pars1_1) in
+    {42}let a726_Cii_1: bitstring = kdf1(a239_Pars1_1,a254_Pars1_1) in
+    {45}let a736_KDF_1: bitstring = kdf2(a726_Cii_1,a733_DH_1) in
+    {46}let a742_Pars1_1: bitstring = pars12(a736_KDF_1,s32) in
+    {47}let a743_Pars2_1: bitstring = pars22(a736_KDF_1,s32) in
+    {48}let a870_DH_1: bitstring = DH(Spriv_i,a254_Pars1_1) in
+    {49}let a873_KDF_1: bitstring = kdf2(a742_Pars1_1,a870_DH_1) in
+    {50}let a879_Pars1_1: bitstring = pars12(a873_KDF_1,s32) in
+    {51}let a880_Pars2_1: bitstring = pars22(a873_KDF_1,s32) in
+    {52}let a008_KDF_1: bitstring = kdf3(a879_Pars1_1,sQ) in
+    {53}let a015_Pars1_1: bitstring = pars13(a008_KDF_1,s32) in
+    {54}let a016_Pars2_1: bitstring = pars23(a008_KDF_1,s32) in
+    {56}let a2022_Pars3_1: bitstring = pars33(a008_KDF_1,s32) in
+    {57}let a029_Dec_1: bitstring = dec(a258_Pars2_1,a2022_Pars3_1) in
+    {59}event eInitAccept(sInit,sResp,Spub_i_1,a88_a_1,Spriv_i)
 ) | (
-    {57}!
-    {59}in(att, a42_a_1: bitstring);
-    {61}new a46_sid_r_1: bitstring;
-    {65}in(att, a55_a_1: bitstring);
-    {66}let a56_Pars1_1: bitstring = pars13(a55_a_1,s32) in
-    {67}let a60_Pars2_1: bitstring = pars23(a55_a_1,s32) in
-    {68}let a63_Pars3_1: bitstring = pars33(a55_a_1,s32) in
-    {58}let Spriv_r: bitstring = Spriv_r_1 in
-    {71}let a77_DH_1: bitstring = DH(Spriv_r,a56_Pars1_1) in
-    {60}let a44_Cr_1: bitstring = hash1(sConstruction) in
-    {69}let a70_Crr_1: bitstring = kdf1(a44_Cr_1,a56_Pars1_1) in
-    {72}let a80_Crr_1: bitstring = kdf1(a70_Crr_1,a77_DH_1) in
-    {73}let a302_Dec_1: bitstring = dec(a60_Pars2_1,a80_Crr_1) in
-    {75}let a308_DH_1: bitstring = DH(Spriv_r,a42_a_1) in
-    {76}let a311_Crr_1: bitstring = kdf1(a80_Crr_1,a308_DH_1) in
-    {77}let a555_Dec_1: bitstring = dec(a63_Pars3_1,a311_Crr_1) in
-    {79}event eRespRecv(sInit,sResp,a42_a_1,Spub_r_1,Spriv_r);
-    {80}new a563_Epriv_r_1: bitstring;
-    {81}let a562_Epriv_r_1: bitstring = a563_Epriv_r_1 in
-    {85}let a856_DH_1: bitstring = DH(a562_Epriv_r_1,a56_Pars1_1) in
-    {82}let a565_Epub_r_1: bitstring = exp(g,a562_Epriv_r_1) in
-    {83}let a776_Crr_1: bitstring = kdf1(a311_Crr_1,a565_Epub_r_1) in
-    {86}let a859_Crr_1: bitstring = kdf1(a776_Crr_1,a856_DH_1) in
-    {87}let a931_KDF_1: bitstring = kdf3(a859_Crr_1,sQ) in
-    {88}let a938_Pars1_1: bitstring = pars13(a931_KDF_1,s32) in
-    {89}let a939_Pars2_1: bitstring = pars23(a931_KDF_1,s32) in
-    {91}let a945_Pars3_1: bitstring = pars33(a931_KDF_1,s32) in
-    {62}let a45_sid_r_1: bitstring = a46_sid_r_1 in
-    {63}let a47_HMAC_1: bitstring = hash2(a44_Cr_1,a45_sid_r_1) in
-    {64}let a51_HMAC_1: bitstring = hash2(a47_HMAC_1,Spub_r_1) in
-    {70}let a71_HMAC_1: bitstring = hash2(a51_HMAC_1,a56_Pars1_1) in
-    {74}let a305_HMAC_1: bitstring = hash2(a71_HMAC_1,a60_Pars2_1) in
-    {78}let a558_HMAC_1: bitstring = hash2(a305_HMAC_1,a63_Pars3_1) in
-    {84}let a777_HMAC_1: bitstring = hash2(a558_HMAC_1,a565_Epub_r_1) in
-    {90}let a942_HMAC_1: bitstring = hash2(a777_HMAC_1,a939_Pars2_1) in
-    {92}let a953_Enc_1: bitstring = AEAD(a945_Pars3_1,s952_epsilon,a942_HMAC_1) in
-    {94}out(att, pair(a565_Epub_r_1,a953_Enc_1));
-    {95}event eRespAnsw(sInit,sResp,a42_a_1,Spub_r_1,Spriv_r)
+    {60}!
+    {61}let Spriv_r: bitstring = Spriv_r_1 in
+    {62}event Spriv_r_1_contains(Spriv_r);
+    {63}in(att, a42_a_1: bitstring);
+    {65}new a46_sid_r_1: bitstring;
+    {69}in(att, a55_a_1: bitstring);
+    {70}let a56_Pars1_1: bitstring = pars13(a55_a_1,s32) in
+    {71}let a60_Pars2_1: bitstring = pars23(a55_a_1,s32) in
+    {72}let a63_Pars3_1: bitstring = pars33(a55_a_1,s32) in
+    {75}let a77_DH_1: bitstring = DH(Spriv_r,a56_Pars1_1) in
+    {64}let a44_Cr_1: bitstring = hash1(sConstruction) in
+    {73}let a70_Crr_1: bitstring = kdf1(a44_Cr_1,a56_Pars1_1) in
+    {76}let a80_Crr_1: bitstring = kdf1(a70_Crr_1,a77_DH_1) in
+    {77}let a302_Dec_1: bitstring = dec(a60_Pars2_1,a80_Crr_1) in
+    {79}let a308_DH_1: bitstring = DH(Spriv_r,a42_a_1) in
+    {80}let a311_Crr_1: bitstring = kdf1(a80_Crr_1,a308_DH_1) in
+    {81}let a555_Dec_1: bitstring = dec(a63_Pars3_1,a311_Crr_1) in
+    {83}event eRespRecv(sInit,sResp,a42_a_1,Spub_r_1,Spriv_r);
+    {84}new a563_Epriv_r_1: bitstring;
+    {85}let a562_Epriv_r_1: bitstring = a563_Epriv_r_1 in
+    {89}let a856_DH_1: bitstring = DH(a562_Epriv_r_1,a56_Pars1_1) in
+    {86}let a565_Epub_r_1: bitstring = exp(g,a562_Epriv_r_1) in
+    {87}let a776_Crr_1: bitstring = kdf1(a311_Crr_1,a565_Epub_r_1) in
+    {90}let a859_Crr_1: bitstring = kdf1(a776_Crr_1,a856_DH_1) in
+    {91}let a931_KDF_1: bitstring = kdf3(a859_Crr_1,sQ) in
+    {92}let a938_Pars1_1: bitstring = pars13(a931_KDF_1,s32) in
+    {93}let a939_Pars2_1: bitstring = pars23(a931_KDF_1,s32) in
+    {95}let a945_Pars3_1: bitstring = pars33(a931_KDF_1,s32) in
+    {66}let a45_sid_r_1: bitstring = a46_sid_r_1 in
+    {67}let a47_HMAC_1: bitstring = hash2(a44_Cr_1,a45_sid_r_1) in
+    {68}let a51_HMAC_1: bitstring = hash2(a47_HMAC_1,Spub_r_1) in
+    {74}let a71_HMAC_1: bitstring = hash2(a51_HMAC_1,a56_Pars1_1) in
+    {78}let a305_HMAC_1: bitstring = hash2(a71_HMAC_1,a60_Pars2_1) in
+    {82}let a558_HMAC_1: bitstring = hash2(a305_HMAC_1,a63_Pars3_1) in
+    {88}let a777_HMAC_1: bitstring = hash2(a558_HMAC_1,a565_Epub_r_1) in
+    {94}let a942_HMAC_1: bitstring = hash2(a777_HMAC_1,a939_Pars2_1) in
+    {96}let a953_Enc_1: bitstring = AEAD(a945_Pars3_1,s952_epsilon,a942_HMAC_1) in
+    {98}out(att, pair(a565_Epub_r_1,a953_Enc_1));
+    {99}event eRespAnsw(sInit,sResp,a42_a_1,Spub_r_1,Spriv_r)
 )
 
 -- Query event(eRespRecv(sInit[],sResp[],exp(g,i),exp(g,r),r))@k ==> (k > j && event(eInitStart(sInit[],sResp[],exp(g,i),exp(g,r),i))@j) || attacker(i) || attacker(r) encoded as event(eRespRecv(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_1 ==> (event(eInitStart(sInit[],sResp[],exp(g,i),exp(g,r),i))@i_2 && i_1 > i_2) || attacker(i) || attacker(r) in process 1.
@@ -264,6 +268,46 @@ Completing...
 4800 rules inserted. Base: 4044 rules (262 with conclusion selected). Queue: 22 rules.
 Starting query event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@k ==> (k > j && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@j) || attacker(i) || attacker(r)
 RESULT event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@k ==> (k > j && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@j) || attacker(i) || attacker(r) is true.
+-- Query secret Spriv_i,Spriv_i_1 encoded as not (event(Spriv_i_1_contains(v)) && attacker(v)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 200 rules (52 with conclusion selected). Queue: 271 rules.
+400 rules inserted. Base: 398 rules (65 with conclusion selected). Queue: 256 rules.
+600 rules inserted. Base: 598 rules (65 with conclusion selected). Queue: 263 rules.
+800 rules inserted. Base: 798 rules (65 with conclusion selected). Queue: 360 rules.
+1000 rules inserted. Base: 998 rules (65 with conclusion selected). Queue: 333 rules.
+1200 rules inserted. Base: 1198 rules (65 with conclusion selected). Queue: 265 rules.
+1400 rules inserted. Base: 1398 rules (65 with conclusion selected). Queue: 352 rules.
+1600 rules inserted. Base: 1526 rules (65 with conclusion selected). Queue: 345 rules.
+1800 rules inserted. Base: 1594 rules (65 with conclusion selected). Queue: 277 rules.
+2000 rules inserted. Base: 1742 rules (65 with conclusion selected). Queue: 383 rules.
+2200 rules inserted. Base: 1906 rules (65 with conclusion selected). Queue: 403 rules.
+2400 rules inserted. Base: 1999 rules (65 with conclusion selected). Queue: 448 rules.
+2600 rules inserted. Base: 2086 rules (83 with conclusion selected). Queue: 382 rules.
+2800 rules inserted. Base: 2286 rules (128 with conclusion selected). Queue: 232 rules.
+3000 rules inserted. Base: 2486 rules (168 with conclusion selected). Queue: 33 rules.
+Starting query secret Spriv_i,Spriv_i_1
+RESULT secret Spriv_i,Spriv_i_1 is true.
+-- Query secret Spriv_r,Spriv_r_1 encoded as not (event(Spriv_r_1_contains(v)) && attacker(v)) in process 1.
+Translating the process into Horn clauses...
+Completing...
+200 rules inserted. Base: 200 rules (52 with conclusion selected). Queue: 271 rules.
+400 rules inserted. Base: 398 rules (65 with conclusion selected). Queue: 256 rules.
+600 rules inserted. Base: 598 rules (65 with conclusion selected). Queue: 263 rules.
+800 rules inserted. Base: 798 rules (65 with conclusion selected). Queue: 360 rules.
+1000 rules inserted. Base: 998 rules (65 with conclusion selected). Queue: 333 rules.
+1200 rules inserted. Base: 1198 rules (65 with conclusion selected). Queue: 265 rules.
+1400 rules inserted. Base: 1398 rules (65 with conclusion selected). Queue: 352 rules.
+1600 rules inserted. Base: 1526 rules (65 with conclusion selected). Queue: 345 rules.
+1800 rules inserted. Base: 1594 rules (65 with conclusion selected). Queue: 277 rules.
+2000 rules inserted. Base: 1742 rules (65 with conclusion selected). Queue: 383 rules.
+2200 rules inserted. Base: 1906 rules (65 with conclusion selected). Queue: 403 rules.
+2400 rules inserted. Base: 1999 rules (65 with conclusion selected). Queue: 448 rules.
+2600 rules inserted. Base: 2086 rules (83 with conclusion selected). Queue: 382 rules.
+2800 rules inserted. Base: 2286 rules (128 with conclusion selected). Queue: 232 rules.
+3000 rules inserted. Base: 2486 rules (168 with conclusion selected). Queue: 33 rules.
+Starting query secret Spriv_r,Spriv_r_1
+RESULT secret Spriv_r,Spriv_r_1 is true.
 -- Query not attacker(Spriv_i_1[!1 = v]) in process 1.
 Translating the process into Horn clauses...
 Completing...
@@ -334,8 +378,8 @@ Spriv_i_2 = Spriv_i_1[!1 = @sid]
 1. We assume as hypothesis that
 attacker(Spub_r).
 
-2. The message Spub_r that the attacker may have by 1 may be received at input {11}.
-So event eInitStart(sInit[],sResp[],exp(g,Spriv_i_2),Spub_r,Spriv_i_2) may be executed at {35}.
+2. The message Spub_r that the attacker may have by 1 may be received at input {14}.
+So event eInitStart(sInit[],sResp[],exp(g,Spriv_i_2),Spub_r,Spriv_i_2) may be executed at {38}.
 event(eInitStart(sInit[],sResp[],exp(g,Spriv_i_2),Spub_r,Spriv_i_2)).
 
 3. By 2, event(eInitStart(sInit[],sResp[],exp(g,Spriv_i_2),Spub_r,Spriv_i_2)).
@@ -348,23 +392,29 @@ A more detailed output of the traces is available with
 
 new Spriv_i_1: bitstring creating Spriv_i_3 at {2} in copy a
 
-out(att, ~M) with ~M = exp(g,Spriv_i_3) at {4} in copy a
+event Spriv_i_1_contains(Spriv_i_3) at {3} in copy a
 
-new Spriv_r_1: bitstring creating Spriv_r_2 at {6} in copy a, a_1
+out(att, ~M) with ~M = exp(g,Spriv_i_3) at {5} in copy a
 
-out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_2) at {8} in copy a, a_1
+new Spriv_r_1: bitstring creating Spriv_r_2 at {7} in copy a, a_1
 
-in(att, a_2) at {11} in copy a, a_1, a_3
+event Spriv_r_1_contains(Spriv_r_2) at {8} in copy a, a_1
 
-new a92_sid_i_1: bitstring creating a92_sid_i at {13} in copy a, a_1, a_3
+out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_2) at {10} in copy a, a_1
 
-new a100_Epriv_i_1: bitstring creating a100_Epriv_i at {17} in copy a, a_1, a_3
+event Spriv_i_1_contains(Spriv_i_3) at {13} in copy a, a_1, a_2
 
-out(att, ~M_2) with ~M_2 = triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_2),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),c_1),DH(Spriv_i_3,a_2)),hash2(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),c_1),DH(Spriv_i_3,a_2)),c_1),c_2)),sts_i,hash2(hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_2),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_2)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_2),exp(g,a100_Epriv_i)))))) at {34} in copy a, a_1, a_3
+in(att, a_3) at {14} in copy a, a_1, a_2
 
-event eInitStart(sInit,sResp,exp(g,Spriv_i_3),a_2,Spriv_i_3) at {35} in copy a, a_1, a_3 (goal)
+new a92_sid_i_1: bitstring creating a92_sid_i at {16} in copy a, a_1, a_2
 
-The event eInitStart(sInit,sResp,exp(g,Spriv_i_3),a_2,Spriv_i_3) is executed at {35} in copy a, a_1, a_3.
+new a100_Epriv_i_1: bitstring creating a100_Epriv_i at {20} in copy a, a_1, a_2
+
+out(att, ~M_2) with ~M_2 = triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_3),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),c_1),DH(Spriv_i_3,a_3)),hash2(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),c_1),DH(Spriv_i_3,a_3)),c_1),c_2)),sts_i,hash2(hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_3),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i)),DH(a100_Epriv_i,a_3)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i),a_3),exp(g,a100_Epriv_i)))))) at {37} in copy a, a_1, a_2
+
+event eInitStart(sInit,sResp,exp(g,Spriv_i_3),a_3,Spriv_i_3) at {38} in copy a, a_1, a_2 (goal)
+
+The event eInitStart(sInit,sResp,exp(g,Spriv_i_3),a_3,Spriv_i_3) is executed at {38} in copy a, a_1, a_2.
 A trace has been found.
 RESULT not event(eInitStart(sInit[],sResp[],Spub_i,Spub_r,Spriv_i_2))@k is false.
 -- Query not event(eInitAccept(sInit[],sResp[],Spub_i,Spub_r,Spriv_i_2))@k encoded as not event(eInitAccept(sInit[],sResp[],Spub_i,Spub_r,Spriv_i_2)) in process 1.
@@ -422,14 +472,14 @@ attacker(c_1).
 7. The attacker initially knows sQ[].
 attacker(sQ[]).
 
-8. The message exp(g,Spriv_i_2) may be sent to the attacker at output {4}.
+8. The message exp(g,Spriv_i_2) may be sent to the attacker at output {5}.
 attacker(exp(g,Spriv_i_2)).
 
 9. The attacker has some term c_32.
 attacker(c_32).
 
-10. The message g that the attacker may have by 1 may be received at input {11}.
-So the message triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),c_2)),sts_i[],hash2(hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)))))) may be sent to the attacker at output {34}.
+10. The message g that the attacker may have by 1 may be received at input {14}.
+So the message triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),c_2)),sts_i[],hash2(hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)))))) may be sent to the attacker at output {37}.
 attacker(triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),c_2)),sts_i[],hash2(hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i))))))).
 
 11. By 10, the attacker may know triple(exp(g,a100_Epriv_i),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i))),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),c_2)),sts_i[],hash2(hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),c_2)),exp(g,Spriv_i_2),hash2(hash2(hash2(hash1(sConstruction[]),a92_sid_i),g),exp(g,a100_Epriv_i)))))).
@@ -515,9 +565,9 @@ By 26, the attacker may know AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash
 Using the function pair the attacker may obtain pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),c_1),c_2)),c_3)),a029_Dec,a)).
 attacker(pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),c_1),c_2)),c_3)),a029_Dec,a))).
 
-28. The message g that the attacker may have by 1 may be received at input {11}.
-The message pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),c_1),c_2)),c_3)),a029_Dec,a)) that the attacker may have by 27 may be received at input {36}.
-So event eInitAccept(sInit[],sResp[],exp(g,Spriv_i_2),g,Spriv_i_2) may be executed at {56}.
+28. The message g that the attacker may have by 1 may be received at input {14}.
+The message pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),exp(g,a100_Epriv_i)),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),g),c_1),exp(g,a100_Epriv_i)),c_1),exp(g,Spriv_i_2)),c_1),sQ[]),c_1),c_2)),c_3)),a029_Dec,a)) that the attacker may have by 27 may be received at input {39}.
+So event eInitAccept(sInit[],sResp[],exp(g,Spriv_i_2),g,Spriv_i_2) may be executed at {59}.
 event(eInitAccept(sInit[],sResp[],exp(g,Spriv_i_2),g,Spriv_i_2)).
 
 29. By 28, event(eInitAccept(sInit[],sResp[],exp(g,Spriv_i_2),g,Spriv_i_2)).
@@ -530,27 +580,33 @@ A more detailed output of the traces is available with
 
 new Spriv_i_1: bitstring creating Spriv_i_3 at {2} in copy a_1
 
-out(att, ~M) with ~M = exp(g,Spriv_i_3) at {4} in copy a_1
+event Spriv_i_1_contains(Spriv_i_3) at {3} in copy a_1
 
-new Spriv_r_1: bitstring creating Spriv_r_2 at {6} in copy a_1, a_2
+out(att, ~M) with ~M = exp(g,Spriv_i_3) at {5} in copy a_1
 
-out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_2) at {8} in copy a_1, a_2
+new Spriv_r_1: bitstring creating Spriv_r_2 at {7} in copy a_1, a_2
 
-in(att, g) at {11} in copy a_1, a_2, a_3
+event Spriv_r_1_contains(Spriv_r_2) at {8} in copy a_1, a_2
 
-new a92_sid_i_1: bitstring creating a92_sid_i_2 at {13} in copy a_1, a_2, a_3
+out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_2) at {10} in copy a_1, a_2
 
-new a100_Epriv_i_1: bitstring creating a100_Epriv_i_2 at {17} in copy a_1, a_2, a_3
+event Spriv_i_1_contains(Spriv_i_3) at {13} in copy a_1, a_2, a_3
 
-out(att, ~M_2) with ~M_2 = triple(exp(g,a100_Epriv_i_2),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2))),AEAD(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),DH(Spriv_i_3,g)),hash2(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),DH(Spriv_i_3,g)),c_1),c_2)),sts_i,hash2(hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2)),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2)))))) at {34} in copy a_1, a_2, a_3
+in(att, g) at {14} in copy a_1, a_2, a_3
 
-event eInitStart(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) at {35} in copy a_1, a_2, a_3
+new a92_sid_i_1: bitstring creating a92_sid_i_2 at {16} in copy a_1, a_2, a_3
 
-in(att, pair(g,AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),c_1),c_2)),c_3)),a_5,a_6))) with pair(g,AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),c_1),c_2)),c_3)),a_5,a_6)) = pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),c_1),c_2)),c_3)),a_5,a_6)) at {36} in copy a_1, a_2, a_3
+new a100_Epriv_i_1: bitstring creating a100_Epriv_i_2 at {20} in copy a_1, a_2, a_3
 
-event eInitAccept(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) at {56} in copy a_1, a_2, a_3 (goal)
+out(att, ~M_2) with ~M_2 = triple(exp(g,a100_Epriv_i_2),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2))),AEAD(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),DH(Spriv_i_3,g)),hash2(hash2(hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),DH(Spriv_i_3,g)),c_1),c_2)),sts_i,hash2(hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2)),AEAD(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),hash2(hash2(hash2(kdf1(hash1(sConstruction),exp(g,a100_Epriv_i_2)),DH(a100_Epriv_i_2,g)),c_1),c_2)),exp(g,Spriv_i_3),hash2(hash2(hash2(hash1(sConstruction),a92_sid_i_2),g),exp(g,a100_Epriv_i_2)))))) at {37} in copy a_1, a_2, a_3
 
-The event eInitAccept(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) is executed at {56} in copy a_1, a_2, a_3.
+event eInitStart(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) at {38} in copy a_1, a_2, a_3
+
+in(att, pair(g,AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),c_1),c_2)),c_3)),a_5,a_6))) with pair(g,AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),pars13(~M_2,a_4)),pars13(~M_2,a_4)),~M),g),pars13(~M_2,a_4)),~M),sQ),c_1),c_2)),c_3)),a_5,a_6)) = pair(g,AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),exp(g,a100_Epriv_i_2)),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),g),c_1),exp(g,a100_Epriv_i_2)),c_1),exp(g,Spriv_i_3)),c_1),sQ),c_1),c_2)),c_3)),a_5,a_6)) at {39} in copy a_1, a_2, a_3
+
+event eInitAccept(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) at {59} in copy a_1, a_2, a_3 (goal)
+
+The event eInitAccept(sInit,sResp,exp(g,Spriv_i_3),g,Spriv_i_3) is executed at {59} in copy a_1, a_2, a_3.
 A trace has been found.
 RESULT not event(eInitAccept(sInit[],sResp[],Spub_i,Spub_r,Spriv_i_2))@k is false.
 -- Query not event(eRespRecv(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k encoded as not event(eRespRecv(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2)) in process 1.
@@ -589,7 +645,7 @@ attacker(a).
 3. The attacker has some term a555_Dec.
 attacker(a555_Dec).
 
-4. The message exp(g,Spriv_r_2) may be sent to the attacker at output {8}.
+4. The message exp(g,Spriv_r_2) may be sent to the attacker at output {10}.
 attacker(exp(g,Spriv_r_2)).
 
 5. The attacker initially knows sConstruction[].
@@ -638,9 +694,9 @@ By 10, the attacker may know AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sCon
 Using the function triple the attacker may obtain triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)).
 attacker(triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a))).
 
-15. The message g that the attacker may have by 1 may be received at input {59}.
-The message triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)) that the attacker may have by 14 may be received at input {65}.
-So event eRespRecv(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2) may be executed at {79}.
+15. The message g that the attacker may have by 1 may be received at input {63}.
+The message triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)) that the attacker may have by 14 may be received at input {69}.
+So event eRespRecv(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2) may be executed at {83}.
 event(eRespRecv(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2)).
 
 16. By 15, event(eRespRecv(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2)).
@@ -653,21 +709,27 @@ A more detailed output of the traces is available with
 
 new Spriv_i_1: bitstring creating Spriv_i_2 at {2} in copy a_2
 
-out(att, ~M) with ~M = exp(g,Spriv_i_2) at {4} in copy a_2
+event Spriv_i_1_contains(Spriv_i_2) at {3} in copy a_2
 
-new Spriv_r_1: bitstring creating Spriv_r_3 at {6} in copy a_2, a_3
+out(att, ~M) with ~M = exp(g,Spriv_i_2) at {5} in copy a_2
 
-out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_3) at {8} in copy a_2, a_3
+new Spriv_r_1: bitstring creating Spriv_r_3 at {7} in copy a_2, a_3
 
-in(att, g) at {59} in copy a_2, a_3, a_4
+event Spriv_r_1_contains(Spriv_r_3) at {8} in copy a_2, a_3
 
-new a46_sid_r_1: bitstring creating a46_sid_r at {61} in copy a_2, a_3, a_4
+out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_3) at {10} in copy a_2, a_3
 
-in(att, triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8))) with triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8)) = triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)) at {65} in copy a_2, a_3, a_4
+event Spriv_r_1_contains(Spriv_r_3) at {62} in copy a_2, a_3, a_4
 
-event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {79} in copy a_2, a_3, a_4 (goal)
+in(att, g) at {63} in copy a_2, a_3, a_4
 
-The event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) is executed at {79} in copy a_2, a_3, a_4.
+new a46_sid_r_1: bitstring creating a46_sid_r at {65} in copy a_2, a_3, a_4
+
+in(att, triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8))) with triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8)) = triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)) at {69} in copy a_2, a_3, a_4
+
+event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {83} in copy a_2, a_3, a_4 (goal)
+
+The event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) is executed at {83} in copy a_2, a_3, a_4.
 A trace has been found.
 RESULT not event(eRespRecv(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k is false.
 -- Query not event(eRespAnsw(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k encoded as not event(eRespAnsw(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2)) in process 1.
@@ -706,7 +768,7 @@ attacker(a).
 3. The attacker has some term a555_Dec.
 attacker(a555_Dec).
 
-4. The message exp(g,Spriv_r_2) may be sent to the attacker at output {8}.
+4. The message exp(g,Spriv_r_2) may be sent to the attacker at output {10}.
 attacker(exp(g,Spriv_r_2)).
 
 5. The attacker initially knows sConstruction[].
@@ -755,9 +817,9 @@ By 10, the attacker may know AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sCon
 Using the function triple the attacker may obtain triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)).
 attacker(triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a))).
 
-15. The message g that the attacker may have by 1 may be received at input {59}.
-The message triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)) that the attacker may have by 14 may be received at input {65}.
-So event eRespAnsw(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2) may be executed at {95}.
+15. The message g that the attacker may have by 1 may be received at input {63}.
+The message triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),a302_Dec,a_1),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction[]),g),c_1),exp(g,Spriv_r_2)),c_1),exp(g,Spriv_r_2)),c_1),a555_Dec,a)) that the attacker may have by 14 may be received at input {69}.
+So event eRespAnsw(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2) may be executed at {99}.
 event(eRespAnsw(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2)).
 
 16. By 15, event(eRespAnsw(sInit[],sResp[],g,exp(g,Spriv_r_2),Spriv_r_2)).
@@ -770,29 +832,67 @@ A more detailed output of the traces is available with
 
 new Spriv_i_1: bitstring creating Spriv_i_2 at {2} in copy a_2
 
-out(att, ~M) with ~M = exp(g,Spriv_i_2) at {4} in copy a_2
+event Spriv_i_1_contains(Spriv_i_2) at {3} in copy a_2
 
-new Spriv_r_1: bitstring creating Spriv_r_3 at {6} in copy a_2, a_3
+out(att, ~M) with ~M = exp(g,Spriv_i_2) at {5} in copy a_2
 
-out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_3) at {8} in copy a_2, a_3
+new Spriv_r_1: bitstring creating Spriv_r_3 at {7} in copy a_2, a_3
 
-in(att, g) at {59} in copy a_2, a_3, a_4
+event Spriv_r_1_contains(Spriv_r_3) at {8} in copy a_2, a_3
 
-new a46_sid_r_1: bitstring creating a46_sid_r at {61} in copy a_2, a_3, a_4
+out(att, ~M_1) with ~M_1 = exp(g,Spriv_r_3) at {10} in copy a_2, a_3
 
-in(att, triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8))) with triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8)) = triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)) at {65} in copy a_2, a_3, a_4
+event Spriv_r_1_contains(Spriv_r_3) at {62} in copy a_2, a_3, a_4
 
-event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {79} in copy a_2, a_3, a_4
+in(att, g) at {63} in copy a_2, a_3, a_4
 
-new a563_Epriv_r_1: bitstring creating a563_Epriv_r at {80} in copy a_2, a_3, a_4
+new a46_sid_r_1: bitstring creating a46_sid_r at {65} in copy a_2, a_3, a_4
 
-out(att, ~M_2) with ~M_2 = pair(exp(g,a563_Epriv_r),AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),c_1),c_2)),c_3)),s952_epsilon,hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),a46_sid_r),exp(g,Spriv_r_3)),g),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6)),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)),exp(g,a563_Epriv_r)),hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),c_1),c_2))))) at {94} in copy a_2, a_3, a_4
+in(att, triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8))) with triple(g,AEAD(kdf1(kdf1(hash1(sConstruction),g),~M_1),a_5,a_6),AEAD(kdf1(kdf1(kdf1(hash1(sConstruction),g),~M_1),~M_1),a_7,a_8)) = triple(g,AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)) at {69} in copy a_2, a_3, a_4
 
-event eRespAnsw(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {95} in copy a_2, a_3, a_4 (goal)
+event eRespRecv(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {83} in copy a_2, a_3, a_4
 
-The event eRespAnsw(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) is executed at {95} in copy a_2, a_3, a_4.
+new a563_Epriv_r_1: bitstring creating a563_Epriv_r at {84} in copy a_2, a_3, a_4
+
+out(att, ~M_2) with ~M_2 = pair(exp(g,a563_Epriv_r),AEAD(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),c_1),c_2)),c_3)),s952_epsilon,hash2(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),a46_sid_r),exp(g,Spriv_r_3)),g),AEAD(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),a_5,a_6)),AEAD(hash2(hash2(hash2(hash2(hash2(hash2(hash1(sConstruction),g),c_1),exp(g,Spriv_r_3)),c_1),exp(g,Spriv_r_3)),c_1),a_7,a_8)),exp(g,a563_Epriv_r)),hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),hash2(hash2(hash2(kdf1(kdf1(kdf1(kdf1(kdf1(hash1(sConstruction),g),DH(Spriv_r_3,g)),DH(Spriv_r_3,g)),exp(g,a563_Epriv_r)),DH(a563_Epriv_r,g)),sQ),c_1),c_2))))) at {98} in copy a_2, a_3, a_4
+
+event eRespAnsw(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) at {99} in copy a_2, a_3, a_4 (goal)
+
+The event eRespAnsw(sInit,sResp,g,exp(g,Spriv_r_3),Spriv_r_3) is executed at {99} in copy a_2, a_3, a_4.
 A trace has been found.
 RESULT not event(eRespAnsw(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k is false.
+-- Query event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@i2 && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i1 ==> i2 > i1 && (attacker(exp(g,i))@j || attacker(exp(g,r))@j2 || (attacker(exp(g,i))@j3 && attacker(exp(g,r))@j4) || attacker(i)@j5 || attacker(r)@j6 || (attacker(i)@j7 && attacker(r)@j8) || (attacker(exp(g,i))@j9 && attacker(r)@j10) || (attacker(exp(g,r))@j11 && attacker(i)@j12)) encoded as event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@i_1 && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r)) ==> (attacker(exp(g,i)) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_2 && i_1 > i_2) || (attacker(exp(g,r)) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_3 && i_1 > i_3) || (attacker(exp(g,r)) && attacker(exp(g,i)) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_4 && i_1 > i_4) || (attacker(i) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_5 && i_1 > i_5) || (attacker(r) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_6 && i_1 > i_6) || (attacker(r) && attacker(i) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_7 && i_1 > i_7) || (attacker(r) && attacker(exp(g,i)) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_8 && i_1 > i_8) || (attacker(i) && attacker(exp(g,r)) && event(v,eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i_9 && i_1 > i_9) in process 1.
+Translating the process into Horn clauses...
+select mess(att[],y)/-5000
+Completing...
+200 rules inserted. Base: 200 rules (51 with conclusion selected). Queue: 364 rules.
+400 rules inserted. Base: 400 rules (51 with conclusion selected). Queue: 364 rules.
+600 rules inserted. Base: 600 rules (63 with conclusion selected). Queue: 365 rules.
+800 rules inserted. Base: 800 rules (67 with conclusion selected). Queue: 361 rules.
+1000 rules inserted. Base: 1000 rules (76 with conclusion selected). Queue: 352 rules.
+1200 rules inserted. Base: 1200 rules (76 with conclusion selected). Queue: 406 rules.
+1400 rules inserted. Base: 1400 rules (76 with conclusion selected). Queue: 515 rules.
+1600 rules inserted. Base: 1600 rules (76 with conclusion selected). Queue: 611 rules.
+1800 rules inserted. Base: 1800 rules (76 with conclusion selected). Queue: 564 rules.
+2000 rules inserted. Base: 2000 rules (76 with conclusion selected). Queue: 498 rules.
+2200 rules inserted. Base: 2200 rules (76 with conclusion selected). Queue: 481 rules.
+2400 rules inserted. Base: 2400 rules (76 with conclusion selected). Queue: 558 rules.
+2600 rules inserted. Base: 2600 rules (76 with conclusion selected). Queue: 604 rules.
+2800 rules inserted. Base: 2765 rules (76 with conclusion selected). Queue: 525 rules.
+3000 rules inserted. Base: 2829 rules (76 with conclusion selected). Queue: 461 rules.
+3200 rules inserted. Base: 2840 rules (76 with conclusion selected). Queue: 416 rules.
+3400 rules inserted. Base: 2856 rules (76 with conclusion selected). Queue: 526 rules.
+3600 rules inserted. Base: 3056 rules (76 with conclusion selected). Queue: 550 rules.
+3800 rules inserted. Base: 3256 rules (76 with conclusion selected). Queue: 554 rules.
+4000 rules inserted. Base: 3456 rules (76 with conclusion selected). Queue: 646 rules.
+4200 rules inserted. Base: 3656 rules (76 with conclusion selected). Queue: 682 rules.
+4400 rules inserted. Base: 3784 rules (76 with conclusion selected). Queue: 554 rules.
+4600 rules inserted. Base: 3912 rules (76 with conclusion selected). Queue: 426 rules.
+4800 rules inserted. Base: 4056 rules (76 with conclusion selected). Queue: 282 rules.
+5000 rules inserted. Base: 4192 rules (143 with conclusion selected). Queue: 157 rules.
+5200 rules inserted. Base: 4388 rules (238 with conclusion selected). Queue: 54 rules.
+Starting query event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@i2 && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i1 ==> i2 > i1 && (attacker(exp(g,i))@j || attacker(exp(g,r))@j2 || (attacker(exp(g,i))@j3 && attacker(exp(g,r))@j4) || attacker(i)@j5 || attacker(r)@j6 || (attacker(i)@j7 && attacker(r)@j8) || (attacker(exp(g,i))@j9 && attacker(r)@j10) || (attacker(exp(g,r))@j11 && attacker(i)@j12))
+RESULT event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@i2 && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i1 ==> i2 > i1 && (attacker(exp(g,i))@j || attacker(exp(g,r))@j2 || (attacker(exp(g,i))@j3 && attacker(exp(g,r))@j4) || attacker(i)@j5 || attacker(r)@j6 || (attacker(i)@j7 && attacker(r)@j8) || (attacker(exp(g,i))@j9 && attacker(r)@j10) || (attacker(exp(g,r))@j11 && attacker(i)@j12)) is true.
 
 --------------------------------------------------------------
 Verification summary:
@@ -800,6 +900,10 @@ Verification summary:
 Query event(eRespRecv(sInit[],sResp[],exp(g,i),exp(g,r),r))@k ==> (k > j && event(eInitStart(sInit[],sResp[],exp(g,i),exp(g,r),i))@j) || attacker(i) || attacker(r) is true.
 
 Query event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@k ==> (k > j && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@j) || attacker(i) || attacker(r) is true.
+
+Query secret Spriv_i,Spriv_i_1 is true.
+
+Query secret Spriv_r,Spriv_r_1 is true.
 
 Query not attacker(Spriv_i_1[!1 = v]) is true.
 
@@ -812,6 +916,8 @@ Query not event(eInitAccept(sInit[],sResp[],Spub_i,Spub_r,Spriv_i_2))@k is false
 Query not event(eRespRecv(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k is false.
 
 Query not event(eRespAnsw(sInit[],sResp[],Spub_i,Spub_r,Spriv_r_2))@k is false.
+
+Query event(eInitAccept(sInit[],sResp[],exp(g,i),exp(g,r),i))@i2 && event(eRespAnsw(sInit[],sResp[],exp(g,i),exp(g,r),r))@i1 ==> i2 > i1 && (attacker(exp(g,i))@j || attacker(exp(g,r))@j2 || (attacker(exp(g,i))@j3 && attacker(exp(g,r))@j4) || attacker(i)@j5 || attacker(r)@j6 || (attacker(i)@j7 && attacker(r)@j8) || (attacker(exp(g,i))@j9 && attacker(r)@j10) || (attacker(exp(g,r))@j11 && attacker(i)@j12)) is true.
 
 --------------------------------------------------------------
 

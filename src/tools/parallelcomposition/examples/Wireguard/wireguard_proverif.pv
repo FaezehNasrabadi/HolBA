@@ -26,7 +26,7 @@ event eInitAccept(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eInitStart(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eRespAnsw(bitstring,bitstring,bitstring,bitstring,bitstring).
 event eRespRecv(bitstring,bitstring,bitstring,bitstring,bitstring).
-
+event Sec(bitstring).
 equation forall x_1:bitstring, x_2:bitstring;   fst(pair(x_1, x_2)) = x_1.
 equation forall x_1:bitstring, x_2:bitstring;   snd(pair(x_1, x_2)) = x_2.
 reduc forall a:bitstring, k:bitstring, p:bitstring;   dec(AEAD(k, p, a), k) = p.
@@ -49,6 +49,7 @@ equation forall key:bitstring, input:bitstring; kdf2(key,input) = pair(hash2(has
 equation forall key:bitstring, input:bitstring; kdf3(key,input) = triple(hash2(hash2(key,input),c_1),hash2(hash2(key,input),hash2(hash2(hash2(key,input),c_1),c_2)), hash2(hash2(key,input), hash2(hash2(hash2(key,input),hash2(hash2(hash2(key,input),c_1),c_2)),c_3))).
 
 
+
 (*injIP*)
 query i:bitstring, r:bitstring, j:time, k:time;
  (event(eRespRecv( sInit, sResp, exp(g,i),exp(g,r), r ))@k) ==>
@@ -59,7 +60,8 @@ query i:bitstring, r:bitstring, j:time, k:time;
  (event(eInitAccept( sInit, sResp, exp(g,i),exp(g,r), i ))@k) ==>
  (((j < k) && (event(eRespAnsw( sInit, sResp, exp(g,i),exp(g,r), r ))@j)) || attacker(i) || attacker(r))
 .
-
+query secret Spriv_i_1.
+query secret Spriv_r_1.
 query attacker(new Spriv_i_1).
 query attacker(new Spriv_r_1).
 
@@ -79,6 +81,21 @@ query Spriv_r:bitstring, Spub_i:bitstring, Spub_r:bitstring, k:time;
 query Spriv_r:bitstring, Spub_i:bitstring, Spub_r:bitstring, k:time;
  event(eRespAnsw( sInit, sResp, Spub_i, Spub_r, Spriv_r ))@k
 .
+(*key_secrecy*)
+query i:bitstring, r:bitstring, i1:time, i2:time, j:time, j2:time, j3:time, j4:time, j5:time, j6:time, j7:time, j8:time, j9:time, j10:time, j11:time, j12:time;
+   ( (inj-event(eInitAccept( sInit, sResp, exp(g,i),exp(g,r), i ))@i2) && (inj-event(eRespAnsw( sInit, sResp, exp(g,i),exp(g,r), r ))@i1)) ==>
+((i1 < i2)&&
+((((
+       ((( attacker( exp(g,i) ) @ j) || ( attacker( exp(g,r) ) @ j2)) ||
+        ( (attacker( exp(g,i) ) @ j3) && (attacker( exp(g,r) ) @ j4)))) ||
+      ((( attacker( i ) @ j5) || (attacker(r ) @ j6)) ||
+       ( (attacker(i ) @ j7) && (attacker( r ) @ j8)))) ||
+     (( (attacker( exp(g,i) ) @ j9) && (attacker( r ) @ j10)) ||
+      ( (attacker( exp(g,r) ) @ j11) && (attacker( i ) @ j12))))
+)
+)
+.
+
 let client(Spriv_i_1:bitstring, Spub_i_1:bitstring, Spub_r_1:bitstring)=
     in(att,a88_a_1:bitstring);
     let a90_Ci_1:bitstring=hash1(sConstruction) in

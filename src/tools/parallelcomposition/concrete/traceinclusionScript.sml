@@ -59,7 +59,7 @@ val subset_comp_def = Define `
                       `;
              
 val compose_vs_modules_conc_symb_thm = store_thm(
-  "compose_vs_modules__conc_symb_thm",
+  "compose_vs_modules_conc_symb_thm",
   ``!Sym Sym' P P' S1 S1' S2 S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (Ded1:('pred1) tded) (Ded2:('pred2) tded).
 (
      (subset_one

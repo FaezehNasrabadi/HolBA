@@ -127,5 +127,11 @@ process
       (((P(pkS_1, skP_1, pkP_1))
       | (S(skS_1, pkS_1, pkP_1))))
       ))
+      |
+      (
+(phase 1; out(att , skS_1))
+|
+(phase 1; out(att , skP_1))
+)
 )
 )

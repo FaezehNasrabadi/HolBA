@@ -230,12 +230,15 @@ in (* local *)
     case state_exec_try_cjmp_label est syst of
        SOME systs => systs
      | NONE       => (
-    (* try to match indirect jump *)
-    case state_exec_try_jmp_exp_var n_dict lbl_tm est syst of
+       (* try to match indirect jump *)
+       if (!ind_jump) then
+   ( case state_exec_try_jmp_exp_var n_dict lbl_tm est syst of
        SOME systs => systs
      | NONE       => (
        state_exec_try_jmp_exp_var_no_const syst
-    ))))
+       )
+   ) else state_exec_try_jmp_exp_var_no_const syst
+       )))
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;
 end (* local *)
@@ -400,7 +403,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 			     in
 				 [SYST_update_pc tgt syst]
 			     end
-			 else if ((bir_symbexec_oracleLib.is_function_call n_dict lbl_tm) andalso (!ind_jump))										  
+			 else if (bir_symbexec_oracleLib.is_function_call n_dict lbl_tm)										  
 			 then
 			     if ((not o List.null o fst o listSyntax.dest_list) stmts)
 			     then

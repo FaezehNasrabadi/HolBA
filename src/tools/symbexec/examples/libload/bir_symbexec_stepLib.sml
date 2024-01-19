@@ -16,6 +16,9 @@ local
 
   val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_stepLib"
   val wrap_exn = Feedback.wrap_exn   "bir_symbexec_stepLib"
+
+  val fun_call = ref (false:bool);
+  val ind_jump = ref (false:bool);
 		 
 in (* outermost local *)
 
@@ -387,48 +390,41 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 		     print_term (est);
 
 	     val s_tms = (fst o listSyntax.dest_list) stmts;
-
-
-	     val syst = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
-		     then
-			 if ((not o List.null o fst o listSyntax.dest_list) stmts)
+	 
+	     val systs = if ((bir_symbexec_oracleLib.is_function_call n_dict lbl_tm) andalso (not (!fun_call))) 
 			 then
 			     let
-				 val s_tm_0 = List.nth (s_tms, 0);
-				 val (bv, be) = dest_BStmt_Assign s_tm_0;
-				 val indjmps = SYST_get_indjmp syst;   
+				 val wpc = (bir_immSyntax.dest_Imm64 o dest_BL_Address) lbl_tm;
+				 val incpc = (rhs o concl o EVAL o wordsSyntax.mk_word_add) (wpc,``4w:word64``);
+				 val tgt = (mk_BL_Address o bir_immSyntax.mk_Imm64) incpc;
 			     in
-				 SYST_update_indjmp (be::indjmps) syst
+				 [SYST_update_pc tgt syst]
 			     end
-			 else syst
-		     else syst;
-		 
-	     val debugOn = false;
-	     val _ = if not debugOn then () else
-		     (print_term bl; print "\n ==================== \n\n");
-
-	     val systs2 = List.foldl (fn (s, systs) => List.concat(List.map (fn x => symb_exec_stmt (s,x)) systs)) [syst] s_tms;   
-	     (* generate list of states from end statement *)
-
-	    val systs =  List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2);
- (*
-		 val systs = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
-			    then
-				let
-				    val wpc = (bir_immSyntax.dest_Imm64 o dest_BL_Address) lbl_tm;
-				    val incpc = (rhs o concl o EVAL o wordsSyntax.mk_word_add) (wpc,``4w:word64``);
-				    val tgt = (mk_BL_Address o bir_immSyntax.mk_Imm64) incpc;
-				in
-				    [SYST_update_pc tgt syst]
-				end
+			 else if ((bir_symbexec_oracleLib.is_function_call n_dict lbl_tm) andalso (!ind_jump))										  
+			 then
+			     if ((not o List.null o fst o listSyntax.dest_list) stmts)
+			     then
+				 let
+				     val s_tm_0 = List.nth (s_tms, 0);
+				     val (bv, be) = dest_BStmt_Assign s_tm_0;
+				     val indjmps = SYST_get_indjmp syst;   
+				 in
+				     [SYST_update_indjmp (be::indjmps) syst]
+				 end
 			     else
 				 let
 				     val systs2 = List.foldl (fn (s, systs) => List.concat(List.map (fn x => symb_exec_stmt (s,x)) systs)) [syst] s_tms; 
-				in
-				    List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2)
-				end
-		    
-*)
+				 in
+				     List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2)
+				 end
+			 else
+			     let
+				 val systs2 = List.foldl (fn (s, systs) => List.concat(List.map (fn x => symb_exec_stmt (s,x)) systs)) [syst] s_tms; 
+			     in
+				 List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2)
+			     end
+			     
+
 	     val systs_processed = abpfun systs;
 			 
 	    in

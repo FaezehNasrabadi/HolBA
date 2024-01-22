@@ -9,7 +9,8 @@ local
     open bir_envSyntax;
     open bir_expSyntax;
     open Redblackmap;
-  val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_funcLib"
+    val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_funcLib"
+    val events = ref (false:bool);
 in
 
 val _ = Theory.new_constant("hash1", ``:bir_var_t -> bir_exp_t``);
@@ -1115,7 +1116,7 @@ fun Adv av syst =
 fun Event lib_type syst =
     let
 
-	val event_names = bir_symbexec_oracleLib.read_fun_names "Event-Names";
+	val event_names =  if (!events) then (bir_symbexec_oracleLib.read_fun_names "Event-Names") else [""];
 
 	val systs = if (hd(event_names) = "HMAC_receive")
 		    then

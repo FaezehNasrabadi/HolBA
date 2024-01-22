@@ -26,6 +26,7 @@ local
     open stringSyntax;
     open bslSyntax;
     val ERR = Feedback.mk_HOL_ERR "bir_symbexec_treeLib"
+    val events = ref (false:bool);
 
 in
 
@@ -743,7 +744,7 @@ fun path_of_tree event_names vals_list refine_preds exec_sts [] str =
 fun sym_exe_to_IML exec_sts =
     let
 	
-	val event_names = bir_symbexec_oracleLib.read_fun_names "Event-Names";
+	val event_names = if (!events) then (bir_symbexec_oracleLib.read_fun_names "Event-Names") else [""];
 
 	val vals_list = symb_execs_vals_term exec_sts [];
 

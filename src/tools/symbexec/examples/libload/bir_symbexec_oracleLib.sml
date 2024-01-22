@@ -22,6 +22,10 @@ local
     open HolKernel Parse boolLib bossLib;
     open HolBACoreSimps;
     val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_oracleLib"
+
+    val crypto_analysis = ref (false:bool); 
+    val crypto_call = ref (false:bool);
+   
 in
 
 (* detect function call based on label of block *)
@@ -169,6 +173,7 @@ fun exist_in_dict fun_name file_name =
 
      
 fun fun_oracle_type_label adr_dict label =
+    if (!crypto_analysis) then
     let
 	open String;
 	     
@@ -199,7 +204,9 @@ fun fun_oracle_type_label adr_dict label =
 	    
     in
 	lbl
-    end;
+    end
+    else "Normal";
+       
 
 (* find address of function call *)     
 fun fun_oracle_Address est syst =
@@ -220,6 +227,7 @@ fun fun_oracle adr_dict lbl_tm syst =
 
 (* detect type of cryptographic function call *)    
 fun lib_oracle_type_label adr_dict label =
+    if (!crypto_call) then
     let
 
 	val C_fun_names = read_fun_names "Cryptographic-Functions-Names";
@@ -298,7 +306,9 @@ fun lib_oracle_type_label adr_dict label =
 	    
     in
 	lbl
-    end;
+    end
+    else
+	"C_Lib";
 
 fun lib_oracle adr_dict lbl_tm syst =
     	(lib_oracle_type_label adr_dict lbl_tm);

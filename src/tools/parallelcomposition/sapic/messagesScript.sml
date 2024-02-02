@@ -113,26 +113,6 @@ val sapic_substname_def = Define`
 | _ =>  sapic_substn x y _                                                            
 ))
                                 `;
-(*
-load "holyHammer"; open holyHammer;
-  hh ([],``1+1=2``);
-  holyhammer ``1+1=2``;
-             load "tacticToe"; open tacticToe;
-  ttt ([],``1+1=2``);
-  tactictoe ``1+1=2``; 
-val sapic_substname_defn =
-Defn.Hol_defn
-    "sapic_substname"
-    ‘(sapic_substname x y t = (case t of
-                                 (FAPP n ts) => (FAPP n (MAP (sapic_substname x y) ts))
-                               | (Con a) => (if x = a then y else (Con a))
-                               | _ =>  t                                                            
-                              ))
-    ’;
-  
-val (sapic_substname_EQN, sapic_substname_IND) =
-Defn.tprove (sapic_substname_defn, cheat);
-*)
                                         
 (* Subset variables *)
 val sapic_substv_def = Define`

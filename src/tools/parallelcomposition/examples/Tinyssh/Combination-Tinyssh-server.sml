@@ -1,10 +1,7 @@
 
 open HolKernel Parse
 
-open binariesLib;
-open binariesTheory;
-open binariesCfgLib;
-open binariesMemLib;
+open TinySSHexampleTheory;
 open bir_symbexec_stateLib;
 open bir_symbexec_coreLib;
 open bir_symbexec_stepLib;
@@ -16,7 +13,6 @@ open bir_valuesSyntax;
 open bir_immSyntax;
 open bir_exec_typingLib;
 open commonBalrobScriptLib;
-open binariesDefsLib;
 open bir_cfgLib;
 open bir_cfg_m0Lib;
 open bir_symbexec_driverLib;
@@ -32,13 +28,34 @@ open translate_to_sapicLib;
 open messagesTheory;
 open messagesSyntax;
 open tree_to_processLib;
-open  sapic_to_fileLib;
+open sapic_to_fileLib;
 
 (******Start******)
 
-(* val lbl_tm = ``BL_Address (Imm64 4209952w)``; *)
+val (_, _, _, prog_tm) =
+    (dest_bir_is_lifted_prog o concl)
+	(DB.fetch "TinySSHexample" "TinySSHexample_thm");
+    
+val bl_dict_    = gen_block_dict prog_tm;
+val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
+
+val prog_vars = gen_vars_of_prog prog_tm;
+
+val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
+
+val prog_vars = adv_mem::prog_vars;
+
+val bv_key = ``BVar "key" (BType_Imm Bit64)``;
+
+val prog_vars = bv_key::prog_vars;
+
+val op_mem = “BVar "Op_MEM" (BType_Mem Bit64 Bit8)”;
+
+val prog_vars = op_mem::prog_vars;
+    
+    
 val lbl_tm = ``BL_Address (Imm64 0x403D20w)``;
-(* val stop_lbl_tms = [``BL_Address (Imm64 4212628w)``]; *)
+
 val stop_lbl_tms = [``BL_Address (Imm64 0x404794w)``];
 
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
@@ -76,9 +93,9 @@ val _ = print "\n\n";
    
 (************)
     
-(* val lbl_tm = ``BL_Address (Imm64 4204336w)``; *)
+
 val lbl_tm = ``BL_Address (Imm64 0x402730w)``;
-(* val stop_lbl_tms = [``BL_Address (Imm64 4206916w)``]; *)
+
 val stop_lbl_tms = [``BL_Address (Imm64 0x403160w)``];
     
 val b = [];
@@ -105,17 +122,7 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 
-    (*
-val m = “BVar "45_Ver" BType_Bool”;
-	
-fun fm m = String.isSuffix "Ver" ((fst o dest_BVar_string) m)
 
-(* (List.map (fn ls => ("\n"^((int_to_string o List.length) ls))) predlists) *)
-    exists
-	(List.map (fn ls => (exists (fm) ls)) (bir_symbexec_sortLib.sort_pred_lists predlists))
-    val predlists =  (List.map (fn ls => (filter (fm) ls)) predlists)
-
-*)
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 

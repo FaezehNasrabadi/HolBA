@@ -78,7 +78,6 @@ struct
      "main"
  ];
 
-
 (* client_xor *)
  val symbs_sec_text = [
      "__libc_malloc",
@@ -413,7 +412,7 @@ val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff)
 				 (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)),
 				 (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       ) ]; 
-
+*)
   val configs              = [ ("client",
 				("client_xor.da", "balrob/client_xor.da.plus", "balrob/client_xor.mem"),
 				"client_THM",
@@ -421,7 +420,7 @@ val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff)
 				 (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)),
 				 (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       ) ];
-
+(*
   val configs              = [ ("client",
 				("client_hmac.da", "balrob/client_hmac.da.plus", "balrob/client_hmac.mem"),
 				"client_THM",
@@ -488,7 +487,7 @@ val configs              = [ ("tinyssh",
 			       ((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
 				(Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
 				(Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-			    )];*)
+			    )];
  val configs              = [ ("example-loop",
                                ("example-loop.da", "balrob/example-loop.da.plus", "balrob/example-loop.mem"),
                                "exampleloop_THM",
@@ -497,7 +496,7 @@ val configs              = [ ("tinyssh",
 				(Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			    )];
 
-(*
+
  val configs              = [ ("CSur-alice",
                                ("CSur_alice.da", "balrob/CSur_alice.da.plus", "balrob/CSur_alice.mem"),
                                "CSuralice_THM",
@@ -525,8 +524,6 @@ val configs              = [ ("tinyssh",
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       )];
 
-
-
 	
 
     
@@ -552,6 +549,5 @@ val symb_filter_lift = fn secname =>
 			    case secname of
 				".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
 			      | _       => (K false);
-
 
 end (* struct *)

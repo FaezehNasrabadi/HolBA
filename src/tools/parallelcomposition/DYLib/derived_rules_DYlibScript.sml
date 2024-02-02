@@ -4,9 +4,9 @@ open pred_setTheory;
 open sigma_algebraTheory;
 open listTheory;
 open tautLib;
-open interleavingemptyTheory;
-open parallelcompositionemptydeductionTheory;
-open derived_rules_emptydeductionTheory;
+open interleavingdeductionTheory;
+open parallelcompositiondeductionTheory;
+open derived_rules_deductionTheory;
 
 val _ = new_theory "derived_rules_DYlib";
 
@@ -29,7 +29,7 @@ val same_function_signature_thm = store_thm(
     ``,
   rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >>
   rw[] >>
-  rewrite_tac[binterleave_trace_emptydeduction]
+  rewrite_tac[binterleave_trace_deduction]
   ); 
 
 
@@ -65,7 +65,7 @@ val distinct_function_signatures_thm = store_thm(
        ``,
      rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >>
      rw[] >>
-     rewrite_tac[binterleave_trace_emptydeduction]   
+     rewrite_tac[binterleave_trace_deduction]   
   ); 
 
 

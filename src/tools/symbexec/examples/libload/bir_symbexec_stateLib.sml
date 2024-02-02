@@ -12,15 +12,11 @@ in (* outermost local *)
 datatype symb_value =
     SymbValBE       of (term * term Redblackset.set)
   | SymbValInterval of ((term * term) * term Redblackset.set)
-                    (* TODO: generalize this later *)
-                    (* memory layout: flash, globals, stack;
-                                      size of first (constants) and middle portion (globals) *)
+                  
   | SymbValMem      of (term *
                         (Arbnum.num * Arbnum.num * Arbnum.num) *
                         ((Arbnum.num -> Arbnum.num option) *
                          (Arbnum.num, term * term Redblackset.set) Redblackmap.dict *
-                         (* notes: need to keep information what on the stack is unknown after merging!
-                                   use free variables for this *)
                          (term * (Arbnum.num, term * term Redblackset.set) Redblackmap.dict)
                         ) *
                         term Redblackset.set);
@@ -171,7 +167,6 @@ fun state_is_running syst =
 
 fun is_state_inloop syst =
   identical (SYST_get_status syst) BST_InLoop_tm;    
-(*val bv = ``BVar "sy_MEM" (BType_Mem Bit32 Bit8)``;*)
 (* fresh variables and initial state variables *)
 local
   open bir_envSyntax;
@@ -184,7 +179,6 @@ in
   fun get_bvar_fresh bv =
     let
       val (s, bty) = dest_BVar_string bv;
-     (* val new_s = "fr_" ^ (Int.toString (get_fresh_var_counter ())) ^ "_" ^ s;*)
       val new_s = (Int.toString (get_fresh_var_counter ())) ^ "_" ^ s;
     in
       mk_BVar_string (new_s, bty)
@@ -311,9 +305,6 @@ fun deps_of_symbval err_src_string symbv =
           SymbValBE (_,deps) => deps
         | SymbValInterval (_, deps) => deps
         | SymbValMem (_, _, _, deps) => deps
-(*
-        | _ => raise ERR err_src_string "cannot handle symbolic value type to find dependencies";
-*)
 
 fun deps_union vals (bv, deps) =
   let
@@ -579,10 +570,10 @@ fun subset_mem_exp vals_eql exp =
     let
 	val (bop, subexp1, subexp2) = (dest_BExp_BinPred (hd vals_eql));
 	val ref_exp =  subst[subexp1 |-> subexp2] exp;
-	    (* val _ = print (term_to_string subexp1); *)
-      (* val _ = print "\n"; *)
-      (* val _ = print (term_to_string subexp2); *)
-      (* val _ = print "\n \n"; *)
+    (* val _ = print (term_to_string subexp1); *)
+    (* val _ = print "\n"; *)
+    (* val _ = print (term_to_string subexp2); *)
+    (* val _ = print "\n \n"; *)
 
     in
 	if (List.null (tl vals_eql))
@@ -672,8 +663,6 @@ fun check_feasible_exp be syst =
       val vals_eql =
         List.map symbval_eq_to_bexp sort_vals;
 
-
-      (* val pr = add_pred (hd pred_conjs);  *)
 
       val exp = conj_preds_exps (tl pred_conjs) (hd pred_conjs);
 

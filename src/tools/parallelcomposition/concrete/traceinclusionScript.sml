@@ -3,9 +3,9 @@ open sumTheory;
 open pred_setTheory;
 open parallelcompositionconcreteTheory;
 open interleavingconcreteTheory;
-open parallelcompositionemptydeductionTheory;
-open interleavingemptyTheory;
-open derived_rules_emptydeductionTheory;
+open parallelcompositiondeductionTheory;
+open interleavingdeductionTheory;
+open derived_rules_deductionTheory;
 
 val _ = new_theory "traceinclusion";
 
@@ -74,7 +74,7 @@ val compose_vs_modules_conc_symb_thm = store_thm(
    (comptraces (MTrn1,Ded1) (MTrn2,Ded2) (Sym,P,S1,S2) (Sym',P',S1',S2'))
 ) ``
   ,
-rewrite_tac[binterleave_composition_concrete,binterleave_composition_emptydeduction,interleavingconcreteTheory.binterleave_ts,interleavingemptyTheory.binterleave_ts,derived_rules_emptydeductionTheory.traces_def,interleavingconcreteTheory.traces_def]>>
+rewrite_tac[binterleave_composition_concrete,binterleave_composition_deduction,interleavingconcreteTheory.binterleave_ts,interleavingdeductionTheory.binterleave_ts,derived_rules_deductionTheory.traces_def,interleavingconcreteTheory.traces_def]>>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [subset_one_def,subset_two_def,subset_comp_def]>>
 rw[]>>
 PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`((RevInterpretEvTwoSyn:('cevent2 + 'ceventS) list -> ('event2 + 'eventS) option list) (t2:(('cevent2+'ceventS) list)))`]))>>

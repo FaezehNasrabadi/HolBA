@@ -18,7 +18,6 @@ in(*local*)
 (* print Name
 
 val N = “Name FreshName "49_OTP"”*)
-
 fun name_to_string N =
     let
 	val (tag,str) = dest_Name N;
@@ -35,7 +34,6 @@ fun name_to_string N =
 (* print Var
 
 val V = “Var "1_X" 0”;*)		 
-
 fun var_to_string V =
     let
 	val (str,id) = dest_Var V;
@@ -90,6 +88,7 @@ fun fact_to_string fct =
     end	
    
 (* print Action
+
 val act = “ChIn (SOME (TVar (Var "C" 0))) (TVar (Var "OTP" 0))”
 val act = “New (Name FreshName "49_otp")”;*)
 fun action_to_string act =
@@ -114,8 +113,10 @@ fun action_to_string act =
     else if (is_Lock act)  then "lock "  ^ ((sapicterm_to_string o dest_Lock) act)
     else if (is_Unlock act)  then "unlock " ^ ((sapicterm_to_string o dest_Unlock) act)
     else if (is_Event act)  then "event " ^ ((fact_to_string o dest_Event) act)
-    else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))			     
+    else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))
+	       
 (* print Combinator
+
 val comb = “Lookup (TVar (Var "C" 0)) (Var "OTP" 0)”
 val comb = “ProcessCall "tst" [(TVar (Var "C" 0))]”;*)
 fun combinator_to_string comb =
@@ -136,6 +137,7 @@ else if (is_ProcessCall comb) then
 
 
 (* print Process
+
 val pro = “ProcessNull”
 val pro = “ProcessAction (New (Name FreshName "49_otp"))
       (ProcessComb
@@ -186,11 +188,7 @@ fun write_sapic_to_file str =
     in
 	(TextIO.output (SFile, str); TextIO.flushOut SFile)
     end;	       
-(*
- HOL_Interactive.toggle_quietdec();
-open optionSyntax;
- HOL_Interactive.toggle_quietdec();
- *)
+
     
 end(*local*)
 

@@ -37,8 +37,8 @@ fun bir_exp_to_sapic_term exp =
     in
 	(* Constants *)
 	(* Manual tests
-val exp = ``BExp_Const (Imm64 112w)``;
-	    bir_exp_to_sapic_term exp 
+         val exp = ``BExp_Const (Imm64 112w)``;
+	 bir_exp_to_sapic_term exp 
 	 *)
 	if is_BExp_Const exp then
 	    let
@@ -301,16 +301,14 @@ val exp = ``BExp_Const (Imm64 112w)``;
 
 	  
 (*
+Test:
 
 val exp = “dec (BVar "4709_a" (BType_Imm Bit64))
      (pars1 (BVar "4576_KDF" (BType_Imm Bit64)))”
 
-Arith_cons.term_of_int (List.length trm_list1);
-HOL_Interactive.toggle_quietdec();
-open mlibArbint;
-HOL_Interactive.toggle_quietdec();
 val exp = “conc1 (BVar "48_OTP" (BType_Imm Bit64))”
- val exp = “BExp_Store
+
+val exp = “BExp_Store
             (BExp_Store
                  (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
                  (BExp_BinExp BIExp_Minus
@@ -322,9 +320,12 @@ val exp = “conc1 (BVar "48_OTP" (BType_Imm Bit64))”
                          (BExp_Const (Imm64 40w))) BEnd_LittleEndian
             (BExp_Den (BVar "R30" (BType_Imm Bit64)))”;
 
- val (sp_term,main_thm) = bir_exp_to_sapic_term exp;
+val (sp_term,main_thm) = bir_exp_to_sapic_term exp;
 
-     SIMP_RULE (srw_ss()) [b2n_def,translate_BinPred_to_string_def,translate_UnaryExp_to_string_def,size_of_bir_immtype_def,translate_BinExp_to_string_def,translate_Endian_to_string_def,translate_Cast_to_string_def] main_thm
+Is main_thm true or false?--> run following
+
+SIMP_RULE (srw_ss()) [b2n_def,translate_BinPred_to_string_def,translate_UnaryExp_to_string_def,size_of_bir_immtype_def,translate_BinExp_to_string_def,translate_Endian_to_string_def,translate_Cast_to_string_def] main_thm
+
  *)    
     
 end (* local *)

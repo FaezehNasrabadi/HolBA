@@ -6,7 +6,7 @@ DEPENDENCIES   =
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../emptydeduction/HolBATools_EmptyDeduction-heap
+HOLHEAP        = ../deduction/HolBATools_Deduction-heap
 NEWHOLHEAP     = HolBATools_DYLib-heap
 
 HEAPINC_EXTRA  = 

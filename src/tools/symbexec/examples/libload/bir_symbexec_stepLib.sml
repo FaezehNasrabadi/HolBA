@@ -411,25 +411,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	     (* generate list of states from end statement *)
 
 	    val systs =  List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2);
- (*
-		 val systs = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
-			    then
-				let
-				    val wpc = (bir_immSyntax.dest_Imm64 o dest_BL_Address) lbl_tm;
-				    val incpc = (rhs o concl o EVAL o wordsSyntax.mk_word_add) (wpc,``4w:word64``);
-				    val tgt = (mk_BL_Address o bir_immSyntax.mk_Imm64) incpc;
-				in
-				    [SYST_update_pc tgt syst]
-				end
-			     else
-				 let
-				     val systs2 = List.foldl (fn (s, systs) => List.concat(List.map (fn x => symb_exec_stmt (s,x)) systs)) [syst] s_tms; 
-				in
-				    List.concat(List.map (symb_exec_endstmt n_dict lbl_tm est) systs2)
-				end
-		    
-*)
-	     val systs_processed = abpfun systs;
+	    val systs_processed = abpfun systs;
 			 
 	    in
 		systs_processed

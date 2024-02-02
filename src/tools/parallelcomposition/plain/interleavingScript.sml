@@ -5,9 +5,18 @@ open listTheory;
 open parallelcompositionsimpleTheory;
 open pairTheory wordsTheory set_sepTheory;
 open quantHeuristicsTheory;
-open propertyTheory;
 
 val _ = new_theory "interleaving";
+
+
+val traces_def =
+Define`
+      traces (MTrn:('event, 'pred, 'state, 'symb) mtrel) ((Sym:'symb set),(P: 'pred set),(S: 'state)) ((Sym':'symb set),(P': 'pred set),(S': 'state)) = {t| (MTrn (Sym,P,S) t (Sym',P',S'))}
+                                                                                                                                                                        `;
+ val comptraces_def =
+Define`
+      comptraces (CMTrn:((('event1+'eventS) + ('event2 +'eventS)), ('pred1 + 'pred2), 'state1#'state2, 'symb) mtrel) ((Sym:'symb set),(P: ('pred1 + 'pred2) set),(S1: 'state1),(S2: 'state2)) ((Sym':'symb set),(P': ('pred1 + 'pred2) set),(S1': 'state1),(S2': 'state2)) = {t| (CMTrn (Sym,P,S1,S2) t (Sym',P',S1',S2'))}
+`;      
 
 val TranRelNil = new_axiom ("TranRelNil",
                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s. MTrn (v,p,s) [] (v,p,s)``);

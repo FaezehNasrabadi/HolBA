@@ -130,7 +130,7 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
-val sapic_process = sbir_tree_sapic_process (purge_tree valtr);
+val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
 
 
 val _ = print "\n";     

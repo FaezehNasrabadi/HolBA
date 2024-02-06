@@ -78,7 +78,7 @@ val tr = predlist_to_tree predlists;
 
 val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
 val sort_vals = bir_symbexec_sortLib.refine_symb_val_list vals_list;
-
+    
 
 val valtr =  tree_with_value tr sort_vals;
 
@@ -87,7 +87,7 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
-val sapic_process = sbir_tree_sapic_process (purge_tree valtr);
+val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
 
 
 val _ = print "\n";     

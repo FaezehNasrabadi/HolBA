@@ -74,6 +74,7 @@ val _ = print "\n";
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 
+
 val tr = predlist_to_tree predlists;
 
 val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
@@ -99,3 +100,25 @@ val _ =  ( write_sapic_to_file o process_to_string) sapic_process
 val _ = print "\n";     
 val _ = print ("wrote into file");
 val _ = print "\n";
+
+
+    open bir_symbexec_funcLib;
+    open bir_exp_immSyntax;
+
+val benvmap_empty = ((snd o dest_comb) ``BEnv (K NONE)``);
+val bvalo_true = ``SOME (BVal_Imm (Imm1 1w))``;
+val bvalo_false = ``SOME (BVal_Imm (Imm1 0w))``;
+ fun simple_pred_to_benvmap []  sort_vals benvmap = benvmap
+  | simple_pred_to_benvmap (p::ps)  sort_vals benvmap =
+      let
+        val benvmap_ =
+            let val (vn, _) = dest_BVar p;
+		val be = (find_be_val sort_vals p);
+	    in
+             mk_comb (combinSyntax.mk_update(vn,be), benvmap)
+          end
+      in
+        simple_pred_to_benvmap ps  sort_vals benvmap_
+      end;   
+   open  bir_countw_simplificationLib;
+ val benv = mk_BEnv (simple_pred_to_benvmap (List.concat predlists)  sort_vals benvmap_empty);

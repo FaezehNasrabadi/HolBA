@@ -87,7 +87,7 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
   
-
+(*
 (******wg_noise_handshake_consume_response******)
     
 val lbl_tm = ``BL_Address (Imm64 4640w)``;
@@ -112,7 +112,7 @@ val _ = print "\n\n";
 val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
 val _ = print "\n\n";
 
-   
+   *)
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 

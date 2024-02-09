@@ -67,4 +67,64 @@ if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then
 if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
 if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
 if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+0if Equal(And(sy_SP_EL0,'7'),'0') then 
+if And(LessOrEqual(Minus(sy_SP_EL0,'64'),'18446744073709551599'),And(Or(LessThan('0',Minus(sy_SP_EL0,'64')),LessOrEqual(Plus('16',Minus(sy_SP_EL0,'64')),'0')),Or(LessThan(Minus(sy_SP_EL0,'64'),'0'),LessOrEqual('4294967295',Minus(sy_SP_EL0,'64'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'24'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'24')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'24')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'24'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'24'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'32'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'32')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'32')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'32'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'32'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'40'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'40')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'40')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'40'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'40'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'18446744073709551614'),And(Or(LessThan('0',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40'))),LessOrEqual(Plus('1',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40'))),'0')),Or(LessThan(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'0'),LessOrEqual('4294967295',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+new ~49_otp;
+let 48_OTP=~49_otp in 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'48'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'48')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'48')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'48'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'48'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+let 66_Conc1=conc1(48_OTP) in 
+let 70_XOR=exclusive_or(66_Conc1,pad) in 
+out(70_XOR);
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'56'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'56')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'56')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'56'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'56'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+0if Equal(And(sy_SP_EL0,'7'),'0') then 
+if And(LessOrEqual(Minus(sy_SP_EL0,'64'),'18446744073709551599'),And(Or(LessThan('0',Minus(sy_SP_EL0,'64')),LessOrEqual(Plus('16',Minus(sy_SP_EL0,'64')),'0')),Or(LessThan(Minus(sy_SP_EL0,'64'),'0'),LessOrEqual('4294967295',Minus(sy_SP_EL0,'64'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'24'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'24')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'24')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'24'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'24'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'32'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'32')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'32')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'32'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'32'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'40'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'40')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'40')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'40'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'40'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'18446744073709551614'),And(Or(LessThan('0',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40'))),LessOrEqual(Plus('1',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40'))),'0')),Or(LessThan(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'0'),LessOrEqual('4294967295',Load(Store(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),Load(Store(Store(Store(Store(sy_MEM,sy_R29,LittleEndian,Minus(sy_SP_EL0,'64')),sy_R30,LittleEndian,Minus(sy_SP_EL0,'56')),sy_R0,LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'24')),'21',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'32')),LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')),'64',LittleEndian,Plus(Minus(sy_SP_EL0,'64'),'40')))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+new ~49_otp;
+let 48_OTP=~49_otp in 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'48'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'48')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'48')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'48'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'48'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+let 66_Conc1=conc1(48_OTP) in 
+let 70_XOR=exclusive_or(66_Conc1,pad) in 
+out(70_XOR);
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if And(LessOrEqual(Plus(Minus(sy_SP_EL0,'64'),'56'),'18446744073709551607'),And(Or(LessThan('0',Plus(Minus(sy_SP_EL0,'64'),'56')),LessOrEqual(Plus('8',Plus(Minus(sy_SP_EL0,'64'),'56')),'0')),Or(LessThan(Plus(Minus(sy_SP_EL0,'64'),'56'),'0'),LessOrEqual('4294967295',Plus(Minus(sy_SP_EL0,'64'),'56'))))) then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
+if Equal(And(Minus(sy_SP_EL0,'64'),'7'),'0') then 
 0

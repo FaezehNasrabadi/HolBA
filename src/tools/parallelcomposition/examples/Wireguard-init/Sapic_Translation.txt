@@ -1,0 +1,41 @@
+if Equal(LowCast(UnsignedCast(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R21,Plus(sy_SP_EL0,'32')),sy_R22,Plus(sy_SP_EL0,'40')),sy_R23,Plus(sy_SP_EL0,'48')),sy_R24,Plus(sy_SP_EL0,'56')),Load(Store(Store(Store(Store(sy_MEM,sy_R21,Plus(sy_SP_EL0,'32')),sy_R22,Plus(sy_SP_EL0,'40')),sy_R23,Plus(sy_SP_EL0,'48')),sy_R24,Plus(sy_SP_EL0,'56')),Plus(sy_R20,'1320')),Plus(sy_SP_EL0,'168')),Plus(Load(Store(Store(Store(Store(Store(sy_MEM,sy_R21,Plus(sy_SP_EL0,'32')),sy_R22,Plus(sy_SP_EL0,'40')),sy_R23,Plus(sy_SP_EL0,'48')),sy_R24,Plus(sy_SP_EL0,'56')),Load(Store(Store(Store(Store(sy_MEM,sy_R21,Plus(sy_SP_EL0,'32')),sy_R22,Plus(sy_SP_EL0,'40')),sy_R23,Plus(sy_SP_EL0,'48')),sy_R24,Plus(sy_SP_EL0,'56')),Plus(sy_R20,'1320')),Plus(sy_SP_EL0,'168')),Plus(sy_R1,'48')),'104')),'64'),'32'),'0') then 
+0
+else in(88_a);
+let 90_Ci=hash1(89_Construction) in 
+new ~92_sid_i;
+let 91_sid_i=~92_sid_i in 
+let 93_HMAC=hash2(90_Ci,91_sid_i) in 
+let 96_HMAC=hash2(93_HMAC,88_a) in 
+new ~100_Epriv_i;
+let 99_Epriv_i=~100_Epriv_i in 
+let 102_Epub_i=expdh(101_g,99_Epriv_i) in 
+if Equal(And('255',LowCast(Plus(sy_R0,'8'),'32')),'0') then 
+0
+else let 154_Cii=kdf1(90_Ci,102_Epub_i) in 
+let 155_HMAC=hash2(96_HMAC,102_Epub_i) in 
+let 159_DH=DH(99_Epriv_i,88_a) in 
+let 162_KDF=kdf2(154_Cii,159_DH) in 
+let 167_pair (BVar "165_c" (BType_Imm Bit64)) (BVar "166_k" (BType_Imm Bit64))=162_KDF in 
+let 168_Pars1=pars12(162_KDF,'32') in 
+let 169_Pars2=pars22(162_KDF,'32') in 
+if Equal(And('255',LowCast(sy_SP_EL0,'32')),'0') then 
+0
+else let 222_Enc=AEAD(169_Pars2,Spub_i,155_HMAC) in 
+let 225_HMAC=hash2(155_HMAC,222_Enc) in 
+let 230_DH=DH(Spriv_i,88_a) in 
+let 233_KDF=kdf2(168_Pars1,230_DH) in 
+let 238_pair (BVar "236_c" (BType_Imm Bit64)) (BVar "237_k" (BType_Imm Bit64))=233_KDF in 
+let 239_Pars1=pars12(233_KDF,'32') in 
+let 240_Pars2=pars22(233_KDF,'32') in 
+let 243_Enc=AEAD(240_Pars2,ts_i,225_HMAC) in 
+let 246_HMAC=hash2(225_HMAC,243_Enc) in 
+let 249_triple (BVar "102_Epub_i" (BType_Imm Bit64))
+  (BVar "222_Enc" (BType_Imm Bit64)) (BVar "243_Enc" (BType_Imm Bit64))=246_HMAC in 
+out(246_HMAC);
+event InitStart(Init,Resp,Spub_i,Spub_r,Spriv_i);
+in(253_a);
+let 254_Pars1=pars12(253_a,'32') in 
+in(254_Pars1);
+let 258_Pars2=pars22(253_a,'32') in 
+if Not(Equal(And('255',LowCast(sy_SP_EL0,'32')),'0')) then 
+0

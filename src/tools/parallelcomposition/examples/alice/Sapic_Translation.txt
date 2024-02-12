@@ -1,0 +1,29 @@
+let 1_SP_EL0=Minus(sy_SP_EL0,'16') in 
+let 6_MEM=Store(sy_MEM,sy_R0,Plus(1_SP_EL0,'8')) in 
+let 11_MEM=Store(6_MEM,sy_R1,1_SP_EL0) in 
+let 14_R1=Load(11_MEM,Plus(1_SP_EL0,'8')) in 
+let 17_R0=Load(11_MEM,1_SP_EL0) in 
+let 18_ProcState_C=LessOrEqual(17_R0,14_R1) in 
+let 19_ProcState_N=SignedLessThan(Minus(14_R1,17_R0),'0') in 
+let 20_ProcState_V=Equal(SignedLessThan(Minus(14_R1,17_R0),'0'),SignedLessOrEqual(17_R0,14_R1)) in 
+let 21_ProcState_Z=Equal(14_R1,17_R0) in 
+if Not(And(18_ProcState_C,Not(21_ProcState_Z))) then 
+let 58_SP_EL0=Plus(sy_SP_EL0,'0') in 
+0
+else let 26_R1=Load(11_MEM,1_SP_EL0) in 
+let 26_R1=Load(11_MEM,1_SP_EL0) in 
+let 27_R0=And('18446744073709551615',LeftShift(26_R1,'2')) in 
+let 28_R0=Plus(27_R0,26_R1) in 
+let 29_R0=And('18446744073709551615',LeftShift(28_R0,'1')) in 
+let 34_MEM=Store(11_MEM,29_R0,1_SP_EL0) in 
+let 37_R1=Load(34_MEM,1_SP_EL0) in 
+let 37_R1=Load(34_MEM,1_SP_EL0) in 
+let 38_R0=And('18446744073709551615',LeftShift(37_R1,'2')) in 
+let 39_R0=Plus(38_R0,37_R1) in 
+let 44_MEM=Store(34_MEM,39_R0,1_SP_EL0) in 
+let 47_R1=Load(44_MEM,1_SP_EL0) in 
+let 50_R0=Load(44_MEM,Plus(1_SP_EL0,'8')) in 
+let 51_R0=Mult(50_R0,47_R1) in 
+let 56_MEM=Store(44_MEM,51_R0,1_SP_EL0) in 
+let 57_SP_EL0=Plus(sy_SP_EL0,'0') in 
+0

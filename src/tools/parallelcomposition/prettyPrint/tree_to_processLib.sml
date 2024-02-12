@@ -114,7 +114,7 @@ fun bir_exp_symbvar_to_symbval vals_lis pred_be =
 fun sbir_tree_sapic_process sort_vals tree =
     case tree of
 	VLeaf => ProcessNull_tm
-      | VBranch ((a,b),lstr,rstr)  => mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term (bir_exp_symbvar_to_symbval sort_vals b)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+      | VBranch ((a,b),lstr,rstr)  => mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
       | VNode ((a,b),str)  =>  (
 	let
 	    val (name,bir_type) = dest_BVar a;

@@ -240,7 +240,6 @@ fun abstract_exp_in_loop exp =
 	  let
 	      val bv_str = (fst o bir_envSyntax.dest_BVar_string) bv_fr
 	      val bv = bir_envSyntax.mk_BVar_string (bv_str, bir_valuesSyntax.BType_Bool_tm);
-		  val _ = print "\n\n===============TEST ";
 	  in
 	      ((SYST_update_pred ((bv)::(SYST_get_pred syst)) o
 		insert_symbval bv symbv
@@ -251,7 +250,7 @@ fun abstract_exp_in_loop exp =
 (* primitive to carry out assignment *)
   fun state_assign_bv bv be syst =
     let
-      val _ = if false then () else
+      val _ = if true then () else
               (print "\n\n===============\nASSIGN: "; print_term bv; print_term be);
 
       val symbv = compute_valbe be syst;
@@ -286,8 +285,7 @@ fun abstract_exp_in_loop exp =
                 | _ => ();
 
       val syst = state_add_pred_fr use_expo_var bv_fr symbv' syst;
-	   val _ = if false then () else
-              (print "\n\n===============\nASSIGN: "; print_term bv; print_term be);
+
     in
       (update_envvar bv bv_fr o
        (if use_expo_var then

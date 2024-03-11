@@ -38,9 +38,8 @@ val symbs_sec_text = [
     "wg_noise_handshake_consume_initiation",
     "wg_noise_handshake_create_response"
   ];
-
   
-val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));                           
+val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff));
 
 val _ = print_with_style_ [Bold, Underline] ("Lifting " ^ dafilename ^ " (" ^ arch_str ^ ")\n");
 
@@ -60,3 +59,4 @@ val _ = save_thm ("Wrespexample_thm", thm);
 
 
 val _ = export_theory();
+

@@ -1,29 +1,29 @@
-let 1_SP_EL0=Minus(sy_SP_EL0,'16') in 
-let 6_MEM=Store(sy_MEM,sy_R0,Plus(1_SP_EL0,'8')) in 
-let 11_MEM=Store(6_MEM,sy_R1,1_SP_EL0) in 
-let 14_R1=Load(11_MEM,Plus(1_SP_EL0,'8')) in 
-let 17_R0=Load(11_MEM,1_SP_EL0) in 
-let 18_ProcState_C=LessOrEqual(17_R0,14_R1) in 
-let 19_ProcState_N=SignedLessThan(Minus(14_R1,17_R0),'0') in 
-let 20_ProcState_V=Equal(SignedLessThan(Minus(14_R1,17_R0),'0'),SignedLessOrEqual(17_R0,14_R1)) in 
-let 21_ProcState_Z=Equal(14_R1,17_R0) in 
-if Not(And(18_ProcState_C,Not(21_ProcState_Z))) then 
-let 58_SP_EL0=Plus(sy_SP_EL0,'0') in 
+let SP_EL0_1=Minus(SP_EL0_sy,c16) in 
+let MEM_6=Store(MEM_sy,R0_sy,Plus(SP_EL0_1,c8)) in 
+let MEM_11=Store(MEM_6,R1_sy,SP_EL0_1) in 
+let R1_14=Load(MEM_11,Plus(SP_EL0_1,c8)) in 
+let R0_17=Load(MEM_11,SP_EL0_1) in 
+let ProcState_C_18=LessOrEqual(R0_17,R1_14) in 
+let ProcState_N_19=SignedLessThan(Minus(R1_14,R0_17),c0) in 
+let ProcState_V_20=Equal(SignedLessThan(Minus(R1_14,R0_17),c0),SignedLessOrEqual(R0_17,R1_14)) in 
+let ProcState_Z_21=Equal(R1_14,R0_17) in 
+if Not(And(ProcState_C_18,Not(ProcState_Z_21))) then 
+let SP_EL0_58=Plus(SP_EL0_sy,c0) in 
 0
-else let 26_R1=Load(11_MEM,1_SP_EL0) in 
-let 26_R1=Load(11_MEM,1_SP_EL0) in 
-let 27_R0=And('18446744073709551615',LeftShift(26_R1,'2')) in 
-let 28_R0=Plus(27_R0,26_R1) in 
-let 29_R0=And('18446744073709551615',LeftShift(28_R0,'1')) in 
-let 34_MEM=Store(11_MEM,29_R0,1_SP_EL0) in 
-let 37_R1=Load(34_MEM,1_SP_EL0) in 
-let 37_R1=Load(34_MEM,1_SP_EL0) in 
-let 38_R0=And('18446744073709551615',LeftShift(37_R1,'2')) in 
-let 39_R0=Plus(38_R0,37_R1) in 
-let 44_MEM=Store(34_MEM,39_R0,1_SP_EL0) in 
-let 47_R1=Load(44_MEM,1_SP_EL0) in 
-let 50_R0=Load(44_MEM,Plus(1_SP_EL0,'8')) in 
-let 51_R0=Mult(50_R0,47_R1) in 
-let 56_MEM=Store(44_MEM,51_R0,1_SP_EL0) in 
-let 57_SP_EL0=Plus(sy_SP_EL0,'0') in 
+else let R1_26=Load(MEM_11,SP_EL0_1) in 
+let R1_26=Load(MEM_11,SP_EL0_1) in 
+let R0_27=And(c18446744073709551615,LeftShift(R1_26,c2)) in 
+let R0_28=Plus(R0_27,R1_26) in 
+let R0_29=And(c18446744073709551615,LeftShift(R0_28,c1)) in 
+let MEM_34=Store(MEM_11,R0_29,SP_EL0_1) in 
+let R1_37=Load(MEM_34,SP_EL0_1) in 
+let R1_37=Load(MEM_34,SP_EL0_1) in 
+let R0_38=And(c18446744073709551615,LeftShift(R1_37,c2)) in 
+let R0_39=Plus(R0_38,R1_37) in 
+let MEM_44=Store(MEM_34,R0_39,SP_EL0_1) in 
+let R1_47=Load(MEM_44,SP_EL0_1) in 
+let R0_50=Load(MEM_44,Plus(SP_EL0_1,c8)) in 
+let R0_51=Mult(R0_50,R1_47) in 
+let MEM_56=Store(MEM_44,R0_51,SP_EL0_1) in 
+let SP_EL0_57=Plus(SP_EL0_sy,c0) in 
 0

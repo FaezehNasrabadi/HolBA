@@ -1,0 +1,8 @@
+
+WhatsApp:     file format elf64-littleaarch64
+
+
+Disassembly of section .text:
+
+00000000004001d8 <LAB_1000055c8>:
+  4001d8:	910003fd 	mov	x29, sp

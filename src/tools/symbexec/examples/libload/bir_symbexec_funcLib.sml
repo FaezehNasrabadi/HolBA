@@ -9,7 +9,13 @@ local
     open bir_envSyntax;
     open bir_expSyntax;
     open Redblackmap;
-  val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_funcLib"
+    open HolKernel Parse boolLib bossLib;
+    open HolBACoreSimps;
+    open bir_envSyntax;
+    open bir_expSyntax;
+    open bir_programSyntax;
+    
+    val ERR      = Feedback.mk_HOL_ERR "bir_symbexec_funcLib"
 in
 
 val _ = Theory.new_constant("hash1", ``:bir_var_t -> bir_exp_t``);
@@ -931,10 +937,10 @@ fun add_knowledge bv syst =
 	val symbv = SOME (get_state_symbv "symbv not found" bv syst)
 	    handle _ => NONE;
 
-	val syst = if (is_some symbv)
+	val syst = if (Option.isSome symbv)
 		   then
 		       let
-			   val be = symbval_bexp (valOf symbv);
+			   val be = symbval_bexp (Option.valOf symbv);
 			   val be = if (is_BVar be)
 				    then ((stringSyntax.fromMLstring o fst o dest_BVar_string) be)
 				    else

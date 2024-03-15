@@ -19,6 +19,8 @@ local
     open messagesSyntax;
     open bir_symbexec_treeLib;
     open bir_symbexec_funcLib;
+
+    val ERR      = Feedback.mk_HOL_ERR "tree_to_processLib"
 in
 
 

@@ -3,7 +3,7 @@ open sumTheory;
 open pred_setTheory;
 open listTheory;
 open parallelcompositiongeneraldeductionTheory;
-open pairTheory wordsTheory set_sepTheory;
+open pairTheory wordsTheory;
 open quantHeuristicsTheory;
 
 

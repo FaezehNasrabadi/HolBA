@@ -44,10 +44,10 @@ val binterleave_trace_comp_to_decomp_combinededuction_thm = store_thm(
       PAT_X_ASSUM ``!phi. A`` (ASSUME_TAC o (Q.SPECL [`phi`])) >>
       PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2 ded1 ded2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P''`,`S1'`,`S2'`,`MTrn1`,`MTrn2`,`ded1`,`ded2`]))>>
       RES_TAC >>
-      Q.EXISTS_TAC `NONE::t1` >>
-      Q.EXISTS_TAC `NONE::t2` >>
+      Q.EXISTS_TAC `t1` >>
+      Q.EXISTS_TAC `t2` >>
       FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[]>>
-      metis_tac[DedRelAll,binterl_none] 
+      metis_tac[DedRelAll,binterl_combinenone] 
       )   >>
      Cases_on `x` >-(
       Cases_on `x'` >-(
@@ -164,14 +164,14 @@ val binterleave_trace_decomp_to_comp_combinededuction_thm = store_thm(
        RES_TAC) >>
      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symbolicParlComp_def] >>
      rpt strip_tac >>
-     IMP_RES_TAC binterl_moveNONE >>
-     rw[] >>
      IMP_RES_TAC TranRelSnocRevNone>>
-     Q.EXISTS_TAC `P''` >>
-     rw[] >>
+     IMP_RES_TAC binterl_movecombinenone >>
      PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2 Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P''`,`S1'`,`S2'`,`MTrn1`,`MTrn2`,`Ded1`,`Ded2`])) >>
-     IMP_RES_TAC binterl_movenone >>
-     RES_TAC
+     RES_TAC >>
+     Q.EXISTS_TAC `P''` >>
+     PAT_X_ASSUM ``!Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Ded1`,`Ded2`]))  >>
+     PAT_X_ASSUM ``!Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Ded1`,`Ded2`]))  >>
+     rw[] 
   );
 
 

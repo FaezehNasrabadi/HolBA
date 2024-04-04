@@ -3,7 +3,7 @@ open sumTheory;
 open pred_setTheory;
 open listTheory;
 open parallelcompositionconcreteTheory;
-open pairTheory wordsTheory set_sepTheory;
+open pairTheory wordsTheory;
 open quantHeuristicsTheory;
 
 val _ = new_theory "interleavingconcrete";

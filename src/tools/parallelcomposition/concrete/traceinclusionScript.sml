@@ -3,9 +3,9 @@ open sumTheory;
 open pred_setTheory;
 open parallelcompositionconcreteTheory;
 open interleavingconcreteTheory;
-open parallelcompositiondeductionTheory;
-open interleavingdeductionTheory;
-open derived_rules_deductionTheory;
+open parallelcompositiongeneraldeductionTheory;
+open interleavinggeneraldeductionTheory;
+open derived_rules_generaldeductionTheory;
 
 val _ = new_theory "traceinclusion";
 
@@ -60,7 +60,7 @@ val subset_comp_def = Define `
              
 val compose_vs_modules_conc_symb_thm = store_thm(
   "compose_vs_modules_conc_symb_thm",
-  ``!Sym Sym' P P' S1 S1' S2 S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (Ded1:('pred1) tded) (Ded2:('pred2) tded).
+  ``!Sym Sym' P P' S1 S1' S2 S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (Ded1:('pred1) tded) (Ded2:('pred2) tded) (Ded3:('pred1 + 'pred2) tded).
 (
      (subset_one
       (traces ((InterpretRelOne:(( 'event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel # ('pred1) tded) -> ('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn1,Ded1)) ((InterpretStOne:'state1 -> 'cstate1) S1) ((InterpretStOne:'state1 -> 'cstate1) S1'))
@@ -71,10 +71,10 @@ val compose_vs_modules_conc_symb_thm = store_thm(
 ) ==>
 (subset_comp
    (comptraces (composeMuRe ((InterpretRelOne:(( 'event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel # ('pred1) tded) -> ('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn1,Ded1)) ((InterpretRelTwo:(( 'event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel # ('pred2) tded) -> ( 'cevent2 + 'ceventS, 'cstate2) mctrel) (MTrn2,Ded2))) (((InterpretStOne:'state1 -> 'cstate1) S1),((InterpretStTwo:'state2 -> 'cstate2) S2)) (((InterpretStOne:'state1 -> 'cstate1) S1'),((InterpretStTwo:'state2 -> 'cstate2) S2')))
-   (comptraces (MTrn1,Ded1) (MTrn2,Ded2) (Sym,P,S1,S2) (Sym',P',S1',S2'))
+   (comptraces (MTrn1,Ded1) (MTrn2,Ded2) Ded3 (Sym,P,S1,S2) (Sym',P',S1',S2'))
 ) ``
   ,
-rewrite_tac[binterleave_composition_concrete,binterleave_composition_deduction,interleavingconcreteTheory.binterleave_ts,interleavingdeductionTheory.binterleave_ts,derived_rules_deductionTheory.traces_def,interleavingconcreteTheory.traces_def]>>
+rewrite_tac[binterleave_composition_concrete,binterleave_composition_generaldeduction,interleavingconcreteTheory.binterleave_ts,interleavinggeneraldeductionTheory.binterleave_ts,derived_rules_generaldeductionTheory.traces_def,interleavingconcreteTheory.traces_def]>>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [subset_one_def,subset_two_def,subset_comp_def]>>
 rw[]>>
 PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`((RevInterpretEvTwoSyn:('cevent2 + 'ceventS) list -> ('event2 + 'eventS) option list) (t2:(('cevent2+'ceventS) list)))`]))>>

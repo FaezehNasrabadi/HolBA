@@ -1,6 +1,9 @@
 open HolKernel Parse boolLib bossLib;
 open bagTheory;
 open messagesTheory;
+open synceventsTheory;
+open dolevyaoTheory;
+
 val _ = new_theory "sapicplus";
 
 (* Sapicplus Syntax *)
@@ -720,5 +723,187 @@ End
 val traces_of_sapic_def  = Define`
 traces_of_sapic (Pconfig (Pro,i,Re,NRe)) = {e| ∃Pro' i' Re' NRe'. (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) e (Pconfig (Pro',i',Re',NRe')))}`;
         
+
+
+val _ = Datatype `sapic_plus_position_configuration_t =
+   Pconfig_plus (Process_t # real # sapic_renaming_t # sapic_name_renaming_t)
+           `;
+
+val PConfigEq_plus = new_axiom ("PConfigEq_plus",
+                            ``∀p r re nre p' r' re' nre'. (Pconfig_plus (p,r,re,nre) = Pconfig_plus (p',r',re',nre')) ⇒ ((r = r')∧(p = p')∧(re = re')∧(nre = nre'))``);                
+
+                
+(* Replication rule *)
+val sapic_plus_position_replication_transition_def = Define `
+                                  sapic_plus_position_replication_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P.
+   (Pro = ProcessAction Rep P) /\
+   (Pro' = P) /\
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
+
+                        
+(* Event rule *)
+val sapic_plus_position_event_transition_def = Define `
+                                  sapic_plus_position_event_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P Fc.
+   (Pro = ProcessAction (Event Fc) P) /\
+   (Pro' = P) /\
+   (Ev = (INL (INL Fc))) /\
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
+
+
+(* Conditional true rule *)
+val sapic_plus_position_conditional_true_transition_def = Define `
+                                  sapic_plus_position_conditional_true_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P Q t.
+   (Pro = (ProcessComb (Cond t) P Q)) /\
+   (Pro' = P) /\
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
+                                
+
+(* Conditional false rule *)
+val sapic_plus_position_conditional_false_transition_def = Define `
+                                  sapic_plus_position_conditional_false_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')) =
+(∃P Q t.
+   (Pro = (ProcessComb (Cond t) P Q)) /\
+   (Pro' = Q) /\
+   (i' = i+1) /\
+   (Re = Re') /\
+   (NRe = NRe'))`;
+
+                
+(* New rule *)
+val sapic_plus_position_new_transition_def = Define `
+                                  sapic_plus_position_new_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P N.
+   (Pro = ProcessAction (New N) P) /\
+   (Pro' = P) /\
+   (NRe' = (sapic_name_renaming_update NRe (N, SOME (Con N)))) /\
+   (i' = i+1) /\
+   (Re' = (sapic_renaming_update Re ((Var "RNG" 0), SOME (Con N)))))`;
+                                                                        
+                
+(* In rule *)
+val sapic_plus_position_in_transition_def = Define `
+                                  sapic_plus_position_in_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P t x.
+   (Pro = ProcessAction (ChIn (SOME t) (TVar x)) P) /\
+   (Pro' = P) /\
+   (Ev = (INL (INL (Fact InFact [(TVar x)])))) /\
+   (Re' = (sapic_renaming_update Re ((Var "Adv" 0), SOME (TVar x)))) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`;   
+
+                   
+(* Out rule *)
+val sapic_plus_position_out_transition_def = Define `
+                                      sapic_plus_position_out_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P t1 t2.
+   (Pro = ProcessAction (ChOut (SOME t1) t2) P) /\
+   (Pro' = P) /\
+   (Ev = (INL (INL (Fact OutFact [t2])))) /\
+   (Re' = Re) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`;                
+
+
+(* New rule Attacker *)
+val sapic_plus_position_new_attacker_transition_def = Define `
+                                  sapic_plus_position_new_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P N.
+   (Pro = ProcessAction (New N) P) /\
+   (Pro' = P) /\
+   (Ev = (INR (INL (Silent N)))) /\
+   (NRe' = (sapic_name_renaming_update NRe (N, SOME (Con N)))) /\
+   (i' = i+1) /\
+   (Re' = (sapic_renaming_update Re ((Var "RNG" 0), SOME (Con N)))))`;
+
+(* New rule Sync *)
+val sapic_plus_position_new_sync_transition_def = Define `
+                                  sapic_plus_position_new_sync_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P N.
+   (Pro = ProcessAction (New N) P) /\
+   (Pro' = P) /\
+   ((Ev = (INR (INR (Sync_Fr N)))) ∨ (Ev = (INL (INR (Sync_Fr N))))) /\
+   (NRe' = (sapic_name_renaming_update NRe (N, SOME (Con N)))) /\
+   (i' = i+1) /\
+   (Re' = (sapic_renaming_update Re ((Var "RNG" 0), SOME (Con N)))))`;
+
+(* Out rule Attacker *)
+val sapic_plus_position_out_attacker_transition_def = Define `
+                                      sapic_plus_position_out_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P Y t2.
+   (Pro = ProcessAction (ChOut (SOME (TVar Y)) t2) P) /\
+   (Pro' = P) /\
+   ((Ev = (INR (INR (P2A Y)))) ∨ (Ev = (INL (INR (P2A Y))))) /\
+   (Re' = Re) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`;
+
+
+(* In rule Attacker *)
+val sapic_plus_position_in_attacker_transition_def = Define `
+                                  sapic_plus_position_in_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P t x.
+   (Pro = ProcessAction (ChIn (SOME t) (TVar x)) P) /\
+   (Pro' = P) /\
+   ((Ev = (INR (INR (A2P x)))) ∨ (Ev = (INL (INR (A2P x))))) /\
+   (Re' = (sapic_renaming_update Re ((Var "Adv" 0), SOME (TVar x)))) /\
+   (i' = i+1) /\
+   (NRe = NRe'))`;
+
+(* Alias rule *)
+val sapic_plus_position_alias_transition_def = Define `
+                                  sapic_plus_position_alias_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) =
+(∃P Q X Y.
+   (Pro = ProcessComb (Let (TVar X) Y) P Q) /\
+   (Pro' = P) /\
+   (Ev = (INR (INL (Alias (X,Y))))) /\
+   (Re' = (sapic_renaming_update Re ((Var "crypto" 0), SOME Y))) ∧
+   (i' = i+1) /\
+   (NRe = NRe'))`; 
+                       
+
+(* Transition relation *)
+val sapic_plus_position_transition_def = Define `
+(sapic_plus_position_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')) = (
+  if ((Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe')) then (T) else
+    (case Ev of
+       (INR (INL (Alias (x,y)))) => (sapic_plus_position_alias_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INR (INR (A2P x))) => (sapic_plus_position_in_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INR (A2P x))) => (sapic_plus_position_in_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INR (INR (P2A Y))) => (sapic_plus_position_out_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INR (P2A Y))) => (sapic_plus_position_out_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INR (INR (Sync_Fr N))) => (sapic_plus_position_new_sync_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INR (Sync_Fr N))) => (sapic_plus_position_new_sync_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INR (INL (Silent N))) => (sapic_plus_position_new_attacker_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INL (Fact OutFact [t2]))) => (sapic_plus_position_out_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INL (Fact InFact [(TVar x)]))) => (sapic_plus_position_in_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | (INL (INL Fc)) => (sapic_plus_position_conditional_true_transition (Pconfig_plus (Pro,i,Re,NRe)) Ev (Pconfig_plus (Pro',i',Re',NRe')))
+     | _ => (F)
+    ))
+)`;
+                       
+(* sapic_plus_position_multi_transitions *)
+Inductive sapic_plus_position_multi_transitions:
+[~nil:]
+  (sapic_plus_position_multi_transitions (Pconfig_plus (Pro,i,Re,NRe)) [] (Pconfig_plus (Pro,i,Re,NRe))) /\
+[~move:]
+  (((sapic_plus_position_multi_transitions (Pconfig_plus (Pro,i,Re,NRe)) ev (Pconfig_plus (Pro'',i'',Re'',NRe'')))∧(sapic_plus_position_transition (Pconfig_plus (Pro'',i'',Re'',NRe'')) e (Pconfig_plus (Pro',i',Re',NRe')))) ==> (sapic_plus_position_multi_transitions (Pconfig_plus (Pro,i,Re,NRe)) (e::ev) (Pconfig_plus (Pro',i',Re',NRe'))))  
+End
+
+val sapic_plus_traces_def =
+Define`
+      sapic_plus_traces sapic_plus_position_multi_transitions (Pconfig_plus (Pro,i,Re,NRe)) (Pconfig_plus (Pro',i',Re',NRe')) =
+{t|  
+ (sapic_plus_position_multi_transitions (Pconfig_plus (Pro,i,Re,NRe)) t (Pconfig_plus (Pro',i',Re',NRe')))
+}
+`;
 
 val _ = export_theory();

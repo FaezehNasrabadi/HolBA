@@ -15,11 +15,103 @@ open dolevyaoTheory;
 
 val _ = new_theory "sapic_comp_DY_sapicplus";
 
-     
+
+
+val spaicplus_to_sapic_vs_DY_thm = store_thm(
+  "spaicplus_to_sapic_vs_DY_thm",
+  ``∀t Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
+       sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus (Pr0,0,Re0,NRe0))) t
+       (Sym',P',(Pconfig_plus (Pr,i,Re,NRe))) ⇒
+     ∃t1 t2.
+       sapic_position_multi_transitions_with_symb (Sym,IMAGE OUTL P,(Pconfig (Pr0,0,Re0,NRe0))) t1
+       (Sym',IMAGE OUTL P',(Pconfig (Pr,i,Re,NRe))) ∧
+       DYmultranrel (Sym,IMAGE OUTR P,ESt) t2 (Sym',IMAGE OUTR P',ESt) ∧
+       binterl t1 t2 t``,
+               GEN_TAC >>
+     Induct_on `t` >- (
+      rpt strip_tac >>
+      IMP_RES_TAC TranRelConfigEq >>
+      Q.EXISTS_TAC `[]` >>
+      Q.EXISTS_TAC `[]` >>
+      rw[binterl_nil,TranRelConfigEq,DYmultranrel_def] >>
+      metis_tac[sapic_position_multi_transitions_with_symb_nil]) >>
+     Cases_on `h` >- (
+      rpt strip_tac >>
+      IMP_RES_TAC TranRelSnocRev >>
+      PAT_X_ASSUM ``!Re0 NRe0 i Re NRe Pr0 Pr Sym Sym' P P'. A`` (ASSUME_TAC o (Q.SPECL [`Re0`,`NRe0`,`i`,`Re`,`NRe`,`Pr0`,`Pr`,`Sym`,`Sym'`,`P`,`P'`]))>>
+      PAT_X_ASSUM ``!v' s' p'. A`` (ASSUME_TAC o (Q.SPECL [`Sym'`,`(Pconfig_plus (Pr,i,Re,NRe))`,`P'`])) >>
+      PAT_X_ASSUM ``!v' s' p'. A`` (ASSUME_TAC o (Q.SPECL [`Sym'`,`(Pconfig_plus (Pr,i,Re,NRe))`,`P'`])) >>
+      RES_TAC >>
+      Q.EXISTS_TAC `t1` >>
+      Q.EXISTS_TAC `t2` >>
+      metis_tac[binterl_combinenone] 
+      ) >>
+     Cases_on `x` >-(
+      Cases_on `x'` >-(
+        rpt strip_tac >>
+        IMP_RES_TAC TranRelSnocRev >>
+        PAT_X_ASSUM ``!Re0 NRe0 i Re NRe Pr0 Pr Sym Sym' P P' Ded ded3. A`` (ASSUME_TAC o (Q.SPECL [`Re0`,`NRe0`,`i''`,`Re''`,`NRe''`,`Pr0`,`Pr''`,`Sym`,`Sym''`,`P`,`P''`,`Ded`,`ded3`]))>>
+      PAT_X_ASSUM ``!v' s' p'. A`` (ASSUME_TAC o (Q.SPECL [`Sym''`,`(Pconfig_plus (Pr'',i'',Re'',NRe''))`,`P''`])) >>
+        PAT_X_ASSUM ``!v' s' p'. A`` (ASSUME_TAC o (Q.SPECL [`Sym''`,`(Pconfig_plus (Pr'',i'',Re'',NRe''))`,`P''`]))>>
+        RES_TAC >>
+        Q.EXISTS_TAC `(SOME (INL x))::t1` >>
+        Q.EXISTS_TAC `t2` >>
+        reverse (rw[binterl_left])
+                
+        metis_tac[TranRelNil,TranRelSnoc,TranRelConfigEq,sapic_position_multi_transitions_with_symb_move]
+        ) >>
+
+
+                        
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[]
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[sapic_position_multi_transitions_with_symb_move] >>
+sapic_position_transition_def
+
+
+                         
+val SapRelConfigEq = new_axiom ("SapRelConfigEq",
+                            ``∀Pr i Re NRe i Pr' i' Re' NRe'. (sapic_plus_position_multi_transitions (Pconfig_plus (Pr,i,Re,NRe)) [] (Pconfig_plus (Pr',i',Re',NRe'))) ⇒ ((Pr = Pr')∧(i = i')∧(Re = Re')∧(NRe = NRe'))``);
+             
 val compose_sapic_vs_DY_spaicplus_thm = store_thm(
   "compose_sapic_vs_DY_spaicplus_thm",
-  ``∀Re0 NRe0 i Re NRe Sym Sym' P P' (MTrn:('event1 + (Name_t, Var_t) sync_event, 'pred1, sapic_position_configuration_t, Var_t) mtrel) (Ded:('pred1) tded) (ded3:('pred1 + DYpred) tded).
-(comptraces (MTrn,Ded) (DYmultranrel,DYdeduction) (Sym,P,(Pconfig (P0,0,Re0,NRe0)),ESt) (Sym',P',(Pconfig (P,i,Re,NRe)),ESt)) = (sapic_plus_traces sapic_plus_position_multi_transitions (Pconfig_plus (P0,0,Re0,NRe0)) (Pconfig_plus (P,i,Re,NRe)))``,
+  ``∀t Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
+       (comptraces (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig (Pr0,0,Re0,NRe0)),ESt) (Sym',P',(Pconfig (Pr,i,Re,NRe)),ESt)) =
+     (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus (Pr0,0,Re0,NRe0))) (Sym',P',(Pconfig_plus (Pr,i,Re,NRe))))``,
+     rewrite_tac[binterleave_composition_generaldeduction,binterleave_ts]>>
+     rewrite_tac[sapic_plus_traces_def]>>
+     rewrite_tac[traces_def]>>
+     FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [EXTENSION]>>
+     rpt strip_tac>>
+     EQ_TAC>>
+     Induct_on `x` >-
+      (rpt strip_tac >>
+       IMP_RES_TAC binterl_Empty >>
+       rw[]>>
+       IMP_RES_TAC TranRelConfigEq >>
+       rw[]>>
+       metis_tac[sapic_plus_position_multi_transitions_with_symb_nil,IMAGEOUT]) >>
+gen_tac >>
+     reverse(Cases_on `h`) >-
+      (Cases_on `x'` >- (
+        Cases_on `x''` >- 
+         (
+          rpt strip_tac >>
+          IMP_RES_TAC binterl_moveAL >>
+          rw[] >>
+          IMP_RES_TAC TranRelSnocRevAsyncL >>
+          Q.EXISTS_TAC `Sym''` >>
+          Q.EXISTS_TAC `P''` >>
+          Q.EXISTS_TAC `S1''` >>
+          rw[]
+          >- (metis_tac[sapic_plus_position_multi_transitions_with_symb_move,IMAGEOUT]) >>
+          PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2 ded1 ded2 ded3. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym''`,`P''`,`S1''`,`S2'`,`MTrn1`,`MTrn2`,`ded1`,`ded2`,`ded3`])) >>
+          IMP_RES_TAC binterl_movesL >>
+          RES_TAC)
+
+        
+rewrite_tac[comptraces_def]
+rewrite_tac[sapic_plus_traces_def]
+FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [EXTENSION]EQ_TAC                                                                                                                                                                                                                                                                        
 rewrite_tac[binterleave_composition_generaldeduction,binterleave_ts,symbtree_to_sapic_trace_inclusion_thm] >>
 FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF] >>
      metis_tac[]

@@ -46,7 +46,8 @@ Define`
       (DYtranrel (Sym,Pi,ESt) (SOME (INL (Alias (X',Y')))) (Sym',Pi',ESt) = ((X' ∉ Sym) ∧ (Sym' = Sym∪{X'}) ∧ (Pi' = Pi∪{Equ((TVar X'),Y')}))) ∧
       (DYtranrel (Sym,Pi,ESt) (SOME (INR (A2P X))) (Sym',Pi',ESt) = ((K (TVar X) ∈ Pi) ∧ (Pi = Pi') ∧ (Sym = Sym'))) ∧
       (DYtranrel (Sym,Pi,ESt) (SOME (INL (Silent n))) (Sym',Pi',ESt) = ((Fr (Con n) ∉ Pi ) ∧ (Pi' = Pi∪{(Fr (Con n));(K (Con n))}) ∧ (Sym = Sym'))) ∧
-      (DYtranrel (Sym,Pi,ESt) (SOME (INR (Sync_Fr n'))) (Sym',Pi',ESt) = ((Fr (Con n') ∉ Pi ) ∧ (Pi' = Pi∪{Fr (Con n')}) ∧ (Sym = Sym')))
+      (DYtranrel (Sym,Pi,ESt) (SOME (INR (Sync_Fr n'))) (Sym',Pi',ESt) = ((Fr (Con n') ∉ Pi ) ∧ (Pi' = Pi∪{Fr (Con n')}) ∧ (Sym = Sym'))) ∧
+      (DYtranrel (Sym,Pi,ESt) (NONE) (Sym',Pi',ESt) = ((Pi = Pi') ∧ (Sym = Sym')))
 `;                                      
 
 

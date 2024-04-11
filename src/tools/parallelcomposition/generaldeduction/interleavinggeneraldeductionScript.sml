@@ -62,15 +62,22 @@ val binterl_moveSL = new_axiom ("binterl_moveSL",
                                 ``∀e t t1 t2.
                                      binterl t1 t2 (SOME (INL (INR e))::t) ⇒
                                    (∃t1' t2'. (t1 = SOME (INR e)::t1') ∧(t2 = SOME (INR e)::t2'))``);
+                                   
 val binterl_moveSR = new_axiom ("binterl_moveSR",
                                 ``∀e t t1 t2.
                                      binterl t1 t2 (SOME (INR (INR e))::t) ⇒
-                                  (∃t1' t2'. (t1 = SOME (INR e)::t1') ∧(t2 = SOME (INR e)::t2'))``);
-
+                                   (∃t1' t2'. (t1 = SOME (INR e)::t1') ∧(t2 = SOME (INR e)::t2'))``);
+                                   
+ val binterl_moveNAL = new_axiom ("binterl_moveNAL",
+                               ``∀e1 t t1 t2.
+                                     binterl t1 t2 (SOME (INL (INL e1))::t) ⇒
+                                  (∃t1' t2'. (t1 = SOME (INL e1)::t1') ∧ (t2 = NONE::t2'))``);
+                                  
  val binterl_moveAL = new_axiom ("binterl_moveAL",
                                ``∀e1 t t1 t2.
                                      binterl t1 t2 (SOME (INL (INL e1))::t) ⇒
                                   (∃t1'. (t1 = SOME (INL e1)::t1'))``);
+                                  
 val binterl_moveAR = new_axiom ("binterl_moveAR",
                                ``∀e2 t t1 t2.
                                      binterl t1 t2 (SOME (INR (INL e2))::t) ⇒

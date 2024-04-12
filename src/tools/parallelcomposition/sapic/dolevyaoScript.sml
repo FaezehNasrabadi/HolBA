@@ -52,14 +52,6 @@ Define`
 
 
 (* Dolev-Yao multi transition relation *)
-(*val DYmultranrel_def =
-Define`DYmultranrel C Eve C' =
-(case Eve of
-   [] => (C = C')
- | (e::ev) => (∃C''. (DYmultranrel C ev C'') ∧ (DYtranrel C'' e C'))
-)
-`;*)
-
 Inductive DYmultranrel:
 [~nil:]
   (DYmultranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) ([]:(DYnsyc_event + (Name_t,Var_t) sync_event) option list) ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt)) /\

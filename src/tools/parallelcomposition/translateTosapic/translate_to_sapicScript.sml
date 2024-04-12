@@ -194,10 +194,6 @@ IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_transition_def]>>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_out_transition_def]>>
-(*Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
-Q.EXISTS_TAC `i'+1` >>
-Q.EXISTS_TAC `Re` >>
-Q.EXISTS_TAC `NRe` >>*)
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []
@@ -216,10 +212,6 @@ ASM_SIMP_TAC (srw_ss()) [sapic_position_in_transition_def]>>
 Cases_on ‘H’ >-(
 Cases_on ‘Re’ >-(
 rewrite_tac[sapic_renaming_update_def] >>
-(*Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
-Q.EXISTS_TAC `i'+1` >>
-Q.EXISTS_TAC `Renaming f'⦇Var "Adv" 0 ↦ SOME (TVar (translate_birvar_to_sapicvar b))⦈` >>
-Q.EXISTS_TAC `NRe` >>*)
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm >>
 ASM_SIMP_TAC (srw_ss()) []
@@ -257,10 +249,6 @@ Cases_on ‘H’ >>
 Cases_on ‘Re’ >>
 Cases_on ‘NRe’ >>
 rewrite_tac[sapic_renaming_update_def,sapic_name_renaming_update_def] >>
-(*Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
-Q.EXISTS_TAC `i'+1` >>
-Q.EXISTS_TAC `Renaming f'⦇Var "RNG" 0 ↦SOME (Con (translate_birvar_to_sapicfreshname b))⦈` >>
-Q.EXISTS_TAC `NameRenaming f''⦇translate_birvar_to_sapicfreshname b ↦SOME (Con (translate_birvar_to_sapicfreshname b))⦈` >>*)
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []
@@ -295,10 +283,6 @@ IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_transition_def]>>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_event_transition_def]>>
-(*Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
-Q.EXISTS_TAC `i'+1` >>
-Q.EXISTS_TAC `Re` >>
-Q.EXISTS_TAC `NRe` >>*)
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []
@@ -356,10 +340,6 @@ IMP_RES_TAC sim_def>>
 ASM_SIMP_TAC (srw_ss()) [symbtree_to_sapic_def,position_in_tree_def] >>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_transition_def]>>
 ASM_SIMP_TAC (srw_ss()) [sapic_position_replication_transition_def]>>
-(*Q.EXISTS_TAC `symbtree_to_sapic Tree'` >>
-Q.EXISTS_TAC `i'+1` >>
-Q.EXISTS_TAC `Re` >>
-Q.EXISTS_TAC `NRe` >>*)
 rw[sim_def] >-(
 IMP_RES_TAC position_of_val_thm>>
 ASM_SIMP_TAC (srw_ss()) []

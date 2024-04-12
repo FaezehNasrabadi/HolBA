@@ -731,6 +731,8 @@ val sapic_position_transition_with_symb_def = Define `
 (((Sym = Sym') ∨ (∃y. Sym' = Sym ∪ {y})) ∧ (P = P') ∧ (Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe'))
 ) ∧
 (sapic_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) (SOME ((INL Ev):(SapicFact_t + (Name_t, Var_t) sync_event))) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))) = (sapic_position_transition (Pconfig (Pro,i,Re,NRe)) Ev (Pconfig (Pro',i',Re',NRe')))
+) ∧
+(sapic_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) (SOME ((INR Ev):(SapicFact_t + (Name_t, Var_t) sync_event))) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))) = ((Sym = Sym') ∧ (P = P') ∧ (Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe'))
 )`;            
 
 Inductive sapic_position_multi_transitions_with_symb:

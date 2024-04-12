@@ -52,14 +52,28 @@ Define`
 
 
 (* Dolev-Yao multi transition relation *)
-val DYmultranrel_def =
+(*val DYmultranrel_def =
 Define`DYmultranrel C Eve C' =
 (case Eve of
    [] => (C = C')
  | (e::ev) => (∃C''. (DYmultranrel C ev C'') ∧ (DYtranrel C'' e C'))
 )
-`;
-                                        
+`;*)
 
+Inductive DYmultranrel:
+[~nil:]
+  (DYmultranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) ([]:(DYnsyc_event + (Name_t,Var_t) sync_event) option list) ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt)) /\
+[~move:]
+  (
+  ((DYmultranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) (ev:(DYnsyc_event + (Name_t,Var_t) sync_event) option list) ((Sym'':(Var_t -> bool)),(P'':(DYpred -> bool)),ESt)) /\
+   (DYtranrel ((Sym'':(Var_t -> bool)),(P'':(DYpred -> bool)),ESt) (e:(DYnsyc_event + (Name_t,Var_t) sync_event) option) ((Sym':(Var_t -> bool)),(P':(DYpred -> bool)),ESt))) ==>
+  ((DYmultranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) ((e::ev):(DYnsyc_event + (Name_t,Var_t) sync_event) option list) ((Sym':(Var_t -> bool)),(P':(DYpred -> bool)),ESt)))
+  )
+End
 
+val DYmultranrel_single = new_axiom ("DYmultranrel_single",
+                                     ``∀e Sym Sym' P P'.
+                                              (DYmultranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) ([e]:(DYnsyc_event + (Name_t,Var_t) sync_event) option list) ((Sym':(Var_t -> bool)),(P':(DYpred -> bool)),ESt)) =
+  (DYtranrel ((Sym:(Var_t -> bool)),(P:(DYpred -> bool)),ESt) (e:(DYnsyc_event + (Name_t,Var_t) sync_event) option) ((Sym':(Var_t -> bool)),(P':(DYpred -> bool)),ESt)) ``);
+                                                 
 val _ = export_theory();

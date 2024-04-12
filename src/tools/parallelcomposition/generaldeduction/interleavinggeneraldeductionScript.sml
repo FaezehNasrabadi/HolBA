@@ -41,7 +41,13 @@ Inductive binterl:
 [~movenone:]                                                                        
   ((binterl (NONE::(t1:('event1 + 'eventS) option list)) (NONE::(t2:('event2 + 'eventS) option list)) (NONE::t)) ==> (binterl t1 t2 t))  /\
 [~movecombinenone:]                                                                        
-  ((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) (NONE::t)) ==> (binterl t1 t2 t)) 
+  ((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) (NONE::t)) ==> (binterl t1 t2 t)) /\
+[~moveB:]
+  (((binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t))∧(binterl [h1] [h2] [h])) ==> (binterl t1 t2 t))/\
+[~moveF:]
+  (((binterl t1 t2 t) ∧ (binterl [h1] [h2] [h])) ==> (binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t))) /\
+[~single:]
+  (((binterl t1 t2 t) ∧ (binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t))) ==> (binterl [h1] [h2] [h]))
 End
 
 
@@ -52,8 +58,17 @@ End
         
 val binterl_Empty = new_axiom ("binterl_Empty",
                                ``∀t1 t2. binterl t1 t2 [] ⇒ ((t1 = []) ∧(t2 = []))``);
-                                                            
-val binterl_moveSL = new_axiom ("binterl_moveNONE",
+
+val binterl_NotEmpty = new_axiom ("binterl_NotEmpty",
+                               ``∀t1 t2. binterl t1 t2 (h::t) ⇒ (∃h1 t1' h2 t2'. (t1 = (h1::t1'))∧(t2 = (h2::t2')))``);
+
+val binterl_Conj = new_axiom ("binterl_Conj",
+                               ``∀h1 t1 h2 t2 h t. (binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t)) ⇒ ((binterl t1 t2 t) ∧ (binterl [h1] [h2] [h]))``);
+
+val binterl_EmptyRev = new_axiom ("binterl_EmptyRev",
+                               ``∀t. binterl [] [] t ⇒ (t = [])``);
+                               
+val binterl_moveNONE = new_axiom ("binterl_moveNONE",
                                 ``∀e t t1 t2.
                                      binterl t1 t2 (NONE::t) ⇒
                                    (∃t1' t2'. (t1 = NONE::t1') ∧(t2 = NONE::t2'))``);                               
@@ -115,6 +130,9 @@ val TranRelConfigEq = new_axiom ("TranRelConfigEq",
 val TranRelSnoc = new_axiom ("TranRelSnoc",
                              ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s''))) ⇒ (MTrn (v,p,s) (e::t) (v'',p'',s''))``);
 
+val TranRelSnocBack = new_axiom ("TranRelSnocBack",
+                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+                             
 val TranRelSnocRev = new_axiom ("TranRelSnocRev",
                              ``∀(MTrn:(('event1 + 'event3) + ('event2 + 'event3), ('pred1 + 'pred2), 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
                                  

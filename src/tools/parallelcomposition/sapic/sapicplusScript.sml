@@ -738,10 +738,17 @@ val sapic_position_transition_with_symb_def = Define `
 Inductive sapic_position_multi_transitions_with_symb:
 [~nil:]
   (sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) [] ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe)))) /\
-[~move:]
-  (((sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe''))))∧(sapic_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))))) ==> (sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe')))))  
+[~moveF:]
+  (((sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe''))))∧(sapic_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))))) ==> (sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))))) /\
+[~moveB:]
+  (((sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))))∧(sapic_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe'))))) ==>
+(sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(Pconfig (Pro'',i'',Re'',NRe'')))))
 End
-               
+
+val sapic_position_with_symb_single = new_axiom ("sapic_position_with_symb_single",
+                            ``∀e Sym Sym' P P' Pro Pro' NRe NRe' Re Re' i i'. (sapic_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) [e] ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe')))) = (sapic_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(Pconfig (Pro,i,Re,NRe))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(Pconfig (Pro',i',Re',NRe')))) ``);                
+
+        
 val traces_of_sapic_def  = Define`
 traces_of_sapic (Pconfig (Pro,i,Re,NRe)) = {e| ∃Pro' i' Re' NRe'. (sapic_position_multi_transitions (Pconfig (Pro,i,Re,NRe)) e (Pconfig (Pro',i',Re',NRe')))}`;
         
@@ -961,7 +968,7 @@ val sapic_plus_position_transition_with_symb_def = Define `
 
                                                           
 val sapic_plus_position_transition_with_symb_def = Define `
-                                                          (sapic_plus_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) Ev ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))) =
+                                                          (sapic_plus_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),((Pconfig_plus (Pro,i,Re,NRe)):sapic_plus_position_configuration_t)) (Ev:((SapicFact_t + (Name_t,Var_t) sync_event)+(DYnsyc_event + (Name_t,Var_t) sync_event)) option) ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),((Pconfig_plus (Pro',i',Re',NRe')):sapic_plus_position_configuration_t)) =
                                                            (case Ev of
        SOME (INR (INL (Alias (x,y)))) => ((DYtranrel (Sym,IMAGE OUTR P,ESt) (SOME (INL (Alias (x,y)))) (Sym',IMAGE OUTR P',ESt)) ∧ (IMAGE OUTL P' = IMAGE OUTL P) ∧ (Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe'))
      | SOME (INR (INR (A2P x))) => ((DYtranrel (Sym,IMAGE OUTR P,ESt) (SOME (INR (A2P x))) (Sym',IMAGE OUTR P',ESt)) ∧ (IMAGE OUTL P' = IMAGE OUTL P) ∧ (Pro = Pro') ∧ (i = i') ∧ (Re = Re') ∧ (NRe = NRe'))
@@ -990,11 +997,20 @@ val sapic_plus_position_transition_with_symb_def = Define `
 Inductive sapic_plus_position_multi_transitions_with_symb:
 [~nil:]
   (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) [] ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe)))) /\
-[~move:]
-  (((sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))))∧(sapic_plus_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))))) ==> (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe')))))  
+[~moveF:]
+  (((sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))))∧(sapic_plus_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))))) ==> (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))))) /\
+[~moveB:]
+  ((
+    (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))))
+    ∧(sapic_plus_position_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))) e ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))))) ==>
+  (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro'',i'',Re'',NRe''))))
+   )
 End
 
-        
+val sapic_plus_position_with_symb_single = new_axiom ("sapic_plus_position_with_symb_single",
+                            ``∀e Sym Sym' P P' Pro Pro' NRe NRe' Re Re' i i'. (sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) [e] ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe')))) = (sapic_plus_position_transition_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) e ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe')))) ``);                
+
+                            
 val sapic_plus_traces_def =
 Define`
       sapic_plus_traces sapic_plus_position_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred + DYpred -> bool)),(Pconfig_plus (Pro,i,Re,NRe))) ((Sym':(Var_t -> bool)),(P':('SPpred + DYpred -> bool)),(Pconfig_plus (Pro',i',Re',NRe'))) =

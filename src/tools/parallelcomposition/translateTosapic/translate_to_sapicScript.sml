@@ -136,13 +136,6 @@ sbirEvent_to_sapicFact e =
         )
   `;
 
-val sbirEventOp_to_sapicFactOp_def =
-Define `sbirEventOp_to_sapicFactOp Eve =
-(case Eve of
-   NONE => NONE
- | SOME e => SOME (sbirEvent_to_sapicFact e)
-)
-`;
   
 val symbtree_to_sapic_def = Define`
 (symbtree_to_sapic (SLeaf) = ProcessNull) /\

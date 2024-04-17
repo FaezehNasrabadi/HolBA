@@ -1,4 +1,3 @@
-
 open HolKernel Parse boolLib bossLib;
 open HolBACoreSimps;
 open HolBASimps;
@@ -119,16 +118,36 @@ Define`single_step_execute_symbolic_tree tre ev tre' =
    
 
 val execute_symbolic_tree_def =
-Define`execute_symbolic_tree tre Eve tre' =
+Define `execute_symbolic_tree tre Eve tre' =
 (case Eve of
    [] => (tre = tre')
  | (e::ev) => (∃tre''. (execute_symbolic_tree tre ev tre'') ∧ (single_step_execute_symbolic_tree tre'' e tre'))
 )
 `;
 
+val symbolic_tree_transition_with_symb_def =
+Define `symbolic_tree_transition_with_symb (Sym,P,tre) Eve (Sym',P',tre') =
+(case Eve of
+   NONE => ((Sym = Sym') ∧ (P = P') ∧ (tre = tre'))
+ | SOME e => (single_step_execute_symbolic_tree tre e tre')
+)
+`;        
+
+Inductive symbolic_tree_multi_transitions_with_symb:
+[~nil:]
+  (symbolic_tree_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) [] ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree)))) /\
+[~moveF:]
+  (((symbolic_tree_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(tr'':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))))∧(symbolic_tree_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(tr'':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(tr':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))))) ==> (symbolic_tree_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(tr':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))))) /\
+[~moveB:]
+  (((symbolic_tree_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) (e::ev) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(tr':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))))∧(symbolic_tree_transition_with_symb ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(tr'':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) e ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(tr':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))))) ==>
+(symbolic_tree_multi_transitions_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) ev ((Sym'':(Var_t -> bool)),(P'':('SPpred -> bool)),(tr'':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree)))))
+End        
 
 val traces_of_tree_def  = Define`
 traces_of_tree tre = {e| ∃tre'. (execute_symbolic_tree tre e tre')}`;
+
+val traces_of_tree_with_symb_def  = Define`
+                                          traces_of_tree_with_symb ((Sym:(Var_t -> bool)),(P:('SPpred -> bool)),(tr:((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) ((Sym':(Var_t -> bool)),(P':('SPpred -> bool)),(tr':((sbir_event, real, (bir_var_t, bir_exp_t) symb_interpret_t) stree))) = {e| (symbolic_tree_multi_transitions_with_symb (Sym,P,tr) e (Sym',P',tr'))}`;
 
 val _ = export_theory();
 

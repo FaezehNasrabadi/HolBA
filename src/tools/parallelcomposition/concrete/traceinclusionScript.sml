@@ -83,6 +83,7 @@ FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolS
 RES_TAC>>
 Q.EXISTS_TAC `((RevInterpretEvOneSyn:('cevent1 + 'ceventS) list -> ('event1 + 'eventS) option list) t1)` >>
 Q.EXISTS_TAC `((RevInterpretEvTwoSyn:('cevent2 + 'ceventS) list -> ('event2 + 'eventS) option list) t2)` >>       metis_tac[binterl_Rev]
-        );  
+  );
+
 val _ = export_theory();
 

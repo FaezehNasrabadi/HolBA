@@ -6,7 +6,7 @@ DEPENDENCIES   =
 
 # configuration
 # ----------------------------------
-HOLHEAP        = ../../../shared/HolBAShared-heap
+HOLHEAP        = ../../symbexecbin/HolBATools_SymbExecBin-heap
 NEWHOLHEAP     = HolBATools_Sapic-heap
 
 HEAPINC_EXTRA  = 

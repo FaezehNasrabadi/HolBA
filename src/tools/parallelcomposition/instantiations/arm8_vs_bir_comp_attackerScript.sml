@@ -24,9 +24,7 @@ open bir_program_multistep_propsTheory;
 val _ = new_theory "arm8_vs_bir_comp_attacker";
 
 val arm8_rel_def = Define `
-    arm8_rel ms mev ms' = ((NextStateARM8 ms = SOME ms') ∧ (mev = ((1):num)))
-                          `;
-
+                          arm8_rel ms mev ms' = ((NextStateARM8 ms = SOME ms') ∧ (mev = ((1):num)))`;
 
 Inductive arm8_mrel:
 [~nil:]
@@ -44,8 +42,7 @@ Inductive arm8_mrel:
 End                                
 
 val arm8_mrel_single = new_axiom ("arm8_mrel_single",
-                                  ``∀ms mev ms'. (arm8_mrel ms [mev] ms') = (arm8_rel ms mev ms')``);
-(*                                   
+                                  ``∀ms mev ms'. (arm8_mrel ms [mev] ms') = (arm8_rel ms mev ms')``);                       (*          
 val arm8_mrel_def =
 Define `arm8_mrel ms meve ms' =
 (case meve of
@@ -59,13 +56,16 @@ val bir_rel_def = Define `
                                  `;
 
 val bir_mrel_def =
-Define `bir_mrel birprog bs beve bs' =
-((l,(SUC (LENGTH beve)),bs') = (bir_exec_step_n birprog bs (LENGTH beve)))`;                                        
+Define ` (bir_mrel birprog bs ([]:num list) bs' =
+          (((bir_exec_step_n birprog bs 0) = ([],0,bs')) ∧ (bs = bs'))) ∧ 
+(bir_mrel birprog bs beve bs' =
+ ((bir_exec_step_n birprog bs (LENGTH beve)) = ([],(LENGTH beve),bs')))
+`;                                        
 
-
+(*
 Inductive bir_mrel:
 [~nil:]
-  (bir_mrel birprog bs [] bs') /\
+ (bir_mrel p state [] state) /\
 [~moveForw:]
   (
   ((bir_mrel birprog bs bev bs'')∧(bir_rel birprog bs be bs'))
@@ -81,7 +81,7 @@ End
 val bir_mrel_single = new_axiom ("bir_mrel_single",
                                   ``∀birprog bs bev bs'. (bir_mrel birprog bs [bev] bs') = (bir_rel birprog bs bev bs')``);                                        
 
-(*
+
 val bir_mrel_def =
 Define `bir_mrel birprog bs beve bs' =
 (case beve of
@@ -116,25 +116,57 @@ val lifter_thm = REWRITE_RULE [GSYM arch_def,GSYM interval_def,GSYM arm8prog_def
 
 val lifted_to_traces_thm = store_thm(
   "lifted_to_traces_thm",
-  ``∀interval arm8prog birprog ms bs ms' bs'. 
-            (bir_is_lifted_prog arm8_bmr interval arm8prog birprog) ∧
-            (bmr_rel arm8_bmr bs ms) ∧
-            (bmr_rel arm8_bmr bs' ms')
-            ==>
-            ((traces (bir_mrel birprog) bs bs') = (traces arm8_mrel ms ms'))
-            ``,
+  ``∀interval arm8prog birprog.
+              (bir_is_lifted_prog arm8_bmr interval arm8prog birprog)
+     ==>
+     (∃ms bs ms' bs'.
+        (traces (bir_mrel birprog) bs bs') = (traces arm8_mrel ms ms')
+     )
+     ``,
+     rpt strip_tac >>
+     Cases_on ‘birprog’ >>
+     Cases_on ‘interval’ >>
+     FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [bmr_rel_def,bir_is_lifted_prog_def,bir_program_string_labels_guarded_def,bir_is_valid_labels_def,WI_wfe_def,bir_labels_of_program_def,bir_exec_to_addr_label_def,traces_def,MAP,EVERY_DEF,IMAGE_DEF,ALL_DISTINCT,EXTENSION,EVERY_CONJ,EVERY_FILTER,EXISTS_LIST_EQ_MAP,EVERY_MAP,arm8_bmr_def] >>
+     PAT_X_ASSUM ``!ms bs li. A `` (ASSUME_TAC o (Q.SPECL [‘ms’,‘bs’,‘li’]))>>
+     RES_TAC >>
+     IMP_RES_TAC EVERY_CONJ
+                 FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [] >>
+     Induct_on ‘arm8prog’ >- (
+      rewrite_tac[EVERY_DEF] >>
+                 FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [bir_machine_lifted_imm_def,APPEND,arm8_PSTATE_lifted_imms_LIST_def,arm8_REGS_lifted_imms_LIST_def,arm8_EXTRA_lifted_imms_LIST_def] >>            
+
+      )(*NIL*)
+
+
+
+
+                 
+                        
+IMP_RES_TAC EVERY_FILTER
+IMP_RES_TAC EXISTS_LIST_EQ_MAP
+IMP_RES_TAC EVERY_MAP
+FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []
+IMP_RES_TAC MAP_ID
+RES_TAC
+DB.find "EVERY"
+
+WF_bmr_ms_mem_contains_def
+FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [arm8_bmr_def]
+bir_machine_lifted_imm_def
+        
 rewrite_tac[bmr_rel_def]
 
 arm8_state_is_OK_def
 RES_TAC
 
 
-FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [bmr_rel_def,bir_is_lifted_prog_def,bir_program_string_labels_guarded_def,bir_is_valid_labels_def,WI_wfe_def,bir_labels_of_program_def,bir_exec_to_addr_label_def,arm8_bmr_def,traces_def, arm8_mrel_def,bir_mrel_def,MAP,EVERY_DEF,IMAGE_DEF,ALL_DISTINCT,EXTENSION]
+FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [bmr_rel_def,bir_is_lifted_prog_def,bir_program_string_labels_guarded_def,bir_is_valid_labels_def,WI_wfe_def,bir_labels_of_program_def,bir_exec_to_addr_label_def,traces_def,MAP,EVERY_DEF,IMAGE_DEF,ALL_DISTINCT,EXTENSION]
 
 
 
 
-FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [bmr_rel_def,bir_is_lifted_prog_def,arm8_bmr_def,traces_def,MAP,EVERY_DEF,IMAGE_DEF,ALL_DISTINCT,EXTENSION]
+FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION]
+Induct_on ‘x’
 rw[]
 
 
@@ -143,7 +175,12 @@ rw[]
             rewrite_tac[bir_program_string_labels_guarded_def]
                        rewrite_tac[ bir_is_valid_labels_def]
                                     rewrite_tac[WI_wfe_def]
-Cases_on ‘birprog’
+                                    Cases_on ‘birprog’
+                                    Cases_on ‘interval’
+                                             
+                                    Cases_on ‘arm8prog’
+                                              
+
 rewrite_tac[bir_labels_of_program_def]
 rewrite_tac[bir_exec_to_addr_label_def]
         
@@ -173,9 +210,9 @@ IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC
             bir_is_valid_labels_def
 bir_state_is_terminated_def
 bir_exec_step_n_REWR_NOT_TERMINATED
- bir_exec_step_n_REWRS
+rw[bir_exec_step_n_REWRS]
 bir_is_valid_labels_def
-
+IMP_RES_TAC  bir_exec_step_n_REWRS
 
 bir_exec_step_state
 

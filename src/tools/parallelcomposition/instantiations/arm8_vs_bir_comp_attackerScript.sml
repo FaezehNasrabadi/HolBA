@@ -21,78 +21,44 @@ open bir_backlifterTheory;
 open bir_program_multistep_propsTheory;
 open arithmeticTheory;
 open bir_auxiliaryTheory;
+open optionTheory;
 (* HOL_Interactive.toggle_quietdec(); *)
 
 val _ = new_theory "arm8_vs_bir_comp_attacker";
 
-val arm8_rel_def = Define `
-                          arm8_rel ms mev ms' = (FUNPOW_OPT arm8_bmr.bmr_step_fun mev ms = SOME ms')`;
 
 Inductive arm8_mrel:
 [~nil:]
-  (arm8_mrel ms [] ms') /\
+  (arm8_mrel ms ([]:('cevent + 'ceventS) list) ms) /\
 [~moveForw:]
   (
-  ((arm8_mrel ms mev ms'')∧(arm8_rel ms'' me ms'))
-  ==> (arm8_mrel ms (me::mev) ms')
+  ((arm8_mrel ms (mev:('cevent + 'ceventS) list) ms'')∧(arm8_mrel ms'' ([me]:('cevent + 'ceventS) list) ms'))
+  ==> (arm8_mrel ms ((me::mev):('cevent + 'ceventS) list) ms')
   )/\
 [~moveBack:]
   (
-  ((arm8_mrel ms (me::mev) ms')∧(arm8_rel ms'' me ms'))
-  ==> (arm8_mrel ms mev ms'')
+  ((arm8_mrel ms ((me::mev):('cevent + 'ceventS) list) ms')∧(arm8_mrel ms'' ([me]:('cevent + 'ceventS) list) ms'))
+  ==> (arm8_mrel ms (mev:('cevent + 'ceventS) list) ms'')
   )
 End                                
-
-val arm8_mrel_single = new_axiom ("arm8_mrel_single",
-                                  ``∀ms mev ms'. (arm8_mrel ms [mev] ms') = (arm8_rel ms mev ms')``);                       (*          
-val arm8_mrel_def =
-Define `arm8_mrel ms meve ms' =
-(case meve of
-   []        => (ms = ms')
- | (me::mev) => (∃ms''. (arm8_mrel ms mev ms'')∧(arm8_rel ms'' me ms'))
-        )
-                          `;*)
-                          
-val bir_rel_def = Define `
-    bir_rel p bs bev bs' = (∀n' lo c_st. (bir_exec_to_addr_label_n p bs n' =
-        BER_Ended lo c_st bev bs'))
-                                 `;
-(*
-val bir_mrel_def =
-Define ` (bir_mrel birprog bs ([]:num list) bs' =
-          (((bir_exec_to_addr_label_n birprog bs 0) = (BER_Ended [] 0 0 bs')) ∧ (bs = bs'))) ∧ 
-(bir_mrel birprog bs beve bs' =
- ((bir_exec_to_addr_label_n birprog bs (LENGTH beve)) = (BER_Ended [] (LENGTH beve) (LENGTH beve) bs')))
-`;                                        
-*)
 
 Inductive bir_mrel:
 [~nil:]
- (bir_mrel p state [] state') /\
+ (bir_mrel p bs ([]:('cevent + 'ceventS) list) bs) /\
 [~moveForw:]
   (
-  ((bir_mrel birprog bs bev bs'')∧(bir_rel birprog bs be bs'))
-  ==> (bir_mrel birprog bs (be::bev) bs')
+  ((bir_mrel birprog bs (bev:('cevent + 'ceventS) list) bs'')∧(bir_mrel birprog bs ([be]:('cevent + 'ceventS) list) bs'))
+  ==> (bir_mrel birprog bs ((be::bev):('cevent + 'ceventS) list) bs')
   )/\
 [~moveBack:]
   (
-  ((bir_mrel birprog bs (be::bev) bs')∧(bir_rel birprog bs be bs'))
-  ==> (bir_mrel birprog bs bev bs'')
+  ((bir_mrel birprog bs ((be::bev):('cevent + 'ceventS) list) bs')∧(bir_mrel birprog bs ([be]:('cevent + 'ceventS) list) bs'))
+  ==> (bir_mrel birprog bs (bev:('cevent + 'ceventS) list) bs'')
   )
 End                                
 
-val bir_mrel_single = new_axiom ("bir_mrel_single",
-                                  ``∀birprog bs bev bs'. (bir_mrel birprog bs [bev] bs') = (bir_rel birprog bs bev bs')``);                                        
 
-(*
-val bir_mrel_def =
-Define `bir_mrel birprog bs beve bs' =
-(case beve of
-   [] => (bs = bs')
- | (be::bev) => (∃bs''. (bir_mrel birprog bs bev bs'')∧(bir_rel birprog bs'' be bs'))
-        )`;
-                                        
-                         
+(*                        
 val arch_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 0);
 val arch_def = Define `
     arch = ^(arch_t)
@@ -152,255 +118,13 @@ bir_auxiliaryLib.QSPECL_X_ASSUM ``!n ms bs. _`` [`n'`, `ms`, `bs`] >>
 REV_FULL_SIMP_TAC (std_ss++holBACore_ss) [bir_programTheory.bir_state_is_terminated_def]
 );
 
-
-        
-val bir_is_lifted_prog_MULTI_STEP_EXEC_compute_32_8_thm =
-  INST_TYPE
-    [Type.gamma |-> ``:32``, Type.delta |-> ``:8``]
-    bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm;
-
-
-
-(*
-NOTATION: FROM PROOF-PRODUCING SYMBOLIC EXECUTION -- MULTISTEP WITH LABEL SET
-=======================================================
-*)
-
-(* n steps deterministic transition relation with using FUNPOW *)
-val step_n_def = Define `
-  (step_n stepf s n s' = (FUNPOW stepf n s = s'))
-`;
-
-val step_n_deterministic_thm = store_thm(
-   "step_n_deterministic_thm", ``
-!stepf.
-!s n s' s''.
-(step_n stepf s n s') ==>
-(step_n stepf s n s'') ==>
-(s' = s'')
-``,
-  SIMP_TAC std_ss [step_n_def]
-);
-val step_n_total_thm = store_thm(
-   "step_n_total_thm", ``
-!stepf.
-!s n.
-?s'.
-step_n stepf s n s'
-``,
-  SIMP_TAC std_ss [step_n_def]
-);
-
-val step_n_in_L_relaxed_def = Define `
-  step_n_in_L_relaxed pcf stepf s n L s' =
-    (step_n stepf s n s' /\
-     (n > 0) /\
-     (!n'. 0 < n' ==> n' < n ==>
-        ?s''. step_n stepf s n' s'' /\ pcf(s'') IN L))
-`;
-
-val step_n_in_L_def = Define `
-  step_n_in_L pcf stepf s n L s' =
-    ((pcf s) IN L /\
-     (step_n_in_L_relaxed pcf stepf s n L s'))
-`;
-
-val step_n_in_L_thm = save_thm("step_n_in_L_thm",
-  REWRITE_RULE [step_n_in_L_relaxed_def] step_n_in_L_def
-);
-
-val step_n_in_L_onlyL_thm = store_thm(
-   "step_n_in_L_onlyL_thm", ``
-!pcf stepf.
-!s n L s'.
-(step_n_in_L pcf stepf s n L s') ==>
-(
-  (* ((pcf s) IN L) /\ *)
-  (!n' s''. n' < n ==> step_n stepf s n' s'' ==> pcf(s'') IN L)
-)
-``,
-  SIMP_TAC std_ss [step_n_in_L_thm] >>
-  REPEAT STRIP_TAC >>
-  Cases_on `n'` >- (
-    FULL_SIMP_TAC std_ss [step_n_def, arithmeticTheory.FUNPOW]
-  ) >>
-  `0 < SUC n''` by (SIMP_TAC arith_ss []) >>
-  METIS_TAC [step_n_deterministic_thm]
-);
-
-val step_n_in_L_IMP_SUPER_thm = store_thm(
-   "step_n_in_L_IMP_SUPER_thm", ``
-!pcf stepf.
-!s n L L' s'.
-  (L SUBSET L') ==>
-  (step_n_in_L pcf stepf s n L  s') ==>
-  (step_n_in_L pcf stepf s n L' s')
-``,
-  REWRITE_TAC [step_n_in_L_thm, SUBSET_DEF] >>
-  METIS_TAC []
-);
-
-val step_n_in_L_SEQ_thm = store_thm(
-   "step_n_in_L_SEQ_thm", ``
-!pcf stepf.
-!s n_A L_A s' n_B L_B s''.
-  (step_n_in_L pcf stepf s  n_A L_A s') ==>
-  (step_n_in_L pcf stepf s' n_B L_B s'') ==>
-  (step_n_in_L pcf stepf s (n_A + n_B) (L_A UNION L_B) s'')
-``,
-  REWRITE_TAC [step_n_in_L_thm, step_n_def] >>
-  REPEAT STRIP_TAC >> (
-    ASM_SIMP_TAC (arith_ss++pred_setSimps.PRED_SET_ss) []
-  ) >> (
-    REWRITE_TAC [Once ADD_SYM] >>
-    ASM_SIMP_TAC (arith_ss++pred_setSimps.PRED_SET_ss) [step_n_def, FUNPOW_ADD]
-  ) >>
-
-  Cases_on `n' < n_A` >- (
-    METIS_TAC []
-  ) >>
-
-  (* n' = n_A + some difference *)
-  `?diff. n' = diff + n_A` by (
-    METIS_TAC [LESS_EQ_EXISTS, NOT_LESS, ADD_SYM]
-  ) >>
-
-  (* that difference < n_B *)
-  `diff < n_B` by (
-    ASM_SIMP_TAC (arith_ss) []
-  ) >>
-
-  (* with that, just solve with assumptions and FUNPOW_ADD *)
-  Cases_on `diff = 0` >> (
-    FULL_SIMP_TAC (arith_ss) [FUNPOW_ADD, FUNPOW_0]
-  )
-);
-
-val FUNPOW_ABS_thm = store_thm(
-   "FUNPOW_ABS_thm", ``
-!f g.
-  (!x. g (f x) = x) ==>
-  !stepf.
-  !s n s'.
-    FUNPOW (f o stepf o g) n (f s)
-    =
-    f (FUNPOW stepf n s)
-``,
-  REPEAT STRIP_TAC >>
-  FULL_SIMP_TAC std_ss [step_n_def] >>
-  Induct_on `n` >> (
-    FULL_SIMP_TAC std_ss [arithmeticTheory.FUNPOW_0, arithmeticTheory.FUNPOW_SUC]
-  )
-);
-
-val step_n_ABS_thm = store_thm(
-   "step_n_ABS_thm", ``
-!f g.
-  (!x y. (f x = f y) <=> (x = y)) ==>
-  (!x. g (f x) = x) ==>
-  !stepf.
-  !s n s'.
-    step_n (f o stepf o g) (f s) n (f s')
-    =
-    step_n stepf s n s'
-``,
-  FULL_SIMP_TAC std_ss [step_n_def, FUNPOW_ABS_thm]
-);
-
-val step_n_in_L_ABS_thm = store_thm(
-   "step_n_in_L_ABS_thm", ``
-!f g.
-  (!x y. (f x = f y) <=> (x = y)) ==>
-  (!x. g (f x) = x) ==>
-  (!x. ?y. (f y) = x) ==>
-  !pcf stepf.
-  !s n L s'.
-    step_n_in_L pcf (f o stepf o g) (f s) n L (f s')
-    =
-    step_n_in_L (pcf o f) stepf s n L s'
-``,
-  REPEAT STRIP_TAC >>
-  FULL_SIMP_TAC std_ss [step_n_in_L_def, step_n_in_L_relaxed_def] >>
-
-  EQ_TAC >> (
-    FULL_SIMP_TAC std_ss [step_n_ABS_thm] >>
-    REPEAT STRIP_TAC >>
-    PAT_X_ASSUM ``!x. A ==> B`` (ASSUME_TAC o Q.SPEC `n'`) >>
-    REV_FULL_SIMP_TAC std_ss [] >>
-    METIS_TAC [step_n_ABS_thm]
-  )
-);
-
-(*
-
-val bir_step_n_in_L_relaxed_def = Define `
-  bir_step_n_in_L_relaxed sr = step_n_in_L_relaxed symb_concst_pc sr.sr_step_conc
-`;
-        
-val conc_step_n_in_L_relaxed_def = Define `
-  conc_step_n_in_L_relaxed sr = step_n_in_L_relaxed symb_concst_pc sr.sr_step_conc
-`;
-
-val conc_step_n_in_L_def = Define `
-  conc_step_n_in_L sr = step_n_in_L symb_concst_pc sr.sr_step_conc
-`;
-
-val conc_step_n_in_L_IMP_relaxed_thm = store_thm(
-   "conc_step_n_in_L_IMP_relaxed_thm", ``
-!sr.
-!s n L s'.
-(conc_step_n_in_L sr s n L s') ==>
-(conc_step_n_in_L_relaxed sr s n L s')
-``,
-  METIS_TAC [conc_step_n_in_L_def, conc_step_n_in_L_relaxed_def, step_n_in_L_def]
-);
-
-
-        
-
-open bir_backlifterTheory;
-TODO: this is probably in precondition lifting
-"bir_backlifterTheory.exist_bir_of_arm8_thm"
-bir_backlifterTheory.bir_pre_arm8_to_bir_def
-bir_backlifterTheory.bir_post_bir_to_arm8_def
-((
-!ms.
-?bs.
-  (bir_envty_list_b birenvtyl st.bst_environ) /\
-  bmr_rel (m0_mod_bmr (F,T)) bs ms
-))
-bir_lifting_machinesTheory.m0_mod_bmr_def
-bir_exec_step_state_def
-bir_exec_step_def 
-step_n_def
-FUNPOW
-bir_exec_to_addr_label_n_def
-BER_Ended
-FUNPOW_OPT_def
-((
-``
-!bprog bs n L bs'.
-(step_n_in_L (\x. x.bst_pc) (bir_exec_step_state bprog) bs n L bs') ==>
-  ?n' lo.
-  (bir_exec_to_addr_label_n bprog bs n' = BER_Ended lo n n' bs')
-``
-REPEAT STRIP_TAC >>
-  FULL_SIMP_TAC std_ss [step_n_in_L_def] >>
-  FULL_SIMP_TAC std_ss [step_n_in_L_relaxed_def]
-  FULL_SIMP_TAC std_ss [step_n_def]
-FULL_SIMP_TAC std_ss [bir_exec_to_addr_label_n_def]
-  bir_exec_to_labels_n
-FULL_SIMP_TAC std_ss [bir_exec_step_state_def]
-FULL_SIMP_TAC std_ss [bir_exec_step_def
-  
-  FULL_SIMP_TAC std_ss [FUNPOW]
-))
-*)
-
-        
+val bmr_rel_to_mrel = new_axiom ("bmr_rel_to_mrel",
+``∀p r bs ms bs' ms' (x:('cevent + 'ceventS) list).
+     ((bmr_rel r bs ms)∧(bmr_rel r bs' ms')) ⇔ ((bir_mrel p bs x bs')∧(arm8_mrel ms x ms'))``)
+     
 val lifted_to_traces_thm = store_thm(
   "lifted_to_traces_thm",
-  ``!mu bs bs' ms ms' mla (p:'a bir_program_t)
+  ``!mu bs bs' ms mla (p:'a bir_program_t)
       mms n' lo c_st c_addr_labels.
     bir_is_lifted_prog arm8_bmr mu mms p ==>
     bmr_rel arm8_bmr bs ms ==>
@@ -411,20 +135,111 @@ val lifted_to_traces_thm = store_thm(
          BER_Ended lo c_st c_addr_labels bs') ==>
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
-     (
-        (traces (bir_mrel p) bs bs') = (traces arm8_mrel ms ms')
+     (∃bs'' ms''.
+        (traces (bir_mrel p) bs bs'') = (traces arm8_mrel ms ms'')
+     )
+     ``,
+     FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION] >>
+  rpt strip_tac >>
+  IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm >>
+   Q.EXISTS_TAC `bs'` >>
+  Q.EXISTS_TAC `ms'` >>
+  metis_tac[bmr_rel_to_mrel]
+)
+
+val lifted_to_traces_eventS_thm =
+  INST_TYPE
+    [Type.gamma |-> ``:'ceventS``]
+    lifted_to_traces_thm;
+
+val compose_arm8_bir_vs_attacker_thm = store_thm(
+  "compose_arm8_bir_vs_attacker_thm",
+  ``!mu bs bs' ms mla (p:'a bir_program_t)
+      mms n' lo c_st c_addr_labels (MTrn:('cevent + 'ceventS, 'cstate) mctrel) as as''.
+    bir_is_lifted_prog arm8_bmr mu mms p ==>
+    bmr_rel arm8_bmr bs ms ==>
+    MEM (BL_Address mla) (bir_labels_of_program p) ==>
+    (bs.bst_pc = bir_block_pc (BL_Address mla)) ==>
+    EVERY (bmr_ms_mem_contains arm8_bmr ms) mms ==>
+    (bir_exec_to_addr_label_n p bs n' =
+         BER_Ended lo c_st c_addr_labels bs') ==>
+    ~bir_state_is_terminated bs ==>
+    ~bir_state_is_terminated bs' ==>
+     (∃bs'' ms''.
+        ((comptraces ((bir_mrel p) || MTrn) (bs,as) (bs'',as'')) = (comptraces (arm8_mrel || MTrn) (ms,as) (ms'',as'')))
      )
      ``,
      rpt strip_tac >>
-  IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm >>
-  FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION] >>
+  IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm >>             
+  IMP_RES_TAC lifted_to_traces_eventS_thm >>
+  Q.EXISTS_TAC `bs''` >>
+  Q.EXISTS_TAC `ms''` >>
+  ‘traces MTrn as as'' = traces MTrn as as''’  by (SIMP_TAC std_ss []) >>       
+  SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [binterleave_composition_concrete,binterleave_ts,MAP,IMAGE_DEF,EXTENSION] >>
+  GEN_TAC >>
+  EQ_TAC >-(
+    rpt strip_tac >>
+    Q.EXISTS_TAC `t1` >>
+    Q.EXISTS_TAC `t2` >>
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def] >>
+    IMP_RES_TAC EXTENSION >>
+    PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+    PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+    PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []
+    )(*end of bir to arm8*) >>
+  rpt strip_tac >>
+  Q.EXISTS_TAC `t1` >>
+  Q.EXISTS_TAC `t2` >>
+  FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def] >>
+  IMP_RES_TAC EXTENSION >>
+  PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+  PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+  PAT_X_ASSUM ``!x. A `` (ASSUME_TAC o (Q.SPECL [‘t1’]))>>
+  FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []  
+  )
+
+
+
+
+(*  
+
+                
+  GEN_TAC >>
+  EQ_TAC >-(
+    strip_tac >>
   Induct_on ‘x’ >- (
     metis_tac[bir_mrel_nil,arm8_mrel_nil]
     )(*NIL*) >>
-    GEN_TAC
-FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [TranRelSnocRev]
+    rpt strip_tac >>
 
-                         
+
+        
+    IMP_RES_TAC TranRelSnocRev >>
+    PAT_X_ASSUM ``!s'. A `` (ASSUME_TAC o (Q.SPECL [‘bs'’]))>>
+    PAT_X_ASSUM ``!s'. A `` (ASSUME_TAC o (Q.SPECL [‘bs'’]))>>
+    IMP_RES_TAC bir_mrel_single >>
+    IMP_RES_TAC bir_rel_def >>
+    PAT_X_ASSUM ``!n' lo c_st. A `` (ASSUME_TAC o (Q.SPECL [‘n'’,‘lo’,‘c_st’]))>>
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []>>
+    rw[] >>
+         
+    IMP_RES_TAC arm8_rel_def >>
+    IMP_RES_TAC arm8_mrel_single >>
+    IMP_RES_TAC arm8_mrel_moveForw >>
+    PAT_X_ASSUM ``!ms' mev. A `` (ASSUME_TAC o (Q.SPECL [‘ms'''’,‘x'’]))>>
+    PAT_X_ASSUM ``!ms'' me. A `` (ASSUME_TAC o (Q.SPECL [‘ms'’,‘c_addr_labels’]))>>
+    ASSUME_TAC (ISPECL [``(ms':arm8_state)``, ``(c_addr_labels:num)``, ``(ms':arm8_state)``] arm8_rel_def) >>
+    
+    RES_TAC
+
+               
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [FUNPOW_OPT_def,arithmeticTheory.FUNPOW] >>
+                  rw[option_case_def]
+    ASSUME_TAC (ISPECL [``((λx. option_CASE x NONE arm8_bmr.bmr_step_fun):(arm8_state option -> arm8_state option))``, ‘(SOME ms'):arm8_state option’, ``(c_addr_labels:num)``, ``(SOME ms'):arm8_state option``] step_n_def) >> 
+                  
+                  rw[]
+)(*bir to arm8*)                         
 
 Cases_on ‘c_addr_labels’
         
@@ -563,13 +378,7 @@ bir_program_terminationTheory???
 
 bir_backlifterTheory.arm8_triple_def
 
-
-
-
-
-  
-                        
-   (*  
+                 
 val compose_bir_attacker_vs_sbir_DY_thm = store_thm(
   "compose_bir_attacker_vs_sbir_DY_thm",
   ``∀T0 Re0 NRe0 i Re NRe Tre
@@ -605,7 +414,61 @@ val compose_bir_attacker_vs_sbir_DY_thm = store_thm(
    (comptraces (MTrn1,Ded1) (MTrn2,Ded2) Ded3 (Sym,P,S1,S2) (Sym',P',S1',S2'))
 ) ``
 
-  
+
+
+val lifted_to_traces_thm = store_thm(
+  "lifted_to_traces_thm",
+  ``!mu bs bs' ms ms' mla (p:'a bir_program_t)
+      mms n' lo c_st c_addr_labels.
+    bir_is_lifted_prog arm8_bmr mu mms p ==>
+    bmr_rel arm8_bmr bs ms ==>
+    MEM (BL_Address mla) (bir_labels_of_program p) ==>
+    (bs.bst_pc = bir_block_pc (BL_Address mla)) ==>
+    EVERY (bmr_ms_mem_contains arm8_bmr ms) mms ==>
+    (bir_exec_to_addr_label_n p bs n' =
+         BER_Ended lo c_st c_addr_labels bs') ==>
+    ~bir_state_is_terminated bs ==>
+    ~bir_state_is_terminated bs' ==>
+     (
+        (traces (bir_mrel p) bs bs') = (traces arm8_mrel ms ms')
+     )
+     ``,
+     rpt strip_tac >>
+  IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm >>
+  FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION] >>
+  GEN_TAC >>
+  EQ_TAC >-(
+    strip_tac >>
+  Induct_on ‘x’ >- (
+    metis_tac[bir_mrel_nil,arm8_mrel_nil]
+    )(*NIL*) >>
+    rpt strip_tac >>
+    IMP_RES_TAC TranRelSnocRev >>
+    PAT_X_ASSUM ``!s'. A `` (ASSUME_TAC o (Q.SPECL [‘bs’]))>>
+    PAT_X_ASSUM ``!s'. A `` (ASSUME_TAC o (Q.SPECL [‘bs'’]))>>
+    RES_TAC >>
+    IMP_RES_TAC bir_mrel_single >>
+    IMP_RES_TAC bir_rel_def >>
+    PAT_X_ASSUM ``!n' lo c_st. A `` (ASSUME_TAC o (Q.SPECL [‘n'’,‘lo’,‘c_st’]))>>
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []>>
+    rw[] >>
+    IMP_RES_TAC arm8_rel_def >>
+    IMP_RES_TAC arm8_mrel_single >>
+    IMP_RES_TAC arm8_mrel_moveForw >>
+    PAT_X_ASSUM ``!ms' mev. A `` (ASSUME_TAC o (Q.SPECL [‘ms'''’,‘x'’]))>>
+    PAT_X_ASSUM ``!ms'' me. A `` (ASSUME_TAC o (Q.SPECL [‘ms'’,‘c_addr_labels’]))>>
+    ASSUME_TAC (ISPECL [``(ms':arm8_state)``, ``(c_addr_labels:num)``, ``(ms':arm8_state)``] arm8_rel_def) >>
+    
+    RES_TAC
+
+               
+    FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [FUNPOW_OPT_def,arithmeticTheory.FUNPOW] >>
+                  rw[option_case_def]
+    ASSUME_TAC (ISPECL [``((λx. option_CASE x NONE arm8_bmr.bmr_step_fun):(arm8_state option -> arm8_state option))``, ‘(SOME ms'):arm8_state option’, ``(c_addr_labels:num)``, ``(SOME ms'):arm8_state option``] step_n_def) >> 
+                  
+                  rw[]
+)(*bir to arm8*)                         
+    
 *)
 
 val _ = export_theory();

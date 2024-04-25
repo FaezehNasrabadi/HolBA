@@ -174,11 +174,6 @@ val compose_arm8_bir_vs_attacker_thm = store_thm(
   FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) []  
   )
 
-
-val compose_arm8_bir_vs_attacker_event_thm =
-  INST_TYPE
-    [Type.beta |-> ``:Type.alpha``]
-    compose_arm8_bir_vs_attacker_thm;
                         
 val arch_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 0);
 val arch_def = Define `

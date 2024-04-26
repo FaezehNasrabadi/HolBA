@@ -111,7 +111,7 @@ val lifted_to_traces_thm = store_thm(
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
      (∃bs'' ms''.
-        (traces (bir_mrel p) bs bs'') = (traces arm8_mrel ms ms'')
+        (traces arm8_mrel ms ms'') = (traces (bir_mrel p) bs bs'')
      )
      ``,
      FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION] >>
@@ -122,15 +122,30 @@ val lifted_to_traces_thm = store_thm(
   metis_tac[bmr_rel_to_mrel]
 )
 
-val lifted_to_traces_eventS_thm =
+val lifted_to_traces_event_thm =
   INST_TYPE
-    [Type.beta |-> ``:'ceventS``]
+    [Type.beta |-> ``:'ceventS``,Type.alpha |-> ``:'cevent``]
     lifted_to_traces_thm;
+
+val arm8_att_comptraces_thm =
+INST_TYPE [``:'cevent1`` |-> ``:'cevent``,``:'cevent2`` |-> ``:'attevent``,``:'cstate1`` |-> ``:arm8_state``,``:'cstate2`` |-> ``:'cstate``] interleavingconcreteTheory.comptraces_def;
+val arm8_att_comptraces_t = (fst o strip_comb o fst o dest_eq o snd o strip_forall o concl) arm8_att_comptraces_thm;
+val arm8_att_comptraces_def = Define `
+    arm8_att_comptraces = ^(arm8_att_comptraces_t)
+                               `;
+
+val bir_att_comptraces_thm =
+INST_TYPE [``:'cevent1`` |-> ``:'cevent``,``:'cevent2`` |-> ``:'attevent``,``:'cstate1`` |-> ``:bir_state_t``,``:'cstate2`` |-> ``:'cstate``] interleavingconcreteTheory.comptraces_def;
+val bir_att_comptraces_t = (fst o strip_comb o fst o dest_eq o snd o strip_forall o concl) bir_att_comptraces_thm;
+val bir_att_comptraces_def = Define `
+    bir_att_comptraces = ^(bir_att_comptraces_t)
+                               `;
+                                
 
 val compose_arm8_bir_vs_attacker_thm = store_thm(
   "compose_arm8_bir_vs_attacker_thm",
   ``!mu bs bs' ms mla (p:'observation_type bir_program_t)
-      mms n' lo c_st c_addr_labels (MTrn:('cevent + 'ceventS, 'cstate) mctrel) as as''.
+      mms n' lo c_st c_addr_labels (MTrn:('attevent + 'ceventS, 'cstate) mctrel) as as''.
     bir_is_lifted_prog arm8_bmr mu mms p ==>
     bmr_rel arm8_bmr bs ms ==>
     MEM (BL_Address mla) (bir_labels_of_program p) ==>
@@ -140,13 +155,14 @@ val compose_arm8_bir_vs_attacker_thm = store_thm(
          BER_Ended lo c_st c_addr_labels bs') ==>
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
-     (∃bs'' ms''.
-        ((comptraces ((bir_mrel p) || MTrn) (bs,as) (bs'',as'')) = (comptraces (arm8_mrel || MTrn) (ms,as) (ms'',as'')))
+     (∃(bs'':bir_state_t) (ms'':arm8_state).
+        ((arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel p) || MTrn) (bs,as) (bs'',as'')))
      )
      ``,
-     rpt strip_tac >>
+     rewrite_tac[bir_att_comptraces_def,arm8_att_comptraces_def] >>
+  rpt strip_tac >>
   IMP_RES_TAC bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm >>             
-  IMP_RES_TAC lifted_to_traces_eventS_thm >>
+  IMP_RES_TAC lifted_to_traces_event_thm >>
   Q.EXISTS_TAC `bs''` >>
   Q.EXISTS_TAC `ms''` >>
   ‘traces MTrn as as'' = traces MTrn as as''’  by (SIMP_TAC std_ss []) >>       
@@ -199,10 +215,12 @@ val birprog_def = Define `
 val lifter_thm = REWRITE_RULE [GSYM arch_def,GSYM interval_def,GSYM arm8prog_def,GSYM birprog_def] XORexampleTheory.XORexample_thm;
 val lifter_t = concl lifter_thm;
 
+val compose_arm8_bir_vs_attacker_comptrace_thm = REWRITE_RULE [GSYM bir_att_comptraces_thm, GSYM arm8_att_comptraces_def] compose_arm8_bir_vs_attacker_thm;
 
+    
 val compose_example_vs_attacker_thm = store_thm(
   "compose_example_vs_attacker_thm",
-  ``!bs bs' ms mla n' lo c_st c_addr_labels (MTrn:('cevent + 'ceventS, 'cstate) mctrel) as as''.
+  ``!bs bs' ms mla n' lo c_st c_addr_labels (MTrn:('attevent + 'ceventS, 'cstate) mctrel) as as''.
     ^lifter_t ==>
     bmr_rel arch bs ms ==>
     MEM (BL_Address mla) (bir_labels_of_program (birprog:'observation_type bir_program_t)) ==>
@@ -212,13 +230,13 @@ val compose_example_vs_attacker_thm = store_thm(
          BER_Ended lo c_st c_addr_labels bs') ==>
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
-     (∃bs'' ms''.
-        ((comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || MTrn) (bs,as) (bs'',as'')) = (comptraces (arm8_mrel || MTrn) (ms,as) (ms'',as'')))
+     (∃(bs'':bir_state_t) (ms'':arm8_state).
+        ((arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || MTrn) (bs,as) (bs'',as'')))
      )
      ``,
      rewrite_tac[arch_def] >>
   REPEAT STRIP_TAC >>
-  ASSUME_TAC (ISPECL [``interval:64 word_interval_t``,``bs:bir_state_t``,``bs':bir_state_t``,``ms:arm8_state``,``mla:bir_imm_t``,``birprog:'observation_type bir_program_t``,``arm8prog:((64 word)# (8 word) list) list``,``n':num``,``lo:(num # 'observation_type) list``,``c_st:num``,``c_addr_labels:num``,``MTrn:('cevent + 'ceventS, 'cstate) mctrel``,``as:'cstate``,``as'':'cstate``] compose_arm8_bir_vs_attacker_thm) >> 
+  ASSUME_TAC (ISPECL [``interval:64 word_interval_t``,``bs:bir_state_t``,``bs':bir_state_t``,``ms:arm8_state``,``mla:bir_imm_t``,``birprog:'observation_type bir_program_t``,``arm8prog:((64 word)# (8 word) list) list``,``n':num``,``lo:(num # 'observation_type) list``,``c_st:num``,``c_addr_labels:num``,``MTrn:('attevent + 'ceventS, 'cstate) mctrel``,``as:'cstate``,``as'':'cstate``] compose_arm8_bir_vs_attacker_thm) >> 
   REV_FULL_SIMP_TAC std_ss [] >>
   Q.EXISTS_TAC `bs''` >>
   Q.EXISTS_TAC `ms''` >>

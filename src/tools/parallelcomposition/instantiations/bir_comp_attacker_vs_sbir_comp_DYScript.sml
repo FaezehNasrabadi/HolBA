@@ -46,55 +46,76 @@ val sbir_DY_comptraces_def =
 INST_TYPE [``:'symb`` |-> ``:Var_t``,``:'pred1`` |-> ``:'SPpred``,``:'state1`` |-> ``:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree``,``:'event1`` |-> ``:sbir_event``,``:'pred2`` |-> ``:DYpred``,``:'state2`` |-> ``:DYstate``,``:'event2`` |-> ``:DYnsyc_event``,``:'eventS`` |-> ``:(Name_t, Var_t) sync_event``] derived_rules_generaldeductionTheory.comptraces_def;
 val sbir_DY_comptraces_t = (fst o strip_comb o fst o dest_eq o snd o strip_forall o concl) sbir_DY_comptraces_def;
 
+
+
 val compose_bir_attacker_vs_sbir_DY_thm = store_thm(
   "compose_bir_attacker_vs_sbir_DY_thm",
   ``
-  ∀(T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (SBIR:((sbir_event + (Name_t, Var_t) sync_event), 'SPpred, (sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree, Var_t) mtrel) (sbir_Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
+  ∀(Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (birprog:'observation_type bir_program_t) (AMTrn:('cevent + 'ceventS, 'cstate) mctrel) (sbir_Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
 
         (
      (subset_one
-      (^bir_traces_t ((InterpretRelOne:(((sbir_event + (Name_t, Var_t) sync_event), 'SPpred, (sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree, Var_t) mtrel # ('SPpred) tded) -> ('a + 'ceventS, bir_state_t) mctrel) (SBIR,sbir_Ded)) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre))
-      (^sbir_traces_t (SBIR,sbir_Ded) (Sym,(IMAGE OUTL P),T0) (Sym',(IMAGE OUTL P'),Tre))) ∧
+      (^bir_traces_t (bir_mrel (birprog:'observation_type bir_program_t)) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre))
+      (^sbir_traces_t (symbolic_tree_multi_transitions_with_symb,sbir_Ded) (Sym,(IMAGE OUTL P),T0) (Sym',(IMAGE OUTL P'),Tre))) ∧
      (subset_two
-      (^att_traces_t ((InterpretRelTwo:(( DYnsyc_event + (Name_t, Var_t) sync_event, DYpred, DYstate, Var_t) mtrel # (DYpred) tded) -> ( 'cevent + 'ceventS, 'cstate) mctrel) (DYmultranrel,DYdeduction)) ((InterpretStTwo:DYstate -> 'cstate) ESt) ((InterpretStTwo:DYstate -> 'cstate) ESt))
+      (^att_traces_t AMTrn ((InterpretStTwo:DYstate -> 'cstate) ESt) ((InterpretStTwo:DYstate -> 'cstate) ESt))
       (^DY_traces_t (DYmultranrel,DYdeduction) (Sym,(IMAGE OUTR P),ESt) (Sym',(IMAGE OUTR P'),ESt)))
 ) ==>
 (subset_comp
-   (^bir_att_comptraces_t (composeMuRe ((InterpretRelOne:(((sbir_event + (Name_t, Var_t) sync_event), 'SPpred, (sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree, Var_t) mtrel # ('SPpred) tded) -> ('a + 'ceventS, bir_state_t) mctrel) (SBIR,sbir_Ded)) ((InterpretRelTwo:(( DYnsyc_event + (Name_t, Var_t) sync_event, DYpred, DYstate, Var_t) mtrel # (DYpred) tded) -> ( 'cevent + 'ceventS, 'cstate) mctrel) (DYmultranrel,DYdeduction))) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt)) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
-   (^sbir_DY_comptraces_t (SBIR,sbir_Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
+   (^bir_att_comptraces_t (composeMuRe (bir_mrel (birprog:'observation_type bir_program_t)) AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt)) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+   (^sbir_DY_comptraces_t (symbolic_tree_multi_transitions_with_symb,sbir_Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
 )
 ``,
-metis_tac[compose_vs_modules_conc_symb_thm]
+rewrite_tac[interleavingconcreteTheory.binterleave_composition_concrete,binterleave_composition_generaldeduction,interleavingconcreteTheory.binterleave_ts,interleavinggeneraldeductionTheory.binterleave_ts,derived_rules_generaldeductionTheory.traces_def,interleavingconcreteTheory.traces_def]>>
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [subset_one_def,subset_two_def,subset_comp_def]>>
+  rw[] >>
+  PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`((RevInterpretEvTwoSyn:('cevent + 'ceventS) list -> (DYnsyc_event + (Name_t, Var_t) sync_event) option list) (t2:(('cevent+'ceventS) list)))`]))>>
+  PAT_X_ASSUM ``!x. A`` (ASSUME_TAC o (Q.SPECL [`((RevInterpretEvOneSyn:('a + 'ceventS) list -> (sbir_event + (Name_t, Var_t) sync_event) option list) (t1:(('a + 'ceventS) list)))`]))>>
+  FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [applyfunEvOneSyn,applyfunEvTwoSyn]>>            
+  RES_TAC>>
+  Q.EXISTS_TAC `((RevInterpretEvOneSyn:('a + 'ceventS) list -> (sbir_event + (Name_t, Var_t) sync_event) option list) t1)` >>
+  Q.EXISTS_TAC `((RevInterpretEvTwoSyn:('cevent + 'ceventS) list -> (DYnsyc_event + (Name_t, Var_t) sync_event) option list) t2)` >>
+  metis_tac[binterl_Rev]
 );
 
 
 
 
-(*
-
-
-val compose_bir_attacker_vs_sbir_DY_thm = store_thm(
-  "compose_bir_attacker_vs_sbir_DY_thm",
-  ``∀(T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (birprog:'observation_type bir_program_t) (AMTrn:('cevent + 'ceventS, 'cstate) mctrel) (as: 'cstate) (as': 'cstate) (bs: bir_state_t) (bs': bir_state_t) (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (SBIR:((sbir_event + (Name_t, Var_t) sync_event), 'SPpred, (sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree, Var_t) mtrel) (sbir_Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
-
-        (
-        (subset_one
-         ((bir_traces ((bir_mrel birprog):('a + 'ceventS, bir_state_t) mctrel) bs bs'):('a + 'cevetS) list -> bool)
-         ((sbir_traces (SBIR,sbir_Ded) (Sym,(IMAGE OUTL P),T0) (Sym',(IMAGE OUTL P'),Tre)):(sbir_event + (Name_t, Var_t) sync_event) option list -> bool)) ∧
-        (subset_two
-         (att_traces AMTrn as as')
-         (DY_traces (DYmultranrel,DYdeduction) (Sym,(IMAGE OUTR P),ESt) (Sym',(IMAGE OUTR P'),ESt)))
-        ) ==> (
-      subset_comp
-      (bir_att_comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || AMTrn) (bs,as) (bs',as'))
-      (sbir_DY_comptraces (SBIR,sbir_Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
-      ) ``,
 
 
 
 
-  );
 
-*)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 val _ = export_theory();

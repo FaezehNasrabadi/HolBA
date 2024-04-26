@@ -14,7 +14,7 @@ open messagesTheory;
 open dolevyaoTheory;
 open arm8_vs_bir_comp_attackerTheory;
 open traceinclusionTheory;
-open XORexampleTheory;
+open WinitexampleTheory;
 val _ = new_theory "bir_comp_attacker_vs_sbir_comp_DY";
 
 val bir_traces_thm =
@@ -92,7 +92,7 @@ rewrite_tac[interleavingconcreteTheory.binterleave_composition_concrete,binterle
 );
 
         
-val birprog_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 3);
+val birprog_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 3);
 val birprog_def = Define `
     birprog = ^(birprog_t)
 `;

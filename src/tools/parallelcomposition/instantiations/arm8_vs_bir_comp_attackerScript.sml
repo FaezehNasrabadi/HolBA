@@ -192,31 +192,29 @@ val compose_arm8_bir_vs_attacker_thm = store_thm(
   )
 
                         
-val arch_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 0);
+val arch_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 0);
 val arch_def = Define `
     arch = ^(arch_t)
                 `;
                 
-val interval_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 1);
+val interval_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 1);
 val interval_def = Define `
     interval = ^(interval_t)
                 `;
                 
-val arm8prog_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 2);
+val arm8prog_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 2);
 val arm8prog_def = Define `
     arm8prog = ^(arm8prog_t)
              `;
 
-val birprog_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 3);
+val birprog_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 3);
 val birprog_def = Define `
     birprog = ^(birprog_t)
 `;
 
 
-val lifter_thm = REWRITE_RULE [GSYM arch_def,GSYM interval_def,GSYM arm8prog_def,GSYM birprog_def] XORexampleTheory.XORexample_thm;
+val lifter_thm = REWRITE_RULE [GSYM arch_def,GSYM interval_def,GSYM arm8prog_def,GSYM birprog_def] WinitexampleTheory.Winitexample_thm;
 val lifter_t = concl lifter_thm;
-
-val compose_arm8_bir_vs_attacker_comptrace_thm = REWRITE_RULE [GSYM bir_att_comptraces_thm, GSYM arm8_att_comptraces_def] compose_arm8_bir_vs_attacker_thm;
 
     
 val compose_example_vs_attacker_thm = store_thm(

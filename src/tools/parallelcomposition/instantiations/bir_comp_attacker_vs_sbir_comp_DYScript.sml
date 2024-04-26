@@ -14,6 +14,7 @@ open messagesTheory;
 open dolevyaoTheory;
 open arm8_vs_bir_comp_attackerTheory;
 open traceinclusionTheory;
+open XORexampleTheory;
 val _ = new_theory "bir_comp_attacker_vs_sbir_comp_DY";
 
 val bir_traces_def =
@@ -78,44 +79,33 @@ rewrite_tac[interleavingconcreteTheory.binterleave_composition_concrete,binterle
   metis_tac[binterl_Rev]
 );
 
+        
+val birprog_t = List.nth((snd o strip_comb o concl) XORexampleTheory.XORexample_thm, 3);
+val birprog_def = Define `
+    birprog = ^(birprog_t)
+`;
 
+       
+val compose_birexample_attacker_vs_sbir_DY_thm = store_thm(
+  "compose_birexample_attacker_vs_sbir_DY_thm",
+  ``
+  ∀(Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (AMTrn:('cevent + 'ceventS, 'cstate) mctrel) (sbir_Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        (
+     (subset_one
+      (^bir_traces_t (bir_mrel (birprog:'observation_type bir_program_t)) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre))
+      (^sbir_traces_t (symbolic_tree_multi_transitions_with_symb,sbir_Ded) (Sym,(IMAGE OUTL P),T0) (Sym',(IMAGE OUTL P'),Tre))) ∧
+     (subset_two
+      (^att_traces_t AMTrn ((InterpretStTwo:DYstate -> 'cstate) ESt) ((InterpretStTwo:DYstate -> 'cstate) ESt))
+      (^DY_traces_t (DYmultranrel,DYdeduction) (Sym,(IMAGE OUTR P),ESt) (Sym',(IMAGE OUTR P'),ESt)))
+) ==>
+(subset_comp
+   (^bir_att_comptraces_t (composeMuRe (bir_mrel (birprog:'observation_type bir_program_t)) AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt)) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+   (^sbir_DY_comptraces_t (symbolic_tree_multi_transitions_with_symb,sbir_Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
+)
+``,
+metis_tac[compose_bir_attacker_vs_sbir_DY_thm]
+);
 
 
 val _ = export_theory();

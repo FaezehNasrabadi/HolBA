@@ -23,7 +23,9 @@ open WrespexampleTheory;
 val _ = new_theory "instantiations";
 
 
-
+(********************************)
+(*end to end correctness result *)                                               
+(********************************)
 
 val end_to_end_correctness_thm = store_thm(
   "end_to_end_correctness_thm",
@@ -70,6 +72,10 @@ val end_to_end_correctness_thm = store_thm(
   metis_tac[comptraces_sapic_vs_DY_EQ_sapic_plus_traces_thm]
   )
 
+                                                
+(*******************************)
+(*end to end correctness Winit *)                                               
+(*******************************)
 
 val arch_Winit_t = List.nth((snd o strip_comb o concl) WinitexampleTheory.Winitexample_thm, 0);
 val arch_Winit_def = Define `
@@ -135,9 +141,72 @@ val end_to_end_correctness_Winit_thm = store_thm(
   )
 
 
+(*******************************)
+(*end to end correctness Wresp *)                                               
+(*******************************)
+
+val arch_Wresp_t = List.nth((snd o strip_comb o concl) WrespexampleTheory.Wrespexample_thm, 0);
+val arch_Wresp_def = Define `
+    arch_Wresp = ^(arch_Wresp_t)
+                `;
+                
+val interval_Wresp_t = List.nth((snd o strip_comb o concl) WrespexampleTheory.Wrespexample_thm, 1);
+val interval_Wresp_def = Define `
+    interval_Wresp = ^(interval_Wresp_t)
+                `;
+                
+val arm8prog_Wresp_t = List.nth((snd o strip_comb o concl) WrespexampleTheory.Wrespexample_thm, 2);
+val arm8prog_Wresp_def = Define `
+    arm8prog_Wresp = ^(arm8prog_Wresp_t)
+             `;
+
+val birprog_Wresp_t = List.nth((snd o strip_comb o concl) WrespexampleTheory.Wrespexample_thm, 3);
+val birprog_Wresp_def = Define `
+    birprog_Wresp = ^(birprog_Wresp_t)
+`;
 
 
+val lifter_Wresp_thm = REWRITE_RULE [GSYM arch_Wresp_def,GSYM interval_Wresp_def,GSYM arm8prog_Wresp_def,GSYM birprog_Wresp_def] WrespexampleTheory.Wrespexample_thm;
+val lifter_Wresp_t = concl lifter_Wresp_thm;
 
+
+val end_to_end_correctness_Wresp_thm = store_thm(
+  "end_to_end_correctness_Wresp_thm",
+  ``
+  !mu ms mla n' lo c_st c_addr_labels
+      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool))
+      (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool))
+      (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
+
+    ^lifter_Wresp_t ==>
+    bmr_rel arch_Wresp ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ms ==>
+    MEM (BL_Address mla) (bir_labels_of_program (birprog_Wresp:'observation_type bir_program_t)) ==>
+    (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0).bst_pc = bir_block_pc (BL_Address mla)) ==>
+    EVERY (bmr_ms_mem_contains arch_Wresp ms) arm8prog_Wresp ==>
+    (bir_exec_to_addr_label_n (birprog_Wresp:'observation_type bir_program_t) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) n' =
+     BER_Ended lo c_st c_addr_labels ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre)) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre) ==>
+    (∃ms'.
+       (
+       (arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
+       (bir_att_comptraces ((bir_mrel (birprog_Wresp:'observation_type bir_program_t)) || AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt))  (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+       )
+       ==>
+       (subset_comp
+        (bir_att_comptraces (composeMuRe (bir_mrel (birprog_Wresp:'observation_type bir_program_t)) AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt)) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+        (comptraces_tree (symbolic_tree_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
+       ) ==>
+       ((IMAGE (MAP sbirEvent_vs_DY_to_sapicFact_vs_DY) (comptraces_tree (symbolic_tree_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))) ⊆
+        (comptraces_sapic (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((symbtree_to_sapic Tre),i,Re,NRe)),ESt))
+       ) ==>
+       (comptraces (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((symbtree_to_sapic Tre),i,Re,NRe)),ESt)) =
+       (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus ((symbtree_to_sapic T0),0,Re0,NRe0))) (Sym',P',(Pconfig_plus ((symbtree_to_sapic Tre),i,Re,NRe))))
+    )
+
+    ``,
+  metis_tac[arch_Wresp_def,end_to_end_correctness_thm]
+  )
 
 
 

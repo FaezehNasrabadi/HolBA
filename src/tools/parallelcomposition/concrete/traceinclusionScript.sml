@@ -12,6 +12,8 @@ val _ = new_theory "traceinclusion";
     
 val _ = Theory.new_constant("InterpretStOne", ``:'state1 -> 'cstate1``);
 
+val _ = Theory.new_constant("RevInterpretStOne", ``:'cstate1 -> 'state1``);
+
 val _ = Theory.new_constant("InterpretEvOne", ``:'event1 -> 'cevent1``);
 
 val _ = Theory.new_constant("InterpretStTwo", ``:'state2 -> 'cstate2``);
@@ -35,6 +37,9 @@ val _ = Theory.new_constant("RevInterpretEvTwoSyn", ``:('cevent2 + 'ceventS) lis
 val _ = Theory.new_constant("InterpretEvComp", ``:(('event1+'eventS) + ('event2 +'eventS)) option list -> (('cevent1+'ceventS) + ('cevent2 +'ceventS)) list``);
 
 
+val applyfunStOne = new_axiom ("applyfunStOne",
+                                  ``∀(t:'state1). (RevInterpretStOne:'cstate1 -> 'state1) ((InterpretStOne:'state1 -> 'cstate1) t) = t``);
+                                  
 val applyfunEvOneSyn = new_axiom ("applyfunEvOneSyn",
                                   ``∀t. (InterpretEvOneSyn:('event1 + 'eventS) option list -> ('cevent1 + 'ceventS) list) ((RevInterpretEvOneSyn:('cevent1 + 'ceventS) list -> ('event1 + 'eventS) option list) t) = t``);
 

@@ -63,7 +63,8 @@ End
 (* NOTATION: FROM PROOF-PRODUCING SYMBOLIC EXECUTION -- adjusted/generalized from "bir_backlifterTheory.bir_is_lifted_prog_MULTI_STEP_EXEC_compute" *)
 (* =================================================================================== *)
 val bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm =
-  prove(
+  store_thm(
+  "bir_is_lifted_prog_MULTI_STEP_EXEC_compute_GEN_thm",
   ``!mu bs bs' ms mla (p:'observation_type bir_program_t) (r:('c, 'd, 'b) bir_lifting_machine_rec_t)
       mms n' lo c_st c_addr_labels.
     bir_is_lifted_prog r mu mms p ==>
@@ -122,7 +123,7 @@ val lifted_to_traces_thm = store_thm(
   metis_tac[bmr_rel_to_mrel]
 )
 
-val lifted_to_traces_event_thm =
+val lifted_to_traces_event_thm = 
   INST_TYPE
     [Type.beta |-> ``:'ceventS``,Type.alpha |-> ``:'cevent``]
     lifted_to_traces_thm;

@@ -29,22 +29,22 @@ val _ = new_theory "arm8_vs_bir_comp_attacker";
 
 Inductive arm8_mrel:
 [~nil:]
-  (arm8_mrel ms ([]:('cevent + 'ceventS) list) ms) /\
+  (arm8_mrel m ms ([]:('cevent + 'ceventS) list) ms) /\
 [~moveForw:]
   (
-  ((arm8_mrel ms (mev:('cevent + 'ceventS) list) ms'')∧(arm8_mrel ms'' ([me]:('cevent + 'ceventS) list) ms'))
-  ==> (arm8_mrel ms ((me::mev):('cevent + 'ceventS) list) ms')
+  ((arm8_mrel m ms (mev:('cevent + 'ceventS) list) ms'')∧(arm8_mrel m ms'' ([me]:('cevent + 'ceventS) list) ms'))
+  ==> (arm8_mrel m ms ((me::mev):('cevent + 'ceventS) list) ms')
   )/\
 [~moveBack:]
   (
-  ((arm8_mrel ms ((me::mev):('cevent + 'ceventS) list) ms')∧(arm8_mrel ms'' ([me]:('cevent + 'ceventS) list) ms'))
-  ==> (arm8_mrel ms (mev:('cevent + 'ceventS) list) ms'')
+  ((arm8_mrel m ms ((me::mev):('cevent + 'ceventS) list) ms')∧(arm8_mrel m ms'' ([me]:('cevent + 'ceventS) list) ms'))
+  ==> (arm8_mrel m ms (mev:('cevent + 'ceventS) list) ms'')
   )
 End                                
 
 Inductive bir_mrel:
 [~nil:]
- (bir_mrel p bs ([]:('cevent + 'ceventS) list) bs) /\
+ (bir_mrel birprog bs ([]:('cevent + 'ceventS) list) bs) /\
 [~moveForw:]
   (
   ((bir_mrel birprog bs (bev:('cevent + 'ceventS) list) bs'')∧(bir_mrel birprog bs ([be]:('cevent + 'ceventS) list) bs'))
@@ -95,13 +95,13 @@ REV_FULL_SIMP_TAC (std_ss++holBACore_ss) [bir_programTheory.bir_state_is_termina
 );
 
 val bmr_rel_to_mrel = new_axiom ("bmr_rel_to_mrel",
-``∀p r bs ms bs' ms' (x:('cevent + 'ceventS) list).
-     ((bmr_rel r bs ms)∧(bmr_rel r bs' ms')) ⇔ ((bir_mrel p bs x bs')∧(arm8_mrel ms x ms'))``)
+``∀p m r bs ms bs' ms' (x:('cevent + 'ceventS) list).
+     ((bmr_rel r bs ms)∧(bmr_rel r bs' ms')) ⇔ ((bir_mrel p bs x bs')∧(arm8_mrel m ms x ms'))``)
      
 val lifted_to_traces_thm = store_thm(
   "lifted_to_traces_thm",
   ``!mu bs bs' ms mla (p:'observation_type bir_program_t)
-      mms n' lo c_st c_addr_labels.
+      (mms:((64 word)# (8 word) list) list) n' lo c_st c_addr_labels.
     bir_is_lifted_prog arm8_bmr mu mms p ==>
     bmr_rel arm8_bmr bs ms ==>
     MEM (BL_Address mla) (bir_labels_of_program p) ==>
@@ -112,7 +112,7 @@ val lifted_to_traces_thm = store_thm(
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
      (∃bs'' ms''.
-        (traces arm8_mrel ms ms'') = (traces (bir_mrel p) bs bs'')
+        (traces (arm8_mrel mms) ms ms'') = (traces (bir_mrel p) bs bs'')
      )
      ``,
      FULL_SIMP_TAC (std_ss++listSimps.LIST_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss++abstract_hoare_logicSimps.bir_wm_SS++holBACore_ss) [traces_def,MAP,IMAGE_DEF,EXTENSION] >>
@@ -146,7 +146,7 @@ val bir_att_comptraces_def = Define `
 val compose_arm8_bir_vs_attacker_thm = store_thm(
   "compose_arm8_bir_vs_attacker_thm",
   ``!mu bs bs' ms mla (p:'observation_type bir_program_t)
-      mms n' lo c_st c_addr_labels (MTrn:('attevent + 'ceventS, 'cstate) mctrel) as as''.
+      (mms:((64 word)# (8 word) list) list) n' lo c_st c_addr_labels (MTrn:('attevent + 'ceventS, 'cstate) mctrel) as as''.
     bir_is_lifted_prog arm8_bmr mu mms p ==>
     bmr_rel arm8_bmr bs ms ==>
     MEM (BL_Address mla) (bir_labels_of_program p) ==>
@@ -157,7 +157,7 @@ val compose_arm8_bir_vs_attacker_thm = store_thm(
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
      (∃(bs'':bir_state_t) (ms'':arm8_state).
-        ((arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel p) || MTrn) (bs,as) (bs'',as'')))
+        ((arm8_att_comptraces (((arm8_mrel mms):arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel p) || MTrn) (bs,as) (bs'',as'')))
      )
      ``,
      rewrite_tac[bir_att_comptraces_def,arm8_att_comptraces_def] >>
@@ -230,7 +230,7 @@ val compose_example_vs_attacker_thm = store_thm(
     ~bir_state_is_terminated bs ==>
     ~bir_state_is_terminated bs' ==>
      (∃(bs'':bir_state_t) (ms'':arm8_state).
-        ((arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || MTrn) (bs,as) (bs'',as'')))
+        ((arm8_att_comptraces (((arm8_mrel arm8prog):arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || MTrn) (ms,as) (ms'',as'')) = (bir_att_comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || MTrn) (bs,as) (bs'',as'')))
      )
      ``,
      rewrite_tac[arch_def] >>

@@ -30,23 +30,23 @@ val _ = new_theory "instantiations";
 val end_to_end_correctness_thm = store_thm(
   "end_to_end_correctness_thm",
   ``
-  !mu ms mla (birprog:'observation_type bir_program_t)  mms n' lo c_st c_addr_labels
-      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool))
+  !mu ms mla (birprog:'observation_type bir_program_t) (arm8prog:((64 word)# (8 word) list) list) n' lo c_st c_addr_labels
+      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe (Sym:(Var_t -> bool))
       (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool))
       (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
 
-    bir_is_lifted_prog arm8_bmr mu mms birprog ==>
+    bir_is_lifted_prog arm8_bmr mu arm8prog birprog ==>
     bmr_rel arm8_bmr ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ms ==>
     MEM (BL_Address mla) (bir_labels_of_program birprog) ==>
     (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0).bst_pc = bir_block_pc (BL_Address mla)) ==>
-    EVERY (bmr_ms_mem_contains arm8_bmr ms) mms ==>
+    EVERY (bmr_ms_mem_contains arm8_bmr ms) arm8prog ==>
     (bir_exec_to_addr_label_n birprog ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) n' =
      BER_Ended lo c_st c_addr_labels ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre)) ==>
     ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0) ==>
     ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre) ==>
     (∃ms'.
        (
-       (arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
+       (arm8_att_comptraces (((arm8_mrel arm8prog):arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
        (bir_att_comptraces ((bir_mrel (birprog:'observation_type bir_program_t)) || AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt))  (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
        )
        ==>
@@ -106,7 +106,7 @@ val end_to_end_correctness_Winit_thm = store_thm(
   "end_to_end_correctness_Winit_thm",
   ``
   !mu ms mla n' lo c_st c_addr_labels
-      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool))
+      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe (Sym:(Var_t -> bool))
       (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool))
       (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
 
@@ -121,7 +121,7 @@ val end_to_end_correctness_Winit_thm = store_thm(
     ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre) ==>
     (∃ms'.
        (
-       (arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
+       (arm8_att_comptraces (((arm8_mrel arm8prog_Winit):arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
        (bir_att_comptraces ((bir_mrel (birprog_Winit:'observation_type bir_program_t)) || AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt))  (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
        )
        ==>
@@ -174,7 +174,7 @@ val end_to_end_correctness_Wresp_thm = store_thm(
   "end_to_end_correctness_Wresp_thm",
   ``
   !mu ms mla n' lo c_st c_addr_labels
-      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool))
+      (AMTrn:('attevent + 'ceventS, 'cstate) mctrel) Re0 NRe0 i Re NRe (Sym:(Var_t -> bool))
       (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool))
       (T0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Tre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
 
@@ -189,7 +189,7 @@ val end_to_end_correctness_Wresp_thm = store_thm(
     ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre) ==>
     (∃ms'.
        (
-       (arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
+       (arm8_att_comptraces (((arm8_mrel arm8prog_Wresp):arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
        (bir_att_comptraces ((bir_mrel (birprog_Wresp:'observation_type bir_program_t)) || AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt))  (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
        )
        ==>
@@ -211,12 +211,58 @@ val end_to_end_correctness_Wresp_thm = store_thm(
 
 
 
+(*
+
+val end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm = store_thm(
+  "end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm",
+  ``
+  !imu rmu ims rms imla rmla in' rn' ilo rlo ic_st rc_st ic_addr_labels rc_addr_labels (AMTrn:('attevent + 'ceventS, 'cstate) mctrel)
+       iRe0 iNRe0 ii iRe iNRe (iT0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (iTre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree)
+       rRe0 rNRe0 ri rRe rNRe (rT0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (rTre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree)
+       (wSym:(Var_t -> bool)) (wSym':(Var_t -> bool)) (wP:('SPpred + 'SPpred -> bool)) (wP':('SPpred + 'SPpred -> bool)) (wDed:('SPpred) tded) (wded3:('SPpred + 'SPpred) tded)
+       (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:(('SPpred + 'SPpred) + DYpred -> bool)) (P':(('SPpred + 'SPpred) + DYpred -> bool)) (Ded:('SPpred + 'SPpred) tded) (ded3:(('SPpred + 'SPpred) + DYpred) tded).
+
+    ^lifter_Winit_t ==>  
+    ^lifter_Wresp_t ==>
+    bmr_rel arch_Winit ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iT0) ims ==>
+    bmr_rel arch_Wresp ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rT0) rms ==>
+    MEM (BL_Address imla) (bir_labels_of_program (birprog_Winit:'observation_type bir_program_t)) ==>
+    (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iT0).bst_pc = bir_block_pc (BL_Address imla)) ==>
+    MEM (BL_Address rmla) (bir_labels_of_program (birprog_Wresp:'observation_type bir_program_t)) ==>
+    (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rT0).bst_pc = bir_block_pc (BL_Address rmla)) ==>
+    EVERY (bmr_ms_mem_contains arch_Winit ims) arm8prog_Winit ==>                              
+    EVERY (bmr_ms_mem_contains arch_Wresp rms) arm8prog_Wresp ==>
+     (bir_exec_to_addr_label_n (birprog_Winit:'observation_type bir_program_t) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iT0) in' =
+     BER_Ended ilo ic_st ic_addr_labels ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iTre)) ==>      
+    (bir_exec_to_addr_label_n (birprog_Wresp:'observation_type bir_program_t) ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rT0) rn' =
+     BER_Ended rlo rc_st rc_addr_labels ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rTre)) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iT0) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rT0) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) iTre) ==>
+    ~bir_state_is_terminated ((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) rTre) ==>
+    (∃ims' rms'.
+       (
+       (arm8_att_comptraces ((arm8_mrel:arm8_state -> ('cevent + 'ceventS) list -> arm8_state -> bool) || AMTrn) (ms,((InterpretStTwo:DYstate -> 'cstate) ESt)) (ms',((InterpretStTwo:DYstate -> 'cstate) ESt))) =
+       (bir_att_comptraces ((bir_mrel (birprog_Wresp:'observation_type bir_program_t)) || AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt))  (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+       )
+       ==>
+       (subset_comp
+        (bir_att_comptraces (composeMuRe (bir_mrel (birprog_Wresp:'observation_type bir_program_t)) AMTrn) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) T0),((InterpretStTwo:DYstate -> 'cstate) ESt)) (((InterpretStOne:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree -> bir_state_t) Tre),((InterpretStTwo:DYstate -> 'cstate) ESt)))
+        (comptraces_tree (symbolic_tree_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))
+       ) ==>
+       ((IMAGE (MAP sbirEvent_vs_DY_to_sapicFact_vs_DY) (comptraces_tree (symbolic_tree_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,T0,ESt) (Sym',P',Tre,ESt))) ⊆
+        (comptraces_sapic (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((symbtree_to_sapic Tre),i,Re,NRe)),ESt))
+       ) ==>
+       (comptraces (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig ((symbtree_to_sapic T0),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((symbtree_to_sapic Tre),i,Re,NRe)),ESt)) =
+       (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus ((symbtree_to_sapic T0),0,Re0,NRe0))) (Sym',P',(Pconfig_plus ((symbtree_to_sapic Tre),i,Re,NRe))))
+    )
+
+    ``,
+  metis_tac[arch_Wresp_def,end_to_end_correctness_thm]
+  )
 
 
-
-
-
-
+*)
 
 
 

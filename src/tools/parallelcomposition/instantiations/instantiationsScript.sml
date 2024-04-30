@@ -250,16 +250,6 @@ Define `
   |  ((INR (INR e)):((sbir_event + (Name_t, Var_t) sync_event) + DYnsyc_event + (Name_t,Var_t) sync_event)) =>  ((INR (INR e)):((SapicFact_t + (Name_t,Var_t) sync_event)+(DYnsyc_event + (Name_t,Var_t) sync_event)))
 )
 `;
-
-
-val sapic_plus_traces_inst_thm =
-INST_TYPE [``:'SPpred`` |-> ``:('SPpred + DYpred) + 'SPpred``] sapic_plus_traces_def;
-val sapic_plus_traces_inst_t = (fst o strip_comb o fst o dest_eq o snd o strip_forall o concl) sapic_plus_traces_inst_thm;
-val sapic_plus_traces_inst_def = Define `
-    sapic_plus_traces_inst = ^(sapic_plus_traces_inst_t)
-`;
-
-
         
 val end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm = store_thm(
   "end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm",
@@ -267,7 +257,6 @@ val end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm = store_thm(
   !imu rmu ims rms imla rmla in' rn' ilo rlo ic_st rc_st ic_addr_labels rc_addr_labels
        (iAMTrn:(('attevent + 'ceventS), 'cstate) mctrel)
        (rAMTrn:(('attevent + 'ceventS), 'cstate) mctrel)
-       Re0 NRe0 i Re NRe
        iRe0 iNRe0 ii iRe iNRe (iT0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (iTre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree)
        rRe0 rNRe0 ri rRe rNRe (rT0:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree) (rTre:(sbir_event, real,(bir_var_t, bir_exp_t) symb_interpret_t) stree)
        (wded3:('SPpred + DYpred) tded) (wDed:('SPpred) tded)
@@ -327,11 +316,11 @@ val end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm = store_thm(
         (Sym',((IMAGE INL P'):(('SPpred + DYpred) + ('SPpred + DYpred) -> bool)),((Pconfig ((symbtree_to_sapic iTre),ii,iRe,iNRe)),ESt),((Pconfig ((symbtree_to_sapic rTre),ri,rRe,rNRe)),ESt)))
        =
        (IMAGE (MAP (OPTION_MAP INL))
-        (comptraces_sapic (sapic_position_multi_transitions_with_symb,wDed) (DYmultranrel,DYdeduction) wded3 (Sym,P,(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),i,Re,NRe)),ESt)))
+        (comptraces_sapic (sapic_position_multi_transitions_with_symb,wDed) (DYmultranrel,DYdeduction) wded3 (Sym,P,(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,(sapic_renaming_extend iRe0 rRe0),(sapic_name_renaming_extend iNRe0 rNRe0))),ESt) (Sym',P',(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),(ii + ri),(sapic_renaming_extend iRe rRe),( sapic_name_renaming_extend iNRe rNRe))),ESt)))
        ) ==>
-       (comptraces (sapic_position_multi_transitions_with_symb,wDed) (DYmultranrel,DYdeduction) wded3 (Sym,P,(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,Re0,NRe0)),ESt) (Sym',P',(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),i,Re,NRe)),ESt)) 
+       (comptraces (sapic_position_multi_transitions_with_symb,wDed) (DYmultranrel,DYdeduction) wded3 (Sym,P,(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,(sapic_renaming_extend iRe0 rRe0),(sapic_name_renaming_extend iNRe0 rNRe0))),ESt) (Sym',P',(Pconfig ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),(ii + ri),(sapic_renaming_extend iRe rRe),(sapic_name_renaming_extend iNRe rNRe))),ESt)) 
        =
-       (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,Re0,NRe0))) (Sym',P',(Pconfig_plus ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),i,Re,NRe))))
+       (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus ((ProcessComb Parallel (symbtree_to_sapic iT0) (symbtree_to_sapic rT0)),0,(sapic_renaming_extend iRe0 rRe0),(sapic_name_renaming_extend iNRe0 rNRe0)))) (Sym',P',(Pconfig_plus ((ProcessComb Parallel (symbtree_to_sapic iTre) (symbtree_to_sapic rTre)),(ii + ri),(sapic_renaming_extend iRe rRe),( sapic_name_renaming_extend iNRe rNRe)))))
     )
 
     ``,
@@ -346,14 +335,6 @@ val end_to_end_correctness_Winit_vs_Wresp_vs_attacker_thm = store_thm(
   rw[] >>
   metis_tac[comptraces_sapic_vs_DY_EQ_sapic_plus_traces_thm]
   )
-
-
-
-
-
-
-
-
 
 
 

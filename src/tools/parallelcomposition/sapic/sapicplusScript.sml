@@ -191,6 +191,16 @@ val sapic_renaming_update_def = Define `
     sapic_renaming_update (Renaming S) (symb, vo) = Renaming ((symb =+ vo) S)
                                                              `;
 
+val sapic_renaming_extend_def = Define `
+    sapic_renaming_extend H_extra H_base =
+    (Renaming (\symb.
+      if symb IN (sapic_renaming_dom H_base) then
+        sapic_renaming_get H_base symb
+      else
+        sapic_renaming_get H_extra symb))
+    `;
+
+        
 (* Renaming Names *)
     
 val _ = Datatype `sapic_name_renaming_t =
@@ -208,7 +218,16 @@ val sapic_name_renaming_update_def = Define `
     sapic_name_renaming_update (NameRenaming S) (symb, vo) = NameRenaming ((symb =+ vo) S)
                                                                           `;
 
-                                                                                
+val sapic_name_renaming_extend_def = Define `
+    sapic_name_renaming_extend H_extra H_base =
+    (NameRenaming (\symb.
+      if symb IN (sapic_name_renaming_dom H_base) then
+        sapic_name_renaming_get H_base symb
+      else
+        sapic_name_renaming_get H_extra symb))
+    `;
+
+        
 (* State *)  
 val _ = Datatype `sapic_state_t =
    State (SapicTerm_t -> (SapicTerm_t option))

@@ -21,7 +21,7 @@ open optionTheory;
 open HolBACoreSimps;
 open WinitexampleTheory;
 open WrespexampleTheory;
-val _ = new_theory "instantiations";
+val _ = new_theory "end_to_end_correctness";
 
 
 (********************************)
@@ -210,6 +210,14 @@ val end_to_end_correctness_Wresp_thm = store_thm(
   )
 
 
+
+
+
+(***************************************************)
+(*end to end correctness Winit vs Wresp vs Attacker*)                                               
+(***************************************************)
+
+  
 val two_arm8s_att_comptraces_thm =
 INST_TYPE [``:'cevent1`` |-> ``:('cevent + 'ceventS)``,``:'cevent2`` |-> ``:('cevent + 'ceventS)``,``:'ceventS`` |-> ``:('attevent + 'ceventS)``,``:'cstate1`` |-> ``:(arm8_state # 'cstate)``,``:'cstate2`` |-> ``:(arm8_state # 'cstate)``] interleavingconcreteTheory.comptraces_def;
 val two_arm8s_att_comptraces_t = (fst o strip_comb o fst o dest_eq o snd o strip_forall o concl) two_arm8s_att_comptraces_thm;

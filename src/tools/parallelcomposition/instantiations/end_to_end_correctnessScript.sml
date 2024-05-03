@@ -73,7 +73,7 @@ val end_to_end_correctness_thm = store_thm(
   metis_tac[comptraces_sapic_vs_DY_EQ_sapic_plus_traces_thm]
   )
 
-                                                
+                                                                  
 (*******************************)
 (*end to end correctness Winit *)                                               
 (*******************************)

@@ -27,7 +27,7 @@ val _ = new_theory "end_to_end_correctness";
 (********************************)
 (*end to end correctness result *)                                               
 (********************************)
-
+  
 val end_to_end_correctness_thm = store_thm(
   "end_to_end_correctness_thm",
   ``

@@ -86,7 +86,19 @@ val binterleave_trace_comp_to_decomp_generaldeduction_thm = store_thm(
   );
 
 
+val binterleave_composition_generaldeduction_subseteq_thm = store_thm(
+  "binterleave_composition_generaldeduction_subseteq",
+  ``∀Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (Ded1:('pred1) tded) (Ded2:('pred2) tded) (ded3:('pred1 + 'pred2) tded).
+         (comptraces (MTrn1,Ded1) (MTrn2,Ded2) ded3 (Sym,P,S1,S2) (Sym',P',S1',S2'))                           
+      ⊆ (binterleave_ts (traces (MTrn1,Ded1) (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) (traces (MTrn2,Ded2) (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2')))
+       ``,
+       rpt gen_tac >>      
+     rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >>
+     FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF] >>
+     rewrite_tac[binterleave_trace_comp_to_decomp_generaldeduction_thm]   
+  );
 
+  
 val binterleave_trace_decomp_to_comp_generaldeduction_thm = store_thm(
   "binterleave_trace_decomp_to_comp_generaldeduction",
   ``∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (ded1:('pred1) tded) (ded2:('pred2) tded) (ded3:('pred1 + 'pred2) tded). 
@@ -173,6 +185,20 @@ val binterleave_trace_decomp_to_comp_generaldeduction_thm = store_thm(
      rw[] 
   );
 
+
+val binterleave_composition_generaldeduction_supseteq_thm = store_thm(
+  "binterleave_composition_generaldeduction_supseteq",
+  ``∀Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (Ded1:('pred1) tded) (Ded2:('pred2) tded) (ded3:('pred1 + 'pred2) tded).
+         (binterleave_ts (traces (MTrn1,Ded1) (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) (traces (MTrn2,Ded2) (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2'))) ⊆
+         (comptraces (MTrn1,Ded1) (MTrn2,Ded2) ded3 (Sym,P,S1,S2) (Sym',P',S1',S2'))
+       ``,
+         rpt gen_tac >>      
+     rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >>
+     FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [SUBSET_DEF] >>
+     rewrite_tac[binterleave_trace_decomp_to_comp_generaldeduction_thm]     
+  );
+  
+  
 val binterleave_trace_generaldeduction_thm = store_thm(
   "binterleave_trace_generaldeduction",
   `` ∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) (ded1:('pred1) tded) (ded2:('pred2) tded) (ded3:('pred1 + 'pred2) tded). 
@@ -192,9 +218,7 @@ val binterleave_composition_generaldeduction_thm = store_thm(
          (comptraces (MTrn1,Ded1) (MTrn2,Ded2) ded3 (Sym,P,S1,S2) (Sym',P',S1',S2'))                           
      = (binterleave_ts (traces (MTrn1,Ded1) (Sym,(IMAGE OUTL P),S1) (Sym',(IMAGE OUTL P'),S1')) (traces (MTrn2,Ded2) (Sym,(IMAGE OUTR P),S2) (Sym',(IMAGE OUTR P'),S2')))
        ``,
-     rewrite_tac[binterleave_ts,traces_def,comptraces_def,EXTENSION] >>
-     rw[] >>
-     rewrite_tac[binterleave_trace_generaldeduction_thm]   
+       rewrite_tac[SET_EQ_SUBSET,binterleave_composition_generaldeduction_supseteq_thm,binterleave_composition_generaldeduction_subseteq_thm]
   ); 
 
 

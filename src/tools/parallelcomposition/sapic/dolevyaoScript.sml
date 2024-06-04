@@ -18,9 +18,11 @@ K SapicTerm_t (* Adversary can deduce term *)
 val (DYdeduction_rules, DYdeduction_ind, DYdeduction_cases)
 = Hol_reln
   `(∀(p:DYpred) (Pi: DYpred set). (p ∈ Pi) ==> (DYdeduction Pi p)) ∧
+  (∀(n:SapicTerm_t) (Pi: DYpred set). (n = (Con (Name (PubName:NameTag_t) (str:string)))) ==> (DYdeduction Pi (K n))) ∧
 (∀(k:SapicTerm_t) (m:SapicTerm_t) (Pi: DYpred set). ((DYdeduction Pi (K k)) ∧ (DYdeduction Pi (K m))) ==> (DYdeduction Pi (K (FAPP  ("Enc", (2, Public, Constructor)) [m;k])))) ∧
 (∀(k:SapicTerm_t) (m:SapicTerm_t) (Pi: DYpred set). ((DYdeduction Pi (K k)) ∧ (DYdeduction Pi (K (FAPP  ("Enc", (2, Public, Constructor)) [m;k])))) ==> (DYdeduction Pi (K m))) ∧
-(∀(t1:SapicTerm_t) (t2:SapicTerm_t) (Pi: DYpred set). ((DYdeduction Pi (K t1)) ∧ (DYdeduction Pi (Equ (t1,t2)))) ==> (DYdeduction Pi (K t2))) 
+(∀(t1:SapicTerm_t) (t2:SapicTerm_t) (Pi: DYpred set). ((DYdeduction Pi (K t1)) ∧ (DYdeduction Pi (Equ (t1,t2)))) ==> (DYdeduction Pi (K t2))) ∧
+(∀(n1:SapicTerm_t) (n2:SapicTerm_t) (Pi: DYpred set). ((DYdeduction Pi (Fr n1)) ∧ (DYdeduction Pi (Equ (n1,n2)))) ==> (DYdeduction Pi (Fr n2))) 
 `;
 
 

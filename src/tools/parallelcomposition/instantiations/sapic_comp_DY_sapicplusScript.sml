@@ -4,10 +4,10 @@ open pred_setTheory;
 open sigma_algebraTheory;
 open listTheory;
 open tautLib;
-open interleavinggeneraldeductionTheory;
-open parallelcompositiongeneraldeductionTheory;
+open interleavingdeductionTheory;
+open parallelcompositiondeductionTheory;
 open translate_to_sapicTheory;
-open derived_rules_generaldeductionTheory;
+open derived_rules_deductionTheory;
 open sbir_treeTheory;
 open sapicplusTheory;
 open messagesTheory;
@@ -551,10 +551,10 @@ val sapic_vs_DY_EQ_spaicplus_multi_transitions_thm = store_thm(
 
 val comptraces_sapic_vs_DY_EQ_sapic_plus_traces_thm = store_thm(
   "comptraces_sapic_vs_DY_EQ_sapic_plus_traces_thm",
-  ``∀t Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (Ded:('SPpred) tded) (ded3:('SPpred + DYpred) tded).
-       (comptraces (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) ded3 (Sym,P,(Pconfig (Pr0,0,Re0,NRe0)),ESt) (Sym',P',(Pconfig (Pr,i,Re,NRe)),ESt)) =
+  ``∀t Re0 NRe0 i Re NRe Pr0 Pr (Sym:(Var_t -> bool)) (Sym':(Var_t -> bool)) (P:('SPpred + DYpred -> bool)) (P':('SPpred + DYpred -> bool)) (Ded:('SPpred) tded).
+       (comptraces (sapic_position_multi_transitions_with_symb,Ded) (DYmultranrel,DYdeduction) (Sym,P,(Pconfig (Pr0,0,Re0,NRe0)),ESt) (Sym',P',(Pconfig (Pr,i,Re,NRe)),ESt)) =
      (sapic_plus_traces sapic_plus_position_multi_transitions_with_symb (Sym,P,(Pconfig_plus (Pr0,0,Re0,NRe0))) (Sym',P',(Pconfig_plus (Pr,i,Re,NRe))))``,
-                                                                                                                                                       rewrite_tac[binterleave_composition_generaldeduction,binterleave_ts]>>
+                                                                                                                                                       rewrite_tac[binterleave_composition_deduction,binterleave_ts]>>
      rewrite_tac[sapic_plus_traces_def]>>
      rewrite_tac[traces_def]>>
      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [EXTENSION]>>

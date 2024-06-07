@@ -145,8 +145,8 @@ new_axiom ("TranRelSnocRevNone",
                                             (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
                                             (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')))``);
 
-val TransEnable_def =
-Define`TransEnable (ded3:('pred1 + 'pred2) tded) ((MTrn1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1: 'pred1 tded)) ((MTrn2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2: 'pred2 tded)) =
+val TransDisable_def =
+Define`TransDisable (ded3:('pred1 + 'pred2) tded) ((MTrn1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1: 'pred1 tded)) ((MTrn2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2: 'pred2 tded)) =
 (∀Sym P S1 S2 Sym' P' S1' S2' t1 t2 phi.
                          ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P',S1')) ∧
                           (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P',S2')) ∧
@@ -155,8 +155,8 @@ Define`TransEnable (ded3:('pred1 + 'pred2) tded) ((MTrn1:(('event1 + 'eventS), '
                            (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P' ∪ {OUTR phi},S2'))))
         `;
 
-val TransDisable_def =
-Define`TransDisable (ded3:('pred1 + 'pred2) tded) ((MTrn1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1: 'pred1 tded)) ((MTrn2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2: 'pred2 tded)) =
+val TransEnable_def =
+Define`TransEnable (ded3:('pred1 + 'pred2) tded) ((MTrn1:(('event1 + 'eventS), 'pred1, 'state1, 'symb) mtrel),(ded1: 'pred1 tded)) ((MTrn2:(('event2 + 'eventS), 'pred2, 'state2, 'symb) mtrel),(ded2: 'pred2 tded)) =
 (∀Sym P S1 S2 Sym' P' S1' S2' t1 t2 phi.
    ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P' ∪ {OUTL phi},S1')) ∧
     (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P' ∪ {OUTR phi},S2')) ∧

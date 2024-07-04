@@ -32,7 +32,7 @@ open bir_inst_liftingHelpersLib;
 
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
-      (DB.fetch "WhatsApp" "WhatsApp_thm");
+      (DB.fetch "WhatsApp" "WhatsApp_session_cipher_encrypt_thm");
     
 val bl_dict_    = gen_block_dict prog_tm;
 val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
@@ -40,6 +40,8 @@ val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
 val prog_vars = gen_vars_of_prog prog_tm;
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
+
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
  (*   
 val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102A0A4E8w)``,
 	  CFGN_hc_descr = SOME " ",
@@ -95,7 +97,7 @@ val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102C5EEC0w)``,
     
 val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102C5EEC0w)``,n)]);
  *)   
-val lbl_tm = ``BL_Address (Imm64 0x102A09D7Cw)``;
+
 
 fun update_n_dict_ ([], n_dict) = n_dict
     | update_n_dict_ (((lbl_tm)::todo), n_dict) =
@@ -123,17 +125,91 @@ open bir_cfg_vizLib;
 val n_dict' = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
 val ns = List.map (valOf o (lookup_block_dict n_dict'))
 		  (#CFGG_nodes g1);
-    
+
+(* val ns = (List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1)); *)
 val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
-   
+    
 
 (* 
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
 
+ open HolKernel Parse;
+    open binariesLib;
+    open binariesTheory;
+    open binariesCfgLib;
+    open binariesMemLib;
+    open bir_programSyntax;
+    open bir_valuesSyntax;
+    open bir_immSyntax;
+    open bir_exec_typingLib;
+    open bir_cfgLib;
+    open bir_cfg_m0Lib;
+    open bir_block_collectionLib;
+    open bir_envSyntax;
+    open bir_expSyntax;
+    open bir_auxiliaryLib;
+    open bir_immSyntax;
+    open wordsSyntax;
+    open String;
+    open bir_program_labelsSyntax;
+    open bir_block_collectionLib;
+    open Redblackmap;
+    open Term;
 
+fun fun_address_dict (n:cfg_node) =
+    let
+        val lbl_tm   = #CFGN_lbl_tm n;
+	val descr  = (valOf o #CFGN_hc_descr) n;
+	val instrDes = (snd o (list_split_pred #" ") o explode) descr;
+	   (* val _ = print ((implode instrDes) ^ "\n"); *)
+	val name_adr = if (isPrefix "(bl " (implode instrDes))
+		       then let
+			       val fname = (implode o fst o (list_split_pred #">") o snd o (list_split_pred #"<")) instrDes;
+			   in
+			       (lbl_tm, fname)
+			   end
+		       else if (isPrefix "(blr " (implode instrDes))
+		       then let
+			       val fname = (implode o fst o (list_split_pred #")") o snd o (list_split_pred #" ")) instrDes;
+			   in
+			       (lbl_tm, fname)
+			   end
+		       else if (isPrefix "(b " (implode instrDes))
+		       then let
+			       val fname = if (isPrefix "(b <" (implode instrDes))
+					   then
+					       (implode o fst o (list_split_pred #">") o snd o (list_split_pred #"<")) instrDes
+					   else
+					       (implode o fst o (list_split_pred #")") o snd o (list_split_pred #" ")) instrDes
+			   in
+			       (lbl_tm, fname)
+			   end
+		       else (“BL_Address (Imm32 0w)”, " ");
+    in
+	name_adr
+    end;
+
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+
+val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
+	    
+	val g1 = cfg_create "toy" prog_lbl_tms_ n_dict bl_dict_;
+
+	val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
+	    
+	val func_table = Redblackmap.mkDict Term.compare : (term, string) Redblackmap.dict;
+
+orelse )
+val n = snd(hd(Redblackmap.listItems n_dict))
+	val fun_adr = (List.map (fn x => (fun_address_dict x)) (List.map snd (Redblackmap.listItems n_dict)));
+
+	val func_table' = Redblackmap.insertList (func_table, fun_adr);
+val instrDes = explode "(b <0x00ee61c0>)"
    
 
-val stop_lbl_tms = [``BL_Address (Imm64 100w)``];
+
+val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
+val stop_lbl_tms = [``BL_Address (Imm64 0xEE6368w)``];
     (*
 
 val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];

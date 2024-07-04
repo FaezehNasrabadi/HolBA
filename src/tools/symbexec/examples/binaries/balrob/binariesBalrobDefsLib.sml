@@ -154,7 +154,6 @@ struct
      "main"
  ];
 
-
  val symbs_sec_text = [
      "__libc_malloc",
      "memcpy",
@@ -273,7 +272,7 @@ struct
      "client",
      "server"
  ];
- 
+ *)
 val symbs_sec_text = [
     "main_tinysshd",
     "Server_decrypt",
@@ -389,7 +388,7 @@ val symbs_sec_text = [
     "subprocess_sign",
     "receive_new_key",
     "read@plt"
-];
+];(*
 
  val symbs_sec_text = [
      "main",
@@ -436,7 +435,7 @@ val symbs_sec_text = [
      "base64_encode"
  ];
 
-*)
+
 val symbs_sec_text = [
     "wait_for_random_bytes",
     "down_read",
@@ -461,7 +460,7 @@ val symbs_sec_text = [
     "wg_noise_handshake_create_initiation",
     "wg_noise_handshake_consume_response"
 ];
-(*
+
  val symbs_sec_text = [
      "wait_for_random_bytes",
      "down_read",
@@ -598,7 +597,7 @@ val prog_range       = ((Arbnum.fromInt 0x00000000), (Arbnum.fromInt 0xffffffff)
 				((Arbnum.fromInt 0x00000000, Arbnum.fromInt 0x00003564), 
 				 (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
 				 (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
-			     )];
+			     )];*)
 val configs              = [ ("tinyssh",
                               ("tinysshd.da", "balrob/tinysshd.da.plus", "balrob/tinysshd.mem"),
                               "tinyssh_THM",
@@ -606,7 +605,7 @@ val configs              = [ ("tinyssh",
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			   )];
-
+(*
  val configs              = [ ("example",
                                ("example.da", "balrob/example.da.plus", "balrob/example.mem"),
                                "example_THM",
@@ -657,7 +656,7 @@ val configs              = [ ("tinyssh",
 			    )];
 
 
-   *)
+   
 
     val configs              = [ ("wireguard",
                               ("wireguard.da", "balrob/wireguard.da.plus", "balrob/wireguard.mem"),
@@ -666,21 +665,29 @@ val configs              = [ ("tinyssh",
                                (Arbnum.fromInt 0x10000000, Arbnum.fromInt (0x00000018 + 0x30d)), 
                                (Arbnum.fromInt 0x10001000, Arbnum.fromInt 0x00000ff0))
 			       )];
-	
-(*val symb_filter_lift = fn secname =>
-			    case secname of
-				".text" => (fn symbname => true)
-			      | _       => (K false);*)
+	*)
 
-    
-
-    
+(* For TinySSH case-study *)    
 val symb_filter_lift = fn secname =>
 			  case secname of
-			      ".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    |		     ".plt" => (fn symbname => true)
-			    |		     ".fini" => (fn symbname => true)
-			    |                ".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
-			    | _       => (K false);
+			      ".text"  => (fn symbname => true)
+			    | ".init"  => (fn symbname => true)
+			    | ".plt"   => (fn symbname => true)
+			    | ".fini"  => (fn symbname => true)
+			    | ".page1" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    | ".page2" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    | ".page3" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			    | _        => (K false);
+
+(*
+  (* For other case-studies *)
+      open HolKernel Parse boolLib pairLib;
+
+val symb_filter_lift = fn secname =>
+			    case secname of
+				".text" => (fn symbname => List.exists (fn x => x = symbname) symbs_sec_text)
+			      | _       => (K false);
+*)
+
 
 end (* struct *)

@@ -73,14 +73,17 @@ fun predlist_to_tree ([[]]: term list list) = Leaf
     end
 
 (*SymbValBE (bv, _)
+val bv = “BVar "sy_R30" (BType_Imm Bit64)”
 Redblackset.empty Term.compare
 *)	
 (*Find bir expression*)
 fun find_be_val vals_list bv =
     let
 	val find_val = List.find (fn (a,_) => Term.term_eq a bv) vals_list;
-	val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" ("cannot find symbolic value for "^(term_to_string bv)^"\n");
-	(* val symbv = ((snd o Option.valOf) find_val) handle _ => SymbValBE (bv, Redblackset.empty Term.compare) ; *)
+	(* val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" ("cannot find symbolic value for "^(term_to_string bv)^"\n"); *)
+	val (bv_str, _) = bir_envSyntax.dest_BVar_string bv;
+	val fr = get_bvar_fresh (bir_envSyntax.mk_BVar_string (bv_str, “BType_Imm Bit64”)); (* generate a fresh variable *)
+	val symbv = ((snd o Option.valOf) find_val) handle _ => SymbValBE (fr, Redblackset.empty Term.compare) ;
 	val exp =
 	    case symbv of
 		SymbValBE (x, _) => x
@@ -97,8 +100,8 @@ datatype 'a valtree = VLeaf | VNode of ('a * 'a) * 'a valtree | VBranch of ('a *
 fun tree_with_value tr sort_vals =
     case tr of
 	Leaf => VLeaf
-      | Node (bv, subtr) => ((VNode ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr sort_vals))) handle _ => VLeaf)
-      | Branch (bv, subtr1, subtr2) => ((VBranch ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr1 sort_vals), (tree_with_value subtr2 sort_vals))) handle _ => VLeaf)
+      | Node (bv, subtr) => VNode ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr sort_vals))
+      | Branch (bv, subtr1, subtr2) => VBranch ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr1 sort_vals), (tree_with_value subtr2 sort_vals))
 
 
 fun hd_of_tree tr =

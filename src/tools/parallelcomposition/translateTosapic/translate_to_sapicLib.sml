@@ -268,7 +268,10 @@ fun bir_exp_to_sapic_term exp =
             handle e => raise wrap_exn "bir_exp_to_sapic_term::mem_store" e
 	else if (identical exp “bir_exp_true”)
 	then
-		(mk_Con (mk_Name (PubName_tm, “"1"”)),(Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL))
+	    (mk_Con (mk_Name (PubName_tm, “"1"”)),(Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL))
+	else if (identical exp “bir_exp_false”)
+	then
+		(mk_Con (mk_Name (PubName_tm, “"0"”)),(Thm.INST_TYPE [alpha |-> (type_of exp)] EQ_REFL))
 	else
 	    let
 		val (name,trms) = strip_comb exp;

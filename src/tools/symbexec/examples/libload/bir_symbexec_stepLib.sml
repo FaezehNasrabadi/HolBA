@@ -363,7 +363,10 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 				in
 				    (List.map (fn x => SYST_update_pc tgt x) systs)(* update symb_state  with new pc *)
 				end;
-		    
+		    val debugOn = false;
+	     val _ = if not debugOn then () else
+		     (print_term bl; print "\n ==================== \n\n");
+
 		val systs_processed = abpfun systs; 
 	    in
 		systs_processed
@@ -373,7 +376,9 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 (* function for run a normal symbolic execution block *)
 fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 	let val lbl_tm = SYST_get_pc syst; in
-	 let  
+	    let
+		val _ = if true then () else
+			print_term (lbl_tm);
 	     val bl = (valOf o (lookup_block_dict bl_dict)) lbl_tm;
 	     val (lbl_block_tm, stmts, est) = dest_bir_block bl;
 

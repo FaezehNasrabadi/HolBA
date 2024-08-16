@@ -30,6 +30,24 @@ open sapic_to_fileLib;
 open bir_symbexec_loopLib;
 open bir_inst_liftingHelpersLib;
 
+fun update_n_dict_ ([], n_dict) = n_dict
+    | update_n_dict_ (((lbl_tm)::todo), n_dict) =
+	  let
+	    val n = { CFGN_lbl_tm   =  lbl_tm,
+		  CFGN_hc_descr = SOME " ",
+		  CFGN_targets  = [],
+		  CFGN_type     = CFGNT_Halt
+		} : cfg_node;
+	    val n_dict' = if isSome (lookup_block_dict n_dict lbl_tm)
+			  then
+			      n_dict
+			  else
+			      Redblackmap.update (n_dict, lbl_tm, K (n));
+			      
+	  in
+	    update_n_dict_ (todo, n_dict')
+	  end;    
+     
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
       (DB.fetch "WhatsApp" "WhatsApp_session_cipher_encrypt_thm");
@@ -38,10 +56,25 @@ val bl_dict_    = gen_block_dict prog_tm;
 val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
 
 val prog_vars = gen_vars_of_prog prog_tm;
+
+val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
+
+val prog_vars = adv_mem::prog_vars;
+
+val bv_key = ``BVar "key" (BType_Imm Bit64)``;
+
+val prog_vars = bv_key::prog_vars;
+
+val op_mem = “BVar "Op_MEM" (BType_Mem Bit64 Bit8)”;
+
+val prog_vars = op_mem::prog_vars;
+    
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
+    
+
+    
  (*   
 val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102A0A4E8w)``,
 	  CFGN_hc_descr = SOME " ",
@@ -96,26 +129,10 @@ val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102C5EEC0w)``,
 
     
 val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102C5EEC0w)``,n)]);
- *)   
+ 
 
 
-fun update_n_dict_ ([], n_dict) = n_dict
-    | update_n_dict_ (((lbl_tm)::todo), n_dict) =
-	  let
-	    val n = { CFGN_lbl_tm   =  lbl_tm,
-		  CFGN_hc_descr = SOME " ",
-		  CFGN_targets  = [],
-		  CFGN_type     = CFGNT_Halt
-		} : cfg_node;
-	    val n_dict' = if isSome (lookup_block_dict n_dict lbl_tm)
-			  then
-			      n_dict
-			  else
-			      Redblackmap.update (n_dict, lbl_tm, K (n));
-			      
-	  in
-	    update_n_dict_ (todo, n_dict')
-	  end;    
+   
 
 open binariesCfgVizLib;
 open binariesDefsLib;
@@ -130,7 +147,7 @@ val ns = List.map (valOf o (lookup_block_dict n_dict'))
 val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
     
 
-(* 
+
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
 
  open HolKernel Parse;
@@ -206,10 +223,7 @@ val n = snd(hd(Redblackmap.listItems n_dict))
 	val func_table' = Redblackmap.insertList (func_table, fun_adr);
 val instrDes = explode "(b <0x00ee61c0>)"
    
-
-
-val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
-val stop_lbl_tms = [``BL_Address (Imm64 0xEE6368w)``];
+ 
     (*
 
 val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
@@ -217,7 +231,47 @@ val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","
 val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
 
 val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
+
+val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,``BL_Address (Imm64 0x12FCEACw)``,``BL_Address (Imm64 0x12E65D0w)``,``BL_Address (Imm64 0x12CE4B4w)``,``BL_Address (Imm64 0xEE8AB0w)``,``BL_Address (Imm64 0xEE8A90w)``,``BL_Address (Imm64 0xEE8A70w)``,``BL_Address (Imm64 0xEE2398w)``,``BL_Address (Imm64 0xEE2320w)``,``BL_Address (Imm64 0xEDE1CCw)``,``BL_Address (Imm64 0xEDCE78w)``,``BL_Address (Imm64 0xEDCE6Cw)``,``BL_Address (Imm64 0xED4874w)``,``BL_Address (Imm64 0xED481Cw)``,``BL_Address (Imm64 0xED4898w)``,``BL_Address (Imm64 0x12BA3C4w)``];
 *)
+
+val lbl_tm = ``BL_Address (Imm64 0xED4898w)``;
+
+val bl = (valOf o (lookup_block_dict bl_dict_)) lbl_tm;
+	     val (lbl_block_tm, stmts, est) = dest_bir_block bl;
+val bl_dict_ = update_bl_dict_ ([lbl_tm],bl_dict_)
+ 
+
+fun update_bl_dict_ ([], bl_dict) = bl_dict
+    | update_bl_dict_ (((lbl_tm)::todo), bl_dict) =
+	  let
+	    
+	    val bl_dict' = if isSome (lookup_block_dict bl_dict lbl_tm)
+			  then
+			      bl_dict
+			  else
+let val n =  “<|bb_label :=
+                  BL_Address_HC (Imm64 0xED4898w) "140F454F (b 0x012ba59c)";
+                bb_statements := [];
+                bb_last_statement :=
+                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 0x12BA59Cw)))|>”
+in
+			      Redblackmap.update (bl_dict, lbl_tm, K (n))
+end;
+			      
+	  in
+	    update_bl_dict_ (todo, bl_dict')
+	  end; 
+
+
+val lbl_tm = ``BL_Address (Imm64 0xED4898w)``;
+
+val bl_dict_ = update_bl_dict_ ([lbl_tm],bl_dict_)
+*)
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+      
+val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
+val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,``BL_Address (Imm64 0x12E65D0w)``,``BL_Address (Imm64 0x12CE4B4w)``,``BL_Address (Imm64 0xEE8AB0w)``,``BL_Address (Imm64 0xEE8A90w)``,``BL_Address (Imm64 0xEE8A70w)``,``BL_Address (Imm64 0xEE2398w)``,``BL_Address (Imm64 0xEE2320w)``,``BL_Address (Imm64 0xEDE1CCw)``,``BL_Address (Imm64 0xEDCE78w)``,``BL_Address (Imm64 0xEDCE6Cw)``,``BL_Address (Imm64 0xED4874w)``,``BL_Address (Imm64 0xED481Cw)``,``BL_Address (Imm64 0xED4898w)``,``BL_Address (Imm64 0x12BA3C4w)``,``BL_Address (Imm64 0x12BDFE8w)``,``BL_Address (Imm64 0xEE636Cw)``,``BL_Address (Imm64 0xEEA368w)``,``BL_Address (Imm64 0xEEA36Cw)``,``BL_Address (Imm64 0x12BA8C4w)``];
     
 val syst = init_state lbl_tm prog_vars;
 
@@ -228,6 +282,11 @@ val syst = state_add_preds "init_pred" pred_conjs syst;
 val _ = print "initial state created.\n\n";
 
 val cfb = false;
+
+val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
+
+val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
+    
 val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [syst] stop_lbl_tms adr_dict [];
 val _ = print "\n\n";
 val _ = print "finished exploration of all paths.\n\n";
@@ -245,33 +304,38 @@ val _ = print "\n";
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 
-
-val tr = predlist_to_tree predlists;
-
-val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
-val sort_vals = bir_symbexec_sortLib.refine_symb_val_list vals_list;
+val _ = print "Get predlists";
+val _ = print "\n";
     
+val tree = predlist_to_tree predlists;
 
-val valtr =  tree_with_value tr sort_vals;
+val _ = print "Get tree";
+val _ = print "\n";
+    
+val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
 
-val _ = print "\n";     
+val _ = print "Get vals_list";
+val _ = print "\n";
+	
+val sort_vals = bir_symbexec_sortLib.refine_symb_val_list vals_list;
+
+val _ = print "Get sort_vals";
+val _ = print "\n";    
+
+val valtr =  tree_with_value tree sort_vals;
+     
 val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
 val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
 
-
-val _ = print "\n";     
-val _ = print ("sapic_process");
+    
+val _ = print ("built sapic_process");
 val _ = print "\n";
     
 val _ =  ( write_sapic_to_file o process_to_string) sapic_process
-
-val _ = print "\n";     
+     
 val _ = print ("wrote into file");
 val _ = print "\n";
 
-
-
-*)

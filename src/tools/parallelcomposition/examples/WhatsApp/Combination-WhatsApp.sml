@@ -267,6 +267,8 @@ end;
 val lbl_tm = ``BL_Address (Imm64 0xED4898w)``;
 
 val bl_dict_ = update_bl_dict_ ([lbl_tm],bl_dict_)
+
+lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
 *)
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
       
@@ -274,7 +276,29 @@ val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
 (* val lbl_tm = ``BL_Address (Imm64 0xEE6118w)``; 
 ``BL_Address (Imm64 0xEE61C0w)``*)
     (* val lbl_tm = ``BL_Address (Imm64 0xEE629Cw)``; *)
-val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,``BL_Address (Imm64 0x12E65D0w)``,``BL_Address (Imm64 0x12CE4B4w)``,``BL_Address (Imm64 0xEE8AB0w)``,``BL_Address (Imm64 0xEE8A90w)``,``BL_Address (Imm64 0xEE8A70w)``,``BL_Address (Imm64 0xEE2398w)``,``BL_Address (Imm64 0xEE2320w)``,``BL_Address (Imm64 0xEDE1CCw)``,``BL_Address (Imm64 0xEDCE78w)``,``BL_Address (Imm64 0xEDCE6Cw)``,``BL_Address (Imm64 0xED4874w)``,``BL_Address (Imm64 0xED481Cw)``,``BL_Address (Imm64 0xED4898w)``,``BL_Address (Imm64 0x12BA3C4w)``,``BL_Address (Imm64 0x12BDFE8w)``,``BL_Address (Imm64 0xEE636Cw)``,``BL_Address (Imm64 0xEEA368w)``,``BL_Address (Imm64 0xEEA36Cw)``,``BL_Address (Imm64 0x12BA8C4w)``,``BL_Address (Imm64 0xEE61C0w)``,``BL_Address (Imm64 0xEE9064w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,
+		      ``BL_Address (Imm64 0x12E65D0w)``,
+		      ``BL_Address (Imm64 0x12CE4B4w)``,
+		      ``BL_Address (Imm64 0xEE8AB0w)``,
+		      ``BL_Address (Imm64 0xEE8A90w)``,
+		      ``BL_Address (Imm64 0xEE8A70w)``,
+		      ``BL_Address (Imm64 0xEE2398w)``,
+		      ``BL_Address (Imm64 0xEE2320w)``,
+		      ``BL_Address (Imm64 0xEDE1CCw)``,
+		      ``BL_Address (Imm64 0xEDCE78w)``,
+		      ``BL_Address (Imm64 0xEDCE6Cw)``,
+		      ``BL_Address (Imm64 0xED4874w)``,
+		      ``BL_Address (Imm64 0xED481Cw)``,
+		      ``BL_Address (Imm64 0xED4898w)``,
+		      ``BL_Address (Imm64 0x12BA3C4w)``,
+		      ``BL_Address (Imm64 0x12BDFE8w)``,
+		      ``BL_Address (Imm64 0xEE636Cw)``,
+		      ``BL_Address (Imm64 0xEEA368w)``,
+		      ``BL_Address (Imm64 0xEEA36Cw)``,
+		      ``BL_Address (Imm64 0x12BA8C4w)``,
+		      ``BL_Address (Imm64 0xEE61C0w)``,
+		      ``BL_Address (Imm64 0xEE61D0w)``,
+		      ``BL_Address (Imm64 0xEE9064w)``];
     
 val syst = init_state lbl_tm prog_vars;
 

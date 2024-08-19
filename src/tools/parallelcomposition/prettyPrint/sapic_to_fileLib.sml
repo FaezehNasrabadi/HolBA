@@ -103,7 +103,7 @@ val act = “New (Name FreshName "49_otp")”;
 val act = “Event (Fact TermFact [TVar (Var "send(sid,m)" 0)])”;*)
 fun action_to_string act =
     let
-	val _ =  if false then () else print ((term_to_string act)^"\n");
+	val _ =  if true then () else print ((term_to_string act)^"\n");
     in
 	if (is_New act) then "new "^((name_to_string o dest_New) act)
 	else if (is_Rep act) then "!"

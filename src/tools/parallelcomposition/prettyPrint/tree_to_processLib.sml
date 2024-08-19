@@ -143,7 +143,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if (String.isSuffix "Adv" namestr)
 	    then (mk_ProcessAction ((mk_ChIn (mk_none(SapicTerm_t_ty),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
-	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(read_events namestr)],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
+	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 	end)
 			 

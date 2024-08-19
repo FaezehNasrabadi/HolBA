@@ -1521,7 +1521,7 @@ fun Random_Number syst =
 	    
 	val syst = update_with_fresh_name Fr_vn vn syst;
 
-	(* val syst = state_add_path "nonce" Fn_vn syst; (* update path condition *)  *)   
+	val syst = state_add_path "RAND_NUM" Fr_vn syst; (* update path condition *)   
 
 	val syst = update_lib_syst Fr_vn vn syst; (* update syst *)
 	    
@@ -2749,9 +2749,9 @@ fun Encryption syst =
 	val key = find_bv_val ("encypt::bv in env not found")
                               env ``BVar "key" (BType_Imm Bit64)``;
 
-	val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
+	(*val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
 
-	val syst = Adv av syst; (* update env, vals & pred *)	  
+	val syst = Adv av syst; (* update env, vals & pred *)	*)  
 
 	val be_adv = find_adv_name syst;
 
@@ -2762,6 +2762,8 @@ fun Encryption syst =
 	val syst = store_mem_r0 C_be Fr_Enc syst; (* update syst *)
 
 	val syst = add_knowledge_r0 Fr_Enc syst;  (*send to channel *)
+
+	val syst = hd(Event "event1" syst);
 	
     in
 	syst

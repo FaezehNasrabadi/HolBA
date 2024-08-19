@@ -1,4 +1,5 @@
 The event name is as follows:
 
-send(sid,m)
+Send(sid,m)
+Receive(sid,m)
 

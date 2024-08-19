@@ -34,17 +34,21 @@ fun name_to_string N =
 
 (* print Var
 
-val V = “Var "1_X" 0”;*)		 
+val V = “Var "1_X" 0”;
+val V = “Var "send(sid,m)" 0”;*)		 
 fun var_to_string V =
     let
-	val (str,id) = dest_Var V;
+	val (str,id) = dest_Var V;    
     in
-	 bir_symbexec_treeLib.rev_name (stringSyntax.fromHOLstring str)
+	if (List.exists (fn x => x = #"_") ((explode o stringSyntax.fromHOLstring) str))
+	then bir_symbexec_treeLib.rev_name (stringSyntax.fromHOLstring str)
+	else (stringSyntax.fromHOLstring str)
     end;
 
 (* print Term
 
-val trm = “FAPP ("conc",2,Public,Constructor) [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;*)	
+val trm = “FAPP ("conc",2,Public,Constructor) [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;
+val trm = “TVar (Var "send(sid,m)" 0)”;*)	
 fun sapicterm_to_string trm =
     if (is_TVar trm)
     then ((var_to_string o dest_TVar) trm)
@@ -77,55 +81,74 @@ fun factTag_to_string fctTag =
 	       
 (* print Fact
 
-val fct = “Fact TermFact [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;*)	
+val fct = “Fact TermFact [TVar (Var "1_OTP" 0);TVar (Var "2_OTP" 0)]”;
+val fct = “Fact TermFact [TVar (Var "send(sid,m)" 0)]”;*)	
 fun fact_to_string fct =
+    if (is_Fact fct) then
     let
 	    val (tag,fct_vals) = dest_Fact fct;
 	    val (trm_list,_) = listSyntax.dest_list fct_vals;
     in
 	if (is_TermFact tag)
-	then ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)))
+	then
+	    ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)))
 	else ((factTag_to_string tag) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)) ^ ")"))	     
-    end	
+    end
+    else raise ERR "fact_to_string" ("Don't know Sapic Fact: " ^ (term_to_string fct))
    
 (* print Action
 
 val act = “ChIn (SOME (TVar (Var "C" 0))) (TVar (Var "OTP" 0))”
-val act = “New (Name FreshName "49_otp")”;*)
+val act = “New (Name FreshName "49_otp")”;
+val act = “Event (Fact TermFact [TVar (Var "send(sid,m)" 0)])”;*)
 fun action_to_string act =
-    if (is_New act) then "new "^((name_to_string o dest_New) act)
-    else if (is_Rep act) then "!"
-    else if (is_ChIn act) then
-	let
-	    val (c,t) = dest_ChIn act;
-	in
-	    if (is_some c) then "in(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
-	    else "in(" ^ (sapicterm_to_string t) ^ ")"
-	end
-    else if (is_ChOut act) then
-	let
-	    val (c,t) = dest_ChOut act;
-	in
-	    if (is_some c) then "out(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
-	    else "out(" ^ (sapicterm_to_string t) ^ ")"
-	end	    
-    else if (is_Insert act)  then "insert " ^ ((sapicterm_to_string o fst o dest_Insert) act) ^ ","  ^ ((sapicterm_to_string o snd o dest_Insert) act)
-    else if (is_Delete act)  then "delete " ^ ((sapicterm_to_string o dest_Delete) act)
-    else if (is_Lock act)  then "lock "  ^ ((sapicterm_to_string o dest_Lock) act)
-    else if (is_Unlock act)  then "unlock " ^ ((sapicterm_to_string o dest_Unlock) act)
-    else if (is_Event act)  then "event " ^ ((fact_to_string o dest_Event) act)
-    else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))
+    let
+	val _ =  if false then () else print ((term_to_string act)^"\n");
+    in
+	if (is_New act) then "new "^((name_to_string o dest_New) act)
+	else if (is_Rep act) then "!"
+	else if (is_ChIn act) then
+	    let
+		val (c,t) = dest_ChIn act;
+	    in
+		if (is_some c) then "in(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
+		else "in(" ^ (sapicterm_to_string t) ^ ")"
+	    end
+	else if (is_ChOut act) then
+	    let
+		val (c,t) = dest_ChOut act;
+	    in
+		if (is_some c) then "out(" ^ ((sapicterm_to_string o dest_some) c) ^ "," ^ (sapicterm_to_string t) ^ ")"
+		else "out(" ^ (sapicterm_to_string t) ^ ")"
+	    end	    
+	else if (is_Insert act)  then "insert " ^ ((sapicterm_to_string o fst o dest_Insert) act) ^ ","  ^ ((sapicterm_to_string o snd o dest_Insert) act)
+	else if (is_Delete act)  then "delete " ^ ((sapicterm_to_string o dest_Delete) act)
+	else if (is_Lock act)  then "lock "  ^ ((sapicterm_to_string o dest_Lock) act)
+	else if (is_Unlock act)  then "unlock " ^ ((sapicterm_to_string o dest_Unlock) act)
+	else if (is_Event act)  then "event " ^ ((fact_to_string o dest_Event) act)
+	else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))
+    end
 	       
 (* print Combinator
 
 val comb = “Lookup (TVar (Var "C" 0)) (Var "OTP" 0)”
-val comb = “ProcessCall "tst" [(TVar (Var "C" 0))]”;*)
+val comb = “ProcessCall "tst" [(TVar (Var "C" 0))]”;
+val comb = “Let (TVar (Var "5107_Enc" 0))
+  (FAPP ("enc",2,Public,Constructor)
+     [TVar (Var "4076_a" 0); TVar (Var "2705_SKey" 0)])”;
+*)
 fun combinator_to_string comb =
 if (is_Parallel comb) then "|"
 else if (is_NDC comb) then "+"
 else if (is_Cond comb) then "if "^ ((sapicterm_to_string o dest_Cond) comb) ^ " then "
 else if (is_CondEq comb) then "if "^ ((sapicterm_to_string o fst o dest_CondEq) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_CondEq) comb) ^ " then "
-else if (is_Let comb) then "let "^ ((sapicterm_to_string o fst o dest_Let) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_Let) comb)^ " in "
+else if (is_Let comb) then
+    let
+	
+	val _ =  if true then () else print ((term_to_string comb)^"\n");
+    in
+	"let "^ ((sapicterm_to_string o fst o dest_Let) comb) ^ "="  ^ ((sapicterm_to_string o snd o dest_Let) comb)^ " in "
+    end
 else if (is_Lookup comb) then "lookup "^ ((sapicterm_to_string o fst o dest_Lookup) comb) ^ " as "  ^ ((var_to_string o snd o dest_Lookup) comb)^ " in "
 else if (is_ProcessCall comb) then
     let

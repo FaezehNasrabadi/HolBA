@@ -1,6 +1,6 @@
 open HolKernel Parse
 open binariesLib;
-open WhatsAppTheory;
+open WhatsApp_session_cipher_encryptTheory;
 open bir_symbexec_stateLib;
 open bir_symbexec_coreLib;
 open bir_symbexec_stepLib;
@@ -50,7 +50,7 @@ fun update_n_dict_ ([], n_dict) = n_dict
      
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
-      (DB.fetch "WhatsApp" "WhatsApp_session_cipher_encrypt_thm");
+      (DB.fetch "WhatsApp_session_cipher_encrypt" "WhatsApp_session_cipher_encrypt_thm");
     
 val bl_dict_    = gen_block_dict prog_tm;
 val prog_lbl_tms_ = get_block_dict_keys bl_dict_;

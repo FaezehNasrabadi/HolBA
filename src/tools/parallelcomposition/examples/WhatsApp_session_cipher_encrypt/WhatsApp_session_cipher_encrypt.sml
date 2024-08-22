@@ -69,6 +69,9 @@ val op_mem = “BVar "Op_MEM" (BType_Mem Bit64 Bit8)”;
 
 val prog_vars = op_mem::prog_vars;
     
+val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
+
+val prog_vars = crypto::prog_vars;
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 

@@ -499,19 +499,19 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 (* execution of a whole block *)
     fun symb_exec_block abpfun n_dict bl_dict adr_dict syst =
 	let val lbl_tm = SYST_get_pc syst; in
-	    let
-		val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
+		let
+		    val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		val _ = if true then () else
-			print_term (lbl_tm);
-		val _ = if true then () else
-			print ("pc_type: " ^ (pc_type) ^ "\n");
-	    in
-		if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst
-		else if (pc_type = "Library") then symb_exec_library_block abpfun n_dict bl_dict adr_dict syst
-		else if (pc_type = "Loop") then symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst
-		else symb_exec_normal_block abpfun n_dict bl_dict syst
-	    end
+		    val _ = if true then () else
+			    print_term (lbl_tm);
+		    val _ = if true then () else
+			    print ("pc_type: " ^ (pc_type) ^ "\n");
+		in
+		    if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst
+		    else if (pc_type = "Library") then symb_exec_library_block abpfun n_dict bl_dict adr_dict syst
+		    else if (pc_type = "Loop") then symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst
+		    else symb_exec_normal_block abpfun n_dict bl_dict syst
+		end
 	    handle e => raise wrap_exn ("symb_exec_block::" ^ term_to_string lbl_tm) e end;
 
   (* execution of blocks until not running anymore or end label set is reached *)

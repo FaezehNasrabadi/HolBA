@@ -1553,13 +1553,13 @@ fun Random_Number syst =
 
 	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RNG", “BType_Imm Bit64”)); (* generate a fresh name *)
 
-	val syst = update_key vn Fr_vn syst;
+	val syst = update_key Fr_vn vn syst;
 	    
-	val syst = update_with_fresh_name Fr_vn vn syst;
+	(* val syst = update_with_fresh_name Fr_vn vn syst; *)
 
-	val syst = state_add_path "RAND_NUM" Fr_vn syst; (* update path condition *)   
+	(* val syst = state_add_path "RAND_NUM" Fr_vn syst; (* update path condition *) *)
 
-	val syst = update_lib_syst Fr_vn vn syst; (* update syst *)
+	(* val syst = update_lib_syst Fr_vn vn syst; (* update syst *) *)
 	    
     in
 	syst
@@ -2705,7 +2705,7 @@ fun new_key syst =
     let
 
 	val env  = (SYST_get_env  syst);
-	    
+    
 	val key = find_bv_val ("encypt::bv in env not found")
                               env ``BVar "key" (BType_Imm Bit64)``; 
 
@@ -2713,7 +2713,7 @@ fun new_key syst =
 		     
 	val (C_bv, C_be) = HMac2 key c1;    	    	
 
-	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”));
+	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MKi", “BType_Imm Bit64”));
 	    
 	val bv_key = ``BVar "Crypto" (BType_Imm Bit64)``;
 
@@ -2723,7 +2723,7 @@ fun new_key syst =
 
 	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval C_be fr_bv) syst;
 	    
-	val syst = update_symbval C_be Fr_SKey syst;   
+	val syst = update_symbval C_be Fr_SKey syst;
 	    
     in
 	syst
@@ -3139,7 +3139,7 @@ fun HMAC_Receive syst =
 	    
 	val be_adv = find_adv_name syst;
 
-	val syst = store key be_adv syst; (* update syst *)
+	val syst = store key (mk_BExp_Den(be_adv)) syst; (* update syst *)
 
     in
 	syst
@@ -3281,11 +3281,12 @@ fun Load_file syst =
 		    
 	val C_be = (mk_BExp_Load (mk_BExp_Den(bv_mem), mk_BExp_Den(be_adv), endi, Vtype));    
 
-	val syst = store_mem_r0 C_be Fr_CK syst; (* update syst *)
+	val syst = update_key C_be Fr_CK syst;
 
     in
 	syst
     end;
+
 	    
 end(*local*)
 

@@ -1,13 +1,13 @@
 let SP_EL0_1=Minus(SP_EL0_sy,c304) in 
 let R30_sy=sy_R30_2199 in 
 let R30_2=c15622336 in 
-let MEM_7=Store(Store(MEM_sy,R28_sy,Plus(SP_EL0_1,c208)),R27_sy,Plus(SP_EL0_1,c216)) in 
-let MEM_12=Store(Store(MEM_7,R26_sy,Plus(SP_EL0_1,c224)),R25_sy,Plus(SP_EL0_1,c232)) in 
-let MEM_17=Store(Store(MEM_12,R24_sy,Plus(SP_EL0_1,c240)),R23_sy,Plus(SP_EL0_1,c248)) in 
-let MEM_22=Store(Store(MEM_17,R22_sy,Plus(SP_EL0_1,c256)),R21_sy,Plus(SP_EL0_1,c264)) in 
-let MEM_27=Store(Store(MEM_22,R20_sy,Plus(SP_EL0_1,c272)),R19_sy,Plus(SP_EL0_1,c280)) in 
+insert Plus(SP_EL0_1,c216),R27_sy;
+insert Plus(SP_EL0_1,c232),R25_sy;
+insert Plus(SP_EL0_1,c248),R23_sy;
+insert Plus(SP_EL0_1,c264),R21_sy;
+insert Plus(SP_EL0_1,c280),R19_sy;
 let R30_sy=sy_R30_2216 in 
-let MEM_32=Store(Store(MEM_27,R29_sy,Plus(SP_EL0_1,c288)),R30_sy,Plus(SP_EL0_1,c296)) in 
+insert Plus(SP_EL0_1,c296),R30_sy;
 let R29_33=Minus(SP_EL0_sy,c16) in 
 let R30_34=c15622352 in 
 let R3_sy=sy_R3_2222 in 
@@ -16,60 +16,60 @@ let R30_35=c15622356 in
 let R1_sy=sy_R1_2225 in 
 let R0_sy=sy_R0_2226 in 
 let R8_36=c28270592 in 
-let R8_39=Load(MEM_32,c28273592) in 
-let R8_42=Load(MEM_32,R8_39) in 
-let MEM_47=Store(MEM_32,R8_42,Minus(R29_33,c96)) in 
-let MEM_52=Store(Store(MEM_47,c0,Plus(SP_EL0_1,c56)),c0,Plus(SP_EL0_1,c64)) in 
-let MEM_57=Store(MEM_52,c0,Plus(SP_EL0_1,c160)) in 
-let MEM_63=Store(Store(MEM_57,c0,Plus(SP_EL0_1,c40)),c0,Plus(SP_EL0_1,c48)) in 
+lookup c28273592 as R8_39 in 
+lookup R8_39 as R8_42 in 
+insert Minus(R29_33,c96),R8_42;
+insert Plus(SP_EL0_1,c64),c0;
+insert Plus(SP_EL0_1,c160),c0;
+insert Plus(SP_EL0_1,c48),c0;
 let R30_64=c15622392 in 
-let R9_67=Load(MEM_63,Plus(R0_sy,c24)) in 
-let R8_70=Load(MEM_63,Plus(R9_67,c96)) in 
+lookup Plus(R0_sy,c24) as R9_67 in 
+lookup Plus(R9_67,c96) as R8_70 in 
 if Not(Equal(R8_70,c0)) then 
 let R30_1133=c15622400 in 
-let R0_1136=Load(MEM_63,Plus(R9_67,c120)) in 
+lookup Plus(R9_67,c120) as R0_1136 in 
 let R8_1139=UnsignedCast(Load(MEM_63,Plus(R0_sy,c40)),c64) in 
 let ProcState_C_1140=LessOrEqual(c1,LowCast(R8_1139,c32)) in 
 let ProcState_N_1141=SignedLessThan(Minus(LowCast(R8_1139,c32),c1),c0) in 
 let ProcState_V_1142=Equal(SignedLessThan(Minus(LowCast(R8_1139,c32),c1),c0),SignedLessOrEqual(c1,LowCast(R8_1139,c32))) in 
 let ProcState_Z_1143=Equal(LowCast(R8_1139,c32),c1) in 
 if Not(ProcState_Z_1143) then 
-let R0_1150=Load(MEM_63,R0_sy) in 
-let R2_1151=Load(MEM_63,Plus(R0_sy,c8)) in 
+lookup R0_sy as R0_1150 in 
+lookup Plus(R0_sy,c8) as R2_1151 in 
 let R1_1152=Minus(SP_EL0_sy,c240) in 
 in(a_1155);
 if Not(SignedLessThan(LowCast(R0_1150,c32),c0)) then 
-let R22_1161=Load(MEM_63,Plus(SP_EL0_1,c64)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(SP_EL0_1,c64) as R22_1161 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(Equal(R23_1164,c0)) then 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 if Not(Equal(R24_1171,c0)) then 
-let CKji_1177=Load(MEM_63,a_1155) in 
+lookup a_1155 as CKji_1177 in 
 let MKi_1179=hash2(CKji_1177,0x01) in 
 if Not(SignedLessThan(LowCast(R0_1150,c32),c0)) then 
-let R8_1185=Load(MEM_63,Plus(R23_1164,c56)) in 
+lookup Plus(R23_1164,c56) as R8_1185 in 
 if Not(Equal(R8_1185,c0)) then 
-let R27_1192=Load(MEM_63,Plus(R8_1185,c16)) in 
+lookup Plus(R8_1185,c16) as R27_1192 in 
 if Not(Equal(R27_1192,c0)) then 
 let R8_1199=UnsignedCast(Load(MEM_63,Plus(R23_1164,c48)),c64) in 
-let MEM_1204=Store(MEM_63,LowCast(R8_1199,c32),Plus(SP_EL0_1,c36)) in 
+insert Plus(SP_EL0_1,c36),LowCast(R8_1199,c32);
 let R28_1207=UnsignedCast(Load(MEM_1204,Plus(R23_1164,c16)),c64) in 
-let MEM_1212=Store(MEM_1204,c0,Plus(SP_EL0_1,c72)) in 
+insert Plus(SP_EL0_1,c72),c0;
 let ProcState_C_1213=LessOrEqual(c3,LowCast(R28_1207,c32)) in 
 let ProcState_N_1214=SignedLessThan(Minus(LowCast(R28_1207,c32),c3),c0) in 
 let ProcState_V_1215=Equal(SignedLessThan(Minus(LowCast(R28_1207,c32),c3),c0),SignedLessOrEqual(c3,LowCast(R28_1207,c32))) in 
 let ProcState_Z_1216=Equal(LowCast(R28_1207,c32),c3) in 
 if Not(ProcState_C_1213) then 
-let MEM_1703=Store(MEM_1212,c0,Minus(R29_33,c100)) in 
-let MEM_1708=Store(MEM_1703,c0,Minus(R29_33,c108)) in 
+insert Minus(R29_33,c100),c0;
+insert Minus(R29_33,c108),c0;
 let R8_1711=UnsignedCast(Load(MEM_1708,Plus(SP_EL0_1,c160)),c64) in 
 let R8_1712=UnsignedCast(Or(RightShift(LowCast(R8_1711,c32),c24),Or(And(RightShift(LowCast(R8_1711,c32),c8),c65280),Or(And(LeftShift(LowCast(R8_1711,c32),c8),c16711680),LeftShift(LowCast(R8_1711,c32),c24)))),c64) in 
-let MEM_1717=Store(MEM_1708,LowCast(R8_1712,c32),Minus(R29_33,c112)) in 
-let R8_1720=Load(MEM_1717,Plus(R0_sy,c24)) in 
+insert Minus(R29_33,c112),LowCast(R8_1712,c32);
+lookup Plus(R0_sy,c24) as R8_1720 in 
 let R30_1721=c15622704 in 
-let R9_1724=Load(MEM_1717,Plus(R8_1720,c72)) in 
-let R8_1727=Load(MEM_1717,Plus(R8_1720,c88)) in 
-let MEM_1732=Store(MEM_1717,R8_1727,SP_EL0_1) in 
+lookup Plus(R8_1720,c72) as R9_1724 in 
+lookup Plus(R8_1720,c88) as R8_1727 in 
+insert SP_EL0_1,R8_1727;
 let R0_1733=Minus(SP_EL0_sy,c232) in 
 let R2_1734=Minus(SP_EL0_sy,c224) in 
 let R4_1735=Minus(SP_EL0_sy,c128) in 
@@ -81,25 +81,25 @@ let R2_sy=sy_R2_2327 in
 let R30_1739=c15622732 in 
 let R0_1733=Minus(SP_EL0_sy,c232) in 
 if Not(SignedLessThan(LowCast(R0_1733,c32),c0)) then 
-let R21_1745=Load(MEM_1732,Plus(SP_EL0_1,c72)) in 
-let R26_1748=Load(MEM_1732,Plus(R23_1164,c24)) in 
+lookup Plus(SP_EL0_1,c72) as R21_1745 in 
+lookup Plus(R23_1164,c24) as R26_1748 in 
 if Not(Equal(R26_1748,c0)) then 
-let R8_1754=Load(MEM_1732,Plus(R23_1164,c32)) in 
+lookup Plus(R23_1164,c32) as R8_1754 in 
 if Not(Equal(R8_1754,c0)) then 
-let R21_1745=Load(MEM_1732,Plus(SP_EL0_1,c72)) in 
+lookup Plus(SP_EL0_1,c72) as R21_1745 in 
 let tmp_R7_1760=Plus(R21_1745,c8) in 
-let R9_1761=Load(MEM_1732,R21_1745) in 
+lookup R21_1745 as R9_1761 in 
 let tmp_R7_1760=Plus(R21_1745,c8) in 
 let R5_1764=UnsignedCast(Load(MEM_1732,Plus(R24_1171,c48)),c64) in 
 let R10_1765=Minus(SP_EL0_sy,c224) in 
 let R2_1766=Minus(SP_EL0_sy,c192) in 
-let R10_1769=Load(MEM_1732,Plus(R0_sy,c24)) in 
-let MEM_1774=Store(Store(MEM_1732,R8_1754,Plus(SP_EL0_1,c16)),R10_1769,Plus(SP_EL0_1,c24)) in 
-let MEM_1779=Store(Store(MEM_1774,R9_1761,SP_EL0_1),R26_1748,Plus(SP_EL0_1,c8)) in 
+lookup Plus(R0_sy,c24) as R10_1769 in 
+insert Plus(SP_EL0_1,c24),R10_1769;
+insert Plus(SP_EL0_1,c8),R26_1748;
 let R1_1780=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_1781=Minus(SP_EL0_sy,c256) in 
 let R3_1782=c32 in 
-let R27_1192=Load(MEM_63,Plus(R8_1185,c16)) in 
+lookup Plus(R8_1185,c16) as R27_1192 in 
 let R6_1785=UnsignedCast(Load(MEM_1779,Plus(SP_EL0_1,c36)),c64) in 
 in(a_1788);
 let Enc_1789=enc(a_1788,MKi_1179) in 
@@ -113,33 +113,31 @@ let ProcState_V_1801=Equal(SignedLessThan(Minus(LowCast(R8_1798,c32),c1),c0),Sig
 let ProcState_Z_1802=Equal(LowCast(R8_1798,c32),c1) in 
 if Not(ProcState_Z_1802) then 
 let R1_2164=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_2166=hash2(CKji_1177,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_2171=Load(MEM_1790,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_2173=Store(MEM_1790,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_2171 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_2181=Load(MEM_2173,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_2181 in 
 if Not(Equal(R8_2181,c0)) then 
-let R8_2191=Load(MEM_2173,Plus(SP_EL0_1,c48)) in 
-let MEM_2196=Store(MEM_2173,R8_2191,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_2191 in 
+insert R3_sy,R8_2191
+else insert R3_sy,R8_2181
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_2188=Store(MEM_2173,R8_2181,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R2_1807=UnsignedCast(Load(MEM_1790,Plus(R23_1164,c164)),c64) in 
-let MEM_1812=Store(MEM_1790,c0,Minus(R29_33,c112)) in 
+insert Minus(R29_33,c112),c0;
 let R8_1815=UnsignedCast(Load(MEM_1812,Plus(R23_1164,c136)),c64) in 
 if Not(Equal(LowCast(R8_1815,c32),c0)) then 
 let R9_1989=UnsignedCast(Load(MEM_1812,Plus(R23_1164,c140)),c64) in 
-let MEM_1994=Store(MEM_1812,LowCast(R9_1989,c32),Minus(R29_33,c112)) in 
-let R5_1997=Load(MEM_1994,Plus(R23_1164,c152)) in 
+insert Minus(R29_33,c112),LowCast(R9_1989,c32);
+lookup Plus(R23_1164,c152) as R5_1997 in 
 if Not(Equal(R5_1997,c0)) then 
 let R4_2003=UnsignedCast(Load(MEM_1994,Plus(R23_1164,c144)),c64) in 
 let ProcState_C_2004=c1 in 
@@ -148,19 +146,19 @@ let ProcState_V_2006=c0 in
 let ProcState_Z_2007=Equal(LowCast(R8_1815,c32),c0) in 
 let R8_2008=Minus(SP_EL0_sy,c128) in 
 let R3_2009=IfThenElse(ProcState_Z_2007,R8_2008,c0) in 
-let R27_2012=Load(MEM_1994,Plus(SP_EL0_1,c48)) in 
-let R8_2015=Load(MEM_1994,Plus(R0_sy,c24)) in 
-let MEM_2020=Store(MEM_1994,R8_2015,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_2012 in 
+lookup Plus(R0_sy,c24) as R8_2015 in 
+insert SP_EL0_1,R8_2015;
 let R1_2021=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_2022=Minus(SP_EL0_sy,c264) in 
 let R30_2023=c15622904 in 
-let R26_1748=Load(MEM_1732,Plus(R23_1164,c24)) in 
-let R27_2012=Load(MEM_1994,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_1164,c24) as R26_1748 in 
+lookup Plus(SP_EL0_1,c48) as R27_2012 in 
 new ~2026_RNG;
 let RAND_NUM_2025=~2026_RNG in 
 if Not(SignedLessThan(LowCast(R0_2022,c32),c0)) then 
 let R30_2029=c15622916 in 
-let R27_2012=Load(MEM_1994,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_2012 in 
 if Not(Equal(R27_2012,c0)) then 
 let R8_2072=UnsignedCast(Load(MEM_2020,R27_2012),c64) in 
 let ProcState_C_2073=LessOrEqual(c2,LowCast(R8_2072,c32)) in 
@@ -168,80 +166,74 @@ let ProcState_N_2074=SignedLessThan(Minus(LowCast(R8_2072,c32),c2),c0) in
 let ProcState_V_2075=Equal(SignedLessThan(Minus(LowCast(R8_2072,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_2072,c32))) in 
 let ProcState_Z_2076=Equal(LowCast(R8_2072,c32),c2) in 
 if Not(ProcState_C_2073) then 
-let R1_2125=Load(MEM_2020,Plus(R27_2012,c8)) in 
-let MEM_2130=Store(MEM_2020,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_2012,c8) as R1_2125 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_2131=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_2133=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_2138=Load(MEM_2130,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_2140=Store(MEM_2130,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_2138 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_2148=Load(MEM_2140,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_2148 in 
 if Not(Equal(R8_2148,c0)) then 
-let R8_2158=Load(MEM_2140,Plus(SP_EL0_1,c48)) in 
-let MEM_2163=Store(MEM_2140,R8_2158,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_2158 in 
+insert R3_sy,R8_2158
+else insert R3_sy,R8_2148
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_2155=Store(MEM_2140,R8_2148,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R8_2079=UnsignedCast(Minus(LowCast(R8_2072,c32),c1),c64) in 
-let MEM_2084=Store(MEM_2020,LowCast(R8_2079,c32),R27_2012) in 
-let MEM_2089=Store(MEM_2084,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_2012,LowCast(R8_2079,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_2090=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_2092=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_2097=Load(MEM_2089,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_2099=Store(MEM_2089,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_2097 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_2107=Load(MEM_2099,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_2107 in 
 if Not(Equal(R8_2107,c0)) then 
-let R8_2117=Load(MEM_2099,Plus(SP_EL0_1,c48)) in 
-let MEM_2122=Store(MEM_2099,R8_2117,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_2117 in 
+insert R3_sy,R8_2117
+else insert R3_sy,R8_2107
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_2114=Store(MEM_2099,R8_2107,R3_sy) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
-0
-else let MEM_2036=Store(MEM_2020,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_2037=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_2039=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_2044=Load(MEM_2036,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_2046=Store(MEM_2036,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_2044 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_2054=Load(MEM_2046,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_2054 in 
 if Not(Equal(R8_2054,c0)) then 
-let R8_2064=Load(MEM_2046,Plus(SP_EL0_1,c48)) in 
-let MEM_2069=Store(MEM_2046,R8_2064,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_2064 in 
+insert R3_sy,R8_2064
+else insert R3_sy,R8_2054
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_2061=Store(MEM_2046,R8_2054,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R0_2022=Minus(SP_EL0_sy,c264) in 
 0
 else let R25_2000=c4294965990 in 
 0
-else let R5_1820=Load(MEM_1812,Plus(R23_1164,c152)) in 
+else lookup Plus(R23_1164,c152) as R5_1820 in 
 if Not(Equal(R5_1820,c0)) then 
 let R4_1826=UnsignedCast(Load(MEM_1812,Plus(R23_1164,c144)),c64) in 
 let ProcState_C_1827=c1 in 
@@ -250,19 +242,19 @@ let ProcState_V_1829=c0 in
 let ProcState_Z_1830=Equal(LowCast(R8_1815,c32),c0) in 
 let R8_1831=Minus(SP_EL0_sy,c128) in 
 let R3_1832=IfThenElse(ProcState_Z_1830,R8_1831,c0) in 
-let R27_1835=Load(MEM_1812,Plus(SP_EL0_1,c48)) in 
-let R8_1838=Load(MEM_1812,Plus(R0_sy,c24)) in 
-let MEM_1843=Store(MEM_1812,R8_1838,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_1835 in 
+lookup Plus(R0_sy,c24) as R8_1838 in 
+insert SP_EL0_1,R8_1838;
 let R1_1844=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_1845=Minus(SP_EL0_sy,c264) in 
 let R30_1846=c15622904 in 
-let R26_1748=Load(MEM_1732,Plus(R23_1164,c24)) in 
-let R27_1835=Load(MEM_1812,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_1164,c24) as R26_1748 in 
+lookup Plus(SP_EL0_1,c48) as R27_1835 in 
 new ~1849_RNG;
 let RAND_NUM_1848=~1849_RNG in 
 if Not(SignedLessThan(LowCast(R0_1845,c32),c0)) then 
 let R30_1852=c15622916 in 
-let R27_1835=Load(MEM_1812,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_1835 in 
 if Not(Equal(R27_1835,c0)) then 
 let R8_1895=UnsignedCast(Load(MEM_1843,R27_1835),c64) in 
 let ProcState_C_1896=LessOrEqual(c2,LowCast(R8_1895,c32)) in 
@@ -270,74 +262,68 @@ let ProcState_N_1897=SignedLessThan(Minus(LowCast(R8_1895,c32),c2),c0) in
 let ProcState_V_1898=Equal(SignedLessThan(Minus(LowCast(R8_1895,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_1895,c32))) in 
 let ProcState_Z_1899=Equal(LowCast(R8_1895,c32),c2) in 
 if Not(ProcState_C_1896) then 
-let R1_1948=Load(MEM_1843,Plus(R27_1835,c8)) in 
-let MEM_1953=Store(MEM_1843,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_1835,c8) as R1_1948 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1954=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1956=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1961=Load(MEM_1953,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1963=Store(MEM_1953,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1961 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1971=Load(MEM_1963,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1971 in 
 if Not(Equal(R8_1971,c0)) then 
-let R8_1981=Load(MEM_1963,Plus(SP_EL0_1,c48)) in 
-let MEM_1986=Store(MEM_1963,R8_1981,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1981 in 
+insert R3_sy,R8_1981
+else insert R3_sy,R8_1971
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1978=Store(MEM_1963,R8_1971,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R8_1902=UnsignedCast(Minus(LowCast(R8_1895,c32),c1),c64) in 
-let MEM_1907=Store(MEM_1843,LowCast(R8_1902,c32),R27_1835) in 
-let MEM_1912=Store(MEM_1907,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_1835,LowCast(R8_1902,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1913=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1915=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1920=Load(MEM_1912,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1922=Store(MEM_1912,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1920 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1930=Load(MEM_1922,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1930 in 
 if Not(Equal(R8_1930,c0)) then 
-let R8_1940=Load(MEM_1922,Plus(SP_EL0_1,c48)) in 
-let MEM_1945=Store(MEM_1922,R8_1940,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1940 in 
+insert R3_sy,R8_1940
+else insert R3_sy,R8_1930
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1937=Store(MEM_1922,R8_1930,R3_sy) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
-0
-else let MEM_1859=Store(MEM_1843,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_1860=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1862=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1867=Load(MEM_1859,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1869=Store(MEM_1859,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1867 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1877=Load(MEM_1869,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1877 in 
 if Not(Equal(R8_1877,c0)) then 
-let R8_1887=Load(MEM_1869,Plus(SP_EL0_1,c48)) in 
-let MEM_1892=Store(MEM_1869,R8_1887,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1887 in 
+insert R3_sy,R8_1887
+else insert R3_sy,R8_1877
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1884=Store(MEM_1869,R8_1877,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R0_1845=Minus(SP_EL0_sy,c264) in 
 0
@@ -351,13 +337,13 @@ else let R25_1751=c4294965992 in
 0
 else let R21_1742=c0 in 
 0
-else let R8_1221=Load(MEM_1212,Plus(R0_sy,c24)) in 
+else lookup Plus(R0_sy,c24) as R8_1221 in 
 let R9_1222=Minus(SP_EL0_sy,c224) in 
 let R4_1223=Minus(SP_EL0_sy,c160) in 
 let R30_1224=c15622528 in 
-let R9_1227=Load(MEM_1212,Plus(R8_1221,c72)) in 
-let R8_1230=Load(MEM_1212,Plus(R8_1221,c88)) in 
-let MEM_1235=Store(MEM_1212,R8_1230,SP_EL0_1) in 
+lookup Plus(R8_1221,c72) as R9_1227 in 
+lookup Plus(R8_1221,c88) as R8_1230 in 
+insert SP_EL0_1,R8_1230;
 let R0_1236=Minus(SP_EL0_sy,c232) in 
 let R2_1237=Minus(SP_EL0_sy,c224) in 
 let R1_1238=c2 in 
@@ -368,25 +354,25 @@ let R2_sy=sy_R2_2681 in
 let R30_1241=c15622732 in 
 let R0_1236=Minus(SP_EL0_sy,c232) in 
 if Not(SignedLessThan(LowCast(R0_1236,c32),c0)) then 
-let R21_1247=Load(MEM_1235,Plus(SP_EL0_1,c72)) in 
-let R26_1250=Load(MEM_1235,Plus(R23_1164,c24)) in 
+lookup Plus(SP_EL0_1,c72) as R21_1247 in 
+lookup Plus(R23_1164,c24) as R26_1250 in 
 if Not(Equal(R26_1250,c0)) then 
-let R8_1256=Load(MEM_1235,Plus(R23_1164,c32)) in 
+lookup Plus(R23_1164,c32) as R8_1256 in 
 if Not(Equal(R8_1256,c0)) then 
-let R21_1247=Load(MEM_1235,Plus(SP_EL0_1,c72)) in 
+lookup Plus(SP_EL0_1,c72) as R21_1247 in 
 let tmp_R7_1262=Plus(R21_1247,c8) in 
-let R9_1263=Load(MEM_1235,R21_1247) in 
+lookup R21_1247 as R9_1263 in 
 let tmp_R7_1262=Plus(R21_1247,c8) in 
 let R5_1266=UnsignedCast(Load(MEM_1235,Plus(R24_1171,c48)),c64) in 
 let R10_1267=Minus(SP_EL0_sy,c224) in 
 let R2_1268=Minus(SP_EL0_sy,c192) in 
-let R10_1271=Load(MEM_1235,Plus(R0_sy,c24)) in 
-let MEM_1276=Store(Store(MEM_1235,R8_1256,Plus(SP_EL0_1,c16)),R10_1271,Plus(SP_EL0_1,c24)) in 
-let MEM_1281=Store(Store(MEM_1276,R9_1263,SP_EL0_1),R26_1250,Plus(SP_EL0_1,c8)) in 
+lookup Plus(R0_sy,c24) as R10_1271 in 
+insert Plus(SP_EL0_1,c24),R10_1271;
+insert Plus(SP_EL0_1,c8),R26_1250;
 let R1_1282=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_1283=Minus(SP_EL0_sy,c256) in 
 let R3_1284=c32 in 
-let R27_1192=Load(MEM_63,Plus(R8_1185,c16)) in 
+lookup Plus(R8_1185,c16) as R27_1192 in 
 let R6_1287=UnsignedCast(Load(MEM_1281,Plus(SP_EL0_1,c36)),c64) in 
 in(a_1290);
 let Enc_1291=enc(a_1290,MKi_1179) in 
@@ -400,33 +386,31 @@ let ProcState_V_1303=Equal(SignedLessThan(Minus(LowCast(R8_1300,c32),c1),c0),Sig
 let ProcState_Z_1304=Equal(LowCast(R8_1300,c32),c1) in 
 if Not(ProcState_Z_1304) then 
 let R1_1666=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1668=hash2(CKji_1177,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1673=Load(MEM_1292,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1675=Store(MEM_1292,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1673 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1683=Load(MEM_1675,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1683 in 
 if Not(Equal(R8_1683,c0)) then 
-let R8_1693=Load(MEM_1675,Plus(SP_EL0_1,c48)) in 
-let MEM_1698=Store(MEM_1675,R8_1693,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1693 in 
+insert R3_sy,R8_1693
+else insert R3_sy,R8_1683
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1690=Store(MEM_1675,R8_1683,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R2_1309=UnsignedCast(Load(MEM_1292,Plus(R23_1164,c164)),c64) in 
-let MEM_1314=Store(MEM_1292,c0,Minus(R29_33,c112)) in 
+insert Minus(R29_33,c112),c0;
 let R8_1317=UnsignedCast(Load(MEM_1314,Plus(R23_1164,c136)),c64) in 
 if Not(Equal(LowCast(R8_1317,c32),c0)) then 
 let R9_1491=UnsignedCast(Load(MEM_1314,Plus(R23_1164,c140)),c64) in 
-let MEM_1496=Store(MEM_1314,LowCast(R9_1491,c32),Minus(R29_33,c112)) in 
-let R5_1499=Load(MEM_1496,Plus(R23_1164,c152)) in 
+insert Minus(R29_33,c112),LowCast(R9_1491,c32);
+lookup Plus(R23_1164,c152) as R5_1499 in 
 if Not(Equal(R5_1499,c0)) then 
 let R4_1505=UnsignedCast(Load(MEM_1496,Plus(R23_1164,c144)),c64) in 
 let ProcState_C_1506=c1 in 
@@ -435,19 +419,19 @@ let ProcState_V_1508=c0 in
 let ProcState_Z_1509=Equal(LowCast(R8_1317,c32),c0) in 
 let R8_1510=Minus(SP_EL0_sy,c128) in 
 let R3_1511=IfThenElse(ProcState_Z_1509,R8_1510,c0) in 
-let R27_1514=Load(MEM_1496,Plus(SP_EL0_1,c48)) in 
-let R8_1517=Load(MEM_1496,Plus(R0_sy,c24)) in 
-let MEM_1522=Store(MEM_1496,R8_1517,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_1514 in 
+lookup Plus(R0_sy,c24) as R8_1517 in 
+insert SP_EL0_1,R8_1517;
 let R1_1523=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_1524=Minus(SP_EL0_sy,c264) in 
 let R30_1525=c15622904 in 
-let R26_1250=Load(MEM_1235,Plus(R23_1164,c24)) in 
-let R27_1514=Load(MEM_1496,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_1164,c24) as R26_1250 in 
+lookup Plus(SP_EL0_1,c48) as R27_1514 in 
 new ~1528_RNG;
 let RAND_NUM_1527=~1528_RNG in 
 if Not(SignedLessThan(LowCast(R0_1524,c32),c0)) then 
 let R30_1531=c15622916 in 
-let R27_1514=Load(MEM_1496,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_1514 in 
 if Not(Equal(R27_1514,c0)) then 
 let R8_1574=UnsignedCast(Load(MEM_1522,R27_1514),c64) in 
 let ProcState_C_1575=LessOrEqual(c2,LowCast(R8_1574,c32)) in 
@@ -455,80 +439,74 @@ let ProcState_N_1576=SignedLessThan(Minus(LowCast(R8_1574,c32),c2),c0) in
 let ProcState_V_1577=Equal(SignedLessThan(Minus(LowCast(R8_1574,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_1574,c32))) in 
 let ProcState_Z_1578=Equal(LowCast(R8_1574,c32),c2) in 
 if Not(ProcState_C_1575) then 
-let R1_1627=Load(MEM_1522,Plus(R27_1514,c8)) in 
-let MEM_1632=Store(MEM_1522,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_1514,c8) as R1_1627 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1633=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1635=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1640=Load(MEM_1632,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1642=Store(MEM_1632,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1640 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1650=Load(MEM_1642,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1650 in 
 if Not(Equal(R8_1650,c0)) then 
-let R8_1660=Load(MEM_1642,Plus(SP_EL0_1,c48)) in 
-let MEM_1665=Store(MEM_1642,R8_1660,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1660 in 
+insert R3_sy,R8_1660
+else insert R3_sy,R8_1650
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1657=Store(MEM_1642,R8_1650,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R8_1581=UnsignedCast(Minus(LowCast(R8_1574,c32),c1),c64) in 
-let MEM_1586=Store(MEM_1522,LowCast(R8_1581,c32),R27_1514) in 
-let MEM_1591=Store(MEM_1586,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_1514,LowCast(R8_1581,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1592=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1594=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1599=Load(MEM_1591,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1601=Store(MEM_1591,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1599 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1609=Load(MEM_1601,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1609 in 
 if Not(Equal(R8_1609,c0)) then 
-let R8_1619=Load(MEM_1601,Plus(SP_EL0_1,c48)) in 
-let MEM_1624=Store(MEM_1601,R8_1619,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1619 in 
+insert R3_sy,R8_1619
+else insert R3_sy,R8_1609
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1616=Store(MEM_1601,R8_1609,R3_sy) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
-0
-else let MEM_1538=Store(MEM_1522,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_1539=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1541=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1546=Load(MEM_1538,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1548=Store(MEM_1538,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1546 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1556=Load(MEM_1548,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1556 in 
 if Not(Equal(R8_1556,c0)) then 
-let R8_1566=Load(MEM_1548,Plus(SP_EL0_1,c48)) in 
-let MEM_1571=Store(MEM_1548,R8_1566,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1566 in 
+insert R3_sy,R8_1566
+else insert R3_sy,R8_1556
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1563=Store(MEM_1548,R8_1556,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R0_1524=Minus(SP_EL0_sy,c264) in 
 0
 else let R25_1502=c4294965990 in 
 0
-else let R5_1322=Load(MEM_1314,Plus(R23_1164,c152)) in 
+else lookup Plus(R23_1164,c152) as R5_1322 in 
 if Not(Equal(R5_1322,c0)) then 
 let R4_1328=UnsignedCast(Load(MEM_1314,Plus(R23_1164,c144)),c64) in 
 let ProcState_C_1329=c1 in 
@@ -537,19 +515,19 @@ let ProcState_V_1331=c0 in
 let ProcState_Z_1332=Equal(LowCast(R8_1317,c32),c0) in 
 let R8_1333=Minus(SP_EL0_sy,c128) in 
 let R3_1334=IfThenElse(ProcState_Z_1332,R8_1333,c0) in 
-let R27_1337=Load(MEM_1314,Plus(SP_EL0_1,c48)) in 
-let R8_1340=Load(MEM_1314,Plus(R0_sy,c24)) in 
-let MEM_1345=Store(MEM_1314,R8_1340,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_1337 in 
+lookup Plus(R0_sy,c24) as R8_1340 in 
+insert SP_EL0_1,R8_1340;
 let R1_1346=UnsignedCast(And(c255,LowCast(R28_1207,c32)),c64) in 
 let R0_1347=Minus(SP_EL0_sy,c264) in 
 let R30_1348=c15622904 in 
-let R26_1250=Load(MEM_1235,Plus(R23_1164,c24)) in 
-let R27_1337=Load(MEM_1314,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_1164,c24) as R26_1250 in 
+lookup Plus(SP_EL0_1,c48) as R27_1337 in 
 new ~1351_RNG;
 let RAND_NUM_1350=~1351_RNG in 
 if Not(SignedLessThan(LowCast(R0_1347,c32),c0)) then 
 let R30_1354=c15622916 in 
-let R27_1337=Load(MEM_1314,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_1337 in 
 if Not(Equal(R27_1337,c0)) then 
 let R8_1397=UnsignedCast(Load(MEM_1345,R27_1337),c64) in 
 let ProcState_C_1398=LessOrEqual(c2,LowCast(R8_1397,c32)) in 
@@ -557,74 +535,68 @@ let ProcState_N_1399=SignedLessThan(Minus(LowCast(R8_1397,c32),c2),c0) in
 let ProcState_V_1400=Equal(SignedLessThan(Minus(LowCast(R8_1397,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_1397,c32))) in 
 let ProcState_Z_1401=Equal(LowCast(R8_1397,c32),c2) in 
 if Not(ProcState_C_1398) then 
-let R1_1450=Load(MEM_1345,Plus(R27_1337,c8)) in 
-let MEM_1455=Store(MEM_1345,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_1337,c8) as R1_1450 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1456=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1458=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1463=Load(MEM_1455,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1465=Store(MEM_1455,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1463 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1473=Load(MEM_1465,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1473 in 
 if Not(Equal(R8_1473,c0)) then 
-let R8_1483=Load(MEM_1465,Plus(SP_EL0_1,c48)) in 
-let MEM_1488=Store(MEM_1465,R8_1483,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1483 in 
+insert R3_sy,R8_1483
+else insert R3_sy,R8_1473
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1480=Store(MEM_1465,R8_1473,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R8_1404=UnsignedCast(Minus(LowCast(R8_1397,c32),c1),c64) in 
-let MEM_1409=Store(MEM_1345,LowCast(R8_1404,c32),R27_1337) in 
-let MEM_1414=Store(MEM_1409,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_1337,LowCast(R8_1404,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1415=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1417=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1422=Load(MEM_1414,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1424=Store(MEM_1414,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1422 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1432=Load(MEM_1424,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1432 in 
 if Not(Equal(R8_1432,c0)) then 
-let R8_1442=Load(MEM_1424,Plus(SP_EL0_1,c48)) in 
-let MEM_1447=Store(MEM_1424,R8_1442,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1442 in 
+insert R3_sy,R8_1442
+else insert R3_sy,R8_1432
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1439=Store(MEM_1424,R8_1432,R3_sy) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
-0
-else let MEM_1361=Store(MEM_1345,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_1362=Minus(SP_EL0_sy,c248) in 
-let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+lookup Plus(R23_1164,c64) as R24_1171 in 
 let CKjiPlus_1364=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
-let R1_1369=Load(MEM_1361,Plus(SP_EL0_1,c56)) in 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-let MEM_1371=Store(MEM_1361,MKi_1179,a_1155) in 
+lookup Plus(SP_EL0_1,c56) as R1_1369 in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
+insert a_1155,MKi_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
+lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
-let R8_1379=Load(MEM_1371,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1379 in 
 if Not(Equal(R8_1379,c0)) then 
-let R8_1389=Load(MEM_1371,Plus(SP_EL0_1,c48)) in 
-let MEM_1394=Store(MEM_1371,R8_1389,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1389 in 
+insert R3_sy,R8_1389
+else insert R3_sy,R8_1379
+else lookup Plus(R22_1161,c16) as R23_1164 in 
 0
-else let MEM_1386=Store(MEM_1371,R8_1379,R3_sy) in 
-0
-else let R23_1164=Load(MEM_63,Plus(R22_1161,c16)) in 
-0
-else let R24_1171=Load(MEM_63,Plus(R23_1164,c64)) in 
+else lookup Plus(R23_1164,c64) as R24_1171 in 
 0
 else let R0_1347=Minus(SP_EL0_sy,c264) in 
 0
@@ -644,7 +616,7 @@ let R25_1196=c4294965993 in
 else let R21_1188=c0 in 
 let R25_1189=c4294965993 in 
 0
-else let R0_1150=Load(MEM_63,R0_sy) in 
+else lookup R0_sy as R0_1150 in 
 let R21_1182=c0 in 
 0
 else let R21_1174=c0 in 
@@ -653,7 +625,7 @@ let R25_1175=c4294965995 in
 else let R21_1167=c0 in 
 let R25_1168=c4294965996 in 
 0
-else let R0_1150=Load(MEM_63,R0_sy) in 
+else lookup R0_sy as R0_1150 in 
 let R21_1158=c0 in 
 0
 else let R21_1146=c0 in 
@@ -665,42 +637,42 @@ let ProcState_N_77=SignedLessThan(Minus(LowCast(R8_75,c32),c1),c0) in
 let ProcState_V_78=Equal(SignedLessThan(Minus(LowCast(R8_75,c32),c1),c0),SignedLessOrEqual(c1,LowCast(R8_75,c32))) in 
 let ProcState_Z_79=Equal(LowCast(R8_75,c32),c1) in 
 if Not(ProcState_Z_79) then 
-let R0_86=Load(MEM_63,R0_sy) in 
-let R2_87=Load(MEM_63,Plus(R0_sy,c8)) in 
+lookup R0_sy as R0_86 in 
+lookup Plus(R0_sy,c8) as R2_87 in 
 let R1_88=Minus(SP_EL0_sy,c240) in 
 in(a_91);
 if Not(SignedLessThan(LowCast(R0_86,c32),c0)) then 
-let R22_97=Load(MEM_63,Plus(SP_EL0_1,c64)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(SP_EL0_1,c64) as R22_97 in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(Equal(R23_100,c0)) then 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 if Not(Equal(R24_107,c0)) then 
-let CKji_113=Load(MEM_63,a_91) in 
+lookup a_91 as CKji_113 in 
 let MKi_115=hash2(CKji_113,0x01) in 
 if Not(SignedLessThan(LowCast(R0_86,c32),c0)) then 
-let R8_121=Load(MEM_63,Plus(R23_100,c56)) in 
+lookup Plus(R23_100,c56) as R8_121 in 
 if Not(Equal(R8_121,c0)) then 
-let R27_128=Load(MEM_63,Plus(R8_121,c16)) in 
+lookup Plus(R8_121,c16) as R27_128 in 
 if Not(Equal(R27_128,c0)) then 
 let R8_135=UnsignedCast(Load(MEM_63,Plus(R23_100,c48)),c64) in 
-let MEM_140=Store(MEM_63,LowCast(R8_135,c32),Plus(SP_EL0_1,c36)) in 
+insert Plus(SP_EL0_1,c36),LowCast(R8_135,c32);
 let R28_143=UnsignedCast(Load(MEM_140,Plus(R23_100,c16)),c64) in 
-let MEM_148=Store(MEM_140,c0,Plus(SP_EL0_1,c72)) in 
+insert Plus(SP_EL0_1,c72),c0;
 let ProcState_C_149=LessOrEqual(c3,LowCast(R28_143,c32)) in 
 let ProcState_N_150=SignedLessThan(Minus(LowCast(R28_143,c32),c3),c0) in 
 let ProcState_V_151=Equal(SignedLessThan(Minus(LowCast(R28_143,c32),c3),c0),SignedLessOrEqual(c3,LowCast(R28_143,c32))) in 
 let ProcState_Z_152=Equal(LowCast(R28_143,c32),c3) in 
 if Not(ProcState_C_149) then 
-let MEM_639=Store(MEM_148,c0,Minus(R29_33,c100)) in 
-let MEM_644=Store(MEM_639,c0,Minus(R29_33,c108)) in 
+insert Minus(R29_33,c100),c0;
+insert Minus(R29_33,c108),c0;
 let R8_647=UnsignedCast(Load(MEM_644,Plus(SP_EL0_1,c160)),c64) in 
 let R8_648=UnsignedCast(Or(RightShift(LowCast(R8_647,c32),c24),Or(And(RightShift(LowCast(R8_647,c32),c8),c65280),Or(And(LeftShift(LowCast(R8_647,c32),c8),c16711680),LeftShift(LowCast(R8_647,c32),c24)))),c64) in 
-let MEM_653=Store(MEM_644,LowCast(R8_648,c32),Minus(R29_33,c112)) in 
-let R8_656=Load(MEM_653,Plus(R0_sy,c24)) in 
+insert Minus(R29_33,c112),LowCast(R8_648,c32);
+lookup Plus(R0_sy,c24) as R8_656 in 
 let R30_657=c15622704 in 
-let R9_660=Load(MEM_653,Plus(R8_656,c72)) in 
-let R8_663=Load(MEM_653,Plus(R8_656,c88)) in 
-let MEM_668=Store(MEM_653,R8_663,SP_EL0_1) in 
+lookup Plus(R8_656,c72) as R9_660 in 
+lookup Plus(R8_656,c88) as R8_663 in 
+insert SP_EL0_1,R8_663;
 let R0_669=Minus(SP_EL0_sy,c232) in 
 let R2_670=Minus(SP_EL0_sy,c224) in 
 let R4_671=Minus(SP_EL0_sy,c128) in 
@@ -712,25 +684,25 @@ let R2_sy=sy_R2_3105 in
 let R30_675=c15622732 in 
 let R0_669=Minus(SP_EL0_sy,c232) in 
 if Not(SignedLessThan(LowCast(R0_669,c32),c0)) then 
-let R21_681=Load(MEM_668,Plus(SP_EL0_1,c72)) in 
-let R26_684=Load(MEM_668,Plus(R23_100,c24)) in 
+lookup Plus(SP_EL0_1,c72) as R21_681 in 
+lookup Plus(R23_100,c24) as R26_684 in 
 if Not(Equal(R26_684,c0)) then 
-let R8_690=Load(MEM_668,Plus(R23_100,c32)) in 
+lookup Plus(R23_100,c32) as R8_690 in 
 if Not(Equal(R8_690,c0)) then 
-let R21_681=Load(MEM_668,Plus(SP_EL0_1,c72)) in 
+lookup Plus(SP_EL0_1,c72) as R21_681 in 
 let tmp_R7_696=Plus(R21_681,c8) in 
-let R9_697=Load(MEM_668,R21_681) in 
+lookup R21_681 as R9_697 in 
 let tmp_R7_696=Plus(R21_681,c8) in 
 let R5_700=UnsignedCast(Load(MEM_668,Plus(R24_107,c48)),c64) in 
 let R10_701=Minus(SP_EL0_sy,c224) in 
 let R2_702=Minus(SP_EL0_sy,c192) in 
-let R10_705=Load(MEM_668,Plus(R0_sy,c24)) in 
-let MEM_710=Store(Store(MEM_668,R8_690,Plus(SP_EL0_1,c16)),R10_705,Plus(SP_EL0_1,c24)) in 
-let MEM_715=Store(Store(MEM_710,R9_697,SP_EL0_1),R26_684,Plus(SP_EL0_1,c8)) in 
+lookup Plus(R0_sy,c24) as R10_705 in 
+insert Plus(SP_EL0_1,c24),R10_705;
+insert Plus(SP_EL0_1,c8),R26_684;
 let R1_716=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_717=Minus(SP_EL0_sy,c256) in 
 let R3_718=c32 in 
-let R27_128=Load(MEM_63,Plus(R8_121,c16)) in 
+lookup Plus(R8_121,c16) as R27_128 in 
 let R6_721=UnsignedCast(Load(MEM_715,Plus(SP_EL0_1,c36)),c64) in 
 in(a_724);
 let Enc_725=enc(a_724,MKi_115) in 
@@ -744,33 +716,31 @@ let ProcState_V_737=Equal(SignedLessThan(Minus(LowCast(R8_734,c32),c1),c0),Signe
 let ProcState_Z_738=Equal(LowCast(R8_734,c32),c1) in 
 if Not(ProcState_Z_738) then 
 let R1_1100=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_1102=hash2(CKji_113,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_1107=Load(MEM_726,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_1109=Store(MEM_726,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_1107 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_1117=Load(MEM_1109,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1117 in 
 if Not(Equal(R8_1117,c0)) then 
-let R8_1127=Load(MEM_1109,Plus(SP_EL0_1,c48)) in 
-let MEM_1132=Store(MEM_1109,R8_1127,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1127 in 
+insert R3_sy,R8_1127
+else insert R3_sy,R8_1117
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_1124=Store(MEM_1109,R8_1117,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R2_743=UnsignedCast(Load(MEM_726,Plus(R23_100,c164)),c64) in 
-let MEM_748=Store(MEM_726,c0,Minus(R29_33,c112)) in 
+insert Minus(R29_33,c112),c0;
 let R8_751=UnsignedCast(Load(MEM_748,Plus(R23_100,c136)),c64) in 
 if Not(Equal(LowCast(R8_751,c32),c0)) then 
 let R9_925=UnsignedCast(Load(MEM_748,Plus(R23_100,c140)),c64) in 
-let MEM_930=Store(MEM_748,LowCast(R9_925,c32),Minus(R29_33,c112)) in 
-let R5_933=Load(MEM_930,Plus(R23_100,c152)) in 
+insert Minus(R29_33,c112),LowCast(R9_925,c32);
+lookup Plus(R23_100,c152) as R5_933 in 
 if Not(Equal(R5_933,c0)) then 
 let R4_939=UnsignedCast(Load(MEM_930,Plus(R23_100,c144)),c64) in 
 let ProcState_C_940=c1 in 
@@ -779,19 +749,19 @@ let ProcState_V_942=c0 in
 let ProcState_Z_943=Equal(LowCast(R8_751,c32),c0) in 
 let R8_944=Minus(SP_EL0_sy,c128) in 
 let R3_945=IfThenElse(ProcState_Z_943,R8_944,c0) in 
-let R27_948=Load(MEM_930,Plus(SP_EL0_1,c48)) in 
-let R8_951=Load(MEM_930,Plus(R0_sy,c24)) in 
-let MEM_956=Store(MEM_930,R8_951,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_948 in 
+lookup Plus(R0_sy,c24) as R8_951 in 
+insert SP_EL0_1,R8_951;
 let R1_957=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_958=Minus(SP_EL0_sy,c264) in 
 let R30_959=c15622904 in 
-let R26_684=Load(MEM_668,Plus(R23_100,c24)) in 
-let R27_948=Load(MEM_930,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_100,c24) as R26_684 in 
+lookup Plus(SP_EL0_1,c48) as R27_948 in 
 new ~962_RNG;
 let RAND_NUM_961=~962_RNG in 
 if Not(SignedLessThan(LowCast(R0_958,c32),c0)) then 
 let R30_965=c15622916 in 
-let R27_948=Load(MEM_930,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_948 in 
 if Not(Equal(R27_948,c0)) then 
 let R8_1008=UnsignedCast(Load(MEM_956,R27_948),c64) in 
 let ProcState_C_1009=LessOrEqual(c2,LowCast(R8_1008,c32)) in 
@@ -799,80 +769,74 @@ let ProcState_N_1010=SignedLessThan(Minus(LowCast(R8_1008,c32),c2),c0) in
 let ProcState_V_1011=Equal(SignedLessThan(Minus(LowCast(R8_1008,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_1008,c32))) in 
 let ProcState_Z_1012=Equal(LowCast(R8_1008,c32),c2) in 
 if Not(ProcState_C_1009) then 
-let R1_1061=Load(MEM_956,Plus(R27_948,c8)) in 
-let MEM_1066=Store(MEM_956,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_948,c8) as R1_1061 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1067=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_1069=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_1074=Load(MEM_1066,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_1076=Store(MEM_1066,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_1074 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_1084=Load(MEM_1076,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1084 in 
 if Not(Equal(R8_1084,c0)) then 
-let R8_1094=Load(MEM_1076,Plus(SP_EL0_1,c48)) in 
-let MEM_1099=Store(MEM_1076,R8_1094,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1094 in 
+insert R3_sy,R8_1094
+else insert R3_sy,R8_1084
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_1091=Store(MEM_1076,R8_1084,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R8_1015=UnsignedCast(Minus(LowCast(R8_1008,c32),c1),c64) in 
-let MEM_1020=Store(MEM_956,LowCast(R8_1015,c32),R27_948) in 
-let MEM_1025=Store(MEM_1020,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_948,LowCast(R8_1015,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_1026=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_1028=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_1033=Load(MEM_1025,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_1035=Store(MEM_1025,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_1033 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_1043=Load(MEM_1035,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_1043 in 
 if Not(Equal(R8_1043,c0)) then 
-let R8_1053=Load(MEM_1035,Plus(SP_EL0_1,c48)) in 
-let MEM_1058=Store(MEM_1035,R8_1053,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1053 in 
+insert R3_sy,R8_1053
+else insert R3_sy,R8_1043
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_1050=Store(MEM_1035,R8_1043,R3_sy) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
-0
-else let MEM_972=Store(MEM_956,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_973=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_975=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_980=Load(MEM_972,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_982=Store(MEM_972,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_980 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_990=Load(MEM_982,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_990 in 
 if Not(Equal(R8_990,c0)) then 
-let R8_1000=Load(MEM_982,Plus(SP_EL0_1,c48)) in 
-let MEM_1005=Store(MEM_982,R8_1000,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_1000 in 
+insert R3_sy,R8_1000
+else insert R3_sy,R8_990
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_997=Store(MEM_982,R8_990,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R0_958=Minus(SP_EL0_sy,c264) in 
 0
 else let R25_936=c4294965990 in 
 0
-else let R5_756=Load(MEM_748,Plus(R23_100,c152)) in 
+else lookup Plus(R23_100,c152) as R5_756 in 
 if Not(Equal(R5_756,c0)) then 
 let R4_762=UnsignedCast(Load(MEM_748,Plus(R23_100,c144)),c64) in 
 let ProcState_C_763=c1 in 
@@ -881,19 +845,19 @@ let ProcState_V_765=c0 in
 let ProcState_Z_766=Equal(LowCast(R8_751,c32),c0) in 
 let R8_767=Minus(SP_EL0_sy,c128) in 
 let R3_768=IfThenElse(ProcState_Z_766,R8_767,c0) in 
-let R27_771=Load(MEM_748,Plus(SP_EL0_1,c48)) in 
-let R8_774=Load(MEM_748,Plus(R0_sy,c24)) in 
-let MEM_779=Store(MEM_748,R8_774,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_771 in 
+lookup Plus(R0_sy,c24) as R8_774 in 
+insert SP_EL0_1,R8_774;
 let R1_780=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_781=Minus(SP_EL0_sy,c264) in 
 let R30_782=c15622904 in 
-let R26_684=Load(MEM_668,Plus(R23_100,c24)) in 
-let R27_771=Load(MEM_748,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_100,c24) as R26_684 in 
+lookup Plus(SP_EL0_1,c48) as R27_771 in 
 new ~785_RNG;
 let RAND_NUM_784=~785_RNG in 
 if Not(SignedLessThan(LowCast(R0_781,c32),c0)) then 
 let R30_788=c15622916 in 
-let R27_771=Load(MEM_748,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_771 in 
 if Not(Equal(R27_771,c0)) then 
 let R8_831=UnsignedCast(Load(MEM_779,R27_771),c64) in 
 let ProcState_C_832=LessOrEqual(c2,LowCast(R8_831,c32)) in 
@@ -901,74 +865,68 @@ let ProcState_N_833=SignedLessThan(Minus(LowCast(R8_831,c32),c2),c0) in
 let ProcState_V_834=Equal(SignedLessThan(Minus(LowCast(R8_831,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_831,c32))) in 
 let ProcState_Z_835=Equal(LowCast(R8_831,c32),c2) in 
 if Not(ProcState_C_832) then 
-let R1_884=Load(MEM_779,Plus(R27_771,c8)) in 
-let MEM_889=Store(MEM_779,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_771,c8) as R1_884 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_890=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_892=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_897=Load(MEM_889,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_899=Store(MEM_889,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_897 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_907=Load(MEM_899,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_907 in 
 if Not(Equal(R8_907,c0)) then 
-let R8_917=Load(MEM_899,Plus(SP_EL0_1,c48)) in 
-let MEM_922=Store(MEM_899,R8_917,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_917 in 
+insert R3_sy,R8_917
+else insert R3_sy,R8_907
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_914=Store(MEM_899,R8_907,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R8_838=UnsignedCast(Minus(LowCast(R8_831,c32),c1),c64) in 
-let MEM_843=Store(MEM_779,LowCast(R8_838,c32),R27_771) in 
-let MEM_848=Store(MEM_843,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_771,LowCast(R8_838,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_849=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_851=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_856=Load(MEM_848,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_858=Store(MEM_848,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_856 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_866=Load(MEM_858,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_866 in 
 if Not(Equal(R8_866,c0)) then 
-let R8_876=Load(MEM_858,Plus(SP_EL0_1,c48)) in 
-let MEM_881=Store(MEM_858,R8_876,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_876 in 
+insert R3_sy,R8_876
+else insert R3_sy,R8_866
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_873=Store(MEM_858,R8_866,R3_sy) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
-0
-else let MEM_795=Store(MEM_779,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_796=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_798=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_803=Load(MEM_795,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_805=Store(MEM_795,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_803 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_813=Load(MEM_805,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_813 in 
 if Not(Equal(R8_813,c0)) then 
-let R8_823=Load(MEM_805,Plus(SP_EL0_1,c48)) in 
-let MEM_828=Store(MEM_805,R8_823,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_823 in 
+insert R3_sy,R8_823
+else insert R3_sy,R8_813
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_820=Store(MEM_805,R8_813,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R0_781=Minus(SP_EL0_sy,c264) in 
 0
@@ -982,13 +940,13 @@ else let R25_687=c4294965992 in
 0
 else let R21_678=c0 in 
 0
-else let R8_157=Load(MEM_148,Plus(R0_sy,c24)) in 
+else lookup Plus(R0_sy,c24) as R8_157 in 
 let R9_158=Minus(SP_EL0_sy,c224) in 
 let R4_159=Minus(SP_EL0_sy,c160) in 
 let R30_160=c15622528 in 
-let R9_163=Load(MEM_148,Plus(R8_157,c72)) in 
-let R8_166=Load(MEM_148,Plus(R8_157,c88)) in 
-let MEM_171=Store(MEM_148,R8_166,SP_EL0_1) in 
+lookup Plus(R8_157,c72) as R9_163 in 
+lookup Plus(R8_157,c88) as R8_166 in 
+insert SP_EL0_1,R8_166;
 let R0_172=Minus(SP_EL0_sy,c232) in 
 let R2_173=Minus(SP_EL0_sy,c224) in 
 let R1_174=c2 in 
@@ -999,25 +957,25 @@ let R2_sy=sy_R2_3459 in
 let R30_177=c15622732 in 
 let R0_172=Minus(SP_EL0_sy,c232) in 
 if Not(SignedLessThan(LowCast(R0_172,c32),c0)) then 
-let R21_183=Load(MEM_171,Plus(SP_EL0_1,c72)) in 
-let R26_186=Load(MEM_171,Plus(R23_100,c24)) in 
+lookup Plus(SP_EL0_1,c72) as R21_183 in 
+lookup Plus(R23_100,c24) as R26_186 in 
 if Not(Equal(R26_186,c0)) then 
-let R8_192=Load(MEM_171,Plus(R23_100,c32)) in 
+lookup Plus(R23_100,c32) as R8_192 in 
 if Not(Equal(R8_192,c0)) then 
-let R21_183=Load(MEM_171,Plus(SP_EL0_1,c72)) in 
+lookup Plus(SP_EL0_1,c72) as R21_183 in 
 let tmp_R7_198=Plus(R21_183,c8) in 
-let R9_199=Load(MEM_171,R21_183) in 
+lookup R21_183 as R9_199 in 
 let tmp_R7_198=Plus(R21_183,c8) in 
 let R5_202=UnsignedCast(Load(MEM_171,Plus(R24_107,c48)),c64) in 
 let R10_203=Minus(SP_EL0_sy,c224) in 
 let R2_204=Minus(SP_EL0_sy,c192) in 
-let R10_207=Load(MEM_171,Plus(R0_sy,c24)) in 
-let MEM_212=Store(Store(MEM_171,R8_192,Plus(SP_EL0_1,c16)),R10_207,Plus(SP_EL0_1,c24)) in 
-let MEM_217=Store(Store(MEM_212,R9_199,SP_EL0_1),R26_186,Plus(SP_EL0_1,c8)) in 
+lookup Plus(R0_sy,c24) as R10_207 in 
+insert Plus(SP_EL0_1,c24),R10_207;
+insert Plus(SP_EL0_1,c8),R26_186;
 let R1_218=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_219=Minus(SP_EL0_sy,c256) in 
 let R3_220=c32 in 
-let R27_128=Load(MEM_63,Plus(R8_121,c16)) in 
+lookup Plus(R8_121,c16) as R27_128 in 
 let R6_223=UnsignedCast(Load(MEM_217,Plus(SP_EL0_1,c36)),c64) in 
 in(a_226);
 let Enc_227=enc(a_226,MKi_115) in 
@@ -1031,33 +989,31 @@ let ProcState_V_239=Equal(SignedLessThan(Minus(LowCast(R8_236,c32),c1),c0),Signe
 let ProcState_Z_240=Equal(LowCast(R8_236,c32),c1) in 
 if Not(ProcState_Z_240) then 
 let R1_602=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_604=hash2(CKji_113,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_609=Load(MEM_228,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_611=Store(MEM_228,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_609 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_619=Load(MEM_611,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_619 in 
 if Not(Equal(R8_619,c0)) then 
-let R8_629=Load(MEM_611,Plus(SP_EL0_1,c48)) in 
-let MEM_634=Store(MEM_611,R8_629,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_629 in 
+insert R3_sy,R8_629
+else insert R3_sy,R8_619
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_626=Store(MEM_611,R8_619,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R2_245=UnsignedCast(Load(MEM_228,Plus(R23_100,c164)),c64) in 
-let MEM_250=Store(MEM_228,c0,Minus(R29_33,c112)) in 
+insert Minus(R29_33,c112),c0;
 let R8_253=UnsignedCast(Load(MEM_250,Plus(R23_100,c136)),c64) in 
 if Not(Equal(LowCast(R8_253,c32),c0)) then 
 let R9_427=UnsignedCast(Load(MEM_250,Plus(R23_100,c140)),c64) in 
-let MEM_432=Store(MEM_250,LowCast(R9_427,c32),Minus(R29_33,c112)) in 
-let R5_435=Load(MEM_432,Plus(R23_100,c152)) in 
+insert Minus(R29_33,c112),LowCast(R9_427,c32);
+lookup Plus(R23_100,c152) as R5_435 in 
 if Not(Equal(R5_435,c0)) then 
 let R4_441=UnsignedCast(Load(MEM_432,Plus(R23_100,c144)),c64) in 
 let ProcState_C_442=c1 in 
@@ -1066,19 +1022,19 @@ let ProcState_V_444=c0 in
 let ProcState_Z_445=Equal(LowCast(R8_253,c32),c0) in 
 let R8_446=Minus(SP_EL0_sy,c128) in 
 let R3_447=IfThenElse(ProcState_Z_445,R8_446,c0) in 
-let R27_450=Load(MEM_432,Plus(SP_EL0_1,c48)) in 
-let R8_453=Load(MEM_432,Plus(R0_sy,c24)) in 
-let MEM_458=Store(MEM_432,R8_453,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_450 in 
+lookup Plus(R0_sy,c24) as R8_453 in 
+insert SP_EL0_1,R8_453;
 let R1_459=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_460=Minus(SP_EL0_sy,c264) in 
 let R30_461=c15622904 in 
-let R26_186=Load(MEM_171,Plus(R23_100,c24)) in 
-let R27_450=Load(MEM_432,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_100,c24) as R26_186 in 
+lookup Plus(SP_EL0_1,c48) as R27_450 in 
 new ~464_RNG;
 let RAND_NUM_463=~464_RNG in 
 if Not(SignedLessThan(LowCast(R0_460,c32),c0)) then 
 let R30_467=c15622916 in 
-let R27_450=Load(MEM_432,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_450 in 
 if Not(Equal(R27_450,c0)) then 
 let R8_510=UnsignedCast(Load(MEM_458,R27_450),c64) in 
 let ProcState_C_511=LessOrEqual(c2,LowCast(R8_510,c32)) in 
@@ -1086,80 +1042,74 @@ let ProcState_N_512=SignedLessThan(Minus(LowCast(R8_510,c32),c2),c0) in
 let ProcState_V_513=Equal(SignedLessThan(Minus(LowCast(R8_510,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_510,c32))) in 
 let ProcState_Z_514=Equal(LowCast(R8_510,c32),c2) in 
 if Not(ProcState_C_511) then 
-let R1_563=Load(MEM_458,Plus(R27_450,c8)) in 
-let MEM_568=Store(MEM_458,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_450,c8) as R1_563 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_569=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_571=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_576=Load(MEM_568,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_578=Store(MEM_568,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_576 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_586=Load(MEM_578,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_586 in 
 if Not(Equal(R8_586,c0)) then 
-let R8_596=Load(MEM_578,Plus(SP_EL0_1,c48)) in 
-let MEM_601=Store(MEM_578,R8_596,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_596 in 
+insert R3_sy,R8_596
+else insert R3_sy,R8_586
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_593=Store(MEM_578,R8_586,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R8_517=UnsignedCast(Minus(LowCast(R8_510,c32),c1),c64) in 
-let MEM_522=Store(MEM_458,LowCast(R8_517,c32),R27_450) in 
-let MEM_527=Store(MEM_522,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_450,LowCast(R8_517,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_528=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_530=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_535=Load(MEM_527,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_537=Store(MEM_527,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_535 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_545=Load(MEM_537,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_545 in 
 if Not(Equal(R8_545,c0)) then 
-let R8_555=Load(MEM_537,Plus(SP_EL0_1,c48)) in 
-let MEM_560=Store(MEM_537,R8_555,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_555 in 
+insert R3_sy,R8_555
+else insert R3_sy,R8_545
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_552=Store(MEM_537,R8_545,R3_sy) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
-0
-else let MEM_474=Store(MEM_458,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_475=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_477=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_482=Load(MEM_474,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_484=Store(MEM_474,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_482 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_492=Load(MEM_484,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_492 in 
 if Not(Equal(R8_492,c0)) then 
-let R8_502=Load(MEM_484,Plus(SP_EL0_1,c48)) in 
-let MEM_507=Store(MEM_484,R8_502,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_502 in 
+insert R3_sy,R8_502
+else insert R3_sy,R8_492
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_499=Store(MEM_484,R8_492,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R0_460=Minus(SP_EL0_sy,c264) in 
 0
 else let R25_438=c4294965990 in 
 0
-else let R5_258=Load(MEM_250,Plus(R23_100,c152)) in 
+else lookup Plus(R23_100,c152) as R5_258 in 
 if Not(Equal(R5_258,c0)) then 
 let R4_264=UnsignedCast(Load(MEM_250,Plus(R23_100,c144)),c64) in 
 let ProcState_C_265=c1 in 
@@ -1168,19 +1118,19 @@ let ProcState_V_267=c0 in
 let ProcState_Z_268=Equal(LowCast(R8_253,c32),c0) in 
 let R8_269=Minus(SP_EL0_sy,c128) in 
 let R3_270=IfThenElse(ProcState_Z_268,R8_269,c0) in 
-let R27_273=Load(MEM_250,Plus(SP_EL0_1,c48)) in 
-let R8_276=Load(MEM_250,Plus(R0_sy,c24)) in 
-let MEM_281=Store(MEM_250,R8_276,SP_EL0_1) in 
+lookup Plus(SP_EL0_1,c48) as R27_273 in 
+lookup Plus(R0_sy,c24) as R8_276 in 
+insert SP_EL0_1,R8_276;
 let R1_282=UnsignedCast(And(c255,LowCast(R28_143,c32)),c64) in 
 let R0_283=Minus(SP_EL0_sy,c264) in 
 let R30_284=c15622904 in 
-let R26_186=Load(MEM_171,Plus(R23_100,c24)) in 
-let R27_273=Load(MEM_250,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R23_100,c24) as R26_186 in 
+lookup Plus(SP_EL0_1,c48) as R27_273 in 
 new ~287_RNG;
 let RAND_NUM_286=~287_RNG in 
 if Not(SignedLessThan(LowCast(R0_283,c32),c0)) then 
 let R30_290=c15622916 in 
-let R27_273=Load(MEM_250,Plus(SP_EL0_1,c48)) in 
+lookup Plus(SP_EL0_1,c48) as R27_273 in 
 if Not(Equal(R27_273,c0)) then 
 let R8_333=UnsignedCast(Load(MEM_281,R27_273),c64) in 
 let ProcState_C_334=LessOrEqual(c2,LowCast(R8_333,c32)) in 
@@ -1188,74 +1138,68 @@ let ProcState_N_335=SignedLessThan(Minus(LowCast(R8_333,c32),c2),c0) in
 let ProcState_V_336=Equal(SignedLessThan(Minus(LowCast(R8_333,c32),c2),c0),SignedLessOrEqual(c2,LowCast(R8_333,c32))) in 
 let ProcState_Z_337=Equal(LowCast(R8_333,c32),c2) in 
 if Not(ProcState_C_334) then 
-let R1_386=Load(MEM_281,Plus(R27_273,c8)) in 
-let MEM_391=Store(MEM_281,c0,Plus(SP_EL0_1,c48)) in 
+lookup Plus(R27_273,c8) as R1_386 in 
+insert Plus(SP_EL0_1,c48),c0;
 let R1_392=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_394=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_399=Load(MEM_391,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_401=Store(MEM_391,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_399 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_409=Load(MEM_401,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_409 in 
 if Not(Equal(R8_409,c0)) then 
-let R8_419=Load(MEM_401,Plus(SP_EL0_1,c48)) in 
-let MEM_424=Store(MEM_401,R8_419,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_419 in 
+insert R3_sy,R8_419
+else insert R3_sy,R8_409
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_416=Store(MEM_401,R8_409,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R8_340=UnsignedCast(Minus(LowCast(R8_333,c32),c1),c64) in 
-let MEM_345=Store(MEM_281,LowCast(R8_340,c32),R27_273) in 
-let MEM_350=Store(MEM_345,c0,Plus(SP_EL0_1,c48)) in 
+insert R27_273,LowCast(R8_340,c32);
+insert Plus(SP_EL0_1,c48),c0;
 let R1_351=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_353=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_358=Load(MEM_350,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_360=Store(MEM_350,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_358 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_368=Load(MEM_360,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_368 in 
 if Not(Equal(R8_368,c0)) then 
-let R8_378=Load(MEM_360,Plus(SP_EL0_1,c48)) in 
-let MEM_383=Store(MEM_360,R8_378,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_378 in 
+insert R3_sy,R8_378
+else insert R3_sy,R8_368
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_375=Store(MEM_360,R8_368,R3_sy) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
-0
-else let MEM_297=Store(MEM_281,c0,Plus(SP_EL0_1,c48)) in 
+else insert Plus(SP_EL0_1,c48),c0;
 let R1_298=Minus(SP_EL0_sy,c248) in 
-let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+lookup Plus(R23_100,c64) as R24_107 in 
 let CKjiPlus_300=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
-let R1_305=Load(MEM_297,Plus(SP_EL0_1,c56)) in 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-let MEM_307=Store(MEM_297,MKi_115,a_91) in 
+lookup Plus(SP_EL0_1,c56) as R1_305 in 
+lookup Plus(R22_97,c16) as R23_100 in 
+insert a_91,MKi_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
+lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
-let R8_315=Load(MEM_307,Plus(SP_EL0_1,c40)) in 
+lookup Plus(SP_EL0_1,c40) as R8_315 in 
 if Not(Equal(R8_315,c0)) then 
-let R8_325=Load(MEM_307,Plus(SP_EL0_1,c48)) in 
-let MEM_330=Store(MEM_307,R8_325,R3_sy) in 
+lookup Plus(SP_EL0_1,c48) as R8_325 in 
+insert R3_sy,R8_325
+else insert R3_sy,R8_315
+else lookup Plus(R22_97,c16) as R23_100 in 
 0
-else let MEM_322=Store(MEM_307,R8_315,R3_sy) in 
-0
-else let R23_100=Load(MEM_63,Plus(R22_97,c16)) in 
-0
-else let R24_107=Load(MEM_63,Plus(R23_100,c64)) in 
+else lookup Plus(R23_100,c64) as R24_107 in 
 0
 else let R0_283=Minus(SP_EL0_sy,c264) in 
 0
@@ -1275,7 +1219,7 @@ let R25_132=c4294965993 in
 else let R21_124=c0 in 
 let R25_125=c4294965993 in 
 0
-else let R0_86=Load(MEM_63,R0_sy) in 
+else lookup R0_sy as R0_86 in 
 let R21_118=c0 in 
 0
 else let R21_110=c0 in 
@@ -1284,7 +1228,7 @@ let R25_111=c4294965995 in
 else let R21_103=c0 in 
 let R25_104=c4294965996 in 
 0
-else let R0_86=Load(MEM_63,R0_sy) in 
+else lookup R0_sy as R0_86 in 
 let R21_94=c0 in 
 0
 else let R21_82=c0 in 

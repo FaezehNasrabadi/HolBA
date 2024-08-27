@@ -10,7 +10,6 @@ local
     open bir_valuesSyntax;
     open bir_immSyntax;
     open bir_expSyntax;
-    open sbir_treeLib;
     open sapicplusTheory;
     open sapicplusSyntax;
     open translate_to_sapicTheory;
@@ -21,9 +20,19 @@ local
     open bir_symbexec_funcLib;
 
     val ERR      = Feedback.mk_HOL_ERR "tree_to_processLib"
+
+    open sbir_treeLib;
 in
 
-
+fun sapic_term_to_var str =
+    let
+	val namestr = stringSyntax.fromMLstring str;
+	val trm = (mk_Var (namestr,“0:int”));
+    in
+	trm
+    end;
+ 
+	  
 fun sapic_term_to_name trm =
     if (is_TVar trm)
     then (mk_Name (FreshName_tm, ((fst o dest_Var o dest_TVar) trm)))
@@ -52,7 +61,7 @@ fun bir_exp_symbvar_to_symbval vals_lis pred_be =
     if (is_BExp_Const pred_be) then pred_be
     else if (is_BExp_Den pred_be) then
 	(let
-	     val be =  symbval_bexp (find_be_val vals_lis (dest_BExp_Den pred_be));
+	     val be =  bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val vals_lis (dest_BExp_Den pred_be));
 
 	 in
 	     bir_exp_symbvar_to_symbval vals_lis be
@@ -144,10 +153,34 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    then (mk_ProcessAction ((mk_ChIn (mk_none(SapicTerm_t_ty),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
+	    else if (is_BExp_Store b)
+	    then let val (mem,adr,en,value) = dest_BExp_Store b;
+		 in (mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
+		 end
+	    else if (is_BExp_Load b)
+	    then let val (mem,adr,en,size) = dest_BExp_Load b;
+		 in (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+		 end
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
-	end)
+end)
 			 
-  
+(* 
+ val b = ``
+	       (BExp_Store
+		    (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+		    (BExp_Den (BVar "ADDR1" (BType_Imm Bit64)))
+		    BEnd_BigEndian
+		    (BExp_Const (Imm128 (42w :word128))))
+	       ``;
+ val b = ``
+	       (BExp_Load (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+			  (BExp_BinExp BIExp_Plus
+				       (BExp_Den (BVar "R1" (BType_Imm Bit64)))
+				       (BExp_Const (Imm64 8w))) BEnd_LittleEndian Bit64)``
+
+val namestr = "R1";
+
+ *)
 end(*local*)
 
 end (* struct *)

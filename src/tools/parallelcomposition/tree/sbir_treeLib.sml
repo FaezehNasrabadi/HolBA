@@ -122,6 +122,13 @@ fun purge_tree tr =
       | VBranch ((bv,be), subtr1, subtr2) => VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))					     
 
 
+
+(* fun cfg_tree tr = *)
+(*     case tr of *)
+(* 	VLeaf =>  *)
+(*       | VNode ((bv,be), subtr) =>  *)
+(*       | VBranch ((bv,be), subtr1, subtr2) =>  *)
+					     
 end (* local *)
 
 end (* struct *)

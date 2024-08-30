@@ -77,7 +77,7 @@ lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
   *)
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-      
+(*      
 val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``];
@@ -148,3 +148,4 @@ val _ =  ( write_sapic_to_file o process_to_string) sapic_process
 val _ = print ("wrote into file");
 val _ = print "\n";
 
+*)

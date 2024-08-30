@@ -18,11 +18,11 @@ val prog_range       = ((Arbnum.fromInt 0x00000000000450c), (Arbnum.fromInt 0x00
 
 val _ = print_with_style_ [Bold, Underline] ("Lifting " ^ dafilename ^ " (" ^ arch_str ^ ")\n");
 
-(* val (region_map, sections) = read_disassembly_file_regions  dafilename; *)
+val (region_map, sections) = read_disassembly_file_regions  dafilename;
                             
-(* val (thm, errors) = bmil_arm8.bir_lift_prog_gen prog_range sections; *)
+val (thm, errors) = bmil_arm8.bir_lift_prog_gen prog_range sections;
 
-(* val _ = save_thm ("WhatsApp_session_cipher_decrypt_signal_message_thm", thm); *)
+val _ = save_thm ("WhatsApp_session_cipher_decrypt_signal_message_thm", thm);
 
 
 

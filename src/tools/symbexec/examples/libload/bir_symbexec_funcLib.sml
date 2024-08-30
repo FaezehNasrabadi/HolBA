@@ -1551,7 +1551,7 @@ fun Random_Number syst =
 
 	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RAND_NUM", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
-	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RNG", “BType_Imm Bit64”)); (* generate a fresh name *)
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pre_Key", “BType_Imm Bit64”)); (* generate a fresh name *)
 
 	val syst = update_key Fr_vn vn syst;
 	    
@@ -1681,7 +1681,7 @@ fun DH_key vn syst =
 		     
 	val (C_bv, C_be) = HMac2 key c2;    	    	
 
-	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKjiPlus", “BType_Imm Bit64”));
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SCKnext", “BType_Imm Bit64”));
 
 	val syst = update_key C_be Fr_CK syst;
 
@@ -2713,7 +2713,7 @@ fun new_key syst =
 		     
 	val (C_bv, C_be) = HMac2 key c1;    	    	
 
-	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MKi", “BType_Imm Bit64”));
+	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MK", “BType_Imm Bit64”));
 	    
 	val bv_key = ``BVar "Crypto" (BType_Imm Bit64)``;
 
@@ -3270,7 +3270,7 @@ fun Load_file syst =
 	    
 	val be_adv = find_adv_name syst;
 
-	val Fr_CK = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKji", “BType_Imm Bit64”))); (* generate a fresh variable *)
+	val Fr_CK = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SCK", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
 	
 	val bv_mem = find_bv_val ("New_memcpy::bv in env not found") (SYST_get_env syst) “BVar "MEM" (BType_Mem Bit64 Bit8)”;

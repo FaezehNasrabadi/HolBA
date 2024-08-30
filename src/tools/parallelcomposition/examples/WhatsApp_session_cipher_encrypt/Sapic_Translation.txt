@@ -44,8 +44,8 @@ lookup Plus(R22_1161,c16) as R23_1164 in
 if Not(Equal(R23_1164,c0)) then 
 lookup Plus(R23_1164,c64) as R24_1171 in 
 if Not(Equal(R24_1171,c0)) then 
-out(Load(MEM_63,a_1155));
-out(hash2(SCK_1177,0x01));
+lookup a_1155 as CKs_1177 in 
+let MKs_1179=hash2(CKs_1177,0x01) in 
 if Not(SignedLessThan(LowCast(R0_1150,c32),c0)) then 
 lookup Plus(R23_1164,c56) as R8_1185 in 
 if Not(Equal(R8_1185,c0)) then 
@@ -102,9 +102,9 @@ let R3_1782=c32 in
 lookup Plus(R8_1185,c16) as R27_1192 in 
 let R6_1785=UnsignedCast(Load(MEM_1779,Plus(SP_EL0_1,c36)),c64) in 
 in(a_1788);
-let Enc_1789=enc(a_1788,MK_1179) in 
+let Enc_1789=enc(a_1788,MKs_1179) in 
 out(Enc_1789);
-event send(a_1788,MK_1179);
+event send(a_1788,MKs_1179);
 if Not(SignedLessThan(LowCast(R0_1791,c32),c0)) then 
 let R8_1798=UnsignedCast(Load(MEM_1790,Plus(R23_1164,c128)),c64) in 
 let ProcState_C_1799=LessOrEqual(c1,LowCast(R8_1798,c32)) in 
@@ -114,11 +114,11 @@ let ProcState_Z_1802=Equal(LowCast(R8_1798,c32),c1) in
 if Not(ProcState_Z_1802) then 
 let R1_2164=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_2166=hash2(SCK_1177,0x02) in 
+let CKsNext_2166=hash2(CKs_1177,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_2171 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -170,11 +170,11 @@ lookup Plus(R27_2012,c8) as R1_2125 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_2131=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_2133=hash2(RAND_NUM_2025,0x02) in 
+let CKsNext_2133=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_2138 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -192,11 +192,11 @@ insert R27_2012,LowCast(R8_2079,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_2090=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_2092=hash2(RAND_NUM_2025,0x02) in 
+let CKsNext_2092=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_2097 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -212,11 +212,11 @@ else lookup Plus(R23_1164,c64) as R24_1171 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_2037=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_2039=hash2(RAND_NUM_2025,0x02) in 
+let CKsNext_2039=hash2(RAND_NUM_2025,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_2044 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -266,11 +266,11 @@ lookup Plus(R27_1835,c8) as R1_1948 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1954=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1956=hash2(RAND_NUM_1848,0x02) in 
+let CKsNext_1956=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1961 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -288,11 +288,11 @@ insert R27_1835,LowCast(R8_1902,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1913=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1915=hash2(RAND_NUM_1848,0x02) in 
+let CKsNext_1915=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1920 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -308,11 +308,11 @@ else lookup Plus(R23_1164,c64) as R24_1171 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_1860=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1862=hash2(RAND_NUM_1848,0x02) in 
+let CKsNext_1862=hash2(RAND_NUM_1848,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1867 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -375,9 +375,9 @@ let R3_1284=c32 in
 lookup Plus(R8_1185,c16) as R27_1192 in 
 let R6_1287=UnsignedCast(Load(MEM_1281,Plus(SP_EL0_1,c36)),c64) in 
 in(a_1290);
-let Enc_1291=enc(a_1290,MK_1179) in 
+let Enc_1291=enc(a_1290,MKs_1179) in 
 out(Enc_1291);
-event send(a_1290,MK_1179);
+event send(a_1290,MKs_1179);
 if Not(SignedLessThan(LowCast(R0_1293,c32),c0)) then 
 let R8_1300=UnsignedCast(Load(MEM_1292,Plus(R23_1164,c128)),c64) in 
 let ProcState_C_1301=LessOrEqual(c1,LowCast(R8_1300,c32)) in 
@@ -387,11 +387,11 @@ let ProcState_Z_1304=Equal(LowCast(R8_1300,c32),c1) in
 if Not(ProcState_Z_1304) then 
 let R1_1666=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1668=hash2(SCK_1177,0x02) in 
+let CKsNext_1668=hash2(CKs_1177,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1673 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -443,11 +443,11 @@ lookup Plus(R27_1514,c8) as R1_1627 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1633=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1635=hash2(RAND_NUM_1527,0x02) in 
+let CKsNext_1635=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1640 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -465,11 +465,11 @@ insert R27_1514,LowCast(R8_1581,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1592=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1594=hash2(RAND_NUM_1527,0x02) in 
+let CKsNext_1594=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1599 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -485,11 +485,11 @@ else lookup Plus(R23_1164,c64) as R24_1171 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_1539=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1541=hash2(RAND_NUM_1527,0x02) in 
+let CKsNext_1541=hash2(RAND_NUM_1527,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1546 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -539,11 +539,11 @@ lookup Plus(R27_1337,c8) as R1_1450 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1456=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1458=hash2(RAND_NUM_1350,0x02) in 
+let CKsNext_1458=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1463 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -561,11 +561,11 @@ insert R27_1337,LowCast(R8_1404,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1415=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1417=hash2(RAND_NUM_1350,0x02) in 
+let CKsNext_1417=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1422 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -581,11 +581,11 @@ else lookup Plus(R23_1164,c64) as R24_1171 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_1362=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_1164,c64) as R24_1171 in 
-let SCKnext_1364=hash2(RAND_NUM_1350,0x02) in 
+let CKsNext_1364=hash2(RAND_NUM_1350,0x02) in 
 if Not(SignedLessThan(LowCast(R24_1171,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1369 in 
 lookup Plus(R22_1161,c16) as R23_1164 in 
-insert a_1155,MK_1179;
+insert a_1155,MKs_1179;
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
 lookup Plus(R22_1161,c16) as R23_1164 in 
 if Not(SignedLessThan(LowCast(R23_1164,c32),c0)) then 
@@ -647,8 +647,8 @@ lookup Plus(R22_97,c16) as R23_100 in
 if Not(Equal(R23_100,c0)) then 
 lookup Plus(R23_100,c64) as R24_107 in 
 if Not(Equal(R24_107,c0)) then 
-out(Load(MEM_63,a_91));
-out(hash2(SCK_113,0x01));
+lookup a_91 as CKs_113 in 
+let MKs_115=hash2(CKs_113,0x01) in 
 if Not(SignedLessThan(LowCast(R0_86,c32),c0)) then 
 lookup Plus(R23_100,c56) as R8_121 in 
 if Not(Equal(R8_121,c0)) then 
@@ -705,9 +705,9 @@ let R3_718=c32 in
 lookup Plus(R8_121,c16) as R27_128 in 
 let R6_721=UnsignedCast(Load(MEM_715,Plus(SP_EL0_1,c36)),c64) in 
 in(a_724);
-let Enc_725=enc(a_724,MK_115) in 
+let Enc_725=enc(a_724,MKs_115) in 
 out(Enc_725);
-event send(a_724,MK_115);
+event send(a_724,MKs_115);
 if Not(SignedLessThan(LowCast(R0_727,c32),c0)) then 
 let R8_734=UnsignedCast(Load(MEM_726,Plus(R23_100,c128)),c64) in 
 let ProcState_C_735=LessOrEqual(c1,LowCast(R8_734,c32)) in 
@@ -717,11 +717,11 @@ let ProcState_Z_738=Equal(LowCast(R8_734,c32),c1) in
 if Not(ProcState_Z_738) then 
 let R1_1100=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_1102=hash2(SCK_113,0x02) in 
+let CKsNext_1102=hash2(CKs_113,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1107 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -773,11 +773,11 @@ lookup Plus(R27_948,c8) as R1_1061 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1067=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_1069=hash2(RAND_NUM_961,0x02) in 
+let CKsNext_1069=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1074 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -795,11 +795,11 @@ insert R27_948,LowCast(R8_1015,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_1026=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_1028=hash2(RAND_NUM_961,0x02) in 
+let CKsNext_1028=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_1033 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -815,11 +815,11 @@ else lookup Plus(R23_100,c64) as R24_107 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_973=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_975=hash2(RAND_NUM_961,0x02) in 
+let CKsNext_975=hash2(RAND_NUM_961,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_980 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -869,11 +869,11 @@ lookup Plus(R27_771,c8) as R1_884 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_890=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_892=hash2(RAND_NUM_784,0x02) in 
+let CKsNext_892=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_897 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -891,11 +891,11 @@ insert R27_771,LowCast(R8_838,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_849=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_851=hash2(RAND_NUM_784,0x02) in 
+let CKsNext_851=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_856 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -911,11 +911,11 @@ else lookup Plus(R23_100,c64) as R24_107 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_796=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_798=hash2(RAND_NUM_784,0x02) in 
+let CKsNext_798=hash2(RAND_NUM_784,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_803 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -978,9 +978,9 @@ let R3_220=c32 in
 lookup Plus(R8_121,c16) as R27_128 in 
 let R6_223=UnsignedCast(Load(MEM_217,Plus(SP_EL0_1,c36)),c64) in 
 in(a_226);
-let Enc_227=enc(a_226,MK_115) in 
+let Enc_227=enc(a_226,MKs_115) in 
 out(Enc_227);
-event send(a_226,MK_115);
+event send(a_226,MKs_115);
 if Not(SignedLessThan(LowCast(R0_229,c32),c0)) then 
 let R8_236=UnsignedCast(Load(MEM_228,Plus(R23_100,c128)),c64) in 
 let ProcState_C_237=LessOrEqual(c1,LowCast(R8_236,c32)) in 
@@ -990,11 +990,11 @@ let ProcState_Z_240=Equal(LowCast(R8_236,c32),c1) in
 if Not(ProcState_Z_240) then 
 let R1_602=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_604=hash2(SCK_113,0x02) in 
+let CKsNext_604=hash2(CKs_113,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_609 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1046,11 +1046,11 @@ lookup Plus(R27_450,c8) as R1_563 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_569=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_571=hash2(RAND_NUM_463,0x02) in 
+let CKsNext_571=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_576 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1068,11 +1068,11 @@ insert R27_450,LowCast(R8_517,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_528=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_530=hash2(RAND_NUM_463,0x02) in 
+let CKsNext_530=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_535 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1088,11 +1088,11 @@ else lookup Plus(R23_100,c64) as R24_107 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_475=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_477=hash2(RAND_NUM_463,0x02) in 
+let CKsNext_477=hash2(RAND_NUM_463,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_482 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1142,11 +1142,11 @@ lookup Plus(R27_273,c8) as R1_386 in
 insert Plus(SP_EL0_1,c48),c0;
 let R1_392=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_394=hash2(RAND_NUM_286,0x02) in 
+let CKsNext_394=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_399 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1164,11 +1164,11 @@ insert R27_273,LowCast(R8_340,c32);
 insert Plus(SP_EL0_1,c48),c0;
 let R1_351=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_353=hash2(RAND_NUM_286,0x02) in 
+let CKsNext_353=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_358 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
@@ -1184,11 +1184,11 @@ else lookup Plus(R23_100,c64) as R24_107 in
 else insert Plus(SP_EL0_1,c48),c0;
 let R1_298=Minus(SP_EL0_sy,c248) in 
 lookup Plus(R23_100,c64) as R24_107 in 
-let SCKnext_300=hash2(RAND_NUM_286,0x02) in 
+let CKsNext_300=hash2(RAND_NUM_286,0x02) in 
 if Not(SignedLessThan(LowCast(R24_107,c32),c0)) then 
 lookup Plus(SP_EL0_1,c56) as R1_305 in 
 lookup Plus(R22_97,c16) as R23_100 in 
-insert a_91,MK_115;
+insert a_91,MKs_115;
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 
 lookup Plus(R22_97,c16) as R23_100 in 
 if Not(SignedLessThan(LowCast(R23_100,c32),c0)) then 

@@ -284,8 +284,10 @@ fun symb_exec_adversary_block abpfun n_dict bl_dict syst =
 (* handle library code *)
 fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
     let val lbl_tm = SYST_get_pc syst; in
-	    let
-		val bl = (valOf o (lookup_block_dict bl_dict)) lbl_tm;
+	let
+	    val _ = if false then () else
+		    print_term (lbl_tm);
+	    val bl = (valOf o (lookup_block_dict bl_dict)) lbl_tm;
 
 		val (lbl_block_tm, bl_stmts, est) = dest_bir_block bl;
 
@@ -297,7 +299,7 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 
 		val lib_type = bir_symbexec_oracleLib.lib_oracle adr_dict lbl_tm syst; (* detect type of library call *)
 
-		val _ = if true then () else
+		val _ = if false then () else
 			print ("Lib type: " ^ (lib_type) ^ "\n");
 
 (* For WireGuard case-study *)

@@ -93,8 +93,7 @@ val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 0xEE6AE4w)``,
 		      ``BL_Address (Imm64 0xEE6B80w)``,
-		      ``BL_Address (Imm64 0xEEA07Cw)``,
-		      “BL_Address (Imm64 0x12F87A0w)”
+		      “BL_Address (Imm64 0x12C1B70w)”
 		   ];
     
 val syst = init_state lbl_tm prog_vars;

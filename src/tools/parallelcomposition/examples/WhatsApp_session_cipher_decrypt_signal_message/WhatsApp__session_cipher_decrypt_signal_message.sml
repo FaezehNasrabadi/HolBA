@@ -68,6 +68,15 @@ val prog_vars = bv_key::prog_vars;
 val op_mem = “BVar "Op_MEM" (BType_Mem Bit64 Bit8)”;
 
 val prog_vars = op_mem::prog_vars;
+
+val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
+
+val prog_vars = crypto::prog_vars;
+
+val ephemeral = “BVar "Ephemeral" (BType_Imm Bit64)”;
+
+val prog_vars = ephemeral::prog_vars;
+    
     
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
@@ -77,10 +86,14 @@ lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
   *)
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-(*      
-val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``];
+val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
+
+val stop_lbl_tms = [``BL_Address (Imm64 0xEE6AE4w)``,
+		      ``BL_Address (Imm64 0xEE6B80w)``,
+		      ``BL_Address (Imm64 0xEEA07Cw)``,
+		      “BL_Address (Imm64 0x12F87A0w)”
+		   ];
     
 val syst = init_state lbl_tm prog_vars;
 
@@ -109,7 +122,7 @@ val _ = print "\n";
 val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
 val _ = print "\n";
 
-    
+ (*   
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 

@@ -22,6 +22,8 @@ val _ = Theory.new_constant("hash1", ``:bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("hash2", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
+val _ = Theory.new_constant("hkdf", ``:bir_var_t -> bir_var_t -> bir_exp_t``); 
+
 val _ = Theory.new_constant("hash3", ``:bir_var_t -> bir_var_t -> bir_var_t -> bir_exp_t``);    
 
 val _ = Theory.new_constant("exclusive_or", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
@@ -568,6 +570,19 @@ fun EXP input1 input2 =
     in
 	dest_BStmt_Assign stmt
     end;
+
+
+fun HKDF input1 input2 =
+    let
+
+	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+		     (hkdf
+			  ( ^input1)
+			  ( ^input2))``;
+    in
+	dest_BStmt_Assign stmt
+    end;
+
     
 fun KDF1 input1 input2 =
     let
@@ -2989,28 +3004,33 @@ fun KeyDF1 syst =
     let
 	val env  = (SYST_get_env  syst);
 
-	val key = find_bv_val ("HMAC_Send::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``;
+	val root = find_bv_val ("keydf1::bv in env not found")
+                              env ``BVar "Root" (BType_Imm Bit64)``;
 
-	val epub = find_bv_val ("bv in env not found")
-                              env ``BVar "R9" (BType_Imm Bit64)``;
+	val ephemeral = find_bv_val ("bv in env not found")
+                              env ``BVar "Ephemeral" (BType_Imm Bit64)``;
 	    
-	val (k_bv, k_be) = KDF1 key epub;
+	val (k_bv, k_be) = HKDF root ephemeral;
+
+	val (P1_bv, P1_be) = Pars1 k_be; (* Parse input *)
+
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKr", “BType_Imm Bit64”));
+
+	val syst = update_key P1_be Fr_CK syst;
 	    
-	val Fr_Ci = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Cii", “BType_Imm Bit64”));
+	val (P2_bv, P2_be) = Pars2 k_be; (* Parse input *)
+
+	val Fr_root = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RK", “BType_Imm Bit64”));
+
+	val bv_key = ``BVar "Root" (BType_Imm Bit64)``;
+
+	val syst =  update_envvar bv_key Fr_root syst;
+
+	val fr_bv = Fr Fr_root;
+
+	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval P2_be fr_bv) syst;
 	    
-	val syst = update_key k_be Fr_Ci syst; (* update syst *)
-
-	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_Ci syst;
-
-	val n = List.nth (readint_inputs "Library-number of inputs", 0);
-	val input = compute_inputs_op_mem n syst; (* get values *)
-	    
-	val (x_bv, x_be) = HMac2 input epub; (* Con inputs *)
-
-	val Fr_Con = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”)); (* generate a fresh variable *)
-
-	val syst = store_op_mem_r0 x_be Fr_Con syst; (* update syst *)
+	val syst = update_symbval P2_be Fr_root syst;
 
     in
 	syst

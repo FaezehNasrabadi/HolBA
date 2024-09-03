@@ -77,7 +77,9 @@ val ephemeral = “BVar "Ephemeral" (BType_Imm Bit64)”;
 
 val prog_vars = ephemeral::prog_vars;
     
-    
+val root = “BVar "Root" (BType_Imm Bit64)”;
+
+val prog_vars = root::prog_vars;    
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
     
@@ -122,7 +124,7 @@ val _ = print "\n";
 val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
 val _ = print "\n";
 
- (*   
+  
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 
@@ -161,4 +163,3 @@ val _ =  ( write_sapic_to_file o process_to_string) sapic_process
 val _ = print ("wrote into file");
 val _ = print "\n";
 
-*)

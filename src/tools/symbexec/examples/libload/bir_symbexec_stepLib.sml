@@ -299,7 +299,7 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 
 		val lib_type = bir_symbexec_oracleLib.lib_oracle adr_dict lbl_tm syst; (* detect type of library call *)
 
-		val _ = if false then () else
+		val _ = if true then () else
 			if (lib_type = "C_Lib") then () else
 			print ("Lib type: " ^ (lib_type) ^ "\n");
 
@@ -487,8 +487,14 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 			       val syst = state_exec_loop_true bl_dict syst;
 				   
 			       val syst = SYST_update_status BST_InLoop_tm syst;
+
+			       val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict (SYST_get_pc syst) syst;
 				   
-			       val systs_processed = symb_exec_normal_block abpfun n_dict bl_dict syst;
+			       val systs_processed =  if (pc_type = "Adversary") then symb_exec_adversary_block abpfun n_dict bl_dict syst
+						      else if (pc_type = "Library") then symb_exec_library_block abpfun n_dict bl_dict adr_dict syst
+						      else if (pc_type = "Loop") then symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst
+						      else symb_exec_normal_block abpfun n_dict bl_dict syst;
+
 			   in
 			       systs_processed
 			   end
@@ -505,7 +511,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 		let
 		    val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		    val _ = if false then () else
+		    val _ = if true then () else
 			    print_term (lbl_tm);
 		    val _ = if true then () else
 			    print ("pc_type: " ^ (pc_type) ^ "\n");

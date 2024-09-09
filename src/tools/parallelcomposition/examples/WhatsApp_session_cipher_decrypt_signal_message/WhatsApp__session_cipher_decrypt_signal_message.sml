@@ -144,7 +144,7 @@ val _ = print("enter address to loop "^(term_to_string enter)^"\n");
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
 
 
-val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE688Cw)``,"loop");
+val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE68A4w)``,"loop");
 
     
 val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
@@ -155,12 +155,17 @@ val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
 	     
 val stop_lbl_tms = [
     ``BL_Address (Imm64 0xEE672cw)``,
-    ``BL_Address (Imm64 0xEE6AE4w)``,
-		      ``BL_Address (Imm64 0xEE6B80w)``,
-		      “BL_Address (Imm64 0x12C1B70w)”,
-		      “BL_Address (Imm64 0x12F83A8w)”,
-    “BL_Address (Imm64 0x12EC14Cw)”
-		   ];
+      ``BL_Address (Imm64 0xEE6AE4w)``,
+      ``BL_Address (Imm64 0xEE6B80w)``,
+      “BL_Address (Imm64 0x12C1B70w)”,
+      “BL_Address (Imm64 0x12F83A8w)”,
+      “BL_Address (Imm64 0x12EC14Cw)”,
+      “BL_Address_HC (Imm64 0xEE68ACw)”,
+     “BL_Address (Imm64 0xEE6700w)”,
+      “BL_Address (Imm64 0xEE6710w)”,
+      “BL_Address (Imm64 0xEE676Cw)”,
+      “BL_Address_HC (Imm64 0xEE681Cw)”
+];
     
 val syst = init_state lbl_tm prog_vars;
 

@@ -144,10 +144,10 @@ val _ = print("enter address to loop "^(term_to_string enter)^"\n");
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
 
 
-val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE68A4w)``,"loop");
+val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE6884w)``,"loop");
 
     
-val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
+val lbl_tm = ``BL_Address (Imm64 0xEE65F8w)``;
     
 val g1 = cfg_create "toy1" [lbl_tm] n_dict bl_dict_;
 

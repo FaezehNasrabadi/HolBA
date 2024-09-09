@@ -50,9 +50,13 @@ val _ = Theory.new_constant("conc2", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 (*
 val _ = Theory.new_constant("conc3", ``:bir_var_t -> bir_var_t -> bir_exp_t``);*)
     
-val _ = Theory.new_constant("pars1", ``:bir_var_t -> bir_exp_t``);
+(* val _ = Theory.new_constant("pars1", ``:bir_var_t -> bir_exp_t``); *)
 
-val _ = Theory.new_constant("pars2", ``:bir_var_t -> bir_exp_t``);
+(* val _ = Theory.new_constant("pars2", ``:bir_var_t -> bir_exp_t``); *)
+
+val _ = Theory.new_constant("pars1", ``:bir_exp_t -> bir_exp_t``);
+
+val _ = Theory.new_constant("pars2", ``:bir_exp_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("pars3", ``:bir_var_t -> bir_exp_t``);
 
@@ -1697,27 +1701,27 @@ fun DH_key vn syst =
 	syst
     end;
 
+
  fun session_key syst =
     let
 
-	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)
-
-	val C_be = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("ephemeral_secret", “BType_Imm Bit64”)); (* generate a fresh name *)
-
-	val bv_key = ``BVar "Ephemeral" (BType_Imm Bit64)``;
-
-	val syst =  update_envvar bv_key Fr_SKey syst;
-
-	val fr_bv = Fr Fr_SKey;
-
-	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval C_be fr_bv) syst;
+	val env  = (SYST_get_env  syst);
 	    
-	val syst = update_symbval C_be Fr_SKey syst;
+	val key = find_bv_val ("encypt::bv in env not found")
+                              env ``BVar "key" (BType_Imm Bit64)``;
+
+	val c2 = ``BVar "0x02" (BType_Imm Bit64)``;
+		     
+	val (C_bv, C_be) = HMac2 key c2;    	    	
+
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKsNext", “BType_Imm Bit64”));
+
+	val syst = update_key C_be Fr_CK syst;
 
     in
 	syst
     end;
-  
+ 
  (*   
 fun session_key syst =
     let
@@ -3038,47 +3042,19 @@ fun KeyDF1 syst =
 
 fun KeyDF2 syst =
     let
-	val env  = (SYST_get_env  syst);
+	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
-	val epriv = find_bv_val ("bv in env not found")
-                               env ``BVar "R8" (BType_Imm Bit64)``;
+	val C_be = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("ephemeral_secret", “BType_Imm Bit64”)); (* generate a fresh name *)
 
-	val be_adv = find_adv_name syst;
+	val bv_key = ``BVar "Ephemeral" (BType_Imm Bit64)``;
+
+	val syst =  update_envvar bv_key Fr_SKey syst;
+
+	val fr_bv = Fr Fr_SKey;
+
+	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval C_be fr_bv) syst;
 	    
-	val (e_bv, e_be) = dh epriv be_adv;
-	    
-	val Fr_dh = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("DH", “BType_Imm Bit64”)); (* generate a fresh variable *)
-
-	val syst = store_mem_r0 e_be Fr_dh syst; (* update syst *)
-
-	val env  = (SYST_get_env  syst);
-
-	val key = find_bv_val ("KDF2::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``; 
-
-	val (k_bv, k_be) = KDF2 key Fr_dh;
-
-	val Fr_kdf = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("KDF", “BType_Imm Bit64”));
-	    
-	val syst = store_mem_r0 k_be Fr_kdf syst; (* update syst *)
-
-	val Fr_c = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("c", “BType_Imm Bit64”)); (* generate a fresh variable *)
-	val Fr_k = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("k", “BType_Imm Bit64”)); (* generate a fresh variable *)
-	val (P_bv, P_be) = makepair Fr_c Fr_k; (* Parse inputs *)
-
-	val Fr_pr = get_bvar_fresh (bir_envSyntax.mk_BVar_string ((term_to_string P_be), bir_valuesSyntax.BType_Bool_tm)); (* generate a fresh variable *)
-
-	val syst = (SYST_update_pred ((Fr_pr)::(SYST_get_pred syst)) o update_symbval Fr_kdf Fr_pr) syst;
-
-	val (P_bv, P_be) = Pars12 Fr_kdf; (* Parse inputs *)
-	    
-	val Fr_par1 = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars1", “BType_Imm Bit64”)); (* generate a fresh variable *)
-	    
-	val syst = update_key P_be Fr_par1 syst; (* update syst *)
-
-	val syst =  update_envvar ``BVar "key" (BType_Imm Bit64)`` Fr_par1 syst;
-
-	val syst = Parse21 Fr_kdf syst;
+	val syst = update_symbval C_be Fr_SKey syst;
 
     in
 	syst

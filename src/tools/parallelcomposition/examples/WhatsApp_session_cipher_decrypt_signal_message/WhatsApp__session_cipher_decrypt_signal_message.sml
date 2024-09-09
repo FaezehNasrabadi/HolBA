@@ -79,21 +79,87 @@ val prog_vars = ephemeral::prog_vars;
     
 val root = “BVar "Root" (BType_Imm Bit64)”;
 
-val prog_vars = root::prog_vars;    
+val prog_vars = root::prog_vars;
+
+
+    
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
+  (*
+val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
     
- (*   
+val g1 = cfg_create "toy1" [lbl_tm] n_dict bl_dict_;
+
+val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
+ 
+val g2 = cfg_create "toy2" [lbl_tm] n_dict bl_dict_;
+    
+val _ = print "Display cfg.\n";
+open bir_cfg_vizLib;
+val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g2))) (#CFGG_nodes g2);
+val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;    
+ 
 lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
+
+val lbl_tm = ``BL_Address (Imm64 0x12F85DCw)``
+val bl = ((valOf o (lookup_block_dict bl_dict_)) lbl_tm) handle _ => ((valOf o (lookup_block_dict bl_dict_)) (bir_symbexec_loopLib.next_pc lbl_tm));
+	     
+val (lbl_block_tm, stmts, est) = dest_bir_block bl;
+
+val loop_pattern = ["CFGNT_Basic","CFGNT_CondJump","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_CondJump","CFGNT_Call","CFGNT_CondJump",
+		    "CFGNT_Basic","CFGNT_Call","CFGNT_Call","CFGNT_CondJump",
+		    "CFGNT_Call","CFGNT_CondJump","CFGNT_Call","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Jump"];
+
+val loop_pattern = ["CFGNT_Call","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_Basic",
+		    "CFGNT_Jump","CFGNT_Basic","CFGNT_CondJump"];
+
+val loop_pattern = ["CFGNT_Basic","CFGNT_CondJump",
+		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_CondJump","CFGNT_Call"];
+
+val loop_pattern = ["CFGNT_Call","CFGNT_CondJump",
+		    "CFGNT_Basic","CFGNT_Call","CFGNT_Call","CFGNT_CondJump",
+		    "CFGNT_Call","CFGNT_CondJump","CFGNT_Call","CFGNT_Basic",
+		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Jump","CFGNT_Basic","CFGNT_CondJump"];	
+val stmt = “ [BStmt_Assert
+                     (BExp_Aligned Bit64 2
+                        (BExp_Den (BVar "R27" (BType_Imm Bit64))));
+                   BStmt_Assign (BVar "R8" (BType_Imm Bit64))
+                     (BExp_Cast BIExp_UnsignedCast
+                        (BExp_Load
+                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+                           (BExp_BinExp BIExp_Plus
+                              (BExp_Den (BVar "R27" (BType_Imm Bit64)))
+                              (BExp_Const (Imm64 48w))) BEnd_LittleEndian
+                           Bit32) Bit64)]”
+val stmt = “[]”
+(can dest_comb) stmt      
+val _ = print("enter address to loop "^(term_to_string enter)^"\n");
   *)
     
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
 
+
+val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE688Cw)``,"loop");
+
+    
 val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
+    
+val g1 = cfg_create "toy1" [lbl_tm] n_dict bl_dict_;
 
-val stop_lbl_tms = [``BL_Address (Imm64 0xEE6AE4w)``,
+val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
+	     
+val stop_lbl_tms = [
+    ``BL_Address (Imm64 0xEE672cw)``,
+    ``BL_Address (Imm64 0xEE6AE4w)``,
 		      ``BL_Address (Imm64 0xEE6B80w)``,
-		      “BL_Address (Imm64 0x12C1B70w)”
+		      “BL_Address (Imm64 0x12C1B70w)”,
+		      “BL_Address (Imm64 0x12F83A8w)”,
+    “BL_Address (Imm64 0x12EC14Cw)”
 		   ];
     
 val syst = init_state lbl_tm prog_vars;
@@ -105,10 +171,6 @@ val syst = state_add_preds "init_pred" pred_conjs syst;
 val _ = print "initial state created.\n\n";
 
 val cfb = false;
-
-val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
-
-val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
     
 val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [syst] stop_lbl_tms adr_dict [];
 val _ = print "\n\n";

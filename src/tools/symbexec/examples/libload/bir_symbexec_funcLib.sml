@@ -1714,7 +1714,7 @@ fun DH_key vn syst =
 		     
 	val (C_bv, C_be) = HMac2 key c2;    	    	
 
-	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKsNext", “BType_Imm Bit64”));
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
 
 	val syst = update_key C_be Fr_CK syst;
 
@@ -2744,7 +2744,7 @@ fun new_key syst =
 		     
 	val (C_bv, C_be) = HMac2 key c1;    	    	
 
-	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MKr", “BType_Imm Bit64”));
+	val Fr_SKey = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MKe", “BType_Imm Bit64”));
 	    
 	val bv_key = ``BVar "Crypto" (BType_Imm Bit64)``;
 
@@ -3018,13 +3018,13 @@ fun KeyDF1 syst =
 
 	val (P1_bv, P1_be) = Pars1 k_be; (* Parse input *)
 
-	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKr", “BType_Imm Bit64”));
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKe", “BType_Imm Bit64”));
 
 	val syst = update_key P1_be Fr_CK syst;
 	    
 	val (P2_bv, P2_be) = Pars2 k_be; (* Parse input *)
 
-	val Fr_root = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RK", “BType_Imm Bit64”));
+	val Fr_root = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RKe", “BType_Imm Bit64”));
 
 	val bv_key = ``BVar "Root" (BType_Imm Bit64)``;
 
@@ -3276,7 +3276,7 @@ fun Load_file syst =
 	    
 	val be_adv = find_adv_name syst;
 
-	val Fr_CK = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKr", “BType_Imm Bit64”))); (* generate a fresh variable *)
+	val Fr_CK = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKe", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
 	
 	val bv_mem = find_bv_val ("Load_file::bv in env not found") (SYST_get_env syst) “BVar "MEM" (BType_Mem Bit64 Bit8)”;

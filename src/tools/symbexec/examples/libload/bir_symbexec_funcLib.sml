@@ -35,6 +35,8 @@ val _ = Theory.new_constant("send", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 val _ = Theory.new_constant("receive", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("new_session", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
+
+val _ = Theory.new_constant("msg_new_session", ``:bir_var_t -> bir_var_t -> bir_var_t -> bir_exp_t``);
     
 val _ = Theory.new_constant("enc1", ``:bir_var_t -> bir_var_t -> bir_var_t -> bir_exp_t``);    
 
@@ -192,6 +194,21 @@ fun NewSession input1 input2 =
     in
 	dest_BStmt_Assign stmt
     end;
+
+
+fun MsgNewSession input1 input2 input3 =
+    let
+	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
+		     (msg_new_session
+			  ( ^input1)
+			  ( ^input2)
+			  ( ^input3))``;
+
+    in
+	dest_BStmt_Assign stmt
+    end;
+
+
     
 fun Sign inputs skS =
     let
@@ -1717,7 +1734,15 @@ fun DH_key vn syst =
 
 
  fun session_key syst =
-    let
+     let
+
+	 val be_adv = find_adv_name syst;
+	     
+	 val av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Adv", “BType_Mem Bit64 Bit8”)); (* generate a fresh variable *)
+
+	val Fn_av = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("B", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	val syst = store_advmem Fn_av av syst;
 
 	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
@@ -1727,9 +1752,7 @@ fun DH_key vn syst =
 	    
 	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
 
-	val be_adv = find_adv_name syst;
-
-	val (E_bv, E_be) = NewSession be_adv vn;
+	val (E_bv, E_be) = MsgNewSession be_adv Fn_av vn;
 
 	val syst = state_add_path "event1" E_be syst
 
@@ -3599,6 +3622,33 @@ fun Load_file syst =
     in
 	syst
     end;
+
+
+
+WhatsApp_session_builder_process_pre_key_bundle
+
+
+ fun session_key syst =
+    let
+
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
+
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Session_Id", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	val syst = update_key Fr_vn vn syst;
+	    
+	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
+
+	val be_adv = find_adv_name syst;
+
+	val (E_bv, E_be) = NewSession be_adv vn;
+
+	val syst = state_add_path "event1" E_be syst
+
+    in
+	syst
+    end;
+ 
 *)	    
 end(*local*)
 

@@ -1745,28 +1745,27 @@ fun DH_key vn syst =
     end;
 
 
- fun session_key syst =
-     let
+fun session_key syst =
+    let
 
-	 val be_adv = find_adv_name syst;
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
-	val Fn_b = bir_envSyntax.mk_BVar_string ("B", “BType_Imm Bit64”); 
-
-	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”));   	
-
-	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Session_Id", “BType_Imm Bit64”)); 
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Session_Id", “BType_Imm Bit64”)); (* generate a fresh name *)
 
 	val syst = update_key Fr_vn vn syst;
 	    
 	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
 
-	val (E_bv, E_be) = MsgNewSession be_adv Fn_b vn;
+	val Fn_b = bir_envSyntax.mk_BVar_string ("B", “BType_Imm Bit64”); 
+
+	val (E_bv, E_be) = NewSession vn Fn_b;
 
 	val syst = state_add_path "event1" E_be syst
 
     in
 	syst
     end;
+ 
  
  (*   
 fun session_key syst =
@@ -3657,6 +3656,31 @@ WhatsApp_session_builder_process_pre_key_bundle
 	syst
     end;
  
+WhatsApp_decryptPreKeyCiphertextData
+
+ fun session_key syst =
+     let
+
+	 val be_adv = find_adv_name syst;
+
+	val Fn_b = bir_envSyntax.mk_BVar_string ("B", “BType_Imm Bit64”); 
+
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”));   	
+
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Session_Id", “BType_Imm Bit64”)); 
+
+	val syst = update_key Fr_vn vn syst;
+	    
+	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
+
+	val (E_bv, E_be) = MsgNewSession be_adv Fn_b vn;
+
+	val syst = state_add_path "event1" E_be syst
+
+    in
+	syst
+    end;
+
 *)	    
 end(*local*)
 

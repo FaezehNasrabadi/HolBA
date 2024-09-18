@@ -29,7 +29,10 @@ local
       let
         val (cnd, be1, be2) = bir_expSyntax.dest_BExp_IfThenElse be;
       in
-        state_branch "assign"
+	  if (bir_bool_expSyntax.is_bir_exp_true cnd) then [state_assign_bv bv be1 syst]
+	  else if (bir_bool_expSyntax.is_bir_exp_false cnd) then [state_assign_bv bv be2 syst]
+	  else
+	      state_branch "assign"
                      cnd
                      (state_exec_assign (bv, be1))
                      (state_exec_assign (bv, be2))
@@ -130,12 +133,15 @@ local
       val tgt1    = fst (List.nth (vs, 1));
       val tgt2    = fst (List.nth (vs, 2));
     in
-      state_branch_simp
-         "cjmp"
-         cnd
-         (SYST_update_pc tgt1)
-         (SYST_update_pc tgt2)
-         syst
+	if (bir_bool_expSyntax.is_bir_exp_true cnd) then [SYST_update_pc tgt1 syst]
+	else if (bir_bool_expSyntax.is_bir_exp_false cnd) then [SYST_update_pc tgt2 syst]
+	else
+	    state_branch_simp
+		"cjmp"
+		cnd
+		(SYST_update_pc tgt1)
+		(SYST_update_pc tgt2)
+		syst
     end
     )
       handle HOL_ERR _ => NONE;

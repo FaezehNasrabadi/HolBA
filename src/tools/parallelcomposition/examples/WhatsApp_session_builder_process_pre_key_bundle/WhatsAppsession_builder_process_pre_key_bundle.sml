@@ -131,23 +131,18 @@ fun printTermList [] = ()
     (printList lst; print "\n"; printTermList rest);
   
 
-(* Helper function that checks if an element is in the list *)
-fun member(_, []) = false
-  | member((x: term), y::ys) = if (identical x y) then true else member(x, ys);
-
-(* Function to remove duplicates while keeping the first occurrence *)
 fun removeDuplicates lst =
     let
-        (* Helper function with accumulator for seen elements *)
-        fun helper([], acc) = List.rev acc
-          | helper(x::xs, acc) =
-                if member(x, acc) then
-                    helper(xs, acc)
+        fun helper([], _, acc) = List.rev acc
+          | helper(x::xs, seen, acc) =
+                if List.exists (fn y => (((fst o bir_envSyntax.dest_BVar_string) x) = ((fst o bir_envSyntax.dest_BVar_string) y))) seen then
+                    helper(xs, seen, acc)
                 else
-                    helper(xs, x::acc)
+                    helper(xs, x::seen, x::acc)
     in
-        helper(lst, [])
+        helper(lst, [], [])
     end;
+    
 (*
 (* Example usage *)
 val lst = [

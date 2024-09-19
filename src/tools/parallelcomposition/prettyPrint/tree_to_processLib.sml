@@ -56,9 +56,11 @@ fun read_events pred =
     in
 	trm
     end;
-    
+(*
+val vals_lis = [];
+val pred_be = “BExp_Den (BVar "994_R0" (BType_Imm Bit64))”*)    
 fun bir_exp_symbvar_to_symbval vals_lis pred_be =
-    if (is_BExp_Const pred_be) then pred_be
+    (if (is_BExp_Const pred_be) then pred_be
     else if (is_BExp_Den pred_be) then
 	(let
 	     val be =  bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val vals_lis (dest_BExp_Den pred_be));
@@ -117,7 +119,8 @@ fun bir_exp_symbvar_to_symbval vals_lis pred_be =
 	in
 	    mk_BExp_MemEq((bir_exp_symbvar_to_symbval vals_lis subexp1), (bir_exp_symbvar_to_symbval vals_lis subexp2))
 	end
-    else pred_be;
+    else pred_be) handle _ => raise ERR "bir_exp_symbvar_to_symbval" ("cannot do it "^(term_to_string pred_be));
+	 
 
 
 	

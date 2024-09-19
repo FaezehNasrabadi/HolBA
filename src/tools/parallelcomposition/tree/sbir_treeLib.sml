@@ -43,7 +43,66 @@ fun allHeadsEqual ([]: term list list) = false
 
 (* Define a datatype for trees *)
 datatype 'a tree = Leaf | Node of 'a * 'a tree | Branch of 'a * 'a tree * 'a tree;
+
+(* Helper function to check if all lists in a list are empty *)
+fun all_empty lsts = List.all null lsts
+
+(* Helper function to check if a list is not empty *)
+fun not_empty ls = not (null ls)
+
+fun prtion (lst: term list list) = case lst of
+				       ([]: term list list) => ([], [])
+				     | ([[]]: term list list) => ([], [])
+				     | ((h::_): term list list) => 
+				       let
+					   val head_val = ((hd h):term)  (* Get the head of the first non-empty sublist *)
+				       in
+					   (* Partition all sublists based on whether their head matches head_val *)
+					   List.partition (fn (ls: term list) => (identical (hd ls) head_val)) lst
+				       end		   
+(* Main function to convert predicate lists to tree *)
+fun predlist_to_tree ([[]]: term list list) = Leaf
+  | predlist_to_tree ([]: term list list) = Leaf
+  | predlist_to_tree (lsts: term list list) =    
+    if all_empty lsts then Leaf
+    else
+      let
+        (* Partition the lists into empty and non-empty *)
+          val (empty, notempty) = List.partition null lsts
+
+          (* Partition the non-empty lists by the head element *)
+          val (head_eq, head_noteq) = prtion notempty;
+      in    
+	      if null head_noteq then
+		  let
+		      val (head_tleq, head_tlnoteq) = (prtion (List.map (fn ls => (tl ls)) head_eq))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("|n"^((int_to_string o List.length) ls))) head_eq)));
+		  in
+		      if null head_tlnoteq then
+			  Node (hd (hd head_eq), predlist_to_tree (List.map tl head_eq))
+		      else
+			  (* Create a Branch using the equal head before head_eq and head_noteq split *)
+			  Branch (
+			  (* The head we branch on is the common head of head_eq and head_noteq *)
+			  hd (hd head_eq),
+			  (* Left subtree for paths that match the head *)
+			  predlist_to_tree head_tleq,
+			  (* Right subtree for paths that have a different head *)
+			  predlist_to_tree head_tlnoteq
+			  )
+		  end
+	      else
+		  raise ERR "predlist_to_tree" "heads not equal"
+		  
+      end 
+
 	 
+(*
+tl [2]
+val P1 = [“"f1"”,“"f3"”, “"f4"”, “"f5"”];
+val P2 = [“"f1"”, “"f6"”, “"f7"”, “"f8"”];
+val P3 = [“"f1"”, “"f6"”, “"f7"”, “"f9"”];
+val lsts= [P1,P2,P3]	 
+
 fun predlist_to_tree ([[]]: term list list) = Leaf
   | predlist_to_tree ([]: term list list) = Leaf
   | predlist_to_tree (lst: term list list) =    
@@ -71,7 +130,7 @@ fun predlist_to_tree ([[]]: term list list) = Leaf
 		else predlist_to_tree head_noteq
 		     
     end
-
+*)
 (*SymbValBE (bv, _)
 val bv = “BVar "sy_R30" (BType_Imm Bit64)”
 Redblackset.empty Term.compare

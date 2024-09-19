@@ -111,11 +111,69 @@ val _ = print "\n";
     
 val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
+    (*
+val P1 = [“BVar "13_assert_true_cnd" BType_Bool”];
+val x = “BVar "13_assert_true_cnd" BType_Bool”;  
+val predlists = [P1]
+		print_term predlists
 
+
+   
+*)
+(* Define a function to print a single list *)
+fun printList [] = ()
+  | printList (x::xs) =
+    (print (((fst o bir_envSyntax.dest_BVar_string) x) ^ ","); printList xs);
+
+(* Define a function to print a list of lists *)
+fun printTermList [] = ()
+  | printTermList (lst::rest) =
+    (printList lst; print "\n"; printTermList rest);
+  
+
+(* Helper function that checks if an element is in the list *)
+fun member(_, []) = false
+  | member((x: term), y::ys) = if (identical x y) then true else member(x, ys);
+
+(* Function to remove duplicates while keeping the first occurrence *)
+fun removeDuplicates lst =
+    let
+        (* Helper function with accumulator for seen elements *)
+        fun helper([], acc) = List.rev acc
+          | helper(x::xs, acc) =
+                if member(x, acc) then
+                    helper(xs, acc)
+                else
+                    helper(xs, x::acc)
+    in
+        helper(lst, [])
+    end;
+(*
+(* Example usage *)
+val lst = [
+    "0_init_pred","1_SP_EL0","sy_R30","2_R30","3_assert_true_cnd","5_assert_true_cnd",
+    "7_MEM","8_assert_true_cnd","10_assert_true_cnd","12_MEM","13_assert_true_cnd",
+    "15_assert_true_cnd","17_MEM","18_assert_true_cnd","20_assert_true_cnd","22_MEM",
+    "0_init_pred","1_SP_EL0","sy_R30","2_R30","3_assert_true_cnd","5_assert_true_cnd",
+    "1001_R0","1002_R1","822_R24","1001_R0"
+];
+
+val uniqueList = removeDuplicates(lst);
+
+
+
+
+
+
+ *)   
 val _ = print "Get predlists";
 val _ = print "\n";
     
-val tree = predlist_to_tree predlists;
+val predlists_refined = List.map (fn lst => removeDuplicates lst) predlists;
+val _ = print "Get refined predlists";    
+val _ = print "\n";
+    val _ = printTermList predlists_refined;
+val tree = predlist_to_tree predlists_refined;
 
 val _ = print "Get tree";
 val _ = print "\n";

@@ -204,6 +204,46 @@ fun process_to_string pro =
     else raise ERR "process_to_string" ("Don't know Sapic Process: " ^ (term_to_string pro))
 
 
+	       
+(*
+val pro = “(ProcessComb
+         (Let (TVar (Var "48_OTP" 0)) (Con (Name FreshName "49_otp")))
+         (ProcessComb
+            (Let (TVar (Var "66_Conc1" 0))
+               (FAPP ("conc1",1,Public,Constructor) [TVar (Var "48_OTP" 0)]))
+            (ProcessComb
+               (Let (TVar (Var "70_XOR" 0))
+                  (FAPP ("exclusive_or",2,Public,Constructor)
+                     [TVar (Var "66_Conc1" 0); TVar (Var "69_pad" 0)]))
+               (ProcessAction (ChIn NONE (TVar (Var "70_XOR" 0)))
+                  ProcessNull) ProcessNull) ProcessNull) ProcessNull)”*)	       
+fun refine_process pro =
+    if (is_ProcessNull pro) then pro
+    else if (is_ProcessComb pro)
+    then
+	let
+	    val (c,pl,pr) = dest_ProcessComb pro;
+	    val refined_pl = refine_process pl;
+            val refined_pr = refine_process pr;
+	in
+	    if ((is_ProcessNull refined_pl) andalso (is_ProcessNull refined_pr) andalso ((is_Let c) orelse (is_Lookup c)))
+	    then ProcessNull_tm	 
+	    else mk_ProcessComb(c, refined_pl, refined_pr)
+	end		
+    else if (is_ProcessAction pro)
+    then
+	let
+	    val (a,p) = dest_ProcessAction pro;
+	    val refined_p = refine_process p;
+	in
+	    if ((is_ProcessNull refined_p) andalso ((is_New a) orelse (is_ChIn a)))
+	    then ProcessNull_tm	 
+	    else mk_ProcessAction(a,refined_p)
+	end		    
+    else raise ERR "refine_process" ("Don't know Sapic Process: " ^ (term_to_string pro))
+
+
+	       
 (* write Sapic into a file *)
 fun write_sapic_to_file str =
     let

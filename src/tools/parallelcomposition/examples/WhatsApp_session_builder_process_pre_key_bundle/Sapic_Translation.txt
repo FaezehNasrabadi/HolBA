@@ -100,8 +100,6 @@ let R0_994=SKey_992 in
 out(SKey_992);
 event New_session(SKey_992,B);
 if Not(SignedLessThan(LowCast(R0_994,c32),c0)) then 
-lookup R0_sy as R0_1001 in 
-lookup Plus(R0_sy,c8) as R1_1002 in 
 0
 else lookup Plus(R25_845,c16) as R27_853 in 
 lookup Plus(SP_EL0_1,c24) as R1_856 in 
@@ -134,8 +132,6 @@ let R0_916=SKey_914 in
 out(SKey_914);
 event New_session(SKey_914,B);
 if Not(SignedLessThan(LowCast(R0_916,c32),c0)) then 
-lookup R0_sy as R0_923 in 
-lookup Plus(R0_sy,c8) as R1_924 in 
 0
 else lookup Plus(R1_sy,c64) as R24_630 in 
 lookup R0_sy as R0_633 in 
@@ -183,8 +179,6 @@ let R0_802=SKey_800 in
 out(SKey_800);
 event New_session(SKey_800,B);
 if Not(SignedLessThan(LowCast(R0_802,c32),c0)) then 
-lookup R0_sy as R0_809 in 
-lookup Plus(R0_sy,c8) as R1_810 in 
 0
 else lookup Plus(R25_653,c16) as R27_661 in 
 lookup Plus(SP_EL0_1,c24) as R1_664 in 
@@ -217,33 +211,6 @@ let R0_724=SKey_722 in
 out(SKey_722);
 event New_session(SKey_722,B);
 if Not(SignedLessThan(LowCast(R0_724,c32),c0)) then 
-lookup R0_sy as R0_731 in 
-lookup Plus(R0_sy,c8) as R1_732 in 
-0
-else let R21_625=c0 in 
-0
-else let R21_617=c0 in 
-0
-else let R21_608=c0 in 
-0
-else lookup Plus(R0_sy,c16) as R0_601 in 
-let R2_602=c26546176 in 
-let R2_603=c26547922 in 
-let R30_604=c15622084 in 
-let R1_605=c1 in 
-0
-else let R21_582=c0 in 
-0
-else lookup Plus(R0_sy,c16) as R0_561 in 
-let R2_562=c26546176 in 
-let R2_563=c26547955 in 
-let R30_564=c15622048 in 
-let R1_565=c1 in 
-0
-else let R21_552=c0 in 
-let R22_553=c4294966286 in 
-0
-else let R21_549=c0 in 
 0
 else lookup R0_sy as R0_72 in 
 lookup Plus(R0_sy,c8) as R1_73 in 
@@ -322,8 +289,6 @@ let R0_525=SKey_523 in
 out(SKey_523);
 event New_session(SKey_523,B);
 if Not(SignedLessThan(LowCast(R0_525,c32),c0)) then 
-lookup R0_sy as R0_532 in 
-lookup Plus(R0_sy,c8) as R1_533 in 
 0
 else lookup Plus(R25_376,c16) as R27_384 in 
 lookup Plus(SP_EL0_1,c24) as R1_387 in 
@@ -356,8 +321,6 @@ let R0_447=SKey_445 in
 out(SKey_445);
 event New_session(SKey_445,B);
 if Not(SignedLessThan(LowCast(R0_447,c32),c0)) then 
-lookup R0_sy as R0_454 in 
-lookup Plus(R0_sy,c8) as R1_455 in 
 0
 else lookup Plus(R1_sy,c64) as R24_161 in 
 lookup R0_sy as R0_164 in 
@@ -405,8 +368,6 @@ let R0_333=SKey_331 in
 out(SKey_331);
 event New_session(SKey_331,B);
 if Not(SignedLessThan(LowCast(R0_333,c32),c0)) then 
-lookup R0_sy as R0_340 in 
-lookup Plus(R0_sy,c8) as R1_341 in 
 0
 else lookup Plus(R25_184,c16) as R27_192 in 
 lookup Plus(SP_EL0_1,c24) as R1_195 in 
@@ -439,31 +400,4 @@ let R0_255=SKey_253 in
 out(SKey_253);
 event New_session(SKey_253,B);
 if Not(SignedLessThan(LowCast(R0_255,c32),c0)) then 
-lookup R0_sy as R0_262 in 
-lookup Plus(R0_sy,c8) as R1_263 in 
-0
-else let R21_156=c0 in 
-0
-else let R21_148=c0 in 
-0
-else let R21_139=c0 in 
-0
-else lookup Plus(R0_sy,c16) as R0_132 in 
-let R2_133=c26546176 in 
-let R2_134=c26547922 in 
-let R30_135=c15622084 in 
-let R1_136=c1 in 
-0
-else let R21_113=c0 in 
-0
-else lookup Plus(R0_sy,c16) as R0_92 in 
-let R2_93=c26546176 in 
-let R2_94=c26547955 in 
-let R30_95=c15622048 in 
-let R1_96=c1 in 
-0
-else let R21_83=c0 in 
-let R22_84=c4294966286 in 
-0
-else let R21_80=c0 in 
 0

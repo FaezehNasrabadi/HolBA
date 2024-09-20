@@ -119,7 +119,12 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
 val _ = print "Get predlists";
 val _ = print "\n";
     
-val tree = predlist_to_tree predlists;
+val predlists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
+val _ = print "Get refined predlists";    
+val _ = print "\n";
+(* val _ = printTermList predlists_refined; *)
+    
+val tree = predlist_to_tree predlists_refined;
 
 val _ = print "Get tree";
 val _ = print "\n";
@@ -141,12 +146,18 @@ val _ = print "\n";
 
 
 val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
-
     
 val _ = print ("built sapic_process");
 val _ = print "\n";
-    
-val _ =  ( write_sapic_to_file o process_to_string) sapic_process
+
+
+val refined_process = refine_process sapic_process;
+
+val _ = print ("built a refined sapic_process");
+val _ = print "\n";
+
+	
+val _ =  ( write_sapic_to_file o process_to_string) refined_process;
      
 val _ = print ("wrote into file");
 val _ = print "\n";

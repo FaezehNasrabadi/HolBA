@@ -79,11 +79,11 @@ fun predlist_to_tree ([[]]: term list list) = Leaf
 		 (* Create a Branch using the equal head before head_eq and head_noteq split *)
 		    Branch (
 		    (* The head we branch on is the common head of head_eq and head_noteq *)
-		    hd (hd head_eq),
+		    hd (hd head_noteq),
 		    (* Left subtree for paths that match the head *)
-		    (predlist_to_tree (List.map (fn ls => (tl ls)) head_eq))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("|n"^((int_to_string o List.length) ls))) head_eq))),
+		    (predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("|n"^((int_to_string o List.length) ls))) head_eq))),
 		    (* Right subtree for paths that have a different head *)
-		    (predlist_to_tree (List.map (fn ls => (tl ls)) head_noteq))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("|n"^((int_to_string o List.length) ls))) head_noteq)))
+		    (predlist_to_tree (List.map (fn ls => (tl ls)) head_eq))handle _ => raise ERR "predlist_to_tree" ("cannot do it "^(String.concat(List.map (fn ls => ("|n"^((int_to_string o List.length) ls))) head_noteq)))
 		    )
 	end 
 
@@ -170,7 +170,12 @@ fun purge_tree tr =
 				      then (purge_tree subtr)
 				      else VNode ((bv,be), (purge_tree subtr))
 				  else VNode ((bv,be), (purge_tree subtr))
-      | VBranch ((bv,be), subtr1, subtr2) => VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))					     
+      | VBranch ((bv,be), subtr1, subtr2) => if (identical be “BExp_Const (Imm1 1w)”)
+					     then (purge_tree subtr1)
+					     else if (identical be “BExp_Const (Imm1 0w)”)
+					     then (purge_tree subtr2)
+					     else VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))
+
 
 
 

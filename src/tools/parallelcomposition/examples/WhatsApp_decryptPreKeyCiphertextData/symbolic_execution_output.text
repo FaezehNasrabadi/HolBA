@@ -95,6 +95,10 @@ Get predlists
 Get refined predlists
 Get tree
 Get vals_list
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
+== Time so far:  60 sec. ==
+===========================
 Get sort_vals
 built a symbolic tree with value
 built sapic_process
@@ -102,5 +106,5 @@ built a refined sapic_process
 wrote into file
 ============================
 == Test successful: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
-== Elapsed time:  41 sec. ==
+== Elapsed time:  67 sec. ==
 ============================

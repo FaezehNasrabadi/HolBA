@@ -132,9 +132,16 @@ local
       val cnd     = fst (List.nth (vs, 0));
       val tgt1    = fst (List.nth (vs, 1));
       val tgt2    = fst (List.nth (vs, 2));
+      val be      = if (is_BExp_Den cnd) then (bir_symbexec_funcLib.symbval_bexp (bir_symbexec_stateLib.get_state_symbv "CJmp" (dest_BExp_Den cnd) syst)) else cnd;
+
+      (* val _ = print "\n Be : "; *)
+      (* val _ = print (term_to_string be); *)
+      (* val _ = print "\n Cnd : ";	 *)
+      (* val _ = print (term_to_string cnd); *)
+      (* val _ = print "\n"; *)
     in
-	if (bir_bool_expSyntax.is_bir_exp_true cnd) then [SYST_update_pc tgt1 syst]
-	else if (bir_bool_expSyntax.is_bir_exp_false cnd) then [SYST_update_pc tgt2 syst]
+	if ((bir_bool_expSyntax.is_bir_exp_true cnd) orelse (bir_bool_expSyntax.is_bir_exp_true be)) then [SYST_update_pc tgt1 syst]
+	else if ((bir_bool_expSyntax.is_bir_exp_false cnd) orelse (bir_bool_expSyntax.is_bir_exp_false be)) then [SYST_update_pc tgt2 syst]
 	else
 	    state_branch_simp
 		"cjmp"

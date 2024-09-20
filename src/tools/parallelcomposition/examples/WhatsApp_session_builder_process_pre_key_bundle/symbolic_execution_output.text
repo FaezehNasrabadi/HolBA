@@ -56,6 +56,8 @@ Scanning [1m../../../symbexec/examples/PreProcess[0m
 Scanning [1m../../../symbexec/examples/libload[0m
 Scanning [1m../../tree[0m
 Scanning [1m../../prettyPrint[0m
+Starting work on HolBATools_SymbExec_ExampleLibload-heap
+HolBATools_SymbExec_ExampleLibload-heap                                                                                                                                                                                                       real:    9s  user:   11s     OK
 make[1]: Leaving directory '/home/faezeh/Desktop/HolBA'
 make[1]: Entering directory '/home/faezeh/Desktop/HolBA'
 !!! including "./config.env.sh"
@@ -78,7 +80,7 @@ found 6841 blocks in program
 initial state created.
 
 current number of stopped states: 0
-current number of stopped states: 162
+current number of stopped states: 191
 
 
 finished exploration of all paths.
@@ -92,15 +94,15 @@ Get refined predlists
 Get tree
 Get vals_list
 Get sort_vals
+built a symbolic tree with value
 ===========================
 == Test running: src/tools/parallelcomposition/examples/WhatsApp_session_builder_process_pre_key_bundle/WhatsAppsession_builder_process_pre_key_bundle.exe ==
 == Time so far:  30 sec. ==
 ===========================
-built a symbolic tree with value
 built sapic_process
 built a refined sapic_process
 wrote into file
 ============================
 == Test successful: src/tools/parallelcomposition/examples/WhatsApp_session_builder_process_pre_key_bundle/WhatsAppsession_builder_process_pre_key_bundle.exe ==
-== Elapsed time:  35 sec. ==
+== Elapsed time:  32 sec. ==
 ============================

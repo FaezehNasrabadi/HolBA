@@ -175,7 +175,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if (is_BExp_Store b)
 	    then let
 		    val (mem,adr,en,value) = dest_BExp_Store b;
-		    val P = if ((is_BExp_Const adr) orelse (is_BExp_Den adr))
+		    val P = if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
 			    then
 				(mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
 			    else
@@ -194,7 +194,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if (is_BExp_Load b)
 	    then let
 		    val (mem,adr,en,size) = dest_BExp_Load b;
-		    val P = if ((is_BExp_Const adr) orelse (is_BExp_Den adr))
+		    val P = if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
 			    then
 				(mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 			    else

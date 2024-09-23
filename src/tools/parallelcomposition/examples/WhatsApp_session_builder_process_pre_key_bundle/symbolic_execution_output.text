@@ -92,15 +92,15 @@ Get refined predlists
 Get tree
 Get vals_list
 Get sort_vals
+built a symbolic tree with value
 ===========================
 == Test running: src/tools/parallelcomposition/examples/WhatsApp_session_builder_process_pre_key_bundle/WhatsAppsession_builder_process_pre_key_bundle.exe ==
 == Time so far:  30 sec. ==
 ===========================
-built a symbolic tree with value
 built sapic_process
 built a refined sapic_process
 wrote into file
 ============================
 == Test successful: src/tools/parallelcomposition/examples/WhatsApp_session_builder_process_pre_key_bundle/WhatsAppsession_builder_process_pre_key_bundle.exe ==
-== Elapsed time:  59 sec. ==
+== Elapsed time:  33 sec. ==
 ============================

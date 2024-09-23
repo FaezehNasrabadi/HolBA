@@ -56,6 +56,8 @@ Scanning [1m../../../symbexec/examples/PreProcess[0m
 Scanning [1m../../../symbexec/examples/libload[0m
 Scanning [1m../../tree[0m
 Scanning [1m../../prettyPrint[0m
+Starting work on HolBATools_SymbExec_ExampleLibload-heap
+HolBATools_SymbExec_ExampleLibload-heap                                                                                                                                                                                                       real:   10s  user:   13s     OK
 make[1]: Leaving directory '/home/faezeh/Desktop/HolBA'
 make[1]: Entering directory '/home/faezeh/Desktop/HolBA'
 !!! including "./config.env.sh"
@@ -78,7 +80,12 @@ found 5803 blocks in program
 initial state created.
 
 current number of stopped states: 0
-current number of stopped states: 254
+current number of stopped states: 192
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
+== Time so far:  30 sec. ==
+===========================
+current number of stopped states: 382
 
 
 finished exploration of all paths.
@@ -88,19 +95,23 @@ number of stopped symbolic execution states: 507
 number of "assert failed" paths found: 405
 number of "no assert failed" paths found: 102
 Get predlists
-===========================
-== Test running: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
-== Time so far:  30 sec. ==
-===========================
 Get refined predlists
 Get tree
 Get vals_list
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
+== Time so far:  60 sec. ==
+===========================
 Get sort_vals
 built a symbolic tree with value
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
+== Time so far:  90 sec. ==
+===========================
 built sapic_process
 built a refined sapic_process
 wrote into file
 ============================
 == Test successful: src/tools/parallelcomposition/examples/WhatsApp_decryptPreKeyCiphertextData/WhatsApp_decryptPreKeyCiphertextDataFor.exe ==
-== Elapsed time:  41 sec. ==
+== Elapsed time: 102 sec. ==
 ============================

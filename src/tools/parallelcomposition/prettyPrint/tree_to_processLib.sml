@@ -19,7 +19,7 @@ local
     open bir_symbexec_treeLib;
     open bir_symbexec_funcLib;
     open bir_exp_immSyntax;
-
+    open bir_symbexec_stateLib;
     val ERR      = Feedback.mk_HOL_ERR "tree_to_processLib"
 
     open sbir_treeLib;
@@ -173,13 +173,40 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
 	    else if (is_BExp_Store b)
-	    then let val (mem,adr,en,value) = dest_BExp_Store b;
-		 in (mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
-		 end
+	    then let
+		    val (mem,adr,en,value) = dest_BExp_Store b;
+		    val P = if ((is_BExp_Const adr) orelse (is_BExp_Den adr))
+			    then
+				(mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
+			    else
+				let
+				    val Fn_adr = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("ADR", “BType_Imm Bit64”)); (* generate a fresh name *)
+				    val Pros = (mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term Fn_adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
+					       
+				in
+				    (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term Fn_adr)),(fst(bir_exp_to_sapic_term adr))),Pros,(ProcessNull_tm)))
+				    
+				end
+		in
+		    P
+		end
+		 
 	    else if (is_BExp_Load b)
-	    then let val (mem,adr,en,size) = dest_BExp_Load b;
-		 in (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
-		 end
+	    then let
+		    val (mem,adr,en,size) = dest_BExp_Load b;
+		    val P = if ((is_BExp_Const adr) orelse (is_BExp_Den adr))
+			    then
+				(mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+			    else
+				let	    
+				    val Fn_adr = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("ADR", “BType_Imm Bit64”)); (* generate a fresh name *)
+				    val Pros = (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term Fn_adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+				in
+				    (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term Fn_adr)),(fst(bir_exp_to_sapic_term adr))),Pros,(ProcessNull_tm)))
+				end
+		in
+		    P
+		end
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 end)
 			 

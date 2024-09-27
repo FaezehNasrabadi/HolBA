@@ -92,7 +92,7 @@ let R30_256='15623076' in
 lookup Plus(R0_53,'24') as R9_259 in 
 lookup Plus(R9_259,'96') as R8_262 in 
 if Equal(R8_262,'0') then 
-let R8_267=UnsignedCast(Load(MEM_255,Plus(R0_53,'40')),'64') in 
+lookup Plus(R0_53,'40') as R8_267 in 
 if LowCast(R8_267,'32')='1' then 
 let R22_274='0' in 
 let R21_275='4294967274' in 
@@ -174,7 +174,7 @@ lookup '28273592' as R9_814 in
 lookup R9_814 as R9_817 in 
 if R9_817=R8_810 then 
 0
-else let R8_831=UnsignedCast(Load(MEM_255,R22_700),'64') in 
+else lookup R22_700 as R8_831 in 
 if LessOrEqual('2',LowCast(R8_831,'32')) then 
 let R8_838=UnsignedCast(Minus(LowCast(R8_831,'32'),'1'),'64') in 
 insert R22_700,LowCast(R8_838,'32');
@@ -265,7 +265,7 @@ if R9_1085=R8_1078 then
 0
 else let R30_1106='15623084' in 
 lookup Plus(R9_259,'120') as R0_1109 in 
-let R8_1112=UnsignedCast(Load(MEM_255,Plus(R0_53,'40')),'64') in 
+lookup Plus(R0_53,'40') as R8_1112 in 
 if LowCast(R8_1112,'32')='1' then 
 let R22_1119='0' in 
 let R21_1120='4294967274' in 
@@ -347,7 +347,7 @@ lookup '28273592' as R9_1659 in
 lookup R9_1659 as R9_1662 in 
 if R9_1662=R8_1655 then 
 0
-else let R8_1676=UnsignedCast(Load(MEM_255,R22_1545),'64') in 
+else lookup R22_1545 as R8_1676 in 
 if LessOrEqual('2',LowCast(R8_1676,'32')) then 
 let R8_1683=UnsignedCast(Minus(LowCast(R8_1676,'32'),'1'),'64') in 
 insert R22_1545,LowCast(R8_1683,'32');

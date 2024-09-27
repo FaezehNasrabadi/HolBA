@@ -88,7 +88,7 @@ let R30_178='15621848' in
 if SignedLessThan(LowCast(R0_175,'32'),'0') then 
 0
 else lookup Plus(SP_EL0_1,'48') as R25_184 in 
-let R8_187=UnsignedCast(Load(MEM_108,Plus(R25_184,'32')),'64') in 
+lookup Plus(R25_184,'32') as R8_187 in 
 if Equal(LowCast(R8_187,'32'),'0') then 
 lookup Plus(R25_184,'16') as R27_192 in 
 lookup Plus(SP_EL0_1,'24') as R1_195 in 
@@ -97,7 +97,7 @@ if SignedLessThan(LowCast(R27_192,'32'),'0') then
 0
 else let R8_202=Minus(SP_EL0_sy,'140') in 
 let R1_207=IfThenElse(ProcState_Z_206,R8_202,'0') in 
-let R2_210=UnsignedCast(Load(MEM_108,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_210 in 
 lookup Plus(R26_174,'16') as R3_213 in 
 lookup R0_sy as R8_217 in 
 lookup Plus(R8_217,'176') as R9_220 in 
@@ -106,9 +106,9 @@ let R1_224=Minus(SP_EL0_sy,'144') in
 let R30_225='15621952' in 
 if SignedLessThan(LowCast(R0_223,'32'),'0') then 
 0
-else let R8_230=UnsignedCast(Load(MEM_108,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_230 in 
 insert Plus(R27_192,'164'),LowCast(R8_230,'32');
-let R8_238=UnsignedCast(Load(MEM_235,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_238 in 
 insert Plus(R27_192,'160'),LowCast(R8_238,'32');
 lookup Plus(R26_174,'16') as R1_246 in 
 lookup R0_sy as R0_250 in 
@@ -129,7 +129,7 @@ if SignedLessThan(LowCast(R27_270,'32'),'0') then
 0
 else let R8_280=Minus(SP_EL0_sy,'140') in 
 let R1_285=IfThenElse(ProcState_Z_284,R8_280,'0') in 
-let R2_288=UnsignedCast(Load(MEM_108,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_288 in 
 lookup Plus(R26_174,'16') as R3_291 in 
 lookup R0_sy as R8_295 in 
 lookup Plus(R8_295,'176') as R9_298 in 
@@ -138,9 +138,9 @@ let R1_302=Minus(SP_EL0_sy,'144') in
 let R30_303='15621952' in 
 if SignedLessThan(LowCast(R0_301,'32'),'0') then 
 0
-else let R8_308=UnsignedCast(Load(MEM_108,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_308 in 
 insert Plus(R27_270,'164'),LowCast(R8_308,'32');
-let R8_316=UnsignedCast(Load(MEM_313,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_316 in 
 insert Plus(R27_270,'160'),LowCast(R8_316,'32');
 lookup Plus(R26_174,'16') as R1_324 in 
 lookup R0_sy as R0_328 in 
@@ -152,7 +152,7 @@ out(SKey_331);
 event New_session(SKey_331,B);
 if SignedLessThan(LowCast(R0_333,'32'),'0') then 
 0
-else let R8_345=UnsignedCast(Load(MEM_108,Plus(R1_sy,'24')),'64') in 
+else lookup Plus(R1_sy,'24') as R8_345 in 
 insert Plus(SP_EL0_1,'20'),LowCast(R8_345,'32');
 lookup Plus(R1_sy,'64') as R24_353 in 
 lookup R0_sy as R0_356 in 
@@ -168,7 +168,7 @@ let R30_370='15621848' in
 if SignedLessThan(LowCast(R0_367,'32'),'0') then 
 0
 else lookup Plus(SP_EL0_1,'48') as R25_376 in 
-let R8_379=UnsignedCast(Load(MEM_350,Plus(R25_376,'32')),'64') in 
+lookup Plus(R25_376,'32') as R8_379 in 
 if Equal(LowCast(R8_379,'32'),'0') then 
 lookup Plus(R25_376,'16') as R27_384 in 
 lookup Plus(SP_EL0_1,'24') as R1_387 in 
@@ -177,7 +177,7 @@ if SignedLessThan(LowCast(R27_384,'32'),'0') then
 0
 else let R8_394=Minus(SP_EL0_sy,'140') in 
 let R1_399=IfThenElse(ProcState_Z_398,R8_394,'0') in 
-let R2_402=UnsignedCast(Load(MEM_350,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_402 in 
 lookup Plus(R26_366,'16') as R3_405 in 
 lookup R0_sy as R8_409 in 
 lookup Plus(R8_409,'176') as R9_412 in 
@@ -186,9 +186,9 @@ let R1_416=Minus(SP_EL0_sy,'144') in
 let R30_417='15621952' in 
 if SignedLessThan(LowCast(R0_415,'32'),'0') then 
 0
-else let R8_422=UnsignedCast(Load(MEM_350,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_422 in 
 insert Plus(R27_384,'164'),LowCast(R8_422,'32');
-let R8_430=UnsignedCast(Load(MEM_427,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_430 in 
 insert Plus(R27_384,'160'),LowCast(R8_430,'32');
 lookup Plus(R26_366,'16') as R1_438 in 
 lookup R0_sy as R0_442 in 
@@ -209,7 +209,7 @@ if SignedLessThan(LowCast(R27_462,'32'),'0') then
 0
 else let R8_472=Minus(SP_EL0_sy,'140') in 
 let R1_477=IfThenElse(ProcState_Z_476,R8_472,'0') in 
-let R2_480=UnsignedCast(Load(MEM_350,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_480 in 
 lookup Plus(R26_366,'16') as R3_483 in 
 lookup R0_sy as R8_487 in 
 lookup Plus(R8_487,'176') as R9_490 in 
@@ -218,9 +218,9 @@ let R1_494=Minus(SP_EL0_sy,'144') in
 let R30_495='15621952' in 
 if SignedLessThan(LowCast(R0_493,'32'),'0') then 
 0
-else let R8_500=UnsignedCast(Load(MEM_350,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_500 in 
 insert Plus(R27_462,'164'),LowCast(R8_500,'32');
-let R8_508=UnsignedCast(Load(MEM_505,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_508 in 
 insert Plus(R27_462,'160'),LowCast(R8_508,'32');
 lookup Plus(R26_366,'16') as R1_516 in 
 lookup R0_sy as R0_520 in 
@@ -285,7 +285,7 @@ let R30_647='15621848' in
 if SignedLessThan(LowCast(R0_644,'32'),'0') then 
 0
 else lookup Plus(SP_EL0_1,'48') as R25_653 in 
-let R8_656=UnsignedCast(Load(MEM_577,Plus(R25_653,'32')),'64') in 
+lookup Plus(R25_653,'32') as R8_656 in 
 if Equal(LowCast(R8_656,'32'),'0') then 
 lookup Plus(R25_653,'16') as R27_661 in 
 lookup Plus(SP_EL0_1,'24') as R1_664 in 
@@ -294,7 +294,7 @@ if SignedLessThan(LowCast(R27_661,'32'),'0') then
 0
 else let R8_671=Minus(SP_EL0_sy,'140') in 
 let R1_676=IfThenElse(ProcState_Z_675,R8_671,'0') in 
-let R2_679=UnsignedCast(Load(MEM_577,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_679 in 
 lookup Plus(R26_643,'16') as R3_682 in 
 lookup R0_sy as R8_686 in 
 lookup Plus(R8_686,'176') as R9_689 in 
@@ -303,9 +303,9 @@ let R1_693=Minus(SP_EL0_sy,'144') in
 let R30_694='15621952' in 
 if SignedLessThan(LowCast(R0_692,'32'),'0') then 
 0
-else let R8_699=UnsignedCast(Load(MEM_577,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_699 in 
 insert Plus(R27_661,'164'),LowCast(R8_699,'32');
-let R8_707=UnsignedCast(Load(MEM_704,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_707 in 
 insert Plus(R27_661,'160'),LowCast(R8_707,'32');
 lookup Plus(R26_643,'16') as R1_715 in 
 lookup R0_sy as R0_719 in 
@@ -326,7 +326,7 @@ if SignedLessThan(LowCast(R27_739,'32'),'0') then
 0
 else let R8_749=Minus(SP_EL0_sy,'140') in 
 let R1_754=IfThenElse(ProcState_Z_753,R8_749,'0') in 
-let R2_757=UnsignedCast(Load(MEM_577,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_757 in 
 lookup Plus(R26_643,'16') as R3_760 in 
 lookup R0_sy as R8_764 in 
 lookup Plus(R8_764,'176') as R9_767 in 
@@ -335,9 +335,9 @@ let R1_771=Minus(SP_EL0_sy,'144') in
 let R30_772='15621952' in 
 if SignedLessThan(LowCast(R0_770,'32'),'0') then 
 0
-else let R8_777=UnsignedCast(Load(MEM_577,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_777 in 
 insert Plus(R27_739,'164'),LowCast(R8_777,'32');
-let R8_785=UnsignedCast(Load(MEM_782,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_785 in 
 insert Plus(R27_739,'160'),LowCast(R8_785,'32');
 lookup Plus(R26_643,'16') as R1_793 in 
 lookup R0_sy as R0_797 in 
@@ -349,7 +349,7 @@ out(SKey_800);
 event New_session(SKey_800,B);
 if SignedLessThan(LowCast(R0_802,'32'),'0') then 
 0
-else let R8_814=UnsignedCast(Load(MEM_577,Plus(R1_sy,'24')),'64') in 
+else lookup Plus(R1_sy,'24') as R8_814 in 
 insert Plus(SP_EL0_1,'20'),LowCast(R8_814,'32');
 lookup Plus(R1_sy,'64') as R24_822 in 
 lookup R0_sy as R0_825 in 
@@ -365,7 +365,7 @@ let R30_839='15621848' in
 if SignedLessThan(LowCast(R0_836,'32'),'0') then 
 0
 else lookup Plus(SP_EL0_1,'48') as R25_845 in 
-let R8_848=UnsignedCast(Load(MEM_819,Plus(R25_845,'32')),'64') in 
+lookup Plus(R25_845,'32') as R8_848 in 
 if Equal(LowCast(R8_848,'32'),'0') then 
 lookup Plus(R25_845,'16') as R27_853 in 
 lookup Plus(SP_EL0_1,'24') as R1_856 in 
@@ -374,7 +374,7 @@ if SignedLessThan(LowCast(R27_853,'32'),'0') then
 0
 else let R8_863=Minus(SP_EL0_sy,'140') in 
 let R1_868=IfThenElse(ProcState_Z_867,R8_863,'0') in 
-let R2_871=UnsignedCast(Load(MEM_819,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_871 in 
 lookup Plus(R26_835,'16') as R3_874 in 
 lookup R0_sy as R8_878 in 
 lookup Plus(R8_878,'176') as R9_881 in 
@@ -383,9 +383,9 @@ let R1_885=Minus(SP_EL0_sy,'144') in
 let R30_886='15621952' in 
 if SignedLessThan(LowCast(R0_884,'32'),'0') then 
 0
-else let R8_891=UnsignedCast(Load(MEM_819,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_891 in 
 insert Plus(R27_853,'164'),LowCast(R8_891,'32');
-let R8_899=UnsignedCast(Load(MEM_896,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_899 in 
 insert Plus(R27_853,'160'),LowCast(R8_899,'32');
 lookup Plus(R26_835,'16') as R1_907 in 
 lookup R0_sy as R0_911 in 
@@ -406,7 +406,7 @@ if SignedLessThan(LowCast(R27_931,'32'),'0') then
 0
 else let R8_941=Minus(SP_EL0_sy,'140') in 
 let R1_946=IfThenElse(ProcState_Z_945,R8_941,'0') in 
-let R2_949=UnsignedCast(Load(MEM_819,Plus(R1_sy,'40')),'64') in 
+lookup Plus(R1_sy,'40') as R2_949 in 
 lookup Plus(R26_835,'16') as R3_952 in 
 lookup R0_sy as R8_956 in 
 lookup Plus(R8_956,'176') as R9_959 in 
@@ -415,9 +415,9 @@ let R1_963=Minus(SP_EL0_sy,'144') in
 let R30_964='15621952' in 
 if SignedLessThan(LowCast(R0_962,'32'),'0') then 
 0
-else let R8_969=UnsignedCast(Load(MEM_819,Plus(SP_EL0_1,'16')),'64') in 
+else lookup Plus(SP_EL0_1,'16') as R8_969 in 
 insert Plus(R27_931,'164'),LowCast(R8_969,'32');
-let R8_977=UnsignedCast(Load(MEM_974,Plus(R1_sy,'16')),'64') in 
+lookup Plus(R1_sy,'16') as R8_977 in 
 insert Plus(R27_931,'160'),LowCast(R8_977,'32');
 lookup Plus(R26_835,'16') as R1_985 in 
 lookup R0_sy as R0_989 in 
@@ -429,9 +429,6 @@ out(SKey_992);
 event New_session(SKey_992,B);
 if SignedLessThan(LowCast(R0_994,'32'),'0') then 
 0
-
-
-
 
 
 
@@ -531,7 +528,7 @@ let R30_256='15623076' in
 lookup Plus(R0_53,'24') as R9_259 in 
 lookup Plus(R9_259,'96') as R8_262 in 
 if Equal(R8_262,'0') then 
-let R8_267=UnsignedCast(Load(MEM_255,Plus(R0_53,'40')),'64') in 
+lookup Plus(R0_53,'40') as R8_267 in 
 if LowCast(R8_267,'32')='1' then 
 let R22_274='0' in 
 let R21_275='4294967274' in 
@@ -613,7 +610,7 @@ lookup '28273592' as R9_814 in
 lookup R9_814 as R9_817 in 
 if R9_817=R8_810 then 
 0
-else let R8_831=UnsignedCast(Load(MEM_255,R22_700),'64') in 
+else lookup R22_700 as R8_831 in 
 if LessOrEqual('2',LowCast(R8_831,'32')) then 
 let R8_838=UnsignedCast(Minus(LowCast(R8_831,'32'),'1'),'64') in 
 insert R22_700,LowCast(R8_838,'32');
@@ -704,7 +701,7 @@ if R9_1085=R8_1078 then
 0
 else let R30_1106='15623084' in 
 lookup Plus(R9_259,'120') as R0_1109 in 
-let R8_1112=UnsignedCast(Load(MEM_255,Plus(R0_53,'40')),'64') in 
+lookup Plus(R0_53,'40') as R8_1112 in 
 if LowCast(R8_1112,'32')='1' then 
 let R22_1119='0' in 
 let R21_1120='4294967274' in 
@@ -786,7 +783,7 @@ lookup '28273592' as R9_1659 in
 lookup R9_1659 as R9_1662 in 
 if R9_1662=R8_1655 then 
 0
-else let R8_1676=UnsignedCast(Load(MEM_255,R22_1545),'64') in 
+else lookup R22_1545 as R8_1676 in 
 if LessOrEqual('2',LowCast(R8_1676,'32')) then 
 let R8_1683=UnsignedCast(Minus(LowCast(R8_1676,'32'),'1'),'64') in 
 insert R22_1545,LowCast(R8_1683,'32');
@@ -875,6 +872,7 @@ lookup '28273592' as R9_1927 in
 lookup R9_1927 as R9_1930 in 
 if R9_1930=R8_1923 then 
 0
+
 
 
 process:

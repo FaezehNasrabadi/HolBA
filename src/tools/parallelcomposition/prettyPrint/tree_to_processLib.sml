@@ -189,8 +189,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 				end
 		in
 		    P
-		end
-		 
+		end	 
 	    else if (is_BExp_Load b)
 	    then let
 		    val (mem,adr,en,size) = dest_BExp_Load b;
@@ -206,6 +205,18 @@ fun sbir_tree_sapic_process sort_vals tree =
 				end
 		in
 		    P
+		end
+	    else if (is_BExp_Cast b) then
+		let
+		    val (castt, subexp, sz) = (dest_BExp_Cast) b;
+		in
+		    if (is_BExp_Load subexp)
+		    then let
+			    val (mem,adr,en,size) = dest_BExp_Load subexp;
+			in
+			    (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+			end
+		    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 		end
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 end)

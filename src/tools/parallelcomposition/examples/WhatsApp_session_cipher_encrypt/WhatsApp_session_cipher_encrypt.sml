@@ -75,210 +75,11 @@ val prog_vars = crypto::prog_vars;
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
-    
 
-    
- (*   
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102A0A4E8w)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102A0A4E8w)``,n)]);
-
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102AEDD0Cw)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102AEDD0Cw)``,n)]);
-
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102AEECC0w)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102AEECC0w)``,n)]);
-
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102C598E0w)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102C598E0w)``,n)]);
-
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102C597C0w)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102C597C0w)``,n)]);
-    
-val n = { CFGN_lbl_tm   =  ``BL_Address (Imm64 0x102C5EEC0w)``,
-	  CFGN_hc_descr = SOME " ",
-	  CFGN_targets  = [],
-	  CFGN_type     = CFGNT_Halt
-	} : cfg_node;
-
-    
-val n_dict = Redblackmap.insertList (n_dict, [(``BL_Address (Imm64 0x102C5EEC0w)``,n)]);
- 
-
-
-   
-
-open binariesCfgVizLib;
-open binariesDefsLib;
-val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
-val _ = print "Display cfg.\n";
-open bir_cfg_vizLib;
-val n_dict' = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
-val ns = List.map (valOf o (lookup_block_dict n_dict'))
-		  (#CFGG_nodes g1);
-
-(* val ns = (List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1)); *)
-val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
-    
-
-
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-
- open HolKernel Parse;
-    open binariesLib;
-    open binariesTheory;
-    open binariesCfgLib;
-    open binariesMemLib;
-    open bir_programSyntax;
-    open bir_valuesSyntax;
-    open bir_immSyntax;
-    open bir_exec_typingLib;
-    open bir_cfgLib;
-    open bir_cfg_m0Lib;
-    open bir_block_collectionLib;
-    open bir_envSyntax;
-    open bir_expSyntax;
-    open bir_auxiliaryLib;
-    open bir_immSyntax;
-    open wordsSyntax;
-    open String;
-    open bir_program_labelsSyntax;
-    open bir_block_collectionLib;
-    open Redblackmap;
-    open Term;
-
-fun fun_address_dict (n:cfg_node) =
-    let
-        val lbl_tm   = #CFGN_lbl_tm n;
-	val descr  = (valOf o #CFGN_hc_descr) n;
-	val instrDes = (snd o (list_split_pred #" ") o explode) descr;
-	   (* val _ = print ((implode instrDes) ^ "\n"); *)
-	val name_adr = if (isPrefix "(bl " (implode instrDes))
-		       then let
-			       val fname = (implode o fst o (list_split_pred #">") o snd o (list_split_pred #"<")) instrDes;
-			   in
-			       (lbl_tm, fname)
-			   end
-		       else if (isPrefix "(blr " (implode instrDes))
-		       then let
-			       val fname = (implode o fst o (list_split_pred #")") o snd o (list_split_pred #" ")) instrDes;
-			   in
-			       (lbl_tm, fname)
-			   end
-		       else if (isPrefix "(b " (implode instrDes))
-		       then let
-			       val fname = if (isPrefix "(b <" (implode instrDes))
-					   then
-					       (implode o fst o (list_split_pred #">") o snd o (list_split_pred #"<")) instrDes
-					   else
-					       (implode o fst o (list_split_pred #")") o snd o (list_split_pred #" ")) instrDes
-			   in
-			       (lbl_tm, fname)
-			   end
-		       else (“BL_Address (Imm32 0w)”, " ");
-    in
-	name_adr
-    end;
-
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-
-val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
-	    
-	val g1 = cfg_create "toy" prog_lbl_tms_ n_dict bl_dict_;
-
-	val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
-	    
-	val func_table = Redblackmap.mkDict Term.compare : (term, string) Redblackmap.dict;
-
-orelse )
-val n = snd(hd(Redblackmap.listItems n_dict))
-	val fun_adr = (List.map (fn x => (fun_address_dict x)) (List.map snd (Redblackmap.listItems n_dict)));
-
-	val func_table' = Redblackmap.insertList (func_table, fun_adr);
-val instrDes = explode "(b <0x00ee61c0>)"
-   
- 
-    (*
-
-val loop_pattern = ["CFGNT_CondJump","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_CondJump"];
-
-val enter = find_loop n_dict adr_dict [lbl_tm] loop_pattern;
-
-val adr_dict = Redblackmap.insert(adr_dict,enter,"loop"); 
-
-val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,``BL_Address (Imm64 0x12FCEACw)``,``BL_Address (Imm64 0x12E65D0w)``,``BL_Address (Imm64 0x12CE4B4w)``,``BL_Address (Imm64 0xEE8AB0w)``,``BL_Address (Imm64 0xEE8A90w)``,``BL_Address (Imm64 0xEE8A70w)``,``BL_Address (Imm64 0xEE2398w)``,``BL_Address (Imm64 0xEE2320w)``,``BL_Address (Imm64 0xEDE1CCw)``,``BL_Address (Imm64 0xEDCE78w)``,``BL_Address (Imm64 0xEDCE6Cw)``,``BL_Address (Imm64 0xED4874w)``,``BL_Address (Imm64 0xED481Cw)``,``BL_Address (Imm64 0xED4898w)``,``BL_Address (Imm64 0x12BA3C4w)``];
-*)
-
-val lbl_tm = ``BL_Address (Imm64 0xED4898w)``;
-
-val bl = (valOf o (lookup_block_dict bl_dict_)) lbl_tm;
-	     val (lbl_block_tm, stmts, est) = dest_bir_block bl;
-val bl_dict_ = update_bl_dict_ ([lbl_tm],bl_dict_)
- 
-
-fun update_bl_dict_ ([], bl_dict) = bl_dict
-    | update_bl_dict_ (((lbl_tm)::todo), bl_dict) =
-	  let
-	    
-	    val bl_dict' = if isSome (lookup_block_dict bl_dict lbl_tm)
-			  then
-			      bl_dict
-			  else
-let val n =  “<|bb_label :=
-                  BL_Address_HC (Imm64 0xED4898w) "140F454F (b 0x012ba59c)";
-                bb_statements := [];
-                bb_last_statement :=
-                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 0x12BA59Cw)))|>”
-in
-			      Redblackmap.update (bl_dict, lbl_tm, K (n))
-end;
-			      
-	  in
-	    update_bl_dict_ (todo, bl_dict')
-	  end; 
-
-
-val lbl_tm = ``BL_Address (Imm64 0xED4898w)``;
-
-val bl_dict_ = update_bl_dict_ ([lbl_tm],bl_dict_)
-
-lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
-*)
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
       
 val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
-(* val lbl_tm = ``BL_Address (Imm64 0xEE6118w)``; 
-``BL_Address (Imm64 0xEE61C0w)``*)
-    (* val lbl_tm = ``BL_Address (Imm64 0xEE629Cw)``; *)
+
 val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,
 		      ``BL_Address (Imm64 0x12E65D0w)``,
 		      ``BL_Address (Imm64 0x12CE4B4w)``,
@@ -337,7 +138,12 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
 val _ = print "Get predlists";
 val _ = print "\n";
     
-val tree = predlist_to_tree predlists;
+val predlists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
+val _ = print "Get refined predlists";    
+val _ = print "\n";
+(* val _ = printTermList predlists_refined; *)
+    
+val tree = predlist_to_tree predlists_refined;
 
 val _ = print "Get tree";
 val _ = print "\n";
@@ -359,13 +165,20 @@ val _ = print "\n";
 
 
 val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
-
     
 val _ = print ("built sapic_process");
 val _ = print "\n";
-    
-val _ =  ( write_sapic_to_file o process_to_string) sapic_process
+
+
+val refined_process = refine_process sapic_process;
+
+val _ = print ("built a refined sapic_process");
+val _ = print "\n";
+
+	
+val _ =  ( write_sapic_to_file o process_to_string) refined_process;
      
 val _ = print ("wrote into file");
 val _ = print "\n";
+
 

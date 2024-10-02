@@ -164,7 +164,7 @@ fun Encrypt2 input1 input2 =
 fun Send input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (send
+		     (Send
 			  ( ^input1)
 			  ( ^input2))``;
 
@@ -175,7 +175,7 @@ fun Send input1 input2 =
 fun Receive input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (receive
+		     (Receive
 			  ( ^input1)
 			  ( ^input2))``;
 

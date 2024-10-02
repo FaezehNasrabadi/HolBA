@@ -85,66 +85,9 @@ val prog_vars = root::prog_vars;
     
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
-  (*
-val lbl_tm = ``BL_Address (Imm64 0xEE6A5Cw)``;
-    
-val g1 = cfg_create "toy1" [lbl_tm] n_dict bl_dict_;
 
-val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
- 
-val g2 = cfg_create "toy2" [lbl_tm] n_dict bl_dict_;
-    
-val _ = print "Display cfg.\n";
-open bir_cfg_vizLib;
-val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g2))) (#CFGG_nodes g2);
-val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;    
- 
-lookup_block_dict adr_dict ``BL_Address (Imm64 0xEE6320w)``
-
-val lbl_tm = ``BL_Address (Imm64 0x12F85DCw)``
-val bl = ((valOf o (lookup_block_dict bl_dict_)) lbl_tm) handle _ => ((valOf o (lookup_block_dict bl_dict_)) (bir_symbexec_loopLib.next_pc lbl_tm));
-	     
-val (lbl_block_tm, stmts, est) = dest_bir_block bl;
-
-val loop_pattern = ["CFGNT_Basic","CFGNT_CondJump","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_CondJump","CFGNT_Call","CFGNT_CondJump",
-		    "CFGNT_Basic","CFGNT_Call","CFGNT_Call","CFGNT_CondJump",
-		    "CFGNT_Call","CFGNT_CondJump","CFGNT_Call","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Jump"];
-
-val loop_pattern = ["CFGNT_Call","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_Basic",
-		    "CFGNT_Jump","CFGNT_Basic","CFGNT_CondJump"];
-
-val loop_pattern = ["CFGNT_Basic","CFGNT_CondJump",
-		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Basic","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_CondJump","CFGNT_Call"];
-
-val loop_pattern = ["CFGNT_Call","CFGNT_CondJump",
-		    "CFGNT_Basic","CFGNT_Call","CFGNT_Call","CFGNT_CondJump",
-		    "CFGNT_Call","CFGNT_CondJump","CFGNT_Call","CFGNT_Basic",
-		    "CFGNT_Basic","CFGNT_Basic","CFGNT_Jump","CFGNT_Basic","CFGNT_CondJump"];	
-val stmt = “ [BStmt_Assert
-                     (BExp_Aligned Bit64 2
-                        (BExp_Den (BVar "R27" (BType_Imm Bit64))));
-                   BStmt_Assign (BVar "R8" (BType_Imm Bit64))
-                     (BExp_Cast BIExp_UnsignedCast
-                        (BExp_Load
-                           (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
-                           (BExp_BinExp BIExp_Plus
-                              (BExp_Den (BVar "R27" (BType_Imm Bit64)))
-                              (BExp_Const (Imm64 48w))) BEnd_LittleEndian
-                           Bit32) Bit64)]”
-val stmt = “[]”
-(can dest_comb) stmt      
-val _ = print("enter address to loop "^(term_to_string enter)^"\n");
-  *)
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
-
-
-(* val adr_dict = Redblackmap.insert(adr_dict,``BL_Address (Imm64 0xEE6884w)``,"loop"); *)
 
     
 val lbl_tm = ``BL_Address (Imm64 0xEE65F8w)``;
@@ -197,7 +140,12 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
 val _ = print "Get predlists";
 val _ = print "\n";
     
-val tree = predlist_to_tree predlists;
+val predlists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
+val _ = print "Get refined predlists";    
+val _ = print "\n";
+(* val _ = printTermList predlists_refined; *)
+    
+val tree = predlist_to_tree predlists_refined;
 
 val _ = print "Get tree";
 val _ = print "\n";
@@ -219,12 +167,18 @@ val _ = print "\n";
 
 
 val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
-
     
 val _ = print ("built sapic_process");
 val _ = print "\n";
-    
-val _ =  ( write_sapic_to_file o process_to_string) sapic_process
+
+
+val refined_process = refine_process sapic_process;
+
+val _ = print ("built a refined sapic_process");
+val _ = print "\n";
+
+	
+val _ =  ( write_sapic_to_file o process_to_string) refined_process;
      
 val _ = print ("wrote into file");
 val _ = print "\n";

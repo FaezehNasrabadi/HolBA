@@ -1,0 +1,1843 @@
+
+/*
+ * Protocol: WhatsApp
+*/
+
+
+
+theory WhatsApp
+
+begin
+
+functions: Minus/2, Plus/2, Not/1, Equal/2, SignedLessThan/2, LowCast/2, UnsignedCast/2, Load/2, IfThenElse/3, LessOrEqual/2, SignedLessOrEqual/2, And/2, hash2/2, enc/2, Or/2, RightShift/2, LeftShift/2, hkdf/2, pars1/1, pars2/1, dec/2, true/0
+
+equations: dec(enc(m, k), k) = m, Equal(x,x)=true
+
+predicates:
+  Equal(x,y) <=> (x=y),
+  SignedLessThan(x,y) <=> (x<y),
+  LessOrEqual(x,y) <=> ((x<y) | (x=y)),
+  And(x,y) <=> ((x = true) & (y = true)),
+  Or(x,y) <=> ((x = true) | (y = true)),
+  Not(x) <=> not (x = true) 
+
+
+let NewSession(B) =
+new ~SP_EL0_sy;
+new ~R0_sy;
+new ~R1_sy;
+new ~R2_sy;
+new ~R3_sy;
+new ~R4_sy;
+new ~R19_sy;
+new ~R21_sy;
+new ~R23_sy;
+new ~R25_sy;
+new ~R27_sy;
+new ~R30_sy;
+let SP_EL0_1=Minus(~SP_EL0_sy,'160') in 
+let R30_2='15621600' in 
+insert Plus(SP_EL0_1,'72'),~R27_sy;
+insert Plus(SP_EL0_1,'88'),~R25_sy;
+insert Plus(SP_EL0_1,'104'),~R23_sy;
+insert Plus(SP_EL0_1,'120'),~R21_sy;
+insert Plus(SP_EL0_1,'136'),~R19_sy;
+insert Plus(SP_EL0_1,'152'),~R30_sy;
+let R29_33=Minus(~SP_EL0_sy,'16') in 
+let R30_34='15621616' in 
+let R8_35='28270592' in 
+lookup '28273592' as R8_38 in 
+lookup R8_38 as R8_41 in 
+insert Plus(SP_EL0_1,'56'),R8_41;
+insert Plus(SP_EL0_1,'48'),'0';
+insert Plus(SP_EL0_1,'32'),'0';
+insert Plus(SP_EL0_1,'16'),'0';
+lookup Plus(~R0_sy,'16') as R9_64 in 
+lookup Plus(R9_64,'96') as R8_67 in 
+if Equal(R8_67,'0') then 
+lookup ~R0_sy as R0_72 in 
+lookup Plus(~R0_sy,'8') as R1_73 in 
+lookup Plus(~R1_sy,'64') as R2_76 in 
+if SignedLessThan(LowCast(R0_72,'32'),'0') then 
+0
+else if Equal(LowCast(R0_72,'32'),'0') then 
+0
+else lookup Plus(~R1_sy,'48') as R25_87 in 
+if Equal(R25_87,'0') then 
+0
+else lookup Plus(~R1_sy,'32') as R23_99 in 
+lookup Plus(~R1_sy,'56') as R21_102 in 
+lookup Plus(~R1_sy,'64') as R24_103 in 
+insert Plus(SP_EL0_1,'8'),'0';
+let R0_109=Minus(~SP_EL0_sy,'152') in 
+if SignedLessThan(LowCast(R0_109,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'8') as R26_116 in 
+let tmp_R1_119=Plus(R26_116,'8') in 
+lookup R26_116 as R2_120 in 
+lookup R21_102 as R4_123 in 
+let R21_124=Plus(R21_102,'8') in 
+let R30_125='15621740' in 
+if Equal(LowCast(R24_103,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R24_103,'32'),'0') then 
+0
+else lookup ~R0_sy as R0_142 in 
+lookup Plus(~R0_sy,'8') as R2_143 in 
+let R1_144=Minus(~SP_EL0_sy,'112') in 
+if SignedLessThan(LowCast(R0_142,'32'),'0') then 
+0
+else lookup Plus(~R0_sy,'16') as R0_151 in 
+let R1_152=Minus(~SP_EL0_sy,'120') in 
+if SignedLessThan(LowCast(R0_151,'32'),'0') then 
+0
+else if Equal(R23_99,'0') then 
+lookup Plus(~R1_sy,'64') as R24_161 in 
+lookup ~R0_sy as R0_164 in 
+let R1_165=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'32') as R21_169 in 
+if SignedLessThan(LowCast(R0_164,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R26_174 in 
+let R0_175=Minus(~SP_EL0_sy,'136') in 
+let R30_176='15621840' in 
+let R30_177='15621844' in 
+let R30_178='15621848' in 
+if SignedLessThan(LowCast(R0_175,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'48') as R25_184 in 
+lookup Plus(R25_184,'32') as R8_187 in 
+if Equal(LowCast(R8_187,'32'),'0') then 
+lookup Plus(R25_184,'16') as R27_192 in 
+lookup Plus(SP_EL0_1,'24') as R1_195 in 
+lookup Plus(~R0_sy,'16') as R2_198 in 
+if SignedLessThan(LowCast(R27_192,'32'),'0') then 
+0
+else let R8_202=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_210 in 
+lookup Plus(R26_174,'16') as R3_213 in 
+lookup ~R0_sy as R8_217 in 
+lookup Plus(R8_217,'176') as R9_220 in 
+lookup Plus(R8_217,'208') as R0_223 in 
+let R1_224=Minus(~SP_EL0_sy,'144') in 
+let R30_225='15621952' in 
+if SignedLessThan(LowCast(R0_223,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_230 in 
+insert Plus(R27_192,'164'),LowCast(R8_230,'32');
+lookup Plus(~R1_sy,'16') as R8_238 in 
+insert Plus(R27_192,'160'),LowCast(R8_238,'32');
+lookup Plus(R26_174,'16') as R1_246 in 
+lookup ~R0_sy as R0_250 in 
+lookup Plus(~R0_sy,'8') as R1_251 in 
+new ~254_Session_Id;
+let SKey_253=~254_Session_Id in 
+let R0_255=SKey_253 in 
+out(SKey_253);
+event New_session(SKey_253,B);
+if SignedLessThan(LowCast(R0_255,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R25_184,'32'),'0') then 
+0
+else lookup Plus(R25_184,'16') as R27_270 in 
+lookup Plus(SP_EL0_1,'24') as R1_273 in 
+lookup Plus(~R0_sy,'16') as R2_276 in 
+if SignedLessThan(LowCast(R27_270,'32'),'0') then 
+0
+else let R8_280=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_288 in 
+lookup Plus(R26_174,'16') as R3_291 in 
+lookup ~R0_sy as R8_295 in 
+lookup Plus(R8_295,'176') as R9_298 in 
+lookup Plus(R8_295,'208') as R0_301 in 
+let R1_302=Minus(~SP_EL0_sy,'144') in 
+let R30_303='15621952' in 
+if SignedLessThan(LowCast(R0_301,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_308 in 
+insert Plus(R27_270,'164'),LowCast(R8_308,'32');
+lookup Plus(~R1_sy,'16') as R8_316 in 
+insert Plus(R27_270,'160'),LowCast(R8_316,'32');
+lookup Plus(R26_174,'16') as R1_324 in 
+lookup ~R0_sy as R0_328 in 
+lookup Plus(~R0_sy,'8') as R1_329 in 
+new ~332_Session_Id;
+let SKey_331=~332_Session_Id in 
+let R0_333=SKey_331 in 
+out(SKey_331);
+event New_session(SKey_331,B);
+if SignedLessThan(LowCast(R0_333,'32'),'0') then 
+0
+else lookup Plus(~R1_sy,'24') as R8_345 in 
+insert Plus(SP_EL0_1,'20'),LowCast(R8_345,'32');
+lookup Plus(~R1_sy,'64') as R24_353 in 
+lookup ~R0_sy as R0_356 in 
+let R1_357=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'32') as R21_361 in 
+if SignedLessThan(LowCast(R0_356,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R26_366 in 
+let R0_367=Minus(~SP_EL0_sy,'136') in 
+let R30_368='15621840' in 
+let R30_369='15621844' in 
+let R30_370='15621848' in 
+if SignedLessThan(LowCast(R0_367,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'48') as R25_376 in 
+lookup Plus(R25_376,'32') as R8_379 in 
+if Equal(LowCast(R8_379,'32'),'0') then 
+lookup Plus(R25_376,'16') as R27_384 in 
+lookup Plus(SP_EL0_1,'24') as R1_387 in 
+lookup Plus(~R0_sy,'16') as R2_390 in 
+if SignedLessThan(LowCast(R27_384,'32'),'0') then 
+0
+else let R8_394=Minus(~SP_EL0_sy,'140') in  
+lookup Plus(~R1_sy,'40') as R2_402 in 
+lookup Plus(R26_366,'16') as R3_405 in 
+lookup ~R0_sy as R8_409 in 
+lookup Plus(R8_409,'176') as R9_412 in 
+lookup Plus(R8_409,'208') as R0_415 in 
+let R1_416=Minus(~SP_EL0_sy,'144') in 
+let R30_417='15621952' in 
+if SignedLessThan(LowCast(R0_415,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_422 in 
+insert Plus(R27_384,'164'),LowCast(R8_422,'32');
+lookup Plus(~R1_sy,'16') as R8_430 in 
+insert Plus(R27_384,'160'),LowCast(R8_430,'32');
+lookup Plus(R26_366,'16') as R1_438 in 
+lookup ~R0_sy as R0_442 in 
+lookup Plus(~R0_sy,'8') as R1_443 in 
+new ~446_Session_Id;
+let SKey_445=~446_Session_Id in 
+let R0_447=SKey_445 in 
+out(SKey_445);
+event New_session(SKey_445,B);
+if SignedLessThan(LowCast(R0_447,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R25_376,'32'),'0') then 
+0
+else lookup Plus(R25_376,'16') as R27_462 in 
+lookup Plus(SP_EL0_1,'24') as R1_465 in 
+lookup Plus(~R0_sy,'16') as R2_468 in 
+if SignedLessThan(LowCast(R27_462,'32'),'0') then 
+0
+else let R8_472=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_480 in 
+lookup Plus(R26_366,'16') as R3_483 in 
+lookup ~R0_sy as R8_487 in 
+lookup Plus(R8_487,'176') as R9_490 in 
+lookup Plus(R8_487,'208') as R0_493 in 
+let R1_494=Minus(~SP_EL0_sy,'144') in 
+let R30_495='15621952' in 
+if SignedLessThan(LowCast(R0_493,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_500 in 
+insert Plus(R27_462,'164'),LowCast(R8_500,'32');
+lookup Plus(~R1_sy,'16') as R8_508 in 
+insert Plus(R27_462,'160'),LowCast(R8_508,'32');
+lookup Plus(R26_366,'16') as R1_516 in 
+lookup ~R0_sy as R0_520 in 
+lookup Plus(~R0_sy,'8') as R1_521 in 
+new ~524_Session_Id;
+let SKey_523=~524_Session_Id in 
+let R0_525=SKey_523 in 
+out(SKey_523);
+event New_session(SKey_523,B);
+if SignedLessThan(LowCast(R0_525,'32'),'0') then 
+0
+else let R30_535='15621660' in 
+lookup Plus(R9_64,'120') as R0_538 in 
+lookup ~R0_sy as R0_541 in 
+lookup Plus(~R0_sy,'8') as R1_542 in 
+lookup Plus(~R1_sy,'64') as R2_545 in 
+if SignedLessThan(LowCast(R0_541,'32'),'0') then 
+0
+else if Equal(LowCast(R0_541,'32'),'0') then 
+0
+else lookup Plus(~R1_sy,'48') as R25_556 in 
+if Equal(R25_556,'0') then 
+0
+else lookup Plus(~R1_sy,'32') as R23_568 in 
+lookup Plus(~R1_sy,'56') as R21_571 in 
+lookup Plus(~R1_sy,'64') as R24_572 in 
+insert Plus(SP_EL0_1,'8'),'0';
+let R0_578=Minus(~SP_EL0_sy,'152') in 
+if SignedLessThan(LowCast(R0_578,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'8') as R26_585 in 
+let tmp_R1_588=Plus(R26_585,'8') in 
+lookup R26_585 as R2_589 in 
+lookup R21_571 as R4_592 in 
+let R21_593=Plus(R21_571,'8') in 
+let R30_594='15621740' in 
+if Equal(LowCast(R24_572,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R24_572,'32'),'0') then 
+0
+else lookup ~R0_sy as R0_611 in 
+lookup Plus(~R0_sy,'8') as R2_612 in 
+let R1_613=Minus(~SP_EL0_sy,'112') in 
+if SignedLessThan(LowCast(R0_611,'32'),'0') then 
+0
+else lookup Plus(~R0_sy,'16') as R0_620 in 
+let R1_621=Minus(~SP_EL0_sy,'120') in 
+if SignedLessThan(LowCast(R0_620,'32'),'0') then 
+0
+else if Equal(R23_568,'0') then 
+lookup Plus(~R1_sy,'64') as R24_630 in 
+lookup ~R0_sy as R0_633 in 
+let R1_634=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'32') as R21_638 in 
+if SignedLessThan(LowCast(R0_633,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R26_643 in 
+let R0_644=Minus(~SP_EL0_sy,'136') in 
+let R30_645='15621840' in 
+let R30_646='15621844' in 
+let R30_647='15621848' in 
+if SignedLessThan(LowCast(R0_644,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'48') as R25_653 in 
+lookup Plus(R25_653,'32') as R8_656 in 
+if Equal(LowCast(R8_656,'32'),'0') then 
+lookup Plus(R25_653,'16') as R27_661 in 
+lookup Plus(SP_EL0_1,'24') as R1_664 in 
+lookup Plus(~R0_sy,'16') as R2_667 in 
+if SignedLessThan(LowCast(R27_661,'32'),'0') then 
+0
+else let R8_671=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_679 in 
+lookup Plus(R26_643,'16') as R3_682 in 
+lookup ~R0_sy as R8_686 in 
+lookup Plus(R8_686,'176') as R9_689 in 
+lookup Plus(R8_686,'208') as R0_692 in 
+let R1_693=Minus(~SP_EL0_sy,'144') in 
+let R30_694='15621952' in 
+if SignedLessThan(LowCast(R0_692,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_699 in 
+insert Plus(R27_661,'164'),LowCast(R8_699,'32');
+lookup Plus(~R1_sy,'16') as R8_707 in 
+insert Plus(R27_661,'160'),LowCast(R8_707,'32');
+lookup Plus(R26_643,'16') as R1_715 in 
+lookup ~R0_sy as R0_719 in 
+lookup Plus(~R0_sy,'8') as R1_720 in 
+new ~723_Session_Id;
+let SKey_722=~723_Session_Id in 
+let R0_724=SKey_722 in 
+out(SKey_722);
+event New_session(SKey_722,B);
+if SignedLessThan(LowCast(R0_724,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R25_653,'32'),'0') then 
+0
+else lookup Plus(R25_653,'16') as R27_739 in 
+lookup Plus(SP_EL0_1,'24') as R1_742 in 
+lookup Plus(~R0_sy,'16') as R2_745 in 
+if SignedLessThan(LowCast(R27_739,'32'),'0') then 
+0
+else let R8_749=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_757 in 
+lookup Plus(R26_643,'16') as R3_760 in 
+lookup ~R0_sy as R8_764 in 
+lookup Plus(R8_764,'176') as R9_767 in 
+lookup Plus(R8_764,'208') as R0_770 in 
+let R1_771=Minus(~SP_EL0_sy,'144') in 
+let R30_772='15621952' in 
+if SignedLessThan(LowCast(R0_770,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_777 in 
+insert Plus(R27_739,'164'),LowCast(R8_777,'32');
+lookup Plus(~R1_sy,'16') as R8_785 in 
+insert Plus(R27_739,'160'),LowCast(R8_785,'32');
+lookup Plus(R26_643,'16') as R1_793 in 
+lookup ~R0_sy as R0_797 in 
+lookup Plus(~R0_sy,'8') as R1_798 in 
+new ~801_Session_Id;
+let SKey_800=~801_Session_Id in 
+let R0_802=SKey_800 in 
+out(SKey_800);
+event New_session(SKey_800,B);
+if SignedLessThan(LowCast(R0_802,'32'),'0') then 
+0
+else lookup Plus(~R1_sy,'24') as R8_814 in 
+insert Plus(SP_EL0_1,'20'),LowCast(R8_814,'32');
+lookup Plus(~R1_sy,'64') as R24_822 in 
+lookup ~R0_sy as R0_825 in 
+let R1_826=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'32') as R21_830 in 
+if SignedLessThan(LowCast(R0_825,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R26_835 in 
+let R0_836=Minus(~SP_EL0_sy,'136') in 
+let R30_837='15621840' in 
+let R30_838='15621844' in 
+let R30_839='15621848' in 
+if SignedLessThan(LowCast(R0_836,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'48') as R25_845 in 
+lookup Plus(R25_845,'32') as R8_848 in 
+if Equal(LowCast(R8_848,'32'),'0') then 
+lookup Plus(R25_845,'16') as R27_853 in 
+lookup Plus(SP_EL0_1,'24') as R1_856 in 
+lookup Plus(~R0_sy,'16') as R2_859 in 
+if SignedLessThan(LowCast(R27_853,'32'),'0') then 
+0
+else let R8_863=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_871 in 
+lookup Plus(R26_835,'16') as R3_874 in 
+lookup ~R0_sy as R8_878 in 
+lookup Plus(R8_878,'176') as R9_881 in 
+lookup Plus(R8_878,'208') as R0_884 in 
+let R1_885=Minus(~SP_EL0_sy,'144') in 
+let R30_886='15621952' in 
+if SignedLessThan(LowCast(R0_884,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_891 in 
+insert Plus(R27_853,'164'),LowCast(R8_891,'32');
+lookup Plus(~R1_sy,'16') as R8_899 in 
+insert Plus(R27_853,'160'),LowCast(R8_899,'32');
+lookup Plus(R26_835,'16') as R1_907 in 
+lookup ~R0_sy as R0_911 in 
+lookup Plus(~R0_sy,'8') as R1_912 in 
+new ~915_Session_Id;
+let SKey_914=~915_Session_Id in 
+let R0_916=SKey_914 in 
+out(SKey_914);
+event New_session(SKey_914,B);
+if SignedLessThan(LowCast(R0_916,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R25_845,'32'),'0') then 
+0
+else lookup Plus(R25_845,'16') as R27_931 in 
+lookup Plus(SP_EL0_1,'24') as R1_934 in 
+lookup Plus(~R0_sy,'16') as R2_937 in 
+if SignedLessThan(LowCast(R27_931,'32'),'0') then 
+0
+else let R8_941=Minus(~SP_EL0_sy,'140') in 
+lookup Plus(~R1_sy,'40') as R2_949 in 
+lookup Plus(R26_835,'16') as R3_952 in 
+lookup ~R0_sy as R8_956 in 
+lookup Plus(R8_956,'176') as R9_959 in 
+lookup Plus(R8_956,'208') as R0_962 in 
+let R1_963=Minus(~SP_EL0_sy,'144') in 
+let R30_964='15621952' in 
+if SignedLessThan(LowCast(R0_962,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'16') as R8_969 in 
+insert Plus(R27_931,'164'),LowCast(R8_969,'32');
+lookup Plus(~R1_sy,'16') as R8_977 in 
+insert Plus(R27_931,'160'),LowCast(R8_977,'32');
+lookup Plus(R26_835,'16') as R1_985 in 
+lookup ~R0_sy as R0_989 in 
+lookup Plus(~R0_sy,'8') as R1_990 in 
+new ~993_Session_Id;
+let SKey_992=~993_Session_Id in 
+let R0_994=SKey_992 in 
+out(SKey_992);
+event New_session(SKey_992,B);
+if SignedLessThan(LowCast(R0_994,'32'),'0') then 
+0
+
+
+
+
+let MsgNewSession(B) =
+new ~SP_EL0_sy;
+new ~R0_sy;
+new ~R1_sy;
+new ~R2_sy;
+new ~R3_sy;
+new ~R4_sy;
+new ~R19_sy;
+new ~R21_sy;
+new ~R23_sy;
+new ~R25_sy;
+new ~R27_sy;
+new ~R30_sy;
+let SP_EL0_1=Minus(~SP_EL0_sy,'144') in 
+insert Plus(SP_EL0_1,'88'),~R23_sy;
+insert Plus(SP_EL0_1,'104'),~R21_sy;
+insert Plus(SP_EL0_1,'120'),~R19_sy;
+insert Plus(SP_EL0_1,'136'),~R30_sy;
+let R29_22=Minus(~SP_EL0_sy,'16') in  
+let R30_23='19298856' in 
+let R8_24='28270592' in 
+lookup '28273592' as R8_27 in 
+lookup R8_27 as R8_30 in 
+insert Minus(R29_22,'56'),R8_30;
+insert Plus(SP_EL0_1,'40'),'0';
+insert Plus(SP_EL0_1,'24'),'0';
+let R0_53=Minus(~SP_EL0_sy,'104') in 
+in(a_57);
+if SignedLessThan(LowCast(R0_53,'32'),'0') then 
+let R1_60='27123712' in 
+let R1_61='27126034' in 
+let R2_62='391' in 
+let R30_63='19299036' in 
+let SP_EL0_64=Minus(~SP_EL0_sy,'192') in 
+insert Plus(SP_EL0_64,'40'),'19299036';
+let R29_70=Minus(~SP_EL0_sy,'160') in 
+let R8_71='28270592' in 
+lookup '28273592' as R8_74 in 
+lookup R8_74 as R8_77 in 
+insert Minus(R29_70,'8'),R8_77;
+insert Plus(SP_EL0_64,'16'),'0';
+insert SP_EL0_64,'27126034';
+let R1_93='26488832' in 
+let R1_94='26490101' in 
+let R0_95=Minus(~SP_EL0_sy,'176') in 
+let R30_96='15129832' in 
+let R16_97='28270592' in 
+lookup '28273880' as R16_100 in 
+lookup Plus(SP_EL0_64,'16') as R8_103 in  
+lookup Minus(R29_70,'8') as R8_111 in 
+let R9_112='28270592' in 
+lookup '28273592' as R9_115 in 
+lookup R9_115 as R9_118 in 
+if R9_118=R8_111 then 
+0
+else if SignedLessThan(LowCast(R0_53,'32'),'0') then 
+let R1_137='27123712' in 
+let R1_138='27126034' in 
+let R2_139='397' in 
+let R30_140='19299084' in 
+let SP_EL0_141=Minus(~SP_EL0_sy,'192') in 
+insert Plus(SP_EL0_141,'40'),'19299084';
+let R29_147=Minus(~SP_EL0_sy,'160') in 
+let R8_148='28270592' in 
+lookup '28273592' as R8_151 in 
+lookup R8_151 as R8_154 in 
+insert Minus(R29_147,'8'),R8_154;
+insert Plus(SP_EL0_141,'16'),'0';
+insert SP_EL0_141,'27126034';
+let R1_170='26488832' in 
+let R1_171='26490101' in 
+let R0_172=Minus(~SP_EL0_sy,'176') in 
+let R30_173='15129832' in 
+let R16_174='28270592' in 
+lookup '28273880' as R16_177 in 
+lookup Plus(SP_EL0_141,'16') as R8_180 in 
+lookup Minus(R29_147,'8') as R8_188 in 
+let R9_189='28270592' in 
+lookup '28273592' as R9_192 in 
+lookup R9_192 as R9_195 in 
+if R9_195=R8_188 then 
+0
+else let R30_209='19298976' in 
+let SP_EL0_210=Minus(~SP_EL0_sy,'240') in 
+insert Plus(SP_EL0_210,'40'),R0_53;
+insert Plus(SP_EL0_210,'56'),R0_53;
+insert Plus(SP_EL0_210,'72'),~R4_sy;
+insert Plus(SP_EL0_210,'88'),'19298976';
+let R29_231=Minus(~SP_EL0_sy,'160') in 
+let R30_232='15623052' in 
+let R8_233='28270592' in 
+lookup '28273592' as R8_236 in 
+lookup R8_236 as R8_239 in 
+let R30_240='15623068' in 
+insert Plus(SP_EL0_210,'24'),R8_239;
+insert Plus(SP_EL0_210,'16'),'0';
+insert Plus(SP_EL0_210,'4'),'0';
+let R30_256='15623076' in 
+lookup Plus(R0_53,'24') as R9_259 in 
+lookup Plus(R9_259,'96') as R8_262 in 
+if Equal(R8_262,'0') then 
+lookup Plus(R0_53,'40') as R8_267 in 
+if LowCast(R8_267,'32')='1' then 
+let R22_274='0' in 
+let R21_275='4294967274' in 
+let R30_276='15623248' in 
+let R0_277='0' in 
+lookup Plus(SP_EL0_210,'16') as R0_282 in 
+let R30_285='15623268' in 
+let R16_286='28274688' in 
+lookup '28274752' as R16_289 in 
+let R30_290='15623272' in 
+lookup Plus(R0_53,'24') as R9_293 in 
+lookup Plus(R9_293,'104') as R8_296 in 
+if Equal(R8_296,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_301 in 
+let R9_302='28270592' in 
+lookup '28273592' as R9_305 in 
+lookup R9_305 as R9_308 in 
+if R9_308=R8_301 then 
+0
+else let R30_321='15623280' in 
+lookup Plus(R9_293,'120') as R0_324 in 
+lookup Plus(SP_EL0_210,'24') as R8_327 in 
+let R9_328='28270592' in 
+lookup '28273592' as R9_331 in 
+lookup R9_331 as R9_334 in 
+if R9_334=R8_327 then 
+0
+else lookup R0_53 as R0_687 in 
+lookup Plus(R0_53,'8') as R2_688 in 
+let R1_689=Minus(~SP_EL0_sy,'232') in 
+new ~692_Session_Id;
+let SKey_691=~692_Session_Id in 
+let R0_693=SKey_691 in 
+out(SKey_691);
+event Msg_new_session(a_57,SKey_691,B);
+if SignedLessThan(LowCast(R0_693,'32'),'0') then 
+lookup Plus(SP_EL0_210,'8') as R22_700 in 
+let R30_701='15623248' in 
+if Equal(R22_700,'0') then 
+lookup Plus(SP_EL0_210,'16') as R0_706 in 
+if SignedLessThan(LowCast(R0_693,'32'),'0') then 
+let R30_709='15623268' in 
+let R16_710='28274688' in 
+lookup '28274752' as R16_713 in 
+let R30_714='15623272' in 
+lookup Plus(R0_53,'24') as R9_717 in 
+lookup Plus(R9_717,'104') as R8_720 in 
+if Equal(R8_720,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_725 in 
+let R9_726='28270592' in 
+lookup '28273592' as R9_729 in 
+lookup R9_729 as R9_732 in 
+if R9_732=R8_725 then 
+0
+else let R30_744='15623280' in 
+lookup Plus(R9_717,'120') as R0_747 in 
+lookup Plus(SP_EL0_210,'24') as R8_750 in 
+let R9_751='28270592' in 
+lookup '28273592' as R9_754 in 
+lookup R9_754 as R9_757 in 
+if R9_757=R8_750 then 
+0
+else insert ~R0_sy,R0_706;
+let R30_774='15623272' in 
+lookup Plus(R0_53,'24') as R9_777 in 
+lookup Plus(R9_777,'104') as R8_780 in 
+if Equal(R8_780,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_785 in 
+let R9_786='28270592' in 
+lookup '28273592' as R9_789 in 
+lookup R9_789 as R9_792 in 
+if R9_792=R8_785 then 
+0
+else let R30_804='15623280' in 
+lookup Plus(R9_777,'120') as R0_807 in 
+lookup Plus(SP_EL0_210,'24') as R8_810 in 
+let R9_811='28270592' in 
+lookup '28273592' as R9_814 in 
+lookup R9_814 as R9_817 in 
+if R9_817=R8_810 then 
+0
+else lookup R22_700 as R8_831 in 
+if LessOrEqual('2',LowCast(R8_831,'32')) then 
+let R8_838=UnsignedCast(Minus(LowCast(R8_831,'32'),'1'),'64') in 
+insert R22_700,LowCast(R8_838,'32');
+lookup Plus(SP_EL0_210,'16') as R0_846 in 
+if SignedLessThan(LowCast(R0_693,'32'),'0') then 
+let R30_849='15623268' in 
+let R16_850='28274688' in 
+lookup '28274752' as R16_853 in 
+let R30_854='15623272' in 
+lookup Plus(R0_53,'24') as R9_857 in 
+lookup Plus(R9_857,'104') as R8_860 in 
+if Equal(R8_860,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_865 in 
+let R9_866='28270592' in 
+lookup '28273592' as R9_869 in 
+lookup R9_869 as R9_872 in 
+if R9_872=R8_865 then 
+0
+else let R30_884='15623280' in 
+lookup Plus(R9_857,'120') as R0_887 in 
+lookup Plus(SP_EL0_210,'24') as R8_890 in 
+let R9_891='28270592' in 
+lookup '28273592' as R9_894 in 
+lookup R9_894 as R9_897 in 
+if R9_897=R8_890 then 
+0
+else insert ~R0_sy,R0_846;
+let R30_914='15623272' in 
+lookup Plus(R0_53,'24') as R9_917 in 
+lookup Plus(R9_917,'104') as R8_920 in 
+if Equal(R8_920,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_925 in 
+let R9_926='28270592' in 
+lookup '28273592' as R9_929 in 
+lookup R9_929 as R9_932 in 
+if R9_932=R8_925 then 
+0
+else let R30_944='15623280' in 
+lookup Plus(R9_917,'120') as R0_947 in 
+lookup Plus(SP_EL0_210,'24') as R8_950 in 
+let R9_951='28270592' in 
+lookup '28273592' as R9_954 in 
+lookup R9_954 as R9_957 in 
+if R9_957=R8_950 then 
+0
+else lookup Plus(R22_700,'8') as R1_971 in 
+lookup Plus(SP_EL0_210,'16') as R0_974 in 
+if SignedLessThan(LowCast(R0_693,'32'),'0') then 
+let R30_977='15623268' in 
+let R16_978='28274688' in 
+lookup '28274752' as R16_981 in 
+let R30_982='15623272' in 
+lookup Plus(R0_53,'24') as R9_985 in 
+lookup Plus(R9_985,'104') as R8_988 in 
+if Equal(R8_988,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_993 in 
+let R9_994='28270592' in 
+lookup '28273592' as R9_997 in 
+lookup R9_997 as R9_1000 in 
+if R9_1000=R8_993 then 
+0
+else let R30_1012='15623280' in 
+lookup Plus(R9_985,'120') as R0_1015 in 
+lookup Plus(SP_EL0_210,'24') as R8_1018 in 
+let R9_1019='28270592' in 
+lookup '28273592' as R9_1022 in 
+lookup R9_1022 as R9_1025 in 
+if R9_1025=R8_1018 then 
+0
+else insert ~R0_sy,R0_974;
+let R30_1042='15623272' in 
+lookup Plus(R0_53,'24') as R9_1045 in 
+lookup Plus(R9_1045,'104') as R8_1048 in 
+if Equal(R8_1048,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1053 in 
+let R9_1054='28270592' in 
+lookup '28273592' as R9_1057 in 
+lookup R9_1057 as R9_1060 in 
+if R9_1060=R8_1053 then 
+0
+else let R30_1072='15623280' in 
+lookup Plus(R9_1045,'120') as R0_1075 in 
+lookup Plus(SP_EL0_210,'24') as R8_1078 in 
+let R9_1079='28270592' in 
+lookup '28273592' as R9_1082 in 
+lookup R9_1082 as R9_1085 in 
+if R9_1085=R8_1078 then 
+0
+else let R30_1106='15623084' in 
+lookup Plus(R9_259,'120') as R0_1109 in 
+lookup Plus(R0_53,'40') as R8_1112 in 
+if LowCast(R8_1112,'32')='1' then 
+let R22_1119='0' in 
+let R21_1120='4294967274' in 
+let R30_1121='15623248' in 
+let R0_1122='0' in 
+lookup Plus(SP_EL0_210,'16') as R0_1127 in 
+let R30_1130='15623268' in 
+let R16_1131='28274688' in 
+lookup '28274752' as R16_1134 in 
+let R30_1135='15623272' in 
+lookup Plus(R0_53,'24') as R9_1138 in 
+lookup Plus(R9_1138,'104') as R8_1141 in 
+if Equal(R8_1141,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1146 in 
+let R9_1147='28270592' in 
+lookup '28273592' as R9_1150 in 
+lookup R9_1150 as R9_1153 in 
+if R9_1153=R8_1146 then 
+0
+else let R30_1166='15623280' in 
+lookup Plus(R9_1138,'120') as R0_1169 in 
+lookup Plus(SP_EL0_210,'24') as R8_1172 in 
+let R9_1173='28270592' in 
+lookup '28273592' as R9_1176 in 
+lookup R9_1176 as R9_1179 in 
+if R9_1179=R8_1172 then 
+0
+else lookup R0_53 as R0_1532 in 
+lookup Plus(R0_53,'8') as R2_1533 in 
+let R1_1534=Minus(~SP_EL0_sy,'232') in 
+new ~1537_Session_Id;
+let SKey_1536=~1537_Session_Id in 
+let R0_1538=SKey_1536 in 
+out(SKey_1536);
+event Msg_new_session(a_57,SKey_1536,B);
+if SignedLessThan(LowCast(R0_1538,'32'),'0') then 
+lookup Plus(SP_EL0_210,'8') as R22_1545 in 
+let R30_1546='15623248' in 
+if Equal(R22_1545,'0') then 
+lookup Plus(SP_EL0_210,'16') as R0_1551 in 
+if SignedLessThan(LowCast(R0_1538,'32'),'0') then 
+let R30_1554='15623268' in 
+let R16_1555='28274688' in 
+lookup '28274752' as R16_1558 in 
+let R30_1559='15623272' in 
+lookup Plus(R0_53,'24') as R9_1562 in 
+lookup Plus(R9_1562,'104') as R8_1565 in 
+if Equal(R8_1565,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1570 in 
+let R9_1571='28270592' in 
+lookup '28273592' as R9_1574 in 
+lookup R9_1574 as R9_1577 in 
+if R9_1577=R8_1570 then 
+0
+else let R30_1589='15623280' in 
+lookup Plus(R9_1562,'120') as R0_1592 in 
+lookup Plus(SP_EL0_210,'24') as R8_1595 in 
+let R9_1596='28270592' in 
+lookup '28273592' as R9_1599 in 
+lookup R9_1599 as R9_1602 in 
+if R9_1602=R8_1595 then 
+0
+else insert ~R0_sy,R0_1551;
+let R30_1619='15623272' in 
+lookup Plus(R0_53,'24') as R9_1622 in 
+lookup Plus(R9_1622,'104') as R8_1625 in 
+if Equal(R8_1625,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1630 in 
+let R9_1631='28270592' in 
+lookup '28273592' as R9_1634 in 
+lookup R9_1634 as R9_1637 in 
+if R9_1637=R8_1630 then 
+0
+else let R30_1649='15623280' in 
+lookup Plus(R9_1622,'120') as R0_1652 in 
+lookup Plus(SP_EL0_210,'24') as R8_1655 in 
+let R9_1656='28270592' in 
+lookup '28273592' as R9_1659 in 
+lookup R9_1659 as R9_1662 in 
+if R9_1662=R8_1655 then 
+0
+else lookup R22_1545 as R8_1676 in 
+if LessOrEqual('2',LowCast(R8_1676,'32')) then 
+let R8_1683=UnsignedCast(Minus(LowCast(R8_1676,'32'),'1'),'64') in 
+insert R22_1545,LowCast(R8_1683,'32');
+lookup Plus(SP_EL0_210,'16') as R0_1691 in 
+if SignedLessThan(LowCast(R0_1538,'32'),'0') then 
+let R30_1694='15623268' in 
+let R16_1695='28274688' in 
+lookup '28274752' as R16_1698 in 
+let R30_1699='15623272' in 
+lookup Plus(R0_53,'24') as R9_1702 in 
+lookup Plus(R9_1702,'104') as R8_1705 in 
+if Equal(R8_1705,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1710 in 
+let R9_1711='28270592' in 
+lookup '28273592' as R9_1714 in 
+lookup R9_1714 as R9_1717 in 
+if R9_1717=R8_1710 then 
+0
+else let R30_1729='15623280' in 
+lookup Plus(R9_1702,'120') as R0_1732 in 
+lookup Plus(SP_EL0_210,'24') as R8_1735 in 
+let R9_1736='28270592' in 
+lookup '28273592' as R9_1739 in 
+lookup R9_1739 as R9_1742 in 
+if R9_1742=R8_1735 then 
+0
+else insert ~R0_sy,R0_1691;
+let R30_1759='15623272' in 
+lookup Plus(R0_53,'24') as R9_1762 in 
+lookup Plus(R9_1762,'104') as R8_1765 in 
+if Equal(R8_1765,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1770 in 
+let R9_1771='28270592' in 
+lookup '28273592' as R9_1774 in 
+lookup R9_1774 as R9_1777 in 
+if R9_1777=R8_1770 then 
+0
+else let R30_1789='15623280' in 
+lookup Plus(R9_1762,'120') as R0_1792 in 
+lookup Plus(SP_EL0_210,'24') as R8_1795 in 
+let R9_1796='28270592' in 
+lookup '28273592' as R9_1799 in 
+lookup R9_1799 as R9_1802 in 
+if R9_1802=R8_1795 then 
+0
+else lookup Plus(R22_1545,'8') as R1_1816 in 
+lookup Plus(SP_EL0_210,'16') as R0_1819 in 
+if SignedLessThan(LowCast(R0_1538,'32'),'0') then 
+let R30_1822='15623268' in 
+let R16_1823='28274688' in 
+lookup '28274752' as R16_1826 in 
+let R30_1827='15623272' in 
+lookup Plus(R0_53,'24') as R9_1830 in 
+lookup Plus(R9_1830,'104') as R8_1833 in 
+if Equal(R8_1833,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1838 in 
+let R9_1839='28270592' in 
+lookup '28273592' as R9_1842 in 
+lookup R9_1842 as R9_1845 in 
+if R9_1845=R8_1838 then 
+0
+else let R30_1857='15623280' in 
+lookup Plus(R9_1830,'120') as R0_1860 in 
+lookup Plus(SP_EL0_210,'24') as R8_1863 in 
+let R9_1864='28270592' in 
+lookup '28273592' as R9_1867 in 
+lookup R9_1867 as R9_1870 in 
+if R9_1870=R8_1863 then 
+0
+else insert ~R0_sy,R0_1819;
+let R30_1887='15623272' in 
+lookup Plus(R0_53,'24') as R9_1890 in 
+lookup Plus(R9_1890,'104') as R8_1893 in 
+if Equal(R8_1893,'0') then 
+lookup Plus(SP_EL0_210,'24') as R8_1898 in 
+let R9_1899='28270592' in 
+lookup '28273592' as R9_1902 in 
+lookup R9_1902 as R9_1905 in 
+if R9_1905=R8_1898 then 
+0
+else let R30_1917='15623280' in 
+lookup Plus(R9_1890,'120') as R0_1920 in 
+lookup Plus(SP_EL0_210,'24') as R8_1923 in 
+let R9_1924='28270592' in 
+lookup '28273592' as R9_1927 in 
+lookup R9_1927 as R9_1930 in 
+if R9_1930=R8_1923 then 
+0
+
+
+
+
+
+
+
+
+
+let SessionCipherEncrypt(B) =
+new ~SP_EL0_sy;
+new ~R0_sy;
+new ~R1_sy;
+new ~R2_sy;
+new ~R3_sy;
+new ~R4_sy;
+new ~R19_sy;
+new ~R21_sy;
+new ~R23_sy;
+new ~R25_sy;
+new ~R27_sy;
+new ~R30_sy;
+let SP_EL0_1=Minus(~SP_EL0_sy,'304') in  
+let R30_2='15622336' in 
+insert Plus(SP_EL0_1,'216'),~R27_sy;
+insert Plus(SP_EL0_1,'232'),~R25_sy;
+insert Plus(SP_EL0_1,'248'),~R23_sy;
+insert Plus(SP_EL0_1,'264'),~R21_sy;
+insert Plus(SP_EL0_1,'280'),~R19_sy;
+insert Plus(SP_EL0_1,'296'),~R30_sy;
+let R29_33=Minus(~SP_EL0_sy,'16') in 
+let R30_34='15622352' in 
+let R30_35='15622356' in 
+let R8_36='28270592' in 
+lookup '28273592' as R8_39 in 
+lookup R8_39 as R8_42 in 
+insert Minus(R29_33,'96'),R8_42;
+insert Plus(SP_EL0_1,'64'),'0';
+insert Plus(SP_EL0_1,'160'),'0';
+insert Plus(SP_EL0_1,'48'),'0';
+let R30_64='15622392' in 
+lookup Plus(~R0_sy,'24') as R9_67 in 
+lookup Plus(R9_67,'96') as R8_70 in 
+if Equal(R8_70,'0') then 
+lookup Plus(~R0_sy,'40') as R8_75 in 
+if LowCast(R8_75,'32')='1' then 
+0
+else lookup ~R0_sy as R0_86 in 
+lookup Plus(~R0_sy,'8') as R2_87 in 
+let R1_88=Minus(~SP_EL0_sy,'240') in 
+in(a_91);
+if SignedLessThan(LowCast(R0_86,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'64') as R22_97 in 
+lookup Plus(R22_97,'16') as R23_100 in 
+if Equal(R23_100,'0') then 
+0
+else lookup Plus(R23_100,'64') as R24_107 in 
+if Equal(R24_107,'0') then 
+0
+else lookup a_91 as CKs_113 in 
+let MKs_115=hash2(CKs_113,'1') in 
+if SignedLessThan(LowCast(R0_86,'32'),'0') then 
+0
+else lookup Plus(R23_100,'56') as R8_121 in 
+if Equal(R8_121,'0') then 
+0
+else lookup Plus(R8_121,'16') as R27_128 in 
+if Equal(R27_128,'0') then 
+0
+else lookup Plus(R23_100,'48') as R8_135 in 
+insert Plus(SP_EL0_1,'36'),LowCast(R8_135,'32');
+lookup Plus(R23_100,'16') as R28_143 in 
+insert Plus(SP_EL0_1,'72'),'0';
+if LessOrEqual('3',LowCast(R28_143,'32')) then 
+lookup Plus(~R0_sy,'24') as R8_157 in 
+let R9_158=Minus(~SP_EL0_sy,'224') in 
+let R4_159=Minus(~SP_EL0_sy,'160') in 
+let R30_160='15622528' in 
+lookup Plus(R8_157,'72') as R9_163 in 
+lookup Plus(R8_157,'88') as R8_166 in 
+insert SP_EL0_1,R8_166;
+let R0_172=Minus(~SP_EL0_sy,'232') in 
+let R2_173=Minus(~SP_EL0_sy,'224') in 
+let R1_174='2' in 
+let R3_175='32' in 
+let R5_176='16' in 
+let R30_177='15622732' in 
+if SignedLessThan(LowCast(R0_172,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'72') as R21_183 in 
+lookup Plus(R23_100,'24') as R26_186 in 
+if Equal(R26_186,'0') then 
+0
+else lookup Plus(R23_100,'32') as R8_192 in 
+if Equal(R8_192,'0') then 
+0
+else let tmp_R7_198=Plus(R21_183,'8') in 
+lookup R21_183 as R9_199 in 
+lookup Plus(R24_107,'48') as R5_202 in 
+let R10_203=Minus(~SP_EL0_sy,'224') in 
+let R2_204=Minus(~SP_EL0_sy,'192') in 
+lookup Plus(~R0_sy,'24') as R10_207 in 
+insert Plus(SP_EL0_1,'24'),R10_207;
+insert Plus(SP_EL0_1,'8'),R26_186;
+let R1_218=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_219=Minus(~SP_EL0_sy,'256') in 
+let R3_220='32' in 
+lookup Plus(SP_EL0_1,'36') as R6_223 in 
+in(a_226);
+let Enc_227=enc(a_226,MKs_115) in 
+let R0_230=Enc_227 in 
+out(Enc_227);
+event Send(a_226,MKs_115);
+if SignedLessThan(LowCast(R0_230,'32'),'0') then 
+0
+else lookup Plus(R23_100,'128') as R8_237 in 
+if LowCast(R8_237,'32')='1' then 
+lookup Plus(R23_100,'164') as R2_246 in 
+insert Minus(R29_33,'112'),'0';
+lookup Plus(R23_100,'136') as R8_254 in 
+if Equal(LowCast(R8_254,'32'),'0') then 
+lookup Plus(R23_100,'152') as R5_259 in 
+if Equal(R5_259,'0') then 
+0
+else lookup Plus(R23_100,'144') as R4_265 in 
+let R8_270=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_274 in 
+lookup Plus(~R0_sy,'24') as R8_277 in 
+insert SP_EL0_1,R8_277;
+let R1_283=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_284=Minus(~SP_EL0_sy,'264') in 
+let R30_285='15622904' in 
+new ~288_Pre_Key;
+let RAND_NUM_287=~288_Pre_Key in 
+if SignedLessThan(LowCast(R0_284,'32'),'0') then 
+0
+else let R30_291='15622916' in 
+if Equal(R27_274,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_299=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_301=hash2(RAND_NUM_287,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_306 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_316 in 
+if Equal(R8_316,'0') then 
+insert ~R3_sy,R8_316
+else lookup Plus(SP_EL0_1,'48') as R8_326 in 
+insert ~R3_sy,R8_326
+else lookup R27_274 as R8_334 in 
+if LessOrEqual('2',LowCast(R8_334,'32')) then 
+let R8_341=UnsignedCast(Minus(LowCast(R8_334,'32'),'1'),'64') in 
+insert R27_274,LowCast(R8_341,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_352=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_354=hash2(RAND_NUM_287,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_359 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_369 in 
+if Equal(R8_369,'0') then 
+insert ~R3_sy,R8_369
+else lookup Plus(SP_EL0_1,'48') as R8_379 in 
+insert ~R3_sy,R8_379
+else lookup Plus(R27_274,'8') as R1_387 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_393=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_395=hash2(RAND_NUM_287,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_400 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_410 in 
+if Equal(R8_410,'0') then 
+insert ~R3_sy,R8_410
+else lookup Plus(SP_EL0_1,'48') as R8_420 in 
+insert ~R3_sy,R8_420
+else lookup Plus(R23_100,'140') as R9_428 in 
+insert Minus(R29_33,'112'),LowCast(R9_428,'32');
+lookup Plus(R23_100,'152') as R5_436 in 
+if Equal(R5_436,'0') then 
+0
+else lookup Plus(R23_100,'144') as R4_442 in 
+let R8_447=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_451 in 
+lookup Plus(~R0_sy,'24') as R8_454 in 
+insert SP_EL0_1,R8_454;
+let R1_460=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_461=Minus(~SP_EL0_sy,'264') in 
+let R30_462='15622904' in 
+new ~465_Pre_Key;
+let RAND_NUM_464=~465_Pre_Key in 
+if SignedLessThan(LowCast(R0_461,'32'),'0') then 
+0
+else let R30_468='15622916' in 
+if Equal(R27_451,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_476=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_478=hash2(RAND_NUM_464,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_483 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_493 in 
+if Equal(R8_493,'0') then 
+insert ~R3_sy,R8_493
+else lookup Plus(SP_EL0_1,'48') as R8_503 in 
+insert ~R3_sy,R8_503
+else lookup R27_451 as R8_511 in 
+if LessOrEqual('2',LowCast(R8_511,'32')) then 
+let R8_518=UnsignedCast(Minus(LowCast(R8_511,'32'),'1'),'64') in 
+insert R27_451,LowCast(R8_518,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_529=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_531=hash2(RAND_NUM_464,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_536 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_546 in 
+if Equal(R8_546,'0') then 
+insert ~R3_sy,R8_546
+else lookup Plus(SP_EL0_1,'48') as R8_556 in 
+insert ~R3_sy,R8_556
+else lookup Plus(R27_451,'8') as R1_564 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_570=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_572=hash2(RAND_NUM_464,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_577 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_587 in 
+if Equal(R8_587,'0') then 
+insert ~R3_sy,R8_587
+else lookup Plus(SP_EL0_1,'48') as R8_597 in 
+insert ~R3_sy,R8_597
+else let R1_603=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_605=hash2(CKs_113,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_610 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_620 in 
+if Equal(R8_620,'0') then 
+insert ~R3_sy,R8_620
+else lookup Plus(SP_EL0_1,'48') as R8_630 in 
+insert ~R3_sy,R8_630
+else insert Minus(R29_33,'100'),'0';
+insert Minus(R29_33,'108'),'0';
+lookup Plus(SP_EL0_1,'160') as R8_648 in 
+let R8_649=UnsignedCast(Or(RightShift(LowCast(R8_648,'32'),'24'),Or(And(RightShift(LowCast(R8_648,'32'),'8'),'65280'),Or(And(LeftShift(LowCast(R8_648,'32'),'8'),'16711680'),LeftShift(LowCast(R8_648,'32'),'24')))),'64') in 
+insert Minus(R29_33,'112'),LowCast(R8_649,'32');
+lookup Plus(~R0_sy,'24') as R8_657 in 
+let R30_658='15622704' in 
+lookup Plus(R8_657,'72') as R9_661 in 
+lookup Plus(R8_657,'88') as R8_664 in 
+insert SP_EL0_1,R8_664;
+let R0_670=Minus(~SP_EL0_sy,'232') in 
+let R2_671=Minus(~SP_EL0_sy,'224') in 
+let R4_672=Minus(~SP_EL0_sy,'128') in 
+let R1_673='1' in 
+let R3_674='32' in 
+let R5_675='16' in 
+let R30_676='15622732' in 
+if SignedLessThan(LowCast(R0_670,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'72') as R21_682 in 
+lookup Plus(R23_100,'24') as R26_685 in 
+if Equal(R26_685,'0') then 
+0
+else lookup Plus(R23_100,'32') as R8_691 in 
+if Equal(R8_691,'0') then 
+0
+else let tmp_R7_697=Plus(R21_682,'8') in 
+lookup R21_682 as R9_698 in 
+lookup Plus(R24_107,'48') as R5_701 in 
+let R10_702=Minus(~SP_EL0_sy,'224') in 
+let R2_703=Minus(~SP_EL0_sy,'192') in 
+lookup Plus(~R0_sy,'24') as R10_706 in 
+insert Plus(SP_EL0_1,'24'),R10_706;
+insert Plus(SP_EL0_1,'8'),R26_685;
+let R1_717=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_718=Minus(~SP_EL0_sy,'256') in 
+let R3_719='32' in 
+lookup Plus(SP_EL0_1,'36') as R6_722 in 
+in(a_725);
+let Enc_726=enc(a_725,MKs_115) in 
+let R0_729=Enc_726 in 
+out(Enc_726);
+event Send(a_725,MKs_115);
+if SignedLessThan(LowCast(R0_729,'32'),'0') then 
+0
+else lookup Plus(R23_100,'128') as R8_736 in 
+if LowCast(R8_736,'32')='1' then 
+lookup Plus(R23_100,'164') as R2_745 in 
+insert Minus(R29_33,'112'),'0';
+lookup Plus(R23_100,'136') as R8_753 in 
+if Equal(LowCast(R8_753,'32'),'0') then 
+lookup Plus(R23_100,'152') as R5_758 in 
+if Equal(R5_758,'0') then 
+0
+else lookup Plus(R23_100,'144') as R4_764 in 
+let R8_769=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_773 in 
+lookup Plus(~R0_sy,'24') as R8_776 in 
+insert SP_EL0_1,R8_776;
+let R1_782=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_783=Minus(~SP_EL0_sy,'264') in 
+let R30_784='15622904' in 
+new ~787_Pre_Key;
+let RAND_NUM_786=~787_Pre_Key in 
+if SignedLessThan(LowCast(R0_783,'32'),'0') then 
+0
+else let R30_790='15622916' in 
+if Equal(R27_773,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_798=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_800=hash2(RAND_NUM_786,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_805 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_815 in 
+if Equal(R8_815,'0') then 
+insert ~R3_sy,R8_815
+else lookup Plus(SP_EL0_1,'48') as R8_825 in 
+insert ~R3_sy,R8_825
+else lookup R27_773 as R8_833 in 
+if LessOrEqual('2',LowCast(R8_833,'32')) then 
+let R8_840=UnsignedCast(Minus(LowCast(R8_833,'32'),'1'),'64') in 
+insert R27_773,LowCast(R8_840,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_851=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_853=hash2(RAND_NUM_786,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_858 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_868 in 
+if Equal(R8_868,'0') then 
+insert ~R3_sy,R8_868
+else lookup Plus(SP_EL0_1,'48') as R8_878 in 
+insert ~R3_sy,R8_878
+else lookup Plus(R27_773,'8') as R1_886 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_892=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_894=hash2(RAND_NUM_786,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_899 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_909 in 
+if Equal(R8_909,'0') then 
+insert ~R3_sy,R8_909
+else lookup Plus(SP_EL0_1,'48') as R8_919 in 
+insert ~R3_sy,R8_919
+else lookup Plus(R23_100,'140') as R9_927 in 
+insert Minus(R29_33,'112'),LowCast(R9_927,'32');
+lookup Plus(R23_100,'152') as R5_935 in 
+if Equal(R5_935,'0') then 
+0
+else lookup Plus(R23_100,'144') as R4_941 in 
+let R8_946=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_950 in 
+lookup Plus(~R0_sy,'24') as R8_953 in 
+insert SP_EL0_1,R8_953;
+let R1_959=UnsignedCast(And('255',LowCast(R28_143,'32')),'64') in 
+let R0_960=Minus(~SP_EL0_sy,'264') in 
+let R30_961='15622904' in 
+new ~964_Pre_Key;
+let RAND_NUM_963=~964_Pre_Key in 
+if SignedLessThan(LowCast(R0_960,'32'),'0') then 
+0
+else let R30_967='15622916' in 
+if Equal(R27_950,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_975=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_977=hash2(RAND_NUM_963,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_982 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_992 in 
+if Equal(R8_992,'0') then 
+insert ~R3_sy,R8_992
+else lookup Plus(SP_EL0_1,'48') as R8_1002 in 
+insert ~R3_sy,R8_1002
+else lookup R27_950 as R8_1010 in 
+if LessOrEqual('2',LowCast(R8_1010,'32')) then 
+let R8_1017=UnsignedCast(Minus(LowCast(R8_1010,'32'),'1'),'64') in 
+insert R27_950,LowCast(R8_1017,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1028=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1030=hash2(RAND_NUM_963,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1035 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1045 in 
+if Equal(R8_1045,'0') then 
+insert ~R3_sy,R8_1045
+else lookup Plus(SP_EL0_1,'48') as R8_1055 in 
+insert ~R3_sy,R8_1055
+else lookup Plus(R27_950,'8') as R1_1063 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1069=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1071=hash2(RAND_NUM_963,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1076 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1086 in 
+if Equal(R8_1086,'0') then 
+insert ~R3_sy,R8_1086
+else lookup Plus(SP_EL0_1,'48') as R8_1096 in 
+insert ~R3_sy,R8_1096
+else let R1_1102=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1104=hash2(CKs_113,'2') in 
+if SignedLessThan(LowCast(R24_107,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1109 in 
+insert a_91,MKs_115;
+if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_100,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1119 in 
+if Equal(R8_1119,'0') then 
+insert ~R3_sy,R8_1119
+else lookup Plus(SP_EL0_1,'48') as R8_1129 in 
+insert ~R3_sy,R8_1129
+else let R30_1135='15622400' in 
+lookup Plus(R9_67,'120') as R0_1138 in 
+lookup Plus(~R0_sy,'40') as R8_1141 in 
+if LowCast(R8_1141,'32')='1' then 
+0
+else lookup ~R0_sy as R0_1152 in 
+lookup Plus(~R0_sy,'8') as R2_1153 in 
+let R1_1154=Minus(~SP_EL0_sy,'240') in 
+in(a_1157);
+if SignedLessThan(LowCast(R0_1152,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'64') as R22_1163 in 
+lookup Plus(R22_1163,'16') as R23_1166 in 
+if Equal(R23_1166,'0') then 
+0
+else lookup Plus(R23_1166,'64') as R24_1173 in 
+if Equal(R24_1173,'0') then 
+0
+else lookup a_1157 as CKs_1179 in 
+let MKs_1181=hash2(CKs_1179,'1') in 
+if SignedLessThan(LowCast(R0_1152,'32'),'0') then 
+0
+else lookup Plus(R23_1166,'56') as R8_1187 in 
+if Equal(R8_1187,'0') then 
+0
+else lookup Plus(R8_1187,'16') as R27_1194 in 
+if Equal(R27_1194,'0') then 
+0
+else lookup Plus(R23_1166,'48') as R8_1201 in 
+insert Plus(SP_EL0_1,'36'),LowCast(R8_1201,'32');
+lookup Plus(R23_1166,'16') as R28_1209 in 
+insert Plus(SP_EL0_1,'72'),'0';
+if LessOrEqual('3',LowCast(R28_1209,'32')) then 
+lookup Plus(~R0_sy,'24') as R8_1223 in 
+let R9_1224=Minus(~SP_EL0_sy,'224') in 
+let R4_1225=Minus(~SP_EL0_sy,'160') in 
+let R30_1226='15622528' in 
+lookup Plus(R8_1223,'72') as R9_1229 in 
+lookup Plus(R8_1223,'88') as R8_1232 in 
+insert SP_EL0_1,R8_1232;
+let R0_1238=Minus(~SP_EL0_sy,'232') in 
+let R2_1239=Minus(~SP_EL0_sy,'224') in 
+let R1_1240='2' in 
+let R3_1241='32' in 
+let R5_1242='16' in 
+let R30_1243='15622732' in 
+if SignedLessThan(LowCast(R0_1238,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'72') as R21_1249 in 
+lookup Plus(R23_1166,'24') as R26_1252 in 
+if Equal(R26_1252,'0') then 
+0
+else lookup Plus(R23_1166,'32') as R8_1258 in 
+if Equal(R8_1258,'0') then 
+0
+else let tmp_R7_1264=Plus(R21_1249,'8') in 
+lookup R21_1249 as R9_1265 in 
+lookup Plus(R24_1173,'48') as R5_1268 in 
+let R10_1269=Minus(~SP_EL0_sy,'224') in 
+let R2_1270=Minus(~SP_EL0_sy,'192') in 
+lookup Plus(~R0_sy,'24') as R10_1273 in 
+insert Plus(SP_EL0_1,'24'),R10_1273;
+insert Plus(SP_EL0_1,'8'),R26_1252;
+let R1_1284=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_1285=Minus(~SP_EL0_sy,'256') in 
+let R3_1286='32' in 
+lookup Plus(SP_EL0_1,'36') as R6_1289 in 
+in(a_1292);
+let Enc_1293=enc(a_1292,MKs_1181) in 
+let R0_1296=Enc_1293 in 
+out(Enc_1293);
+event Send(a_1292,MKs_1181);
+if SignedLessThan(LowCast(R0_1296,'32'),'0') then 
+0
+else lookup Plus(R23_1166,'128') as R8_1303 in 
+if LowCast(R8_1303,'32')='1' then 
+lookup Plus(R23_1166,'164') as R2_1312 in 
+insert Minus(R29_33,'112'),'0';
+lookup Plus(R23_1166,'136') as R8_1320 in 
+if Equal(LowCast(R8_1320,'32'),'0') then 
+lookup Plus(R23_1166,'152') as R5_1325 in 
+if Equal(R5_1325,'0') then 
+0
+else lookup Plus(R23_1166,'144') as R4_1331 in 
+let R8_1336=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_1340 in 
+lookup Plus(~R0_sy,'24') as R8_1343 in 
+insert SP_EL0_1,R8_1343;
+let R1_1349=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_1350=Minus(~SP_EL0_sy,'264') in 
+let R30_1351='15622904' in 
+new ~1354_Pre_Key;
+let RAND_NUM_1353=~1354_Pre_Key in 
+if SignedLessThan(LowCast(R0_1350,'32'),'0') then 
+0
+else let R30_1357='15622916' in 
+if Equal(R27_1340,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1365=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1367=hash2(RAND_NUM_1353,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1372 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1382 in 
+if Equal(R8_1382,'0') then 
+insert ~R3_sy,R8_1382
+else lookup Plus(SP_EL0_1,'48') as R8_1392 in 
+insert ~R3_sy,R8_1392
+else lookup R27_1340 as R8_1400 in 
+if LessOrEqual('2',LowCast(R8_1400,'32')) then 
+let R8_1407=UnsignedCast(Minus(LowCast(R8_1400,'32'),'1'),'64') in 
+insert R27_1340,LowCast(R8_1407,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1418=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1420=hash2(RAND_NUM_1353,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1425 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1435 in 
+if Equal(R8_1435,'0') then 
+insert ~R3_sy,R8_1435
+else lookup Plus(SP_EL0_1,'48') as R8_1445 in 
+insert ~R3_sy,R8_1445
+else lookup Plus(R27_1340,'8') as R1_1453 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1459=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1461=hash2(RAND_NUM_1353,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1466 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1476 in 
+if Equal(R8_1476,'0') then 
+insert ~R3_sy,R8_1476
+else lookup Plus(SP_EL0_1,'48') as R8_1486 in 
+insert ~R3_sy,R8_1486
+else lookup Plus(R23_1166,'140') as R9_1494 in 
+insert Minus(R29_33,'112'),LowCast(R9_1494,'32');
+lookup Plus(R23_1166,'152') as R5_1502 in 
+if Equal(R5_1502,'0') then 
+0
+else lookup Plus(R23_1166,'144') as R4_1508 in 
+let R8_1513=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_1517 in 
+lookup Plus(~R0_sy,'24') as R8_1520 in 
+insert SP_EL0_1,R8_1520;
+let R1_1526=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_1527=Minus(~SP_EL0_sy,'264') in 
+let R30_1528='15622904' in 
+new ~1531_Pre_Key;
+let RAND_NUM_1530=~1531_Pre_Key in 
+if SignedLessThan(LowCast(R0_1527,'32'),'0') then 
+0
+else let R30_1534='15622916' in 
+if Equal(R27_1517,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1542=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1544=hash2(RAND_NUM_1530,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1549 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1559 in 
+if Equal(R8_1559,'0') then 
+insert ~R3_sy,R8_1559
+else lookup Plus(SP_EL0_1,'48') as R8_1569 in 
+insert ~R3_sy,R8_1569
+else lookup R27_1517 as R8_1577 in 
+if LessOrEqual('2',LowCast(R8_1577,'32')) then 
+let R8_1584=UnsignedCast(Minus(LowCast(R8_1577,'32'),'1'),'64') in 
+insert R27_1517,LowCast(R8_1584,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1595=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1597=hash2(RAND_NUM_1530,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1602 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1612 in 
+if Equal(R8_1612,'0') then 
+insert ~R3_sy,R8_1612
+else lookup Plus(SP_EL0_1,'48') as R8_1622 in 
+insert ~R3_sy,R8_1622
+else lookup Plus(R27_1517,'8') as R1_1630 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1636=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1638=hash2(RAND_NUM_1530,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1643 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1653 in 
+if Equal(R8_1653,'0') then 
+insert ~R3_sy,R8_1653
+else lookup Plus(SP_EL0_1,'48') as R8_1663 in 
+insert ~R3_sy,R8_1663
+else let R1_1669=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1671=hash2(CKs_1179,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1676 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1686 in 
+if Equal(R8_1686,'0') then 
+insert ~R3_sy,R8_1686
+else lookup Plus(SP_EL0_1,'48') as R8_1696 in 
+insert ~R3_sy,R8_1696
+else insert Minus(R29_33,'100'),'0';
+insert Minus(R29_33,'108'),'0';
+lookup Plus(SP_EL0_1,'160') as R8_1714 in 
+let R8_1715=UnsignedCast(Or(RightShift(LowCast(R8_1714,'32'),'24'),Or(And(RightShift(LowCast(R8_1714,'32'),'8'),'65280'),Or(And(LeftShift(LowCast(R8_1714,'32'),'8'),'16711680'),LeftShift(LowCast(R8_1714,'32'),'24')))),'64') in 
+insert Minus(R29_33,'112'),LowCast(R8_1715,'32');
+lookup Plus(~R0_sy,'24') as R8_1723 in 
+let R30_1724='15622704' in 
+lookup Plus(R8_1723,'72') as R9_1727 in 
+lookup Plus(R8_1723,'88') as R8_1730 in 
+insert SP_EL0_1,R8_1730;
+let R0_1736=Minus(~SP_EL0_sy,'232') in 
+let R2_1737=Minus(~SP_EL0_sy,'224') in 
+let R4_1738=Minus(~SP_EL0_sy,'128') in 
+let R1_1739='1' in 
+let R3_1740='32' in 
+let R5_1741='16' in 
+let R30_1742='15622732' in 
+if SignedLessThan(LowCast(R0_1736,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'72') as R21_1748 in 
+lookup Plus(R23_1166,'24') as R26_1751 in 
+if Equal(R26_1751,'0') then 
+0
+else lookup Plus(R23_1166,'32') as R8_1757 in 
+if Equal(R8_1757,'0') then 
+0
+else let tmp_R7_1763=Plus(R21_1748,'8') in 
+lookup R21_1748 as R9_1764 in 
+lookup Plus(R24_1173,'48') as R5_1767 in 
+let R10_1768=Minus(~SP_EL0_sy,'224') in 
+let R2_1769=Minus(~SP_EL0_sy,'192') in 
+lookup Plus(~R0_sy,'24') as R10_1772 in 
+insert Plus(SP_EL0_1,'24'),R10_1772;
+insert Plus(SP_EL0_1,'8'),R26_1751;
+let R1_1783=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_1784=Minus(~SP_EL0_sy,'256') in 
+let R3_1785='32' in 
+lookup Plus(SP_EL0_1,'36') as R6_1788 in 
+in(a_1791);
+let Enc_1792=enc(a_1791,MKs_1181) in 
+let R0_1795=Enc_1792 in 
+out(Enc_1792);
+event Send(a_1791,MKs_1181);
+if SignedLessThan(LowCast(R0_1795,'32'),'0') then 
+0
+else lookup Plus(R23_1166,'128') as R8_1802 in 
+if LowCast(R8_1802,'32')='1' then 
+lookup Plus(R23_1166,'164') as R2_1811 in 
+insert Minus(R29_33,'112'),'0';
+lookup Plus(R23_1166,'136') as R8_1819 in 
+if Equal(LowCast(R8_1819,'32'),'0') then 
+lookup Plus(R23_1166,'152') as R5_1824 in 
+if Equal(R5_1824,'0') then 
+0
+else lookup Plus(R23_1166,'144') as R4_1830 in 
+let R8_1835=Minus(~SP_EL0_sy,'128') in  
+lookup Plus(SP_EL0_1,'48') as R27_1839 in 
+lookup Plus(~R0_sy,'24') as R8_1842 in 
+insert SP_EL0_1,R8_1842;
+let R1_1848=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_1849=Minus(~SP_EL0_sy,'264') in 
+let R30_1850='15622904' in 
+new ~1853_Pre_Key;
+let RAND_NUM_1852=~1853_Pre_Key in 
+if SignedLessThan(LowCast(R0_1849,'32'),'0') then 
+0
+else let R30_1856='15622916' in 
+if Equal(R27_1839,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1864=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1866=hash2(RAND_NUM_1852,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1871 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1881 in 
+if Equal(R8_1881,'0') then 
+insert ~R3_sy,R8_1881
+else lookup Plus(SP_EL0_1,'48') as R8_1891 in 
+insert ~R3_sy,R8_1891
+else lookup R27_1839 as R8_1899 in 
+if LessOrEqual('2',LowCast(R8_1899,'32')) then 
+let R8_1906=UnsignedCast(Minus(LowCast(R8_1899,'32'),'1'),'64') in 
+insert R27_1839,LowCast(R8_1906,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1917=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1919=hash2(RAND_NUM_1852,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1924 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1934 in 
+if Equal(R8_1934,'0') then 
+insert ~R3_sy,R8_1934
+else lookup Plus(SP_EL0_1,'48') as R8_1944 in 
+insert ~R3_sy,R8_1944
+else lookup Plus(R27_1839,'8') as R1_1952 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_1958=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_1960=hash2(RAND_NUM_1852,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_1965 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_1975 in 
+if Equal(R8_1975,'0') then 
+insert ~R3_sy,R8_1975
+else lookup Plus(SP_EL0_1,'48') as R8_1985 in 
+insert ~R3_sy,R8_1985
+else lookup Plus(R23_1166,'140') as R9_1993 in 
+insert Minus(R29_33,'112'),LowCast(R9_1993,'32');
+lookup Plus(R23_1166,'152') as R5_2001 in 
+if Equal(R5_2001,'0') then 
+0
+else lookup Plus(R23_1166,'144') as R4_2007 in 
+let R8_2012=Minus(~SP_EL0_sy,'128') in 
+lookup Plus(SP_EL0_1,'48') as R27_2016 in 
+lookup Plus(~R0_sy,'24') as R8_2019 in 
+insert SP_EL0_1,R8_2019;
+let R1_2025=UnsignedCast(And('255',LowCast(R28_1209,'32')),'64') in 
+let R0_2026=Minus(~SP_EL0_sy,'264') in 
+let R30_2027='15622904' in 
+new ~2030_Pre_Key;
+let RAND_NUM_2029=~2030_Pre_Key in 
+if SignedLessThan(LowCast(R0_2026,'32'),'0') then 
+0
+else let R30_2033='15622916' in 
+if Equal(R27_2016,'0') then 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_2041=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_2043=hash2(RAND_NUM_2029,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_2048 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_2058 in 
+if Equal(R8_2058,'0') then 
+insert ~R3_sy,R8_2058
+else lookup Plus(SP_EL0_1,'48') as R8_2068 in 
+insert ~R3_sy,R8_2068
+else lookup R27_2016 as R8_2076 in 
+if LessOrEqual('2',LowCast(R8_2076,'32')) then 
+let R8_2083=UnsignedCast(Minus(LowCast(R8_2076,'32'),'1'),'64') in 
+insert R27_2016,LowCast(R8_2083,'32');
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_2094=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_2096=hash2(RAND_NUM_2029,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_2101 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_2111 in 
+if Equal(R8_2111,'0') then 
+insert ~R3_sy,R8_2111
+else lookup Plus(SP_EL0_1,'48') as R8_2121 in 
+insert ~R3_sy,R8_2121
+else lookup Plus(R27_2016,'8') as R1_2129 in 
+insert Plus(SP_EL0_1,'48'),'0';
+let R1_2135=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_2137=hash2(RAND_NUM_2029,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_2142 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_2152 in 
+if Equal(R8_2152,'0') then 
+insert ~R3_sy,R8_2152
+else lookup Plus(SP_EL0_1,'48') as R8_2162 in 
+insert ~R3_sy,R8_2162
+else let R1_2168=Minus(~SP_EL0_sy,'248') in 
+let CKsNext_2170=hash2(CKs_1179,'2') in 
+if SignedLessThan(LowCast(R24_1173,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'56') as R1_2175 in 
+insert a_1157,MKs_1181;
+if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else if SignedLessThan(LowCast(R23_1166,'32'),'0') then 
+0
+else lookup Plus(SP_EL0_1,'40') as R8_2185 in 
+if Equal(R8_2185,'0') then 
+insert ~R3_sy,R8_2185
+else lookup Plus(SP_EL0_1,'48') as R8_2195 in 
+insert ~R3_sy,R8_2195;
+0
+
+
+
+
+
+process:
+ new B;
+           !(
+	    !(NewSession(B)  | MsgNewSession(B)) | !(SessionCipherEncrypt(B))
+	    )
+
+
+
+
+lemma unique[reuse]: //uniqueness of session id
+  "(not (Ex A B sid #i #j. (New_session(B,sid)@i & New_session(A,sid)@j)))"
+
+
+
+end

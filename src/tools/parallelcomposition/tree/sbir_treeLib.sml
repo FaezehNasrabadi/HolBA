@@ -133,7 +133,7 @@ fun find_be_val vals_list bv =
 	val find_val = List.find (fn (a,_) => Term.term_eq a bv) vals_list;
 	(* val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" ("cannot find symbolic value for "^(term_to_string bv)^"\n"); *)
 	val (bv_str, _) = bir_envSyntax.dest_BVar_string bv;
-	val fr = get_bvar_fresh (bir_envSyntax.mk_BVar_string (bv_str, “BType_Imm Bit64”)); (* generate a fresh variable *)
+	val fr = get_bvar_fresh (bir_envSyntax.mk_BVar_string (bv_str, “BType_Bool”)); (* generate a fresh variable *)
 	val symbv = ((snd o Option.valOf) find_val) handle _ => SymbValBE (fr, Redblackset.empty Term.compare) ;
 	val exp =
 	    case symbv of
@@ -162,20 +162,101 @@ fun hd_of_tree tr =
       | VBranch ((bv,be), subtr1, subtr2) => SOME (bv,be)
 
 
+fun areIdentical bv x =
+    if (bir_expSyntax.is_BExp_Den x andalso bir_expSyntax.is_BExp_Den bv) orelse (bir_envSyntax.is_BVar x andalso bir_envSyntax.is_BVar bv) orelse (bir_envSyntax.is_bir_var_name x andalso bir_envSyntax.is_bir_var_name bv) then
+        identical x bv
+	 else if stringSyntax.is_string bv then
+        identical x (bir_envSyntax.mk_BVar (bv, “BType_Imm Bit64”))
+    else if stringSyntax.is_string x then
+        identical (bir_envSyntax.mk_BVar (x, “BType_Imm Bit64”)) bv
+    else
+        raise ERR "areIdentical " ((term_to_string bv) ^ " compare to " ^ (term_to_string x))
+
+	      
+fun trmunion(xs: term list, ys: term list) = foldl (fn (x, acc) => if List.exists (fn y => (identical x y)) acc then acc else x::acc) ys xs
+(*
+val bv = “"bv"”
+val be = ``
+	       (BExp_Store
+		    (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
+		    (BExp_Den (BVar "ADDR1" (BType_Imm Bit64)))
+		    BEnd_BigEndian
+		    (BExp_Const (Imm128 (42w :word128))))
+	       ``;
+
+	       (List.map (fn x =>
+											   if (bir_envSyntax.is_BVar x)
+											   then (bir_expSyntax.mk_BExp_Den x)
+											   else (x)) trms)
+	 
+val be = “New_session (BVar "253_SKey" (BType_Imm Bit64)) (BVar "B" (BType_Imm Bit64))”
+Term.term_eq be bv
+val bv = “BVar "253_SKey" (BType_Imm Bit64)”
+
+HOL_Interactive.toggle_quietdec();
+open Redblackset;
+HOL_Interactive.toggle_quietdec();
+Redblackset.union
+strip_comb exp
+``(bir_vars_of_exp ^exp)``;
+*)					     
+fun liveVars tr = 
+    case tr of
+	VLeaf => ((Redblackset.empty Term.compare): term Redblackset.set)
+      | VNode ((bv,be), subtr) =>
+	let
+            val subtrLive = ((liveVars subtr): term Redblackset.set);
+            val exprLive =  if (bir_envSyntax.is_BVar be)
+			    then [be]
+			    else ((bir_exp_helperLib.get_birexp_vars be)handle _ =>
+									       let
+										   val (name,trms) = strip_comb be;
+									       in
+										   trms
+									       end
+									       
+				 );
+	    (*raise ERR "liveVars " (term_to_string be);*)
+	    val strLive = List.map (fn x => (fst o bir_envSyntax.dest_BVar) x) exprLive;
+	    val combinedLive = Redblackset.addList(subtrLive,strLive);
+        in
+            (combinedLive: term Redblackset.set)
+        end
+      | VBranch ((bv,be), subtr1, subtr2) =>
+	let
+            val leftLive = liveVars subtr1;
+            val rightLive = liveVars subtr2;
+            (*val exprLive = bir_exp_helperLib.get_birexp_vars be; NOTE:As we removed branch exp in model, we do not add their vars here*)
+	    val combinedLive = Redblackset.union(leftLive,rightLive);
+        in
+            (combinedLive: term Redblackset.set)
+        end
+	
+	
 fun purge_tree tr =
     case tr of
 	VLeaf => VLeaf
-      | VNode ((bv,be), subtr) => if (isSome (hd_of_tree subtr)) then
-				      if ((identical ((fst o valOf o hd_of_tree) subtr) bv) andalso (identical ((snd o valOf o hd_of_tree) subtr) be))
-				      then (purge_tree subtr)
-				      else VNode ((bv,be), (purge_tree subtr))
-				  else VNode ((bv,be), (purge_tree subtr))
-      | VBranch ((bv,be), subtr1, subtr2) => if (identical be “BExp_Const (Imm1 1w)”)
-					     then (purge_tree subtr1)
-					     else if (identical be “BExp_Const (Imm1 0w)”)
-					     then (purge_tree subtr2)
-					     else VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))
-
+      | VNode ((bv,be), subtr) =>
+	if (isSome (hd_of_tree subtr)) then
+	    if ((identical ((fst o valOf o hd_of_tree) subtr) bv) andalso (identical ((snd o valOf o hd_of_tree) subtr) be))
+	    then (purge_tree subtr)
+	    else VNode ((bv,be), (purge_tree subtr))
+		(*if (Redblackset.member((liveVars subtr),((fst o bir_envSyntax.dest_BVar) bv))) then
+		VNode ((bv,be), (purge_tree subtr))
+	    else
+		let
+		    val _ = print ((term_to_string bv)^" not exists \n")
+		in
+		    (purge_tree subtr)
+		end*)
+	else VNode ((bv,be), (purge_tree subtr))
+      | VBranch ((bv,be), subtr1, subtr2) =>
+	if (identical be “BExp_Const (Imm1 1w)”)
+	then (purge_tree subtr1)
+	else if (identical be “BExp_Const (Imm1 0w)”)
+	then (purge_tree subtr2)
+	else VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))
+	     
 
 
 

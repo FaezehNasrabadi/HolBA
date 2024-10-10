@@ -9,7 +9,7 @@ local
     open messagesTheory;
     open messagesSyntax;
     open optionSyntax;
-	 
+    open Set;
     val ERR = mk_HOL_ERR "sapic_to_fileLib";
     val wrap_exn = Feedback.wrap_exn "sapic_to_fileLib";
 	
@@ -64,6 +64,21 @@ fun sapicterm_to_string trm =
 	    (name ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)) ^ ")"))	   
 	end	
     else raise ERR "term_to_string" ("Don't know Sapic Term: " ^ (term_to_string trm))
+(*val rset = (Redblackset.empty Term.compare)*)
+fun Vars_of_sapicterm rset trm =
+    if (is_TVar trm)
+    then Redblackset.add(rset,trm)
+    else if (is_Con trm)
+    then rset
+    else if (is_FAPP trm)
+    then
+	let
+	    val (_,fun_vals) = dest_FAPP trm;
+	    val (trm_list,_) = listSyntax.dest_list fun_vals;
+	in
+	    (List.foldl (fn (x,s) => (Vars_of_sapicterm s x)) rset trm_list)  
+	end	
+    else raise ERR "Vars_of_sapicterm" ("Don't know Sapic Term: " ^ (term_to_string trm))
 
 	       
 (* print FactTag
@@ -95,7 +110,17 @@ fun fact_to_string fct =
 	else ((factTag_to_string tag) ^ "(" ^ ((sapicterm_to_string (hd trm_list))^(List.foldr (fn (x,s) => s ^","^ (sapicterm_to_string x)) "" (tl trm_list)) ^ ")"))	     
     end
     else raise ERR "fact_to_string" ("Don't know Sapic Fact: " ^ (term_to_string fct))
-   
+
+fun Vars_of_fact rset fct =
+    if (is_Fact fct) then
+    let
+	    val (_,fct_vals) = dest_Fact fct;
+	    val (trm_list,_) = listSyntax.dest_list fct_vals;
+    in
+	(List.foldl (fn (x,s) => (Vars_of_sapicterm s x)) rset trm_list)
+    end
+    else raise ERR "Vars_of_fact" ("Don't know Sapic Fact: " ^ (term_to_string fct))
+ 	       
 (* print Action
 
 val act = “ChIn (SOME (TVar (Var "C" 0))) (TVar (Var "OTP" 0))”
@@ -128,6 +153,30 @@ fun action_to_string act =
 	else if (is_Event act)  then "event " ^ ((fact_to_string o dest_Event) act)
 	else raise ERR "action_to_string" ("Don't know Sapic Action: " ^ (term_to_string act))
     end
+
+fun Vars_of_action rset act =
+    if (is_New act) then rset
+    else if (is_Rep act) then rset
+    else if (is_ChIn act) then
+	let
+	    val (c,t) = dest_ChIn act;
+	in
+	    if (is_some c) then Redblackset.union((Vars_of_sapicterm rset (dest_some c)),(Vars_of_sapicterm rset t))
+	    else (Vars_of_sapicterm rset t)
+	end
+    else if (is_ChOut act) then
+	let
+	    val (c,t) = dest_ChOut act;
+	in
+	    if (is_some c) then Redblackset.union((Vars_of_sapicterm rset (dest_some c)),(Vars_of_sapicterm rset t))
+	    else (Vars_of_sapicterm rset t)
+	end	    
+    else if (is_Insert act) then Redblackset.union((Vars_of_sapicterm rset ((fst o dest_Insert) act)),(Vars_of_sapicterm rset ((snd o dest_Insert) act)))
+    else if (is_Delete act) then (Vars_of_sapicterm rset (dest_Delete act))
+    else if (is_Lock act) then (Vars_of_sapicterm rset (dest_Lock act))
+    else if (is_Unlock act) then (Vars_of_sapicterm rset (dest_Unlock act))
+    else if (is_Event act) then (Vars_of_fact rset (dest_Event act))
+    else raise ERR "Vars_of_action" ("Don't know Sapic Action: " ^ (term_to_string act))
 	       
 (* print Combinator
 
@@ -159,6 +208,27 @@ else if (is_ProcessCall comb) then
     end
  else raise ERR "combinator_to_string" ("Don't know Sapic Combinator: " ^ (term_to_string comb))   
 
+fun Vars_of_combinator rset comb =
+    if (is_Parallel comb) then rset
+    else if (is_NDC comb) then rset
+    else if (is_Cond comb) then (Vars_of_fact rset (dest_Cond comb))
+    else if (is_CondEq comb) then Redblackset.union((Vars_of_sapicterm rset ((fst o dest_CondEq) comb)),(Vars_of_sapicterm rset ((snd o dest_CondEq) comb)))
+    else if (is_Let comb) then
+	let
+	    
+	    val _ =  if true then () else print ((term_to_string comb)^"\n");
+	in
+	    Redblackset.union((Vars_of_sapicterm rset ((fst o dest_Let) comb)),(Vars_of_sapicterm rset ((snd o dest_Let) comb)))
+	end
+    else if (is_Lookup comb) then Redblackset.add((Vars_of_sapicterm rset ((fst o dest_Lookup) comb)),((mk_TVar o snd o dest_Lookup) comb))
+    else if (is_ProcessCall comb) then
+	let
+	    val (_,vals) = dest_ProcessCall comb;
+	    val (trm_list,_) = listSyntax.dest_list vals;
+	in
+	    (List.foldl (fn (x,s) => (Vars_of_sapicterm s x)) rset trm_list)
+	end
+    else raise ERR "Vars_of_combinator" ("Don't know Sapic Combinator: " ^ (term_to_string comb))   
 
 (* print Process
 
@@ -167,7 +237,7 @@ val pro = “ProcessAction (New (Name FreshName "49_otp"))
       (ProcessComb
          (Let (TVar (Var "48_OTP" 0)) (Con (Name FreshName "49_otp")))
          (ProcessComb
-            (Let (TVar (Var "66_Conc1" 0))
+            (Let (TVar (Var "67_Conc1" 0))
                (FAPP ("conc1",1,Public,Constructor) [TVar (Var "48_OTP" 0)]))
             (ProcessComb
                (Let (TVar (Var "70_XOR" 0))
@@ -203,20 +273,40 @@ fun process_to_string pro =
 	end		    
     else raise ERR "process_to_string" ("Don't know Sapic Process: " ^ (term_to_string pro))
 
+fun Vars_of_proces rset pro =
+    if (is_ProcessNull pro) then rset
+    else if (is_ProcessComb pro)
+    then
+	let
+	    val (c,pl,pr) = dest_ProcessComb pro;
+	in
+	     Redblackset.union((Vars_of_combinator rset c),Redblackset.union((Vars_of_proces rset pl),(Vars_of_proces rset pr)))
+	end		
+    else if (is_ProcessAction pro)
+    then
+	let
+	    val (a,p) = dest_ProcessAction pro;
+	in
+	   Redblackset.union((Vars_of_proces rset p),(Vars_of_action rset a))
+	end		    
+    else raise ERR "Vars_of_proces" ("Don't know Sapic Process: " ^ (term_to_string pro))
 
 	       
 (*
-val pro = “(ProcessComb
-         (Let (TVar (Var "48_OTP" 0)) (Con (Name FreshName "49_otp")))
+val pro = “ProcessComb
+         (Let (TVar (Var "49_OTP" 0)) (Con (Name FreshName "49_otp")))
+	 ((ProcessAction (New (Name FreshName "49_otp"))) ProcessNull)
          (ProcessComb
-            (Let (TVar (Var "66_Conc1" 0))
-               (FAPP ("conc1",1,Public,Constructor) [TVar (Var "48_OTP" 0)]))
+            (Let (TVar (Var "67_Conc1" 0))
+               (FAPP ("conc1",1,Public,Constructor) [TVar (Var "49_OTP" 0)]))
             (ProcessComb
                (Let (TVar (Var "70_XOR" 0))
                   (FAPP ("exclusive_or",2,Public,Constructor)
-                     [TVar (Var "66_Conc1" 0); TVar (Var "69_pad" 0)]))
+                     [TVar (Var "49_OTP" 0); TVar (Var "69_pad" 0)]))
                (ProcessAction (ChIn NONE (TVar (Var "70_XOR" 0)))
-                  ProcessNull) ProcessNull) ProcessNull) ProcessNull)”*)	       
+                  ProcessNull) ProcessNull) ProcessNull)”
+val pro = refine_process pro;
+*)	       
 fun refine_process pro =
     if (is_ProcessNull pro) then pro
     else if (is_ProcessComb pro)
@@ -226,8 +316,12 @@ fun refine_process pro =
 	    val refined_pl = refine_process pl;
             val refined_pr = refine_process pr;
 	in
-	    if ((is_ProcessNull refined_pl) andalso (is_ProcessNull refined_pr) andalso ((is_Let c) orelse (is_Lookup c)))
-	    then ProcessNull_tm	 
+	    if ((is_ProcessNull refined_pl) andalso (is_ProcessNull refined_pr) andalso ((is_Let c) orelse (is_Lookup c) orelse (is_NDC c)))
+	    then ProcessNull_tm
+	    else if ((is_NDC c) andalso (is_ProcessNull refined_pr) andalso not(is_ProcessNull refined_pl))
+	    then refined_pl
+	    else if ((is_NDC c) andalso (is_ProcessNull refined_pl) andalso not(is_ProcessNull refined_pr))
+	    then refined_pr
 	    else mk_ProcessComb(c, refined_pl, refined_pr)
 	end		
     else if (is_ProcessAction pro)
@@ -241,9 +335,46 @@ fun refine_process pro =
 	    else mk_ProcessAction(a,refined_p)
 	end		    
     else raise ERR "refine_process" ("Don't know Sapic Process: " ^ (term_to_string pro))
+(*val c = “Let (TVar (Var "333_R0" 0)) (TVar (Var "331_SKey" 0))”
+ open sapicplusSyntax;
+*)
+fun process_live_vars rset pro =
+    if (is_ProcessNull pro) then pro
+    else if (is_ProcessComb pro)
+    then
+	let
+            val (c, pl, pr) = dest_ProcessComb pro;
+	    (* val _ = print ((term_to_string c) ^ "\n") *)
+	    val live_pl = process_live_vars rset pl;
+            val live_pr = process_live_vars rset pr;
 
-
-	       
+	    val rset_pl = Vars_of_proces rset live_pl;
+            val rset_pr = Vars_of_proces rset live_pr;
+        in
+            (if (is_Let c)
+	     then
+		 if (not (is_ProcessNull live_pl) andalso is_ProcessNull live_pr andalso not (Redblackset.member(rset_pl, (fst o dest_Let) c)))
+		 then live_pl
+		 else if (not (is_ProcessNull live_pr) andalso is_ProcessNull live_pl andalso not (Redblackset.member(rset_pr, (fst o dest_Let) c)))
+	 	 then live_pr
+		 else if not (is_ProcessNull live_pl) andalso not (is_ProcessNull live_pr)
+		 then
+		     if (Redblackset.member(rset_pl, (fst o dest_Let) c) orelse Redblackset.member(rset_pr, (fst o dest_Let) c))
+		     then mk_ProcessComb(c, live_pl, live_pr)
+		     else mk_ProcessComb(NDC_tm, live_pl, live_pr)
+		 else mk_ProcessComb(c, live_pl, live_pr)
+	     else mk_ProcessComb(c, live_pl, live_pr)) handle _ => raise ERR "process_live_vars" ("Don't know Sapic Process: " ^ (term_to_string c))
+	end
+     else if (is_ProcessAction pro)
+    then
+	 let
+	     val (a,p) = dest_ProcessAction pro;
+	     val live_p = process_live_vars rset p;
+	   in
+	     mk_ProcessAction(a,live_p)
+	 end
+     else raise ERR "process_live_vars" ("Don't know Sapic Process: " ^ (term_to_string pro))
+			
 (* write Sapic into a file *)
 fun write_sapic_to_file str =
     let

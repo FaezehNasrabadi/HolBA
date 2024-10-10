@@ -164,7 +164,7 @@ fun Encrypt2 input1 input2 =
 fun Send input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (send
+		     (Send
 			  ( ^input1)
 			  ( ^input2))``;
 
@@ -175,7 +175,7 @@ fun Send input1 input2 =
 fun Receive input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (receive
+		     (Receive
 			  ( ^input1)
 			  ( ^input2))``;
 
@@ -1748,23 +1748,23 @@ fun DH_key vn syst =
  fun session_key syst =
     let
 
-	val env  = (SYST_get_env  syst);
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
+
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Session_Id", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	val syst = update_key Fr_vn vn syst;
 	    
-	val key = find_bv_val ("encypt::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``;
+	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
 
-	val c2 = ``BVar "0x02" (BType_Imm Bit64)``;
-		     
-	val (C_bv, C_be) = HMac2 key c2;    	    	
+	val Fn_b = bir_envSyntax.mk_BVar_string ("B", “BType_Imm Bit64”); 
 
-	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
+	val (E_bv, E_be) = NewSession vn Fn_b;
 
-	val syst = update_key C_be Fr_CK syst;
+	val syst = state_add_path "event1" E_be syst
 
     in
 	syst
     end;
- 
  (*   
 fun session_key syst =
     let

@@ -78,15 +78,8 @@ found 3041 blocks in program
 initial state created.
 
 current number of stopped states: 0
-current number of stopped states: 65
-current number of stopped states: 178
-===========================
-== Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
-== Time so far:  30 sec. ==
-===========================
-current number of stopped states: 333
-current number of stopped states: 426
-current number of stopped states: 540
+current number of stopped states: 218
+current number of stopped states: 500
 
 
 finished exploration of all paths.
@@ -98,25 +91,25 @@ number of "no assert failed" paths found: 186
 Get predlists
 ===========================
 == Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
+== Time so far:  30 sec. ==
+===========================
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
 == Time so far:  60 sec. ==
-===========================
-===========================
-== Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
-== Time so far:  90 sec. ==
-===========================
-===========================
-== Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
-== Time so far: 120 sec. ==
 ===========================
 Get refined predlists
 Get tree
 Get vals_list
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
+== Time so far:  90 sec. ==
+===========================
 Get sort_vals
 built a symbolic tree with value
 built sapic_process
-built a refined sapic_process
+built a refined process with live variables
 wrote into file
 ============================
 == Test successful: src/tools/parallelcomposition/examples/WhatsApp_session_cipher_encrypt/WhatsApp_session_cipher_encrypt.exe ==
-== Elapsed time: 142 sec. ==
+== Elapsed time: 105 sec. ==
 ============================

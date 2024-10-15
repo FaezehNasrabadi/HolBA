@@ -37,12 +37,7 @@ lookup R8_236 as R8_239 in
 insert Plus(SP_EL0_210,'24'),R8_239;
 insert Plus(SP_EL0_210,'16'),'0';
 insert Plus(SP_EL0_210,'4'),'0';
-lookup Plus(R0_53,'24') as R9_259 in 
-lookup Plus(R9_259,'96') as R8_262 in 
-(lookup Plus(R0_53,'40') as R8_267 in 
-lookup R0_53 as R0_687 in 
-lookup Plus(R0_53,'8') as R2_688 in 
-new ~692_Session_Id;
+(new ~692_Session_Id;
 let SKey_691=~692_Session_Id in 
 out(SKey_691);
 event Msg_new_session(a_57,SKey_691,B);
@@ -52,13 +47,8 @@ insert R0_sy,R0_706)+(lookup R22_700 as R8_831 in
 (let R8_838=UnsignedCast(Minus(LowCast(R8_831,'32'),'1'),'64') in 
 insert R22_700,LowCast(R8_838,'32');
 lookup Plus(SP_EL0_210,'16') as R0_846 in 
-insert R0_sy,R0_846)+(lookup Plus(R22_700,'8') as R1_971 in 
-lookup Plus(SP_EL0_210,'16') as R0_974 in 
-insert R0_sy,R0_974)))+(lookup Plus(R9_259,'120') as R0_1109 in 
-lookup Plus(R0_53,'40') as R8_1112 in 
-lookup R0_53 as R0_1532 in 
-lookup Plus(R0_53,'8') as R2_1533 in 
-new ~1537_Session_Id;
+insert R0_sy,R0_846)+(lookup Plus(SP_EL0_210,'16') as R0_974 in 
+insert R0_sy,R0_974)))+(new ~1537_Session_Id;
 let SKey_1536=~1537_Session_Id in 
 out(SKey_1536);
 event Msg_new_session(a_57,SKey_1536,B);
@@ -68,6 +58,5 @@ insert R0_sy,R0_1551)+(lookup R22_1545 as R8_1676 in
 (let R8_1683=UnsignedCast(Minus(LowCast(R8_1676,'32'),'1'),'64') in 
 insert R22_1545,LowCast(R8_1683,'32');
 lookup Plus(SP_EL0_210,'16') as R0_1691 in 
-insert R0_sy,R0_1691)+(lookup Plus(R22_1545,'8') as R1_1816 in 
-lookup Plus(SP_EL0_210,'16') as R0_1819 in 
+insert R0_sy,R0_1691)+(lookup Plus(SP_EL0_210,'16') as R0_1819 in 
 insert R0_sy,R0_1819)))))

@@ -235,7 +235,7 @@ fun Vars_of_combinator rset comb =
 val pro = “ProcessNull”
 val pro = “ProcessAction (New (Name FreshName "49_otp"))
       (ProcessComb
-         (Let (TVar (Var "48_OTP" 0)) (Con (Name FreshName "49_otp")))
+         (Lookup (TVar (Var "C" 0)) (Var "OTP" 0))
          (ProcessComb
             (Let (TVar (Var "67_Conc1" 0))
                (FAPP ("conc1",1,Public,Constructor) [TVar (Var "48_OTP" 0)]))
@@ -294,7 +294,7 @@ fun Vars_of_proces rset pro =
 	       
 (*
 val pro = “ProcessComb
-         (Let (TVar (Var "49_OTP" 0)) (Con (Name FreshName "49_otp")))
+         (Lookup (TVar (Var "C" 0)) (Var "OTP" 0))
 	 ((ProcessAction (New (Name FreshName "49_otp"))) ProcessNull)
          (ProcessComb
             (Let (TVar (Var "67_Conc1" 0))
@@ -336,8 +336,12 @@ fun refine_process pro =
 	end		    
     else raise ERR "refine_process" ("Don't know Sapic Process: " ^ (term_to_string pro))
 (*val c = “Let (TVar (Var "333_R0" 0)) (TVar (Var "331_SKey" 0))”
+val c = “Lookup (TVar (Var "333_R0" 0)) (Var "331_SKey" 0)”
  open sapicplusSyntax;
-*)
+ *)
+
+fun make_nolookup  trm_list pro = mk_ProcessComb(NDC_tm,(mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([mk_FAPP (pairSyntax.list_mk_pair [“"NoLookup"”,“(2:int)”,Public_tm, Constructor_tm],(listSyntax.mk_list (trm_list,SapicTerm_t_ty)))],SapicTerm_t_ty))))),ProcessNull_tm)),pro);
+    
 fun process_live_vars rset pro =
     if (is_ProcessNull pro) then pro
     else if (is_ProcessComb pro)
@@ -362,6 +366,18 @@ fun process_live_vars rset pro =
 		     if (Redblackset.member(rset_pl, (fst o dest_Let) c) orelse Redblackset.member(rset_pr, (fst o dest_Let) c))
 		     then mk_ProcessComb(c, live_pl, live_pr)
 		     else mk_ProcessComb(NDC_tm, live_pl, live_pr)
+		 else mk_ProcessComb(c, live_pl, live_pr)
+	     else if (is_Lookup c)
+	     then
+		 if (not (is_ProcessNull live_pl) andalso is_ProcessNull live_pr andalso not (Redblackset.member(rset_pl, (mk_TVar o snd o dest_Lookup) c)))
+		 then (*(make_nolookup [((fst o dest_Lookup) c),((mk_TVar o snd o dest_Lookup) c)] live_pl)*) live_pl
+		 else if (not (is_ProcessNull live_pr) andalso is_ProcessNull live_pl andalso not (Redblackset.member(rset_pr, (mk_TVar o snd o dest_Lookup) c)))
+	 	 then (*(make_nolookup [((fst o dest_Lookup) c),((mk_TVar o snd o dest_Lookup) c)] live_pr)*) live_pr
+		 else if not (is_ProcessNull live_pl) andalso not (is_ProcessNull live_pr)
+		 then
+		     if (Redblackset.member(rset_pl, (mk_TVar o snd o dest_Lookup) c) orelse Redblackset.member(rset_pr, (mk_TVar o snd o dest_Lookup) c))
+		     then mk_ProcessComb(c, live_pl, live_pr)
+		     else (*(make_nolookup [((fst o dest_Lookup) c),((mk_TVar o snd o dest_Lookup) c)] (mk_ProcessComb(NDC_tm, live_pl,live_pr)))*) mk_ProcessComb(NDC_tm, live_pl, live_pr)
 		 else mk_ProcessComb(c, live_pl, live_pr)
 	     else mk_ProcessComb(c, live_pl, live_pr)) handle _ => raise ERR "process_live_vars" ("Don't know Sapic Process: " ^ (term_to_string c))
 	end

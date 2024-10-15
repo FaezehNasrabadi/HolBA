@@ -14,54 +14,33 @@ insert Minus(R29_33,'96'),R8_42;
 insert Plus(SP_EL0_1,'64'),'0';
 insert Plus(SP_EL0_1,'160'),'0';
 insert Plus(SP_EL0_1,'48'),'0';
-lookup Plus(R0_sy,'24') as R9_67 in 
-lookup Plus(R9_67,'96') as R8_70 in 
-(lookup Plus(R0_sy,'40') as R8_75 in 
-lookup R0_sy as R0_86 in 
-lookup Plus(R0_sy,'8') as R2_87 in 
-in(a_91);
+(in(a_91);
 lookup Plus(SP_EL0_1,'64') as R22_97 in 
 lookup Plus(R22_97,'16') as R23_100 in 
-lookup Plus(R23_100,'64') as R24_107 in 
 lookup a_91 as CKs_113 in 
 let MKs_115=hash2(CKs_113,0x01) in 
-lookup Plus(R23_100,'56') as R8_121 in 
-lookup Plus(R8_121,'16') as R27_128 in 
 lookup Plus(R23_100,'48') as R8_135 in 
 insert Plus(SP_EL0_1,'36'),LowCast(R8_135,'32');
-lookup Plus(R23_100,'16') as R28_143 in 
 insert Plus(SP_EL0_1,'72'),'0';
 (lookup Plus(R0_sy,'24') as R8_157 in 
-lookup Plus(R8_157,'72') as R9_163 in 
 lookup Plus(R8_157,'88') as R8_166 in 
 insert SP_EL0_1,R8_166;
-lookup Plus(SP_EL0_1,'72') as R21_183 in 
 lookup Plus(R23_100,'24') as R26_186 in 
-lookup Plus(R23_100,'32') as R8_192 in 
-lookup R21_183 as R9_199 in 
-lookup Plus(R24_107,'48') as R5_202 in 
 lookup Plus(R0_sy,'24') as R10_207 in 
 insert Plus(SP_EL0_1,'24'),R10_207;
 insert Plus(SP_EL0_1,'8'),R26_186;
-lookup Plus(SP_EL0_1,'36') as R6_223 in 
 in(a_226);
 let Enc_227=enc(a_226,MKs_115) in 
 out(Enc_227);
 event Send(a_226,MKs_115);
-lookup Plus(R23_100,'128') as R8_237 in 
-(lookup Plus(R23_100,'164') as R2_246 in 
-insert Minus(R29_33,'112'),'0';
-lookup Plus(R23_100,'136') as R8_254 in 
-(lookup Plus(R23_100,'152') as R5_259 in 
-lookup Plus(R23_100,'144') as R4_265 in 
-lookup Plus(SP_EL0_1,'48') as R27_274 in 
+(insert Minus(R29_33,'112'),'0';
+(lookup Plus(SP_EL0_1,'48') as R27_274 in 
 lookup Plus(R0_sy,'24') as R8_277 in 
 insert SP_EL0_1,R8_277;
 new ~288_Pre_Key;
 let RAND_NUM_287=~288_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_301=hash2(RAND_NUM_287,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_306 in 
 insert a_91,CKsNext_301;
 lookup Plus(SP_EL0_1,'40') as R8_316 in 
 (insert R3_sy,R8_316)+(lookup Plus(SP_EL0_1,'48') as R8_326 in 
@@ -70,21 +49,16 @@ insert R3_sy,R8_326))+(lookup R27_274 as R8_334 in
 insert R27_274,LowCast(R8_341,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_354=hash2(RAND_NUM_287,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_359 in 
 insert a_91,CKsNext_354;
 lookup Plus(SP_EL0_1,'40') as R8_369 in 
 (insert R3_sy,R8_369)+(lookup Plus(SP_EL0_1,'48') as R8_379 in 
-insert R3_sy,R8_379))+(lookup Plus(R27_274,'8') as R1_387 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_379))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_395=hash2(RAND_NUM_287,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_400 in 
 insert a_91,CKsNext_395;
 lookup Plus(SP_EL0_1,'40') as R8_410 in 
 (insert R3_sy,R8_410)+(lookup Plus(SP_EL0_1,'48') as R8_420 in 
 insert R3_sy,R8_420))))+(lookup Plus(R23_100,'140') as R9_428 in 
 insert Minus(R29_33,'112'),LowCast(R9_428,'32');
-lookup Plus(R23_100,'152') as R5_436 in 
-lookup Plus(R23_100,'144') as R4_442 in 
 lookup Plus(SP_EL0_1,'48') as R27_451 in 
 lookup Plus(R0_sy,'24') as R8_454 in 
 insert SP_EL0_1,R8_454;
@@ -92,7 +66,6 @@ new ~465_Pre_Key;
 let RAND_NUM_464=~465_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_478=hash2(RAND_NUM_464,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_483 in 
 insert a_91,CKsNext_478;
 lookup Plus(SP_EL0_1,'40') as R8_493 in 
 (insert R3_sy,R8_493)+(lookup Plus(SP_EL0_1,'48') as R8_503 in 
@@ -101,19 +74,15 @@ insert R3_sy,R8_503))+(lookup R27_451 as R8_511 in
 insert R27_451,LowCast(R8_518,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_531=hash2(RAND_NUM_464,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_536 in 
 insert a_91,CKsNext_531;
 lookup Plus(SP_EL0_1,'40') as R8_546 in 
 (insert R3_sy,R8_546)+(lookup Plus(SP_EL0_1,'48') as R8_556 in 
-insert R3_sy,R8_556))+(lookup Plus(R27_451,'8') as R1_564 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_556))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_572=hash2(RAND_NUM_464,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_577 in 
 insert a_91,CKsNext_572;
 lookup Plus(SP_EL0_1,'40') as R8_587 in 
 (insert R3_sy,R8_587)+(lookup Plus(SP_EL0_1,'48') as R8_597 in 
 insert R3_sy,R8_597)))))+(let CKsNext_605=hash2(CKs_113,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_610 in 
 insert a_91,CKsNext_605;
 lookup Plus(SP_EL0_1,'40') as R8_620 in 
 (insert R3_sy,R8_620)+(lookup Plus(SP_EL0_1,'48') as R8_630 in 
@@ -123,36 +92,24 @@ lookup Plus(SP_EL0_1,'160') as R8_648 in
 let R8_649=UnsignedCast(Or(RightShift(LowCast(R8_648,'32'),'24'),Or(And(RightShift(LowCast(R8_648,'32'),'8'),'65280'),Or(And(LeftShift(LowCast(R8_648,'32'),'8'),'16711680'),LeftShift(LowCast(R8_648,'32'),'24')))),'64') in 
 insert Minus(R29_33,'112'),LowCast(R8_649,'32');
 lookup Plus(R0_sy,'24') as R8_657 in 
-lookup Plus(R8_657,'72') as R9_661 in 
 lookup Plus(R8_657,'88') as R8_664 in 
 insert SP_EL0_1,R8_664;
-lookup Plus(SP_EL0_1,'72') as R21_682 in 
 lookup Plus(R23_100,'24') as R26_685 in 
-lookup Plus(R23_100,'32') as R8_691 in 
-lookup R21_682 as R9_698 in 
-lookup Plus(R24_107,'48') as R5_701 in 
 lookup Plus(R0_sy,'24') as R10_706 in 
 insert Plus(SP_EL0_1,'24'),R10_706;
 insert Plus(SP_EL0_1,'8'),R26_685;
-lookup Plus(SP_EL0_1,'36') as R6_722 in 
 in(a_725);
 let Enc_726=enc(a_725,MKs_115) in 
 out(Enc_726);
 event Send(a_725,MKs_115);
-lookup Plus(R23_100,'128') as R8_736 in 
-(lookup Plus(R23_100,'164') as R2_745 in 
-insert Minus(R29_33,'112'),'0';
-lookup Plus(R23_100,'136') as R8_753 in 
-(lookup Plus(R23_100,'152') as R5_758 in 
-lookup Plus(R23_100,'144') as R4_764 in 
-lookup Plus(SP_EL0_1,'48') as R27_773 in 
+(insert Minus(R29_33,'112'),'0';
+(lookup Plus(SP_EL0_1,'48') as R27_773 in 
 lookup Plus(R0_sy,'24') as R8_776 in 
 insert SP_EL0_1,R8_776;
 new ~787_Pre_Key;
 let RAND_NUM_786=~787_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_800=hash2(RAND_NUM_786,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_805 in 
 insert a_91,CKsNext_800;
 lookup Plus(SP_EL0_1,'40') as R8_815 in 
 (insert R3_sy,R8_815)+(lookup Plus(SP_EL0_1,'48') as R8_825 in 
@@ -161,21 +118,16 @@ insert R3_sy,R8_825))+(lookup R27_773 as R8_833 in
 insert R27_773,LowCast(R8_840,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_853=hash2(RAND_NUM_786,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_858 in 
 insert a_91,CKsNext_853;
 lookup Plus(SP_EL0_1,'40') as R8_868 in 
 (insert R3_sy,R8_868)+(lookup Plus(SP_EL0_1,'48') as R8_878 in 
-insert R3_sy,R8_878))+(lookup Plus(R27_773,'8') as R1_886 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_878))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_894=hash2(RAND_NUM_786,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_899 in 
 insert a_91,CKsNext_894;
 lookup Plus(SP_EL0_1,'40') as R8_909 in 
 (insert R3_sy,R8_909)+(lookup Plus(SP_EL0_1,'48') as R8_919 in 
 insert R3_sy,R8_919))))+(lookup Plus(R23_100,'140') as R9_927 in 
 insert Minus(R29_33,'112'),LowCast(R9_927,'32');
-lookup Plus(R23_100,'152') as R5_935 in 
-lookup Plus(R23_100,'144') as R4_941 in 
 lookup Plus(SP_EL0_1,'48') as R27_950 in 
 lookup Plus(R0_sy,'24') as R8_953 in 
 insert SP_EL0_1,R8_953;
@@ -183,7 +135,6 @@ new ~964_Pre_Key;
 let RAND_NUM_963=~964_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_977=hash2(RAND_NUM_963,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_982 in 
 insert a_91,CKsNext_977;
 lookup Plus(SP_EL0_1,'40') as R8_992 in 
 (insert R3_sy,R8_992)+(lookup Plus(SP_EL0_1,'48') as R8_1002 in 
@@ -192,69 +143,45 @@ insert R3_sy,R8_1002))+(lookup R27_950 as R8_1010 in
 insert R27_950,LowCast(R8_1017,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1030=hash2(RAND_NUM_963,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1035 in 
 insert a_91,CKsNext_1030;
 lookup Plus(SP_EL0_1,'40') as R8_1045 in 
 (insert R3_sy,R8_1045)+(lookup Plus(SP_EL0_1,'48') as R8_1055 in 
-insert R3_sy,R8_1055))+(lookup Plus(R27_950,'8') as R1_1063 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_1055))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1071=hash2(RAND_NUM_963,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1076 in 
 insert a_91,CKsNext_1071;
 lookup Plus(SP_EL0_1,'40') as R8_1086 in 
 (insert R3_sy,R8_1086)+(lookup Plus(SP_EL0_1,'48') as R8_1096 in 
 insert R3_sy,R8_1096)))))+(let CKsNext_1104=hash2(CKs_113,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1109 in 
 insert a_91,CKsNext_1104;
 lookup Plus(SP_EL0_1,'40') as R8_1119 in 
 (insert R3_sy,R8_1119)+(lookup Plus(SP_EL0_1,'48') as R8_1129 in 
-insert R3_sy,R8_1129))))+(lookup Plus(R9_67,'120') as R0_1138 in 
-lookup Plus(R0_sy,'40') as R8_1141 in 
-lookup R0_sy as R0_1152 in 
-lookup Plus(R0_sy,'8') as R2_1153 in 
-in(a_1157);
+insert R3_sy,R8_1129))))+(in(a_1157);
 lookup Plus(SP_EL0_1,'64') as R22_1163 in 
 lookup Plus(R22_1163,'16') as R23_1166 in 
-lookup Plus(R23_1166,'64') as R24_1173 in 
 lookup a_1157 as CKs_1179 in 
 let MKs_1181=hash2(CKs_1179,0x01) in 
-lookup Plus(R23_1166,'56') as R8_1187 in 
-lookup Plus(R8_1187,'16') as R27_1194 in 
 lookup Plus(R23_1166,'48') as R8_1201 in 
 insert Plus(SP_EL0_1,'36'),LowCast(R8_1201,'32');
-lookup Plus(R23_1166,'16') as R28_1209 in 
 insert Plus(SP_EL0_1,'72'),'0';
 (lookup Plus(R0_sy,'24') as R8_1223 in 
-lookup Plus(R8_1223,'72') as R9_1229 in 
 lookup Plus(R8_1223,'88') as R8_1232 in 
 insert SP_EL0_1,R8_1232;
-lookup Plus(SP_EL0_1,'72') as R21_1249 in 
 lookup Plus(R23_1166,'24') as R26_1252 in 
-lookup Plus(R23_1166,'32') as R8_1258 in 
-lookup R21_1249 as R9_1265 in 
-lookup Plus(R24_1173,'48') as R5_1268 in 
 lookup Plus(R0_sy,'24') as R10_1273 in 
 insert Plus(SP_EL0_1,'24'),R10_1273;
 insert Plus(SP_EL0_1,'8'),R26_1252;
-lookup Plus(SP_EL0_1,'36') as R6_1289 in 
 in(a_1292);
 let Enc_1293=enc(a_1292,MKs_1181) in 
 out(Enc_1293);
 event Send(a_1292,MKs_1181);
-lookup Plus(R23_1166,'128') as R8_1303 in 
-(lookup Plus(R23_1166,'164') as R2_1312 in 
-insert Minus(R29_33,'112'),'0';
-lookup Plus(R23_1166,'136') as R8_1320 in 
-(lookup Plus(R23_1166,'152') as R5_1325 in 
-lookup Plus(R23_1166,'144') as R4_1331 in 
-lookup Plus(SP_EL0_1,'48') as R27_1340 in 
+(insert Minus(R29_33,'112'),'0';
+(lookup Plus(SP_EL0_1,'48') as R27_1340 in 
 lookup Plus(R0_sy,'24') as R8_1343 in 
 insert SP_EL0_1,R8_1343;
 new ~1354_Pre_Key;
 let RAND_NUM_1353=~1354_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1367=hash2(RAND_NUM_1353,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1372 in 
 insert a_1157,CKsNext_1367;
 lookup Plus(SP_EL0_1,'40') as R8_1382 in 
 (insert R3_sy,R8_1382)+(lookup Plus(SP_EL0_1,'48') as R8_1392 in 
@@ -263,21 +190,16 @@ insert R3_sy,R8_1392))+(lookup R27_1340 as R8_1400 in
 insert R27_1340,LowCast(R8_1407,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1420=hash2(RAND_NUM_1353,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1425 in 
 insert a_1157,CKsNext_1420;
 lookup Plus(SP_EL0_1,'40') as R8_1435 in 
 (insert R3_sy,R8_1435)+(lookup Plus(SP_EL0_1,'48') as R8_1445 in 
-insert R3_sy,R8_1445))+(lookup Plus(R27_1340,'8') as R1_1453 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_1445))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1461=hash2(RAND_NUM_1353,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1466 in 
 insert a_1157,CKsNext_1461;
 lookup Plus(SP_EL0_1,'40') as R8_1476 in 
 (insert R3_sy,R8_1476)+(lookup Plus(SP_EL0_1,'48') as R8_1486 in 
 insert R3_sy,R8_1486))))+(lookup Plus(R23_1166,'140') as R9_1494 in 
 insert Minus(R29_33,'112'),LowCast(R9_1494,'32');
-lookup Plus(R23_1166,'152') as R5_1502 in 
-lookup Plus(R23_1166,'144') as R4_1508 in 
 lookup Plus(SP_EL0_1,'48') as R27_1517 in 
 lookup Plus(R0_sy,'24') as R8_1520 in 
 insert SP_EL0_1,R8_1520;
@@ -285,7 +207,6 @@ new ~1531_Pre_Key;
 let RAND_NUM_1530=~1531_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1544=hash2(RAND_NUM_1530,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1549 in 
 insert a_1157,CKsNext_1544;
 lookup Plus(SP_EL0_1,'40') as R8_1559 in 
 (insert R3_sy,R8_1559)+(lookup Plus(SP_EL0_1,'48') as R8_1569 in 
@@ -294,19 +215,15 @@ insert R3_sy,R8_1569))+(lookup R27_1517 as R8_1577 in
 insert R27_1517,LowCast(R8_1584,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1597=hash2(RAND_NUM_1530,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1602 in 
 insert a_1157,CKsNext_1597;
 lookup Plus(SP_EL0_1,'40') as R8_1612 in 
 (insert R3_sy,R8_1612)+(lookup Plus(SP_EL0_1,'48') as R8_1622 in 
-insert R3_sy,R8_1622))+(lookup Plus(R27_1517,'8') as R1_1630 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_1622))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1638=hash2(RAND_NUM_1530,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1643 in 
 insert a_1157,CKsNext_1638;
 lookup Plus(SP_EL0_1,'40') as R8_1653 in 
 (insert R3_sy,R8_1653)+(lookup Plus(SP_EL0_1,'48') as R8_1663 in 
 insert R3_sy,R8_1663)))))+(let CKsNext_1671=hash2(CKs_1179,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1676 in 
 insert a_1157,CKsNext_1671;
 lookup Plus(SP_EL0_1,'40') as R8_1686 in 
 (insert R3_sy,R8_1686)+(lookup Plus(SP_EL0_1,'48') as R8_1696 in 
@@ -316,36 +233,24 @@ lookup Plus(SP_EL0_1,'160') as R8_1714 in
 let R8_1715=UnsignedCast(Or(RightShift(LowCast(R8_1714,'32'),'24'),Or(And(RightShift(LowCast(R8_1714,'32'),'8'),'65280'),Or(And(LeftShift(LowCast(R8_1714,'32'),'8'),'16711680'),LeftShift(LowCast(R8_1714,'32'),'24')))),'64') in 
 insert Minus(R29_33,'112'),LowCast(R8_1715,'32');
 lookup Plus(R0_sy,'24') as R8_1723 in 
-lookup Plus(R8_1723,'72') as R9_1727 in 
 lookup Plus(R8_1723,'88') as R8_1730 in 
 insert SP_EL0_1,R8_1730;
-lookup Plus(SP_EL0_1,'72') as R21_1748 in 
 lookup Plus(R23_1166,'24') as R26_1751 in 
-lookup Plus(R23_1166,'32') as R8_1757 in 
-lookup R21_1748 as R9_1764 in 
-lookup Plus(R24_1173,'48') as R5_1767 in 
 lookup Plus(R0_sy,'24') as R10_1772 in 
 insert Plus(SP_EL0_1,'24'),R10_1772;
 insert Plus(SP_EL0_1,'8'),R26_1751;
-lookup Plus(SP_EL0_1,'36') as R6_1788 in 
 in(a_1791);
 let Enc_1792=enc(a_1791,MKs_1181) in 
 out(Enc_1792);
 event Send(a_1791,MKs_1181);
-lookup Plus(R23_1166,'128') as R8_1802 in 
-(lookup Plus(R23_1166,'164') as R2_1811 in 
-insert Minus(R29_33,'112'),'0';
-lookup Plus(R23_1166,'136') as R8_1819 in 
-(lookup Plus(R23_1166,'152') as R5_1824 in 
-lookup Plus(R23_1166,'144') as R4_1830 in 
-lookup Plus(SP_EL0_1,'48') as R27_1839 in 
+(insert Minus(R29_33,'112'),'0';
+(lookup Plus(SP_EL0_1,'48') as R27_1839 in 
 lookup Plus(R0_sy,'24') as R8_1842 in 
 insert SP_EL0_1,R8_1842;
 new ~1853_Pre_Key;
 let RAND_NUM_1852=~1853_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1866=hash2(RAND_NUM_1852,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1871 in 
 insert a_1157,CKsNext_1866;
 lookup Plus(SP_EL0_1,'40') as R8_1881 in 
 (insert R3_sy,R8_1881)+(lookup Plus(SP_EL0_1,'48') as R8_1891 in 
@@ -354,21 +259,16 @@ insert R3_sy,R8_1891))+(lookup R27_1839 as R8_1899 in
 insert R27_1839,LowCast(R8_1906,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1919=hash2(RAND_NUM_1852,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1924 in 
 insert a_1157,CKsNext_1919;
 lookup Plus(SP_EL0_1,'40') as R8_1934 in 
 (insert R3_sy,R8_1934)+(lookup Plus(SP_EL0_1,'48') as R8_1944 in 
-insert R3_sy,R8_1944))+(lookup Plus(R27_1839,'8') as R1_1952 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_1944))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_1960=hash2(RAND_NUM_1852,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_1965 in 
 insert a_1157,CKsNext_1960;
 lookup Plus(SP_EL0_1,'40') as R8_1975 in 
 (insert R3_sy,R8_1975)+(lookup Plus(SP_EL0_1,'48') as R8_1985 in 
 insert R3_sy,R8_1985))))+(lookup Plus(R23_1166,'140') as R9_1993 in 
 insert Minus(R29_33,'112'),LowCast(R9_1993,'32');
-lookup Plus(R23_1166,'152') as R5_2001 in 
-lookup Plus(R23_1166,'144') as R4_2007 in 
 lookup Plus(SP_EL0_1,'48') as R27_2016 in 
 lookup Plus(R0_sy,'24') as R8_2019 in 
 insert SP_EL0_1,R8_2019;
@@ -376,7 +276,6 @@ new ~2030_Pre_Key;
 let RAND_NUM_2029=~2030_Pre_Key in 
 (insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_2043=hash2(RAND_NUM_2029,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_2048 in 
 insert a_1157,CKsNext_2043;
 lookup Plus(SP_EL0_1,'40') as R8_2058 in 
 (insert R3_sy,R8_2058)+(lookup Plus(SP_EL0_1,'48') as R8_2068 in 
@@ -385,19 +284,15 @@ insert R3_sy,R8_2068))+(lookup R27_2016 as R8_2076 in
 insert R27_2016,LowCast(R8_2083,'32');
 insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_2096=hash2(RAND_NUM_2029,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_2101 in 
 insert a_1157,CKsNext_2096;
 lookup Plus(SP_EL0_1,'40') as R8_2111 in 
 (insert R3_sy,R8_2111)+(lookup Plus(SP_EL0_1,'48') as R8_2121 in 
-insert R3_sy,R8_2121))+(lookup Plus(R27_2016,'8') as R1_2129 in 
-insert Plus(SP_EL0_1,'48'),'0';
+insert R3_sy,R8_2121))+(insert Plus(SP_EL0_1,'48'),'0';
 let CKsNext_2137=hash2(RAND_NUM_2029,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_2142 in 
 insert a_1157,CKsNext_2137;
 lookup Plus(SP_EL0_1,'40') as R8_2152 in 
 (insert R3_sy,R8_2152)+(lookup Plus(SP_EL0_1,'48') as R8_2162 in 
 insert R3_sy,R8_2162)))))+(let CKsNext_2170=hash2(CKs_1179,0x02) in 
-lookup Plus(SP_EL0_1,'56') as R1_2175 in 
 insert a_1157,CKsNext_2170;
 lookup Plus(SP_EL0_1,'40') as R8_2185 in 
 (insert R3_sy,R8_2185)+(lookup Plus(SP_EL0_1,'48') as R8_2195 in 

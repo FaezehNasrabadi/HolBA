@@ -119,7 +119,7 @@ unlock sidB
 
 
 
-let NewSession(sidA,sidB) =
+let NewSession(sidA,sidB,P) =
 lock sidA;
 lock sidB;
 new ~Root_sy;
@@ -127,13 +127,13 @@ new ~Ephemeral_sy;
 let CKn=pars1(hkdf(~Root_sy,~Ephemeral_sy)) in 
 insert sidA,CKn;
 insert sidB,CKn;
-event New_session(sidA,sidB);
+event New_session(sidA,sidB,P);
 unlock sidA;
 unlock sidB
 
 
 
-let MsgNewSession(sidA,sidB) =
+let MsgNewSession(sidA,sidB,P) =
 lock sidA;
 lock sidB;
 in(am);
@@ -142,7 +142,7 @@ new ~Ephemeral_sy;
 let CKm=pars1(hkdf(~Root_sy,~Ephemeral_sy)) in 
 insert sidA,CKm;
 insert sidB,CKm;
-event Msg_new_session(am,sidA,sidB);
+event Msg_new_session(am,sidA,sidB,P);
 unlock sidA;
 unlock sidB
 
@@ -153,12 +153,20 @@ new ~Alice;
 new ~Bob;
 let sidAlice = session(~Alice) in
 let sidBob = session(~Bob) in
+lock sidAlice;
+lock sidBob;
+new ~RootInit;
+new ~EphemeralInit;
+let CK=pars1(hkdf(~RootInit,~EphemeralInit)) in 
+insert sidAlice,CK;
+insert sidBob,CK;
+unlock sidAlice;
+unlock sidBob;
 !(
-!(NewSession(sidAlice,sidBob)) | 
-!(NewSession(sidAlice,sidBob)) | 
-!(MsgNewSession(sidAlice,sidBob)) | 
-!(MsgNewSession(sidAlice,sidBob)) | 
-!(CompromiseSession(sidAlice,sidBob)) | 
+!(NewSession(sidAlice,sidBob,~Alice)) | 
+!(NewSession(sidAlice,sidBob,~Bob)) | 
+!(MsgNewSession(sidAlice,sidBob,~Alice)) | 
+!(MsgNewSession(sidAlice,sidBob,~Bob)) | 
 !(CompromiseSession(sidAlice,sidBob)) | 
 !(SessionCipherEncrypt(sidAlice,sidBob,~Alice)) | 
 !(SessionCipherEncrypt(sidBob,sidAlice,~Bob)) | 
@@ -166,6 +174,129 @@ let sidBob = session(~Bob) in
 !(SessionCipherDecrypt(sidAlice,sidBob,~Bob)) |
 0
 )
+
+
+
+
+
+
+
+lemma IsInSrc [sources]:
+  all-traces
+  "∀ x y #i.
+    (IsIn( x, y ) @ #i) ⇒
+    (((∃ p1 p2. y = hash2(p1, p2)) ∨
+      (∃ p1 p2. y = pars1(hkdf(p1, p2)))) ∨
+     (∃ p1. y = hash(p1)))"
+/*
+guarded formula characterizing all counter-examples:
+"∃ x y #i.
+  (IsIn( x, y ) @ #i)
+ ∧
+  (∀ p1 p2. (y = hash2(p1, p2)) ⇒ ⊥) ∧
+  (∀ p1 p2. (y = pars1(hkdf(p1, p2))) ⇒ ⊥) ∧
+  (∀ p1. (y = hash(p1)) ⇒ ⊥)"
+*/
+induction
+  case empty_trace
+  by contradiction /* from formulas */
+next
+  case non_empty_trace
+  simplify
+  solve( Insert( x, y ) @ #t2 )
+    case insertsessionAlicehashCKe_0_1111111111112121212121212111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAlicehashCKs_0_11111111111121212121211111122
+    by contradiction /* from formulas */
+  next
+    case insertsessionAlicehashparshkdfRootsyEphemeralsy_0_1111111111112121212121212111211111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAlicehashparshkdfparshkdfRootsyEphemeralsyephemeralsecret_0_11111111111121212121212121112111121111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootInitEphemeralInit_0_111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_111111111111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_11111111111121111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_11111111111121211111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_1111111111112121211111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_11111111111121212121211111121111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_11111111111121212121212111111211111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_11111111111121212121212121112111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfRootsyEphemeralsy_0_111111111111212121212121212111211111
+    by contradiction /* from formulas */
+  next
+    case insertsessionAliceparshkdfparshkdfRootsyEphemeralsyephemeralsecret_0_111111111111212121212121211121111211
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobhashCKe_0_111111111111212121212121212111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobhashCKs_0_1111111111112121212121211111122
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobhashparshkdfRootsyEphemeralsy_0_111111111111212121212121212111211111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobhashparshkdfparshkdfRootsyEphemeralsyephemeralsecret_0_1111111111112121212121212121112111121111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootInitEphemeralInit_0_1111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_1111111111111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_111111111111211111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_111111111111212111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_11111111111121212111111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_111111111111212121212111111211111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_1111111111112121212121211111121111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_1111111111112121212121212111211111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfRootsyEphemeralsy_0_1111111111112121212121212121112111111
+    by contradiction /* from formulas */
+  next
+    case insertsessionBobparshkdfparshkdfRootsyEphemeralsyephemeralsecret_0_11111111111121212121212121211121111211
+    by contradiction /* from formulas */
+  next
+    case newephemeralsecret_0_1111111111112121212121212111211112
+    by contradiction /* from formulas */
+  next
+    case newephemeralsecret_0_111111111111212121212121212111211112
+    by contradiction /* from formulas */
+  qed
+qed
+
+
 
 /*
 lemma compromise_receive:
@@ -212,56 +343,8 @@ lemma authentication:
 ==> 
   (Ex #j. (Send(sid,M)@j) ∧ (j < i))"
 
-*/
 
 
-lemma sanity_New_session:
-exists-trace
-  "(Ex sidA sidB #i. (New_session(sidA,sidB)@i))"
-
-
-lemma sanity_Msg_new_session:
-exists-trace
-  "(Ex M sidA sidB #i. (Msg_new_session(M,sidA,sidB)@i))"
-
-lemma sanity_Send:
-exists-trace
-  "(Ex M sidA sidB #i. (Send(sidA,sidB,M)@i))"
-
-lemma sanity_Receive:
-exists-trace
-  "(Ex M sidA sidB #i. (Receive(sidA,sidB,M)@i))"
-
-
-lemma sanity_Heal:
-exists-trace
-  "(Ex sidA sidB #i. (Heal(sidA,sidB)@i))"
-
-lemma sanity_Compromise:
-exists-trace
-  "(Ex sidA sidB #i. (Compromise(sidA,sidB)@i))"
-
-
-lemma IsInSrc[sources]:
-    " All x y #i .
-        IsIn(x,y)@i ==> 
-        (Ex p1 p2 . y =hash2(p1,p2)) |
-        (Ex p1 p2 . y =pars1(hkdf(p1,p2))) |
-        (Ex p1 . y =hash(p1)) 
-        "
-induction
-  case empty_trace
-  by contradiction /* from formulas */
-next
-  case non_empty_trace
-  simplify
-  solve( Insert( x, y ) @ #t2 )
-    case insertSessionIdCKs_0_1111121212121212111111111
-    by sorry
-  qed
-qed
-
-/*
 lemma clone_detect:
 exists-trace
   "∃ B sid1 sid2 MK #i #j #k. New_session(sid1,B)@i & New_session(sid2,B)@j & Send(sid1,MK)@k & i < j & j < k"

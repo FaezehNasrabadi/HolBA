@@ -176,7 +176,10 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if (is_BExp_Store b)
 	    then let
 		    val (mem,adr,en,value) = dest_BExp_Store b;
-		    val P = if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
+		    val P = if ((is_BExp_Den adr) andalso (String.isSuffix "_a" ((stringSyntax.fromHOLstring o fst o dest_BVar o dest_BExp_Den) adr)))
+			    then (mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
+			    else (sbir_tree_sapic_process sort_vals str)
+			(*if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
 			    then
 				(mk_ProcessAction ((mk_Insert ((fst(bir_exp_to_sapic_term adr)),(fst(bir_exp_to_sapic_term value)))),(sbir_tree_sapic_process sort_vals str)))
 			    else
@@ -187,14 +190,17 @@ fun sbir_tree_sapic_process sort_vals tree =
 				in
 				    (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term Fn_adr)),(fst(bir_exp_to_sapic_term adr))),Pros,(ProcessNull_tm)))
 				    
-				end
+				end*)
 		in
 		    P
 		end	 
 	    else if (is_BExp_Load b)
 	    then let
 		    val (mem,adr,en,size) = dest_BExp_Load b;
-		    val P = if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
+		    val P = if ((is_BExp_Den adr) andalso (String.isSuffix "_a" ((stringSyntax.fromHOLstring o fst o dest_BVar o dest_BExp_Den) adr)))
+			    then (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+			    else (sbir_tree_sapic_process sort_vals str)
+	(*if true (* ((is_BExp_Const adr) orelse (is_BExp_Den adr)) *)
 			    then
 				(mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 			    else
@@ -203,12 +209,12 @@ fun sbir_tree_sapic_process sort_vals tree =
 				    val Pros = (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term Fn_adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 				in
 				    (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term Fn_adr)),(fst(bir_exp_to_sapic_term adr))),Pros,(ProcessNull_tm)))
-				end
+				end*)
 		in
 		    P
 		end
-	    else if (is_BExp_Cast b) then
-		let
+	    else if (is_BExp_Cast b)
+		(*let
 		    val (castt, subexp, sz) = (dest_BExp_Cast) b;
 		in
 		    if (is_BExp_Load subexp)
@@ -218,7 +224,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 			    (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 			end
 		    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
-		end
+		end*) then (sbir_tree_sapic_process sort_vals str)
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 end)
 			 
@@ -232,9 +238,8 @@ end)
 	       ``;
  val b = ``
 	       (BExp_Load (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))
-			  (BExp_BinExp BIExp_Plus
-				       (BExp_Den (BVar "R1" (BType_Imm Bit64)))
-				       (BExp_Const (Imm64 8w))) BEnd_LittleEndian Bit64)``
+			  (BExp_Den (BVar "R1" (BType_Imm Bit64)))
+				       BEnd_LittleEndian Bit64)``
 
 val namestr = "R1";
 

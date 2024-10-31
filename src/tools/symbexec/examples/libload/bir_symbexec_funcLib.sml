@@ -1743,7 +1743,7 @@ fun DH_key vn syst =
     in
 	syst
     end;
-    
+
 
  fun session_key syst =
     let
@@ -1760,10 +1760,6 @@ fun DH_key vn syst =
 	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
 
 	val syst = update_key C_be Fr_CK syst;
-
-	val be_adv = find_adv_name syst;
-
-	val syst = store Fr_CK (mk_BExp_Den(be_adv)) syst; (* update syst *)
 
     in
 	syst
@@ -3176,14 +3172,13 @@ fun HMAC_Send syst =
 	syst
     end;
 *)
-
 fun HMAC_Receive syst =
     let
 
 	val env  = (SYST_get_env  syst);
 	    
 	val key = find_bv_val ("encypt::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``;
+                              env ``BVar "Crypto" (BType_Imm Bit64)``;
 	    
 	val be_adv = find_adv_name syst;
 
@@ -3192,6 +3187,7 @@ fun HMAC_Receive syst =
     in
 	syst
     end;
+
     
 fun Xor syst =
     let
@@ -3620,10 +3616,6 @@ fun Load_file syst =
 	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
 
 	val syst = update_key C_be Fr_CK syst;
-
-	val be_adv = find_adv_name syst;
-
-	val syst = store Fr_CK (mk_BExp_Den(be_adv)) syst; (* update syst *)
 
     in
 	syst

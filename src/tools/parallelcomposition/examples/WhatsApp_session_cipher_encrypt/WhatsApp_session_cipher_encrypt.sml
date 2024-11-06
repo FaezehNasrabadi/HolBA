@@ -30,6 +30,8 @@ open sapic_to_fileLib;
 open bir_symbexec_loopLib;
 open bir_inst_liftingHelpersLib;
 
+
+     
 fun update_n_dict_ ([], n_dict) = n_dict
     | update_n_dict_ (((lbl_tm)::todo), n_dict) =
 	  let
@@ -51,6 +53,7 @@ fun update_n_dict_ ([], n_dict) = n_dict
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
       (DB.fetch "WhatsApp_session_cipher_encrypt" "WhatsApp_session_cipher_encrypt_thm");
+
     
 val bl_dict_    = gen_block_dict prog_tm;
 val prog_lbl_tms_ = get_block_dict_keys bl_dict_;

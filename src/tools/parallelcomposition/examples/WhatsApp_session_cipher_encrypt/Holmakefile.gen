@@ -1,6 +1,6 @@
 # includes
 # ----------------------------------
-DEPENDENCIES   = ../../../symbexec/examples/PreProcess ../../tree ../../sapic ../../translateTosapic ../../prettyPrint
+DEPENDENCIES   = ../../../symbexec/examples/PreProcess ../../tree ../../sapic ../../translateTosapic ../../prettyPrint ../../../scamv
 
 
 # configuration

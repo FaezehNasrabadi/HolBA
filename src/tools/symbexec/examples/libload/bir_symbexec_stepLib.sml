@@ -67,13 +67,13 @@ local
 
       val (exp_tms,_) = listSyntax.dest_list exps_tm;
 
-      val cnd_bv = bir_envSyntax.mk_BVar_string ("observe_cnd", bir_valuesSyntax.BType_Bool_tm);
+      val cnd_bv = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("observe_cnd", bir_valuesSyntax.BType_Bool_tm));
 
       fun fold_exp (exp_tm, (exp_bvs, insert_fun)) =
         let
           val exp_ty = (optionSyntax.dest_some o bir_exp_helperLib.get_type_of_bir_exp) exp_tm
                        handle e => raise wrap_exn "state_exec_observe::typpeofthm not as expected" e;
-          val exp_bv = bir_envSyntax.mk_BVar_string ("observe_exp", exp_ty);
+          val exp_bv = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("observe_exp", exp_ty));
         in
           (exp_bv::exp_bvs, (state_insert_symbval_from_be exp_bv exp_tm) o insert_fun)
         end;
@@ -409,7 +409,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 
 	     val s_tms = (fst o listSyntax.dest_list) stmts;
 
-
+(*
 	     val syst = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
 		     then
 			 if ((not o List.null o fst o listSyntax.dest_list) stmts)
@@ -423,7 +423,7 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 			     end
 			 else syst
 		     else syst;
-		 
+		 *)
 	     val debugOn = false;
 	     val _ = if not debugOn then () else
 		     (print_term bl; print "\n ==================== \n\n");

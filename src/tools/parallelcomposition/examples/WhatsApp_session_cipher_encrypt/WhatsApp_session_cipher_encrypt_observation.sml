@@ -140,17 +140,17 @@ val lbl_tm   = #CFGN_lbl_tm n;
 	val descr  = (valOf o #CFGN_hc_descr) n;
 	val instrDes = (snd o (list_split_pred #" ") o explode) descr;	
 val fun_adr = (List.map (fn x => (fun_address_dict x)) (List.map snd (Redblackmap.listItems n_dict)));
- *)   
+  
 val lbl_tm = ``BL_Address (Imm64 0xEE60B4w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 0xEE6190w)``,“BL_Address (Imm64 0x12BB178w)”];
-(*
 
+ *) 
 val lbl_tm = ``BL_Address (Imm64 0xEE6128w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 0xEE613Cw)``,“BL_Address (Imm64 0xEE61C0w)”];
 
-
+(*
 val stop_lbl_tms = [``BL_Address (Imm64 0x1309AC4w)``,
 		      ``BL_Address (Imm64 0x12E65D0w)``,
 		      ``BL_Address (Imm64 0x12CE4B4w)``,
@@ -209,6 +209,173 @@ val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (l
 val _ = print "\n";
 
 
+open bslSyntax;
+
+fun symbval_eq_to_bexp (bv, symbv) =
+    let
+	val bv_exp = bden bv;
+
+	val bexp =
+	    case symbv of
+		SymbValBE (exp,_) =>
+		beq (bv_exp, exp)
+              | SymbValInterval ((exp1, exp2), _) =>
+		band (ble (exp1, bv_exp), ble (bv_exp, exp2))
+              | _ => raise ERR "symbval_eq_to_bexp" "cannot handle symbolic value type";
+
+    in
+	bexp
+    end;
+
+ fun collect_pred_expsdeps vals (bv, (exps, deps)) =
+      let
+      val symbv = find_bv_val "collect_pred_expsdeps" vals bv;
+      val _ = if true then () else
+              print ("pred: " ^ (symbv_to_string symbv) ^ "\n");
+
+      val deps_delta = deps_of_symbval "collect_pred_expsdeps" symbv;
+      val _ = if true then () else
+              print ("pred_deps: " ^ (List.foldr (fn (x,s) => s ^ "; " ^ (term_to_string x)) "" (Redblackset.listItems deps_delta)) ^ "\n \n");
+
+      val exp =
+       case symbv of
+          SymbValBE (x, _) => x
+        | _ => raise ERR "collect_pred_expsdeps" "cannot handle symbolic value type";
+      
+    in
+      (exp::exps, Redblackset.union(deps_delta, deps))
+      end;
+     
+fun get_pred_exps_syst syst =
+    let
+	val vals  = SYST_get_vals syst;
+	val pred_bvl = SYST_get_pred syst;	  
+
+	val pred_flt = (List.filter (fn a => (String.isSuffix "_cnd" ((fst o dest_BVar_string) a))) pred_bvl);
+	    
+	val (pred_conjs, pred_deps) =
+            List.foldr (collect_pred_expsdeps vals) ([], symbvalbe_dep_empty) pred_flt;
+
+	val pred_conjs_exp = conj_preds_exps (tl pred_conjs) (hd pred_conjs);
+
+	val pred_depsl_ = Redblackset.listItems pred_deps;
+	val pred_depsl  = List.filter (is_bvar_bound vals) pred_depsl_;
+
+	val valsl = List.map (fn bv => (bv, find_bv_val "get_pred_exps_syst" vals bv))
+                             pred_depsl;
+	val vals_eql =
+            List.map symbval_eq_to_bexp valsl;
+
+	val final_exp = conj_preds_exps vals_eql pred_conjs_exp;
+	    
+    in
+	final_exp
+    end
+
+	  
+
+fun get_obs_exps_syst syst =
+let 
+
+    val symb_list = Redblackmap.listItems (SYST_get_vals syst);
+
+    val obs_exp_list = (rev (List.filter (fn (a,_) => (String.isSuffix "observe_exp" ((fst o dest_BVar_string) a))) symb_list));
+
+    val exp_ls = List.map symbval_eq_to_bexp obs_exp_list;
+
+    val exps = conj_preds_exps (tl exp_ls) (hd exp_ls);
+
+in 
+   exps
+end
+
+
+fun exp_to_model exps =
+    let
+	
+	val word_relation = bir_exp_to_wordsLib.bir2bool exps;
+
+	(* val _ = print_term  (word_relation); *)
+	    
+	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
+    in
+	(List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model)
+    end
+
+
+val symb_syst1 = List.nth(systs_noassertfailed,1);
+
+val symb_syst2 = List.nth(systs_noassertfailed,2);
+
+val pred_exps1 = get_pred_exps_syst symb_syst1; 
+
+val obs_exps1 = get_obs_exps_syst symb_syst1;
+    
+val pred_exps2 = get_pred_exps_syst symb_syst2;
+
+val obs_exps2 = get_obs_exps_syst symb_syst2;
+
+
+val obs_exps12 = ``(BExp_BinPred BIExp_Equal
+		      ^obs_exps1
+		      ^obs_exps2
+		     )``; 
+
+(*    
+val exps_vs_p1 = conj_preds_exps [pred_exps1] obs_exps12;
+
+val exps_vs_p2_final = conj_preds_exps [pred_exps2] exps_vs_p1;
+
+
+val exps_vs_p2_final = conj_preds_exps [pred_exps2] pred_exps1;
+    
+val uls = exp_to_model obs_exps12;
+ *)
+
+val uls = exp_to_model pred_exps1;
+val uls = exp_to_model pred_exps2;
+    
+
+fun subset_sval_cval exp (sval,cval)  =
+    let
+	val subexp1 = mk_BExp_Den(mk_BVar_string (sval,“BType_Imm Bit64”));
+	val subexp2 = mk_BExp_Const(mk_Imm64(cval))
+	val ref_exp =  subst[subexp1 |-> subexp2] exp;
+    in
+	ref_exp
+    end;
+
+    
+		 
+   (*       
+val sval = "sy_SP_EL0";
+val cval = “0x800060C0w”;
+  open bir_expSyntax;
+  open bir_envSyntax;
+  open bir_smtLib;
+
+  fun proc_preds (vars, asserts) pred =
+    List.foldr (fn (exp, (vl1,al)) =>
+      let val (_,vl2,a) = bexp_to_smtlib [] vl1 exp in
+        (vl2, a::al)
+      end) (vars, asserts) pred;
+
+
+val vars    = Redblackset.empty smtlib_vars_compare;
+	val asserts = [];
+
+	(* process the predicate conjuncts *)
+	val (vars, asserts) = proc_preds (vars, asserts) pred_conjs;
+
+	(* process the symbolic values *)
+	val (vars, asserts) = proc_preds (vars, asserts) vals_eql;
+val result = querysmt bir_smtLib_z3_prelude vars asserts;
+
+val ops_lists = List.map get_obs_exps_syst systs_noassertfailed;
+ 
+val uls = List.map exp_to_model ops_lists;
+
+
 
 fun get_obs_exps_syst syst =
 let 
@@ -226,31 +393,41 @@ end
 val ops_lists = List.map get_obs_exps_syst systs_noassertfailed;
     
 
-   (* 
 
 
- open bslSyntax;
 
-  fun symbval_eq_to_bexp (bv, symbv) =
+
+val word_relation = bir_exp_to_wordsLib.bir2bool exps;
+
+	(* val _ = print_term  (word_relation); *)
+	    
+	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
+
+	(* val _ = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model); *)
+
+	val tgt_val = (List.find (fn (x,y) => x = "sy_target") model);
+
+
+val symb_syst1 = List.nth(systs_noassertfailed,1);
+val symb_syst2 = List.nth(systs_noassertfailed,2);
+
+check_feasible symb_syst2
+
+
+
+fun conj_preds_exps tms exp =
     let
-      val bv_exp = bden bv;
 
-      val bexp =
-       case symbv of
-          SymbValBE (exp,_) =>
-            beq (bv_exp, exp)
-        | SymbValInterval ((exp1, exp2), _) =>
-            band (ble (exp1, bv_exp), ble (bv_exp, exp2))
-        | _ => raise ERR "symbval_eq_to_bexp" "cannot handle symbolic value type";
-      
-      (* val _ = print (term_to_string bv); *)
-      (* val _ = print "\n"; *)
-      (* val _ = print (term_to_string bexp); *)
-      (* val _ = print "\n"; *)
+	val exps = ``(BExp_BinExp BIExp_And
+		      ^exp
+		      ^(hd tms)
+		     )``;   
+
     in
-	bexp
-    end;
-
+	if (List.null (tl tms))
+	     then  exps
+	else (conj_preds_exps (tl tms) exps)
+    end;  
 
 fun get_obs_exps_syst syst =
 let 
@@ -267,14 +444,19 @@ end
 
 List.map get_obs_exps_syst systs_noassertfailed
 
-listSyntax.mk_list
 
-List.map symbval_eq_to_bexp obs_exp_list
+val syst = hd systs_noassertfailed;
+val obs_exp_list = (rev (List.filter (fn (a,_) => (String.isSuffix "observe_exp" ((fst o dest_BVar_string) a))) symb_list));
+
+val exp_ls = List.map symbval_eq_to_bexp obs_exp_list
+
+val exps = conj_preds_exps (tl exp_ls) (hd exp_ls);
+
 
 Redblackmap.foldl
 
 HOL_Interactive.toggle_quietdec(); 
-open Term;
+open List;
 HOL_Interactive.toggle_quietdec(); 
 
 List.filter ()

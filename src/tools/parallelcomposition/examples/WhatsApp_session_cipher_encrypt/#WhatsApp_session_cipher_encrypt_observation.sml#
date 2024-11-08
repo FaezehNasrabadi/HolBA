@@ -319,7 +319,11 @@ fun mem_constraint [] = ``T``
     in
 	mc_conj
     end
-    
+(*
+
+val model = [("v22_sy_MEM",“HD”),("v19_92_observe_exp",“15622456”)]
+
+*)    
 fun exp_to_model exps =
     let
 	

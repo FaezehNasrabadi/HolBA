@@ -294,31 +294,7 @@ in
    exps
 end
 
-fun mem_constraint [] = ``T``
-  | mem_constraint mls =
-    let fun is_addr_numeral tm = tm |> pairSyntax.dest_pair |> fst |> (fn x => (rhs o concl o EVAL) ``w2n ^x``) |> numSyntax.is_numeral
-	fun adjust_prime s =
-            if String.isSuffix "_" s
-            then String.map (fn c => if c = #"_" then #"'" else c) s
-            else s
-	fun mk_cnst vname vls =
-	    let
-		val toIntls = (snd o finite_mapSyntax.strip_fupdate) vls
-		val mem = mk_var (adjust_prime vname ,Type`:word64 |-> word8`)
-		val memconstraint = map (fn p => let val (t1,t2) = pairSyntax.dest_pair p
-						 in
-						     ``^mem ' (^t1) = ^t2``
-						 end) toIntls;
-		val mc_conj = foldl (fn (a,b) => mk_conj (a,b)) (hd memconstraint) (tl memconstraint);
-	    in
-		(``~(^mc_conj)``, toIntls)
-	    end
 
-	val (hc, hv)::(tc, tv)::[] = (map (fn (vn, vl) =>  mk_cnst vn vl ) mls)
-	val mc_conj = mk_conj ((if is_addr_numeral (hd hv) then hc else ``T``), (if is_addr_numeral (hd tv) then tc else ``T``))
-    in
-	mc_conj
-    end
     
 fun exp_to_model exps =
     let
@@ -328,33 +304,9 @@ fun exp_to_model exps =
 	(* val _ = print_term  (word_relation); *)
 	    
 	val model = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation;
-
-	(* val u = (List.map (fn (x,y) => (print (x^" : "^(term_to_string y) ^"\n"))) model); *)
-
-	val (ml, regs) = List.partition (fn el =>  (String.isSubstring (#1 el) "MEM_")) model;
-	val (primed, nprimed) = List.partition (bir_utilLib.isPrimedRun o fst) model;
-	val primed_rm = List.map (fn (r,v) => (bir_utilLib.remove_prime r,v)) primed;
-	val s1 = bir_utilLib.to_sml_Arbnums nprimed;
-	val s2 = bir_utilLib.to_sml_Arbnums primed_rm;
-
-	fun mk_var_mapping s =
-            let fun mk_eq (a,b) =
-                    let fun adjust_prime s =
-                            if String.isSuffix "_" s
-                            then String.map (fn c => if c = #"_" then #"'" else c) s
-                            else s;
-                        val va = mk_var (adjust_prime a,``:word64``);
-                    in ``^va = ^b``
-                    end;
-            in list_mk_conj (map mk_eq s) end;
-
-        val reg_constraint = ``~^(mk_var_mapping (regs))``;
-	val mem_constraint = mem_constraint ml;
-	val new_constraint = mk_conj (reg_constraint, mem_constraint);
-
-	    
+  
     in
-	(s1,s2,new_constraint)
+	model
     end
 
 (*   
@@ -463,10 +415,10 @@ fun obs_equal symb_syst1 symb_syst2 =
 
 	val word_relation = bir_exp_to_wordsLib.bir2bool exps_vs_p2_final;
 
-	val equal = ((Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation; true)
-			handle HOL_ERR e => false);
+	val (model,equal) = ((Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation, true)
+			handle HOL_ERR e => ([],false));
     in
-	equal
+	(model,equal) 
     end
     
 fun subset_sval_cval exp (sval,cval)  =
@@ -500,55 +452,79 @@ val full_product = triangleWith (fn x => fn y => { a_run = x, b_run = y})
                                  systs_noassertfailed_run_a systs_noassertfailed_run_b;
 
 
-val spec = hd full_product;
-
-val symb_syst1 = (#a_run spec);
-
-val symb_syst2 = (#b_run spec);
     
 (* roundrobin_list full_product 
     open embexp_logsLib;
-    open bir_scamv_driverLib;*)
-val obs_eq_systs = (List.filter (fn spec => (obs_equal (#a_run spec) (#b_run spec))) full_product);
+    open bir_scamv_driverLib;
+
+(String.isSubstring "9_R22" "v10_9_R22")
+
+*)
+val obs_eq_systs = (List.filter (fn spec => snd(obs_equal (#a_run spec) (#b_run spec))) full_product);
 
 val _ = print ("number of \"observation equal\" final state pairs found: " ^ (Int.toString (length obs_eq_systs)));
 val _ = print "\n";
 
 
+fun sval_cval_bir (sval,cval)  =
+    if ((fst o dest_type o type_of) cval) = "fmap" then
+	let
+	    val _ = (print o fst o dest_type o type_of) cval;
+	    val deep = Redblackset.empty Term.compare;
+	    val var = mk_BVar_string (sval,“BType_Imm Bit64”);
+	    val value = (SymbValBE (“BExp_Const (Imm64 0x0w)”,deep));
+	in
+	    (var,value)
+	end
+    else
+	let
+	    val _ = (print o fst o dest_type o type_of) cval;
+	    val deep = Redblackset.empty Term.compare;
+	    val var = mk_BVar_string (sval,“BType_Imm Bit64”);
+	    val value = (SymbValBE (mk_BExp_Const(mk_Imm64(cval)),deep));
+	in
+	    (var,value)
+	end
+    
 
-fun rel_get_model word_relation =
+(* Redblackmap.listItems vals1 
+Redblackmap.insertList (vals1,)
+*)    
+fun add_model_obs_equal symb_syst1 symb_syst2 =
     let
-      fun to_new_name n =
-        "sv_" ^ (if String.isSuffix "'" n then (String.substring(n, 0, (String.size n)-1) ^ "_p") else n);
-      fun var_to_new t =
-        let
-          val (vn, vt) = dest_var t;
-        in
-          (t, mk_var (to_new_name vn, vt))
-        end;
-      fun rev_model_name rev_maplist (n_new, v) =
-        let
-          val m_o = List.find (fn (_, x) => x = n_new) rev_maplist;
-          val n = case m_o of
-             SOME (n,_) => n
-           | NONE => raise ERR "scamv_get_model" "unexpected error";
-        in
-          (n, v)
-        end;
+	val model = fst(obs_equal symb_syst1 symb_syst2);
 
-      val vars = free_vars word_relation;
-      val vars_to_new = List.map var_to_new vars;
-      val varnames_to_new = List.map (fn (a,b) => ((fst o dest_var) a, (fst o dest_var) b)) vars_to_new;
+	val mlist = List.map sval_cval_bir model;
+	    
+	val vals1 = SYST_get_vals symb_syst1;
 
-      val word_relation_newnames = subst (List.map (|->) vars_to_new) word_relation;
-      val model_newnames = Z3_SAT_modelLib.Z3_GET_SAT_MODEL word_relation_newnames;
-      val model = List.map (rev_model_name varnames_to_new) model_newnames;
+	val vals2 = SYST_get_vals symb_syst1;
+	    
+	val syst1 = SYST_update_vals (Redblackmap.insertList (vals1,mlist)) symb_syst1;
 
+	val syst2 = SYST_update_vals (Redblackmap.insertList (vals2,mlist)) symb_syst2;
+	    
     in
-      model
-    end;
+	{ a_run = syst1, b_run = syst2}
+    end
+    
+
+val syst_w_conc_vals = (List.map (fn spec => (add_model_obs_equal  (#a_run spec) (#b_run spec))) obs_eq_systs);
 
 
+val obs_eq_systs = (List.filter (fn spec => snd(obs_equal (#a_run spec) (#b_run spec))) syst_w_conc_vals);
+
+val _ = print ("number of \"observation equal\" final state pairs found: " ^ (Int.toString (length obs_eq_systs)));
+val _ = print "\n";
+  (*  
+val b =  “0”;
+
+(print o fst o dest_type o type_of) b
+val spec = hd full_product;
+
+val symb_syst1 = (#a_run spec);
+
+val symb_syst2 = (#b_run spec);
     
 val pred_exps1 = get_pred_exps_syst symb_syst1; 
 
@@ -570,10 +546,10 @@ val exps_vs_p1 = conj_preds_exps [pred_exps1] obs_exps12;
 val exps_vs_p2_final = conj_preds_exps [pred_exps2] exps_vs_p1;
 
 
-val md =  exp_to_model exps_vs_p2_final;
+
     
     
-  (*        
+      
 fun enumerate_relation path_dom static_obs_dom dynamic_obs_dom =
     let (* compute all interesting path pairs *)
         val paths = triangleWith (fn x => fn y => { a_run = x, b_run = y})
@@ -730,7 +706,7 @@ val exps = conj_preds_exps (tl exp_ls) (hd exp_ls);
 Redblackmap.foldl
 
 HOL_Interactive.toggle_quietdec(); 
-open List;
+open Redblackmap;
 HOL_Interactive.toggle_quietdec(); 
 
 List.filter ()

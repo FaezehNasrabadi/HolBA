@@ -234,7 +234,7 @@ fun symbval_eq_to_bexp (bv, symbv) =
 
  fun collect_pred_expsdeps vals (bv, (exps, deps)) =
       let
-      val symbv = find_bv_val "collect_pred_expsdeps" vals bv;
+      val symbv = (find_bv_val "collect_pred_expsdeps" vals bv) handle _ => (SymbValBE ((mk_BExp_Den bv),(Redblackset.empty Term.compare))) ;
       val _ = if true then () else
               print ("pred: " ^ (symbv_to_string symbv) ^ "\n");
 
@@ -465,20 +465,91 @@ val obs_eq_systs = (List.filter (fn spec => snd(obs_equal (#a_run spec) (#b_run 
 val _ = print ("number of \"observation equal\" final state pairs found: " ^ (Int.toString (length obs_eq_systs)));
 val _ = print "\n";
 
+(*val cval = ``(FUN_FMAP (K (0w :word8) :word64 -> word8) 𝕌(:word64) |+
+((0x80008015w :word64),(0w :word8)) |+ ((0x80004647w :word64),(0w :word8)) |+
+((0x80004640w :word64),(0w :word8)) |+
+((0x80008013w :word64),(128w :word8)) |+
+((0x80004644w :word64),(0w :word8)) |+
+((0x80004643w :word64),(128w :word8)) |+
+((0x80008017w :word64),(0w :word8)) |+
+((0x80008012w :word64),(128w :word8)) |+
+((0x80004645w :word64),(0w :word8)) |+ ((0x80008010w :word64),(8w :word8)) |+
+((0x8080004Ew :word64),(1w :word8)) |+
+((0x80004641w :word64),(128w :word8)) |+
+((0x80008016w :word64),(0w :word8)) |+ ((0x80008014w :word64),(0w :word8)) |+
+((0x80004646w :word64),(0w :word8)) |+ ((0x80004642w :word64),(0w :word8)) |+
+((0x80008011w :word64),(0w :word8))) : 64 word |-> 8 word``
+open HolKernel Parse;
+  open bslSyntax;
+  open bir_exp_to_wordsLib stringSyntax wordsSyntax*)
+
+fun syntax_fns n d m = HolKernel.syntax_fns {n = n, dest = d, make = m} "finite_map";
+
+val syntax_fns2 = syntax_fns 2 HolKernel.dest_binop HolKernel.mk_binop;
+
+val (FUN_FMAP_tm, mk_FUN_FMAP, dest_FUN_FMAP, is_FUN_FMAP)  = syntax_fns2 "FUN_FMAP";
+
+val expected_mem_type = ``:word64 |-> word8``;
+val expected_K_tm = ``K : 8 word -> 64 word -> 8 word``;
+val expected_U_tm = ``UNIV :word64->bool``;
+
+  fun is_valid_to_sml_Arbnums_mem tm =
+    finite_mapSyntax.is_fupdate tm orelse
+    finite_mapSyntax.is_fempty tm orelse
+    is_FUN_FMAP tm;
+open wordsSyntax;
+  fun to_sml_Arbnum_map tm =
+    if finite_mapSyntax.is_fupdate tm then
+      let
+        val (tm_base, vlsW) = finite_mapSyntax.strip_fupdate tm;
+
+        val (mem_dict, mem_default) = to_sml_Arbnum_map tm_base;
+        val mem_updates = List.map (fn p =>
+          let val (ad, vl) = pairSyntax.dest_pair p
+          in (dest_word_literal ad, dest_word_literal vl)
+          end) vlsW;
+      in
+        (Redblackmap.insertList (mem_dict, mem_updates), mem_default)
+      end
+    else if finite_mapSyntax.is_fempty tm then
+      (Redblackmap.fromList Arbnum.compare [], Arbnum.zero)
+    else if is_FUN_FMAP tm then
+      let
+        val (map_f, map_P) = dest_FUN_FMAP tm;
+      in
+        if identical map_P expected_U_tm andalso
+           is_comb map_f andalso
+           identical ((fst o dest_comb) map_f) expected_K_tm then
+          let
+            val (_, default_val) = dest_comb map_f;
+          in
+            (Redblackmap.fromList Arbnum.compare [], (dest_word_literal default_val))
+          end
+        else raise ERR "to_sml_Arbnum_map" "unexpected base map"
+      end
+    else
+	raise ERR "to_sml_Arbnum_map" "unexpected fmap";
+
+
 
 fun sval_cval_bir (sval,cval)  =
     if ((fst o dest_type o type_of) cval) = "fmap" then
 	let
-	    val _ = (print o fst o dest_type o type_of) cval;
+	    (* val _ = (print o fst o dest_type o type_of) cval; *)
+	    val (mem_dict,default_val) = to_sml_Arbnum_map cval;
+	    val memtype = inst [Type.alpha |-> ``:num``, Type.beta |-> ``:num``] finite_mapSyntax.fempty_t;
+	    val mem_fun =	List.foldr (fn ((a,v), t) => finite_mapSyntax.mk_fupdate
+                (t, pairSyntax.mk_pair (numSyntax.mk_numeral a, numSyntax.mk_numeral v))
+            ) memtype (Redblackmap.listItems mem_dict);
+	    val bv_mem = ``BVar "sy_MEM" (BType_Mem Bit64 Bit8)``;
 	    val deep = Redblackset.empty Term.compare;
-	    val var = mk_BVar_string (sval,“BType_Imm Bit64”);
-	    val value = (SymbValBE (“BExp_Const (Imm64 0x0w)”,deep));
+	    val value = (SymbValBE (“BExp_MemConst Bit64 Bit8 ^mem_fun”,deep));
 	in
-	    (var,value)
+	    (bv_mem,value)
 	end
     else
 	let
-	    val _ = (print o fst o dest_type o type_of) cval;
+	    (* val _ = (print o fst o dest_type o type_of) cval; *)
 	    val deep = Redblackset.empty Term.compare;
 	    val var = mk_BVar_string (sval,“BType_Imm Bit64”);
 	    val value = (SymbValBE (mk_BExp_Const(mk_Imm64(cval)),deep));
@@ -511,12 +582,42 @@ fun add_model_obs_equal symb_syst1 symb_syst2 =
 
 val syst_w_conc_vals = (List.map (fn spec => (add_model_obs_equal  (#a_run spec) (#b_run spec))) obs_eq_systs);
 
+val _ = print ("number of final state with conc values : " ^ (Int.toString (length syst_w_conc_vals)));
+val _ = print "\n";
 
+val systs_updated_pc = (List.map (fn spec =>
+				    { a_run = SYST_update_pc lbl_tm (#a_run spec) ,
+				      b_run = SYST_update_pc lbl_tm (#b_run spec)}
+								     ) syst_w_conc_vals);
+			   
+val symb_exec_wit_init_conc_systs = (List.map (fn spec =>
+				    { a_run = (symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [(#a_run spec)] stop_lbl_tms adr_dict []),
+				      b_run = (symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [(#b_run spec)] stop_lbl_tms adr_dict [])}
+				    ) systs_updated_pc);
+    
+val _ = print ("number of final symbolic state with initial conc values : " ^ (Int.toString (length symb_exec_wit_init_conc_systs)));
+val _ = (List.map (fn spec => print ("\n a = "^(Int.toString (length (#a_run spec)))^" , b = "^(Int.toString (length (#b_run spec)))^"\n")
+		  ) symb_exec_wit_init_conc_systs);
+val _ = print "\n";
+
+
+val full_product_symb_w_init_conc = List.map (fn spec => (triangleWith (fn x => fn y => { a_run = x, b_run = y})
+                                 (#a_run spec) (#b_run spec))) symb_exec_wit_init_conc_systs;
+
+val _ = print ("number of final symbolic state with initial conc state : " ^ (Int.toString (length full_product_symb_w_init_conc)));
+val _ = List.map (fn x => print ("\n"^(Int.toString (length x))^"\n")) full_product_symb_w_init_conc;
+
+val obs_eq_systs_w_init_conc = List.map (List.filter (fn spec => snd(obs_equal (#a_run spec) (#b_run spec)))) full_product_symb_w_init_conc;
+
+val _ = print ("number of \"observation equal\" final state pairs from conc state found: " ^ (Int.toString (length obs_eq_systs_w_init_conc)));
+val _ = List.map (fn x => print ("\n"^(Int.toString (length x))^"\n")) obs_eq_systs_w_init_conc;   
+    (*  
+wordsSyntax.dest_word_literal
 val obs_eq_systs = (List.filter (fn spec => snd(obs_equal (#a_run spec) (#b_run spec))) syst_w_conc_vals);
 
 val _ = print ("number of \"observation equal\" final state pairs found: " ^ (Int.toString (length obs_eq_systs)));
 val _ = print "\n";
-  (*  
+  
 val b =  “0”;
 
 (print o fst o dest_type o type_of) b
@@ -706,7 +807,7 @@ val exps = conj_preds_exps (tl exp_ls) (hd exp_ls);
 Redblackmap.foldl
 
 HOL_Interactive.toggle_quietdec(); 
-open Redblackmap;
+open finite_mapSyntax;
 HOL_Interactive.toggle_quietdec(); 
 
 List.filter ()

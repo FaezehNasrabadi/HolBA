@@ -14,7 +14,7 @@ val arch_str         = "arm8";
 
 val dafilename = "alice.da";
 
-val prog_range       = ((Arbnum.fromInt 0x00000000000450c), (Arbnum.fromInt 0x000000001b7ba37));
+val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x65));
 
 val _ = print_with_style_ [Bold, Underline] ("Lifting " ^ dafilename ^ " (" ^ arch_str ^ ")\n");
 
@@ -27,7 +27,7 @@ val _ = save_thm ("Alice_thm", thm);
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
   (DB.fetch "Alice" "Alice_thm");
-
+(*
 fun add_obs_to_bir embexp_params_memory current_prog =
     let 
 	open bir_obs_modelTheory;
@@ -51,10 +51,9 @@ fun add_obs_to_bir embexp_params_memory current_prog =
 	lifted_prog_w_obs
         end;
         
-val embexp_params_memory = ((Arbnum.fromInt 0x00000000000450c), (Arbnum.fromInt 0x000000001b7ba37));
 
-val prog_w_obs = add_obs_to_bir embexp_params_memory prog_tm;
-
+val prog_w_obs = add_obs_to_bir prog_range prog_tm;
+*)
 
 val _ = export_theory();
 

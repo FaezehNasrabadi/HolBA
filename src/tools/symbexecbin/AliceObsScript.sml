@@ -14,7 +14,7 @@ val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
   (DB.fetch "Alice" "Alice_thm");
   
-val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x65));
+val prog_range       =  ((Arbnum.fromInt 0x690), (Arbnum.fromInt 0xBB1));
 
 val entry = Arbnum.fromInt 0;
     

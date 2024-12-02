@@ -1,24 +1,17 @@
 The cryptographic functions names are as follows:
 
-senc
-sdec
-mac
-get_mac
-
-
-
-abort@plt
-__stack_chk_fail@plt
-
-get_nonce
 
 
 
 
+memcpy
 
-send_nonce
-send_cipher
-send_mac
+
+
+
+otp
+RAND_bytes
+xor
 
 
 
@@ -32,4 +25,11 @@ send_mac
 
 
 
-strcmp@plt
+
+
+
+
+
+
+
+

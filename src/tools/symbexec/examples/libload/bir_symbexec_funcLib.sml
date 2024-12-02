@@ -1,6 +1,6 @@
 structure bir_symbexec_funcLib =
 struct
-
+val bir_symbexec_step_execstep_spec = ref true;
 local
     
     open bir_symbexec_stateLib;
@@ -713,9 +713,12 @@ fun update_symbval new_be Fr_bv syst =
 
 fun store_link bl_stmts syst =
     let
-	val s_tm = (fst o listSyntax.dest_list) bl_stmts;
-	val s_tm_0 = List.nth (s_tm, 0);
-	val (bv, be) = dest_BStmt_Assign s_tm_0; (* extract bir expression *)
+	val s_tms = (fst o listSyntax.dest_list) bl_stmts;
+	    
+	val s_tm_ = if (!bir_symbexec_step_execstep_spec)
+					    then List.nth (s_tms, 1)
+						 else List.nth (s_tms, 0);
+	val (bv, be) = dest_BStmt_Assign s_tm_; (* extract bir expression *)
 	val Fr_bv = get_bvar_fresh bv; (* generate a fresh link *)
 	val syst =  update_envvar bv Fr_bv syst; (* update environment *)
 	val symbv = bir_symbexec_coreLib.compute_valbe be syst;

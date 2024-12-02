@@ -9,6 +9,8 @@ send_nonce
 get_cipher
 get_mac
 strcmp@plt
+compare_mac
+compare_nonces
 sdec
 senc
 mac

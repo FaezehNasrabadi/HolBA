@@ -106,9 +106,9 @@ val prog_vars = mac::prog_vars;
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict n_dict_org;
     
-val lbl_tm = ``BL_Address (Imm64 2440w)``;
+val lbl_tm = ``BL_Address (Imm64 2424w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 2696w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 2664w)``,``BL_Address (Imm64 2648w)``,``BL_Address (Imm64 2656w)``,``BL_Address (Imm64 2672w)``];
     
 val syst = init_state lbl_tm prog_vars;
 
@@ -133,3 +133,13 @@ val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (leng
 val _ = print "\n";     
 val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
 val _ = print "\n";
+
+
+val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
+                         systs_noassertfailed;
+
+val _ = print "Get predlists";
+val _ = print "\n";    
+
+
+    (*Next : Add observe_exp to path *)

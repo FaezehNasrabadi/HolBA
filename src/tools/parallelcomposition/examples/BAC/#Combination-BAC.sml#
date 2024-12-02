@@ -138,6 +138,6 @@ val bl = “
                   BStmt_Jmp (BLE_Label (BL_Address (Imm64 1688w)))|>
 	     ”
 val (adr,stmt,est) = dest_bir_block bl;
-    (dest_BL_Address o rand o concl) (EVAL adr)
+    (dest_BL_Address o (rand o concl) (EVAL adr)
 
     val bbla = dest_BL_Label_string adr

@@ -97,7 +97,6 @@ open bir_program_labelsTheory
 open bir_expSyntax
 open bir_block_collectionLib;
 open bir_cfgLib;
-open bir_program_labelsSyntax;
 (* ================================================ *)
 
     type 'a stack = 'a list;
@@ -170,7 +169,7 @@ open bir_program_labelsSyntax;
 
 	    val callstack = if cfg_nodetype_is_call n_type
 			    then case n_type of
-				     CFGNT_Call [e] => push (mk_BL_Address_HC (e,(stringSyntax.fromMLstring (valOf descr_o)))) callstack
+				     CFGNT_Call [e] => push (mk_BL_Address e) callstack
 				   | _ => raise ERR "callstack" "more than one call address"
 			    else callstack;
 
@@ -248,7 +247,7 @@ open bir_program_labelsSyntax;
                   end;
           fun get_block_label block =
               let val (lbl,_,_) = dest_bir_block block
-              in (*(rand o concl) (EVAL lbl)*) lbl end;
+              in (rand o concl) (EVAL lbl) end;
 
           val blocks = collect_blocks (depth-1) first_block;
           val branch_labels = List.map get_block_label blocks;
@@ -510,20 +509,7 @@ open bir_program_labelsSyntax;
         in
 	  (lift_string string_ty ("0x" ^ vstr ^ "*"))
 	end
-fun mk_shadow_addr_hc exp =
-	let
-	  fun problem exp msg = problem_gen "mk_shadow_addr_hc" exp msg;
-	in
-	  if is_BL_Address_HC exp then
-	    let
-	      val (sz, wv) = (gen_dest_Imm o fst o dest_BL_Address_HC) exp;
-	      val primed_wv = primed_word_literal wv;
-            in
-	      mk_BL_Label primed_wv
-            end
-	  else
-	    problem exp "the expression is not a bir address: "
-	end
+
     fun mk_shadow_addr exp =
 	let
 	  fun problem exp msg = problem_gen "mk_shadow_addr" exp msg;
@@ -543,9 +529,7 @@ fun mk_shadow_addr_hc exp =
 	let
 	  fun problem exp msg = problem_gen "mk_shadow_label" exp msg;
 	in
-	  if is_BL_Address_HC lbl then
-	      mk_shadow_addr_hc lbl
-	      else if is_BL_Address lbl then
+	  if is_BL_Address lbl then
 	    mk_shadow_addr lbl
 	  else if is_BL_Label lbl then
 	    let
@@ -793,7 +777,7 @@ fun mk_shadow_addr_hc exp =
                  | NONE => false;
        fun get_block_label block =
            let val (lbl,_,_) = dest_bir_block block
-           in (*(rand o concl) (EVAL lbl)*) lbl end;
+           in (rand o concl) (EVAL lbl) end;
        val targets = List.map get_block_label (List.filter block_filter blocks);
        val (target, pred_target) =
 	   (* NOTE: now we target the first conditional branch *)

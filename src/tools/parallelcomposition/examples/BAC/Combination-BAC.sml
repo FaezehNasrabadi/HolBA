@@ -27,7 +27,6 @@ open messagesSyntax;
 open tree_to_processLib;
 open  sapic_to_fileLib;
 open bir_symbexec_loopLib;
-
 open bossLib;
 open PPBackEnd;
 open boolLib pairLib;
@@ -37,7 +36,6 @@ open gcc_supportLib;
 open bir_obs_modelTheory;
 open bir_obs_modelLib;
 open AliceTheory;
-
     
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
@@ -74,19 +72,18 @@ val mem_bounds =
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
 val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry;
+
+
+val bl_dict_org    = gen_block_dict prog_tm;
+val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
+val n_dict_org = bir_cfgLib.cfg_build_node_dict bl_dict_org prog_lbl_tms_org;   
     
-(*
-val prog_w_obs =
-  concl
-      (DB.fetch "AliceObs" "Alice_Spec_Obs_thm");
-    Error
-val prog_bls = (fst o dest_list o is_BirProgram prog_w_obs ;*)
-    
-val bl_dict_    = gen_block_dict prog_w_obs;
-val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
+val bl_dict_spec    = gen_block_dict prog_w_obs;
+val prog_lbl_tms_spec = get_block_dict_keys bl_dict_spec;
+val n_dict_spec = bir_cfgLib.cfg_build_node_dict bl_dict_spec prog_lbl_tms_spec;
 
 val prog_vars = gen_vars_of_prog prog_w_obs;
-
+    
 val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
 
 val prog_vars = adv_mem::prog_vars;
@@ -102,8 +99,6 @@ val prog_vars = op_mem::prog_vars;
 val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
 
 val prog_vars = crypto::prog_vars;
-    
-val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
 val adr_dict = Redblackmap.mkDict Term.compare : (term, string) Redblackmap.dict;
 
@@ -120,24 +115,17 @@ val init_syst = state_add_preds "init_pred" pred_conjs syst;
 val _ = print "initial state created.\n\n";
 
 val cfb = false;
-		 
-val systs_run_a = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [init_syst] stop_lbl_tms adr_dict [];
+    
+val systs = symb_exec_to_stop (abpfun cfb) n_dict_org bl_dict_spec [init_syst] stop_lbl_tms adr_dict [];
 
+val _ = print "\n\n";
+val _ = print "finished exploration of all paths.\n\n";
+val _ = print ("number of stopped symbolic execution states: " ^ (Int.toString (length systs)));
+val _ = print "\n\n";
 
-open bir_program_labelsSyntax;
-     
-(fst o dest_BL_Address_HC) adr
-
-val bl = “
- <|bb_label :=
-                  BL_Address_HC (Imm64 1684w) "910003FD (mov x29, sp)";
-                bb_statements :=
-                  [BStmt_Assign (BVar "R29" (BType_Imm Bit64))
-                     (BExp_Den (BVar "SP_EL0" (BType_Imm Bit64)))];
-                bb_last_statement :=
-                  BStmt_Jmp (BLE_Label (BL_Address (Imm64 1688w)))|>
-	     ”
-val (adr,stmt,est) = dest_bir_block bl;
-    (dest_BL_Address o rand o concl) (EVAL adr)
-
-    val bbla = dest_BL_Label_string adr
+val (systs_noassertfailed, systs_assertfailed) =
+    List.partition (fn syst => not (identical (SYST_get_status syst) BST_AssertionViolated_tm)) systs;
+val _ = print ("number of \"assert failed\" paths found: " ^ (Int.toString (length systs_assertfailed)));
+val _ = print "\n";     
+val _ = print ("number of \"no assert failed\" paths found: " ^ (Int.toString (length systs_noassertfailed)));
+val _ = print "\n";

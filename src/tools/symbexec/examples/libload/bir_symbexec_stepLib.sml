@@ -1,6 +1,8 @@
 structure bir_symbexec_stepLib =
 struct
 
+val bir_symbexec_step_execstep_spec = ref true;
+    
 local
   open bir_symbexec_stateLib;
   open bir_symbexec_coreLib;
@@ -482,21 +484,23 @@ fun symb_exec_normal_block abpfun n_dict bl_dict syst =
 
 	     val s_tms = (fst o listSyntax.dest_list) stmts;
 
-(*
+
 	     val syst = if bir_symbexec_oracleLib.is_function_call n_dict lbl_tm
 		     then
 			 if ((not o List.null o fst o listSyntax.dest_list) stmts)
 			 then
 			     let
-				 val s_tm_0 = List.nth (s_tms, 0);
-				 val (bv, be) = dest_BStmt_Assign s_tm_0;
+				 val s_tm = if (!bir_symbexec_step_execstep_spec)
+					    then List.nth (s_tms, 1)
+						 else List.nth (s_tms, 0);
+				 val (bv, be) = dest_BStmt_Assign s_tm;
 				 val indjmps = SYST_get_indjmp syst;   
 			     in
 				 SYST_update_indjmp (be::indjmps) syst
 			     end
 			 else syst
 		     else syst;
-		 *)
+		 
 	     val debugOn = false;
 	     val _ = if not debugOn then () else
 		     (print_term bl; print "\n ==================== \n\n");

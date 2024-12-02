@@ -100,8 +100,12 @@ val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
 
 val prog_vars = crypto::prog_vars;
 
-val adr_dict = Redblackmap.mkDict Term.compare : (term, string) Redblackmap.dict;
+val mac = “BVar "MAC" (BType_Imm Bit64)”;
 
+val prog_vars = mac::prog_vars;
+    
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict n_dict_org;
+    
 val lbl_tm = ``BL_Address (Imm64 2440w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 2696w)``];

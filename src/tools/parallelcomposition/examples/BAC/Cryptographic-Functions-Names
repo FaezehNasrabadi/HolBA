@@ -1,29 +1,24 @@
 The cryptographic functions names are as follows:
 
+senc
+sdec
+mac
+get_mac
+strcmp
+
+
+
+__stack_chk_fail
+
+get_nonce
 
 
 
 
-memcpy
-
-
-
-
-otp
-RAND_bytes
-xor
-
-
-
-
-
-
-
-
-
-
-
-
+compare_mac
+send_nonce
+send_cipher
+send_mac
 
 
 
@@ -33,3 +28,8 @@ xor
 
 
 
+
+
+
+
+compare_nonces

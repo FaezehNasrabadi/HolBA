@@ -110,6 +110,14 @@ val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
 
 val prog_vars = crypto::prog_vars;
 
+val pars = “BVar "Pars" (BType_Imm Bit64)”;
+
+val prog_vars = pars::prog_vars;
+
+val nonce = “BVar "Nonce" (BType_Imm Bit64)”;
+
+val prog_vars = nonce::prog_vars;
+    
 val mac = “BVar "MAC" (BType_Imm Bit64)”;
 
 val prog_vars = mac::prog_vars;

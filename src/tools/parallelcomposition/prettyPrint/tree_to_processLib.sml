@@ -129,9 +129,9 @@ fun bir_exp_symbvar_to_symbval vals_lis pred_be =
 fun sbir_tree_sapic_process sort_vals tree =
     case tree of
 	VLeaf => ProcessNull_tm
-      | VBranch ((a,b),lstr,rstr)  => mk_ProcessComb((mk_CondEq ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+      | VBranch ((a,b),lstr,rstr)  => (* mk_ProcessComb((mk_CondEq ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
       (* mk_ProcessComb (NDC_tm,(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
-	(*if (is_BExp_Den b) then
+	if (is_BExp_Den b) then
 	let
 	     val be =  bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b));
 	 in
@@ -146,13 +146,13 @@ fun sbir_tree_sapic_process sort_vals tree =
 	     else
 		  mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 	 end
-	else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
+	else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) 
       | VNode ((a,b),str)  =>  (
 	let
 	    val (name,bir_type) = dest_BVar a;
 	    val namestr = stringSyntax.fromHOLstring name;
 	in
-	    if ((String.isSuffix "assert_true_cnd" namestr) orelse(String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr) orelse (String.isSuffix "ProcState_Z" namestr) orelse (String.isSuffix "ProcState_V" namestr) orelse (String.isSuffix "ProcState_N" namestr) orelse (String.isSuffix "ProcState_C" namestr) orelse (String.isSuffix "RepEnd" namestr) orelse (String.isSuffix "R30" namestr))
+	    if ((String.isSuffix "assert_true_cnd" namestr) orelse(String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr) orelse (String.isSuffix "RepEnd" namestr) orelse (String.isSuffix "R30" namestr))
 	    then (sbir_tree_sapic_process sort_vals str)
 	    else if ((String.isSuffix "comp_true_cnd" namestr) orelse (String.isSuffix "cjmp_true_cnd" namestr))
 	    then

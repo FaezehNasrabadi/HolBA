@@ -116,7 +116,7 @@ val prog_vars = mac::prog_vars;
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict n_dict_org;
     
-val lbl_tm = ``BL_Address (Imm64 308w)``;
+val lbl_tm = ``BL_Address (Imm64 276w)``;
 
 val stop_lbl_tms = [``BL_Address (Imm64 620w)``,``BL_Address (Imm64 556w)``,``BL_Address (Imm64 540w)``,``BL_Address (Imm64 548w)``,``BL_Address (Imm64 564w)``,``BL_Address (Imm64 568w)``];
     
@@ -151,7 +151,7 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
 val _ = print "Get predlists";
 val _ = print "\n";
 
-
+(*
 fun get_observe_exp syst =
     let
 	val obs_list = SYST_get_obss syst;
@@ -167,9 +167,9 @@ val _ = print "Get observe exp lists";
 val _ = print "\n";
     
 val lists = predlists@obsexplists;
+*)
 
-
-val lists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) lists;
+val lists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
 val _ = print "Get refined lists";    
 val _ = print "\n";
     

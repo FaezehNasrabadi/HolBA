@@ -1,21 +1,14 @@
 The function names are as follows:
-__libc_start_main@plt
-abort@plt
-__cxa_finalize@plt
-deregister_tm_clones
 get_challenge
 get_nonce
 send_nonce
 get_cipher
 get_mac
-strcmp@plt
+strcmp
 compare_mac
 compare_nonces
 sdec
 senc
 mac
 send_cipher
-send_mac
-__stack_chk_fail@plt
-passport
-_init
+__stack_chk_fail

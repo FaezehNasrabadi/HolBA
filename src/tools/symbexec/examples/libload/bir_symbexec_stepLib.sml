@@ -83,8 +83,10 @@ local
 
       val obs = (id, cnd_bv, exp_bvs, ofun_tm);
       val obss' = obs::(SYST_get_obss syst);
+      val pred = (SYST_get_pred syst);
+      val pred' = exp_bvs@pred;
     in
-      [(SYST_update_obss obss' o
+      [(SYST_update_pred pred' o SYST_update_obss obss' o
         insert_fun o
         state_insert_symbval_from_be cnd_bv cnd_tm
         ) syst]

@@ -14,11 +14,11 @@ val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
   (DB.fetch "Alice" "Alice_thm");
   
-val prog_range       =  ((Arbnum.fromInt 0x690), (Arbnum.fromInt 0xBB1));
+val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x2D1));
 
 val entry = Arbnum.fromInt 0;
     
-fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x80000000, x);
+fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x0000000, x);
 
 val stack_pointer_portion = Arbnum.fromHexString "0x0";    
 

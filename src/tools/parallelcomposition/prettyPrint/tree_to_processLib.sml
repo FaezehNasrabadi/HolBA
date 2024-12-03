@@ -129,8 +129,9 @@ fun bir_exp_symbvar_to_symbval vals_lis pred_be =
 fun sbir_tree_sapic_process sort_vals tree =
     case tree of
 	VLeaf => ProcessNull_tm
-      | VBranch ((a,b),lstr,rstr)  => (* mk_ProcessComb (NDC_tm,(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
-	if (is_BExp_Den b) then
+      | VBranch ((a,b),lstr,rstr)  => mk_ProcessComb((mk_CondEq ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+      (* mk_ProcessComb (NDC_tm,(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
+	(*if (is_BExp_Den b) then
 	let
 	     val be =  bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b));
 	 in
@@ -145,7 +146,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	     else
 		  mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 	 end
-	else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) 
+	else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
       | VNode ((a,b),str)  =>  (
 	let
 	    val (name,bir_type) = dest_BVar a;
@@ -224,11 +225,14 @@ fun sbir_tree_sapic_process sort_vals tree =
 			    (mk_ProcessComb(mk_Lookup ((fst(bir_exp_to_sapic_term adr)),(sapic_term_to_var namestr)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 			end
 		    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
-		end*) then (sbir_tree_sapic_process sort_vals str)
+		 end*) then (sbir_tree_sapic_process sort_vals str)
+	    else if (String.isSuffix "observe_exp" namestr)
+	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 end)
 			 
 (* 
+
  val exp = ``
 	       (BExp_Store
 		    (BExp_Den (BVar "MEM" (BType_Mem Bit64 Bit8)))

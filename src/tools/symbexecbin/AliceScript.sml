@@ -14,7 +14,7 @@ val arch_str         = "arm8";
 
 val dafilename = "alice.da";
 
-val prog_range       =  ((Arbnum.fromInt 0x690), (Arbnum.fromInt 0xBB1));
+val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x2D1));
 
 val _ = print_with_style_ [Bold, Underline] ("Lifting " ^ dafilename ^ " (" ^ arch_str ^ ")\n");
 

@@ -41,11 +41,11 @@ val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
   (DB.fetch "Alice" "Alice_thm");
   
-val prog_range       =  ((Arbnum.fromInt 0x690), (Arbnum.fromInt 0xBB1));
+val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x2D1));
 
 val entry = Arbnum.fromInt 0;
     
-fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x80000000, x);
+fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x0000000, x);
 
 val stack_pointer_portion = Arbnum.fromHexString "0x0";    
 
@@ -82,6 +82,16 @@ val bl_dict_spec    = gen_block_dict prog_w_obs;
 val prog_lbl_tms_spec = get_block_dict_keys bl_dict_spec;
 val n_dict_spec = bir_cfgLib.cfg_build_node_dict bl_dict_spec prog_lbl_tms_spec;
 
+ (*   
+open binariesCfgVizLib;
+open binariesDefsLib;
+val g1 = cfg_create "toy" [lbl_tm] n_dict_org bl_dict_spec;
+val _ = print "Display cfg.\n";
+open bir_cfg_vizLib;
+val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1);
+val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
+  *)
+    
 val prog_vars = gen_vars_of_prog prog_w_obs;
     
 val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
@@ -106,9 +116,9 @@ val prog_vars = mac::prog_vars;
     
 val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict n_dict_org;
     
-val lbl_tm = ``BL_Address (Imm64 2424w)``;
+val lbl_tm = ``BL_Address (Imm64 308w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 2664w)``,``BL_Address (Imm64 2648w)``,``BL_Address (Imm64 2656w)``,``BL_Address (Imm64 2672w)``];
+val stop_lbl_tms = [``BL_Address (Imm64 620w)``,``BL_Address (Imm64 556w)``,``BL_Address (Imm64 540w)``,``BL_Address (Imm64 548w)``,``BL_Address (Imm64 564w)``,``BL_Address (Imm64 568w)``];
     
 val syst = init_state lbl_tm prog_vars;
 
@@ -139,7 +149,57 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
                          systs_noassertfailed;
 
 val _ = print "Get predlists";
+val _ = print "\n";
+
+
+fun get_observe_exp syst =
+    let
+	val obs_list = SYST_get_obss syst;
+	val exp_list = List.map (fn (id_tm, cnd_tm, exps_tm, ofun_tm) => List.@(exps_tm,[])) obs_list;
+    in
+	List.concat exp_list
+    end
+    
+val obsexplists = List.map (fn syst => (rev o get_observe_exp) syst)
+                         systs_noassertfailed;	    
+   
+val _ = print "Get observe exp lists";
+val _ = print "\n";
+    
+val lists = predlists@obsexplists;
+
+
+val lists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) lists;
+val _ = print "Get refined lists";    
+val _ = print "\n";
+    
+val tree = predlist_to_tree lists_refined;
+
+val _ = print "Get tree";
+val _ = print "\n";
+    
+val vals_list = bir_symbexec_treeLib.symb_execs_vals_term systs_noassertfailed [];
+
+val _ = print "Get vals_list";
+val _ = print "\n";
+	
+val sort_vals = bir_symbexec_sortLib.refine_symb_val_list vals_list;
+
+val _ = print "Get sort_vals";
 val _ = print "\n";    
 
+val valtr =  tree_with_value tree sort_vals;
+     
+val _ = print ("built a symbolic tree with value");
+val _ = print "\n";
+    
+val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
+    
+val _ = print ("built sapic_process");
+val _ = print "\n";
 
-    (*Next : Add observe_exp to path *)
+
+val _ =  ( write_sapic_to_file o process_to_string) sapic_process;
+     
+val _ = print ("wrote into file");
+val _ = print "\n";

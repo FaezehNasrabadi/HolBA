@@ -34,7 +34,7 @@ val _ = Theory.new_constant("mac", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("compare", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 
-val _ = Theory.new_constant("compare_mac", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
+val _ = Theory.new_constant("compare_mac", ``:bir_exp_t -> bir_var_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("compare_nonces", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
     
@@ -62,10 +62,16 @@ val _ = Theory.new_constant("conc2", ``:bir_var_t -> bir_var_t -> bir_exp_t``);
 (*
 val _ = Theory.new_constant("conc3", ``:bir_var_t -> bir_var_t -> bir_exp_t``);*)
     
-(* val _ = Theory.new_constant("pars1", ``:bir_var_t -> bir_exp_t``); *)
+val _ = Theory.new_constant("pars12", ``:bir_var_t -> bir_exp_t``);
 
-(* val _ = Theory.new_constant("pars2", ``:bir_var_t -> bir_exp_t``); *)
+val _ = Theory.new_constant("pars22", ``:bir_var_t -> bir_exp_t``);
 
+val _ = Theory.new_constant("pars13", ``:bir_var_t -> bir_exp_t``);
+
+val _ = Theory.new_constant("pars23", ``:bir_var_t -> bir_exp_t``);
+
+val _ = Theory.new_constant("pars33", ``:bir_var_t -> bir_exp_t``);
+	    
 val _ = Theory.new_constant("pars1", ``:bir_exp_t -> bir_exp_t``);
 
 val _ = Theory.new_constant("pars2", ``:bir_exp_t -> bir_exp_t``);
@@ -521,7 +527,7 @@ fun Pars12 input =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (pars12
 			  ( ^input)
-			  (BExp_Const (Imm32 32w))
+			  
 		     )``;
     in
 	dest_BStmt_Assign stmt
@@ -533,7 +539,7 @@ fun Pars22 input =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (pars22
 			  ( ^input)
-			  (BExp_Const (Imm32 32w))
+			  
 		     )``;
     in
 	dest_BStmt_Assign stmt
@@ -545,7 +551,7 @@ fun Pars13 input =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (pars13
 			  ( ^input)
-			  (BExp_Const (Imm32 32w))
+			 
 		     )``;
     in
 	dest_BStmt_Assign stmt
@@ -557,7 +563,7 @@ fun Pars23 input =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (pars23
 			  ( ^input)
-			  (BExp_Const (Imm32 32w))
+			  
 		     )``;
     in
 	dest_BStmt_Assign stmt
@@ -569,7 +575,7 @@ fun Pars33 input =
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
 		     (pars33
 			  ( ^input)
-			  (BExp_Const (Imm32 32w))
+			  
 		     )``;
     in
 	dest_BStmt_Assign stmt
@@ -1180,18 +1186,18 @@ fun find_R0_symval syst =
 
     end;
     
-fun update_R0_symval be bv syst =
+fun update_R0_symval bv be syst =
     let
 	
 	val bv_key = ``BVar "R0" (BType_Imm Bit64)``;
 
 	val syst =  update_envvar bv_key bv syst;
 
-	val fr_bv = Fr bv;
+	(*val fr_bv = Fr bv;
 
 	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval be fr_bv) syst;
 	    
-	val syst = update_symbval be bv syst;
+	 val syst = update_symbval be bv syst; *)
 
     in
 	syst
@@ -1615,6 +1621,8 @@ fun Compare syst =
 	val Fr_cmp = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("cmpnonce", “BType_Imm Bit64”)); (* generate a fresh variable *)
 	    
 	val syst = store_mem_r0 C_be Fr_cmp syst; (* update syst *)
+
+	val syst = update_R0_symval Fr_cmp C_be syst;   
 	    
     in
 	[syst]
@@ -2937,7 +2945,7 @@ fun Decryption syst =
 
 	val syst = store_mem_r0 C_be Fr_Dec syst; (* update syst *)
 
-	val (P1_bv, P1_be) = Pars13 C_be;
+	val (P1_bv, P1_be) = Pars13 Fr_Dec;
 
 	val Fr_P1 = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars13", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
@@ -2951,11 +2959,11 @@ fun Decryption syst =
 	    
 	val syst = update_symbval P1_be Fr_P1 syst;
 
-	val (P2_bv, P2_be) = Pars23 C_be;
+	val (P2_bv, P2_be) = Pars23 Fr_Dec;
 
 	val Fr_P2 = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars23", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
-	val syst = update_key Fr_P2 P2_be syst;
+	val syst = update_key P2_be Fr_P2 syst;
 
 	val syst = update_R0_symval Fr_Dec C_be syst;	
 	    
@@ -2976,13 +2984,17 @@ fun Encryption syst =
                               env ``BVar "Crypto" (BType_Imm Bit64)``;
 
 	val nonce = find_bv_val ("encypt::bv in env not found")
-                              env ``BVar "nonce" (BType_Imm Bit64)``;
+                              env ``BVar "Nonce" (BType_Imm Bit64)``;
 
-	val (P2_bv, P2_be) = Conc3 key msg nonce;  
+	val (P2_bv, P2_be) = Conc3 key msg nonce;
+
+	val Fr_conc = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Conc", “BType_Imm Bit64”))); (* generate a fresh variable *)
+
+	val syst = store_mem_r0 P2_be Fr_conc syst; (* update syst *)
 
 	val ke = ``BVar "ke" (BType_Imm Bit64)``;
 
-	val (C_bv, C_be) = Encrypt2 P2_be ke;    
+	val (C_bv, C_be) = Encrypt2 Fr_conc ke;    
 
 	val Fr_Enc = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Enc", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
@@ -3259,23 +3271,23 @@ fun HMAC_Send syst =
 *)
 fun HMAC_Receive syst =
     let
-	    
+  
 	val be_adv = find_adv_name syst;
 
 	val (P2_bv, P2_be) = Pars12 be_adv; (* Parse input *)
-
-	val Fr_p = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Pars12", “BType_Imm Bit64”));
+ 
+	val Fr_p = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("pars12", “BType_Imm Bit64”));
 
 	val bv_key = ``BVar "Pars" (BType_Imm Bit64)``;
 
 	val syst =  update_envvar bv_key Fr_p syst;
-
+ 
 	val fr_bv = Fr Fr_p;
 
 	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval P2_be fr_bv) syst;
-	    
-	val syst = update_symbval P2_be Fr_p syst;
 
+	val syst = update_symbval P2_be Fr_p syst;
+ 
 	val syst = update_R0_symval Fr_p P2_be syst;		
 
     in
@@ -3347,7 +3359,9 @@ fun New_memcpy syst =
 
 	val Fr_ch = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("check", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
-	val syst = store_mem_r0 C_be Fr_ch syst; (* update syst *)    
+	val syst = store_mem_r0 C_be Fr_ch syst; (* update syst *)
+
+	val syst = update_R0_symval Fr_ch C_be syst;
 	
     in
 	syst

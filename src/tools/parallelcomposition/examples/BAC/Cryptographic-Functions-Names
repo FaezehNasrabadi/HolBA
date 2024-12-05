@@ -17,8 +17,8 @@ get_nonce
 
 compare_mac
 send_nonce
-send_cipher
-send_mac
+
+
 
 
 

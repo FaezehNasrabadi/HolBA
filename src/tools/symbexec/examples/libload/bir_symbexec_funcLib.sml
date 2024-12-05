@@ -1720,9 +1720,9 @@ fun One_Time_Pad syst =
 fun Random_Number syst =
     let
 
-	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RAND_NUM", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RAND_NUM", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
-	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("nonce", “BType_Imm Bit64”)); (* generate a fresh name *)
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("nonce", “BType_Imm Bit64”)); (* generate a fresh name *)
 
 	val bv_key = ``BVar "Nonce" (BType_Imm Bit64)``;
 
@@ -2998,7 +2998,18 @@ fun Encryption syst =
 
 	val Fr_Enc = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Enc", “BType_Imm Bit64”))); (* generate a fresh variable *)
 
-	val syst = store_mem_r0 C_be Fr_Enc syst; (* update syst *)
+	val bv_key = ``BVar "Pars" (BType_Imm Bit64)``;
+
+	val syst =  update_envvar bv_key Fr_Enc syst;
+
+	val fr_bv = Fr Fr_Enc;
+
+	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval C_be fr_bv) syst;
+	    
+	val syst = update_symbval C_be Fr_Enc syst;
+
+	val syst = state_add_path "Kr" Fr_Enc syst;	
+	    
 	
     in
 	syst
@@ -3129,7 +3140,7 @@ fun HMAC_Send syst =
 	    
 	val syst = update_symbval M_be Fr_mac syst;
 
-	val syst = update_R0_symval Fr_mac M_be syst;	
+	val syst = state_add_path "Kr" Fr_mac syst;
 
     in
 	syst
@@ -3413,9 +3424,13 @@ fun Load_file syst =
 fun Load_file syst =
     let
 	    
-	val be_r0 = find_R0_symval syst;
+	val env  = (SYST_get_env  syst);
 
-	val syst = state_add_path "Kr" be_r0 syst;
+	
+	val nonce = find_bv_val ("bv in env not found")
+				env ``BVar "Nonce" (BType_Imm Bit64)``;
+
+	val syst = state_add_path "Kr" nonce syst;
 
     in
 	syst

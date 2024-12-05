@@ -12,7 +12,7 @@ static void send_nonce(char *output) {
 static char get_challenge(void) {
 }
 
-static void send_mac(char *output) {
+static void send_mac(char *message, char *key) {
 
 }
 
@@ -30,7 +30,7 @@ static char get_cipher(void) {
 
 // Encryption and Decryption functions
 static void senc(char *val1, char *val2, char *val3, char *val4, char *val5) {
-
+send_cipher(val5); 
 }
 
 static int sdec(char *val1, char *val2, char *val3, char *val4, char *val5) {
@@ -96,9 +96,7 @@ int passport(char *k_e, char *k_m) {
 					    // Step 7: Generate k_t and send response
 					    *k_t = get_nonce();
 					    senc(generated_n_t, xn_r, k_t, k_e, response_message);
-					    *response_mac = mac(response_message, k_m);
-					    send_cipher(response_message); 
-					    send_mac(response_mac);
+					    send_mac(response_message, k_m);
 					} else {
 						return 0;
 						} 

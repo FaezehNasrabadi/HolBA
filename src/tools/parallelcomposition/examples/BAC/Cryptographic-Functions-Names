@@ -14,7 +14,7 @@ get_nonce
 
 
 
-
+send_mac
 compare_mac
 send_nonce
 

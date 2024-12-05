@@ -18,197 +18,195 @@ Disassembly of section .text:
 000000000000001c <send_mac>:
   1c:	d10043ff 	sub	sp, sp, #0x10
   20:	f90007e0 	str	x0, [sp, #8]
-  24:	d503201f 	nop
-  28:	910043ff 	add	sp, sp, #0x10
-  2c:	d65f03c0 	ret
+  24:	f90003e1 	str	x1, [sp]
+  28:	d503201f 	nop
+  2c:	910043ff 	add	sp, sp, #0x10
+  30:	d65f03c0 	ret
 
-0000000000000030 <get_mac>:
-  30:	d503201f 	nop
-  34:	d65f03c0 	ret
+0000000000000034 <get_mac>:
+  34:	d503201f 	nop
+  38:	d65f03c0 	ret
 
-0000000000000038 <send_cipher>:
-  38:	d10043ff 	sub	sp, sp, #0x10
-  3c:	f90007e0 	str	x0, [sp, #8]
-  40:	d503201f 	nop
-  44:	910043ff 	add	sp, sp, #0x10
-  48:	d65f03c0 	ret
+000000000000003c <send_cipher>:
+  3c:	d10043ff 	sub	sp, sp, #0x10
+  40:	f90007e0 	str	x0, [sp, #8]
+  44:	d503201f 	nop
+  48:	910043ff 	add	sp, sp, #0x10
+  4c:	d65f03c0 	ret
 
-000000000000004c <get_cipher>:
-  4c:	d503201f 	nop
-  50:	d65f03c0 	ret
+0000000000000050 <get_cipher>:
+  50:	d503201f 	nop
+  54:	d65f03c0 	ret
 
-0000000000000054 <senc>:
-  54:	d100c3ff 	sub	sp, sp, #0x30
-  58:	f90017e0 	str	x0, [sp, #40]
-  5c:	f90013e1 	str	x1, [sp, #32]
-  60:	f9000fe2 	str	x2, [sp, #24]
-  64:	f9000be3 	str	x3, [sp, #16]
-  68:	f90007e4 	str	x4, [sp, #8]
-  6c:	d503201f 	nop
-  70:	9100c3ff 	add	sp, sp, #0x30
-  74:	d65f03c0 	ret
+0000000000000058 <senc>:
+  58:	a9bc7bfd 	stp	x29, x30, [sp, #-64]!
+  5c:	910003fd 	mov	x29, sp
+  60:	f9001fe0 	str	x0, [sp, #56]
+  64:	f9001be1 	str	x1, [sp, #48]
+  68:	f90017e2 	str	x2, [sp, #40]
+  6c:	f90013e3 	str	x3, [sp, #32]
+  70:	f9000fe4 	str	x4, [sp, #24]
+  74:	f9400fe0 	ldr	x0, [sp, #24]
+  78:	97fffff1 	bl	3c <send_cipher>
+  7c:	d503201f 	nop
+  80:	a8c47bfd 	ldp	x29, x30, [sp], #64
+  84:	d65f03c0 	ret
 
-0000000000000078 <sdec>:
-  78:	d100c3ff 	sub	sp, sp, #0x30
-  7c:	f90017e0 	str	x0, [sp, #40]
-  80:	f90013e1 	str	x1, [sp, #32]
-  84:	f9000fe2 	str	x2, [sp, #24]
-  88:	f9000be3 	str	x3, [sp, #16]
-  8c:	f90007e4 	str	x4, [sp, #8]
-  90:	d503201f 	nop
-  94:	9100c3ff 	add	sp, sp, #0x30
-  98:	d65f03c0 	ret
+0000000000000088 <sdec>:
+  88:	d100c3ff 	sub	sp, sp, #0x30
+  8c:	f90017e0 	str	x0, [sp, #40]
+  90:	f90013e1 	str	x1, [sp, #32]
+  94:	f9000fe2 	str	x2, [sp, #24]
+  98:	f9000be3 	str	x3, [sp, #16]
+  9c:	f90007e4 	str	x4, [sp, #8]
+  a0:	d503201f 	nop
+  a4:	9100c3ff 	add	sp, sp, #0x30
+  a8:	d65f03c0 	ret
 
-000000000000009c <mac>:
-  9c:	d10043ff 	sub	sp, sp, #0x10
-  a0:	f90007e0 	str	x0, [sp, #8]
-  a4:	f90003e1 	str	x1, [sp]
-  a8:	d503201f 	nop
-  ac:	910043ff 	add	sp, sp, #0x10
-  b0:	d65f03c0 	ret
+00000000000000ac <mac>:
+  ac:	d10043ff 	sub	sp, sp, #0x10
+  b0:	f90007e0 	str	x0, [sp, #8]
+  b4:	f90003e1 	str	x1, [sp]
+  b8:	d503201f 	nop
+  bc:	910043ff 	add	sp, sp, #0x10
+  c0:	d65f03c0 	ret
 
-00000000000000b4 <compare_mac>:
-  b4:	d10043ff 	sub	sp, sp, #0x10
-  b8:	f90007e0 	str	x0, [sp, #8]
-  bc:	f90003e1 	str	x1, [sp]
-  c0:	d503201f 	nop
-  c4:	910043ff 	add	sp, sp, #0x10
-  c8:	d65f03c0 	ret
+00000000000000c4 <compare_mac>:
+  c4:	d10043ff 	sub	sp, sp, #0x10
+  c8:	f90007e0 	str	x0, [sp, #8]
+  cc:	f90003e1 	str	x1, [sp]
+  d0:	d503201f 	nop
+  d4:	910043ff 	add	sp, sp, #0x10
+  d8:	d65f03c0 	ret
 
-00000000000000cc <compare_nonces>:
-  cc:	d10043ff 	sub	sp, sp, #0x10
-  d0:	f90007e0 	str	x0, [sp, #8]
-  d4:	f90003e1 	str	x1, [sp]
-  d8:	d503201f 	nop
-  dc:	910043ff 	add	sp, sp, #0x10
-  e0:	d65f03c0 	ret
+00000000000000dc <compare_nonces>:
+  dc:	d10043ff 	sub	sp, sp, #0x10
+  e0:	f90007e0 	str	x0, [sp, #8]
+  e4:	f90003e1 	str	x1, [sp]
+  e8:	d503201f 	nop
+  ec:	910043ff 	add	sp, sp, #0x10
+  f0:	d65f03c0 	ret
 
-00000000000000e4 <get_nonce>:
-  e4:	d503201f 	nop
-  e8:	d65f03c0 	ret
+00000000000000f4 <get_nonce>:
+  f4:	d503201f 	nop
+  f8:	d65f03c0 	ret
 
-00000000000000ec <passport>:
-  ec:	d12cc3ff 	sub	sp, sp, #0xb30
-  f0:	a9007bfd 	stp	x29, x30, [sp]
-  f4:	910003fd 	mov	x29, sp
-  f8:	f9000fe0 	str	x0, [sp, #24]
-  fc:	f9000be1 	str	x1, [sp, #16]
- 100:	90000000 	adrp	x0, 0 <__stack_chk_guard>
- 104:	f9400000 	ldr	x0, [x0]
- 108:	f9400001 	ldr	x1, [x0]
- 10c:	f90597e1 	str	x1, [sp, #2856]
- 110:	d2800001 	mov	x1, #0x0                   	// #0
- 114:	97ffffc0 	bl	14 <get_challenge>
- 118:	12001c00 	and	w0, w0, #0xff
- 11c:	3900a3e0 	strb	w0, [sp, #40]
- 120:	9100a3e2 	add	x2, sp, #0x28
- 124:	90000000 	adrp	x0, 0 <send_nonce>
- 128:	91000001 	add	x1, x0, #0x0
- 12c:	aa0203e0 	mov	x0, x2
- 130:	94000000 	bl	0 <strcmp>
- 134:	7100001f 	cmp	w0, #0x0
- 138:	54000801 	b.ne	238 <passport+0x14c>  // b.any
- 13c:	97ffffea 	bl	e4 <get_nonce>
- 140:	12001c00 	and	w0, w0, #0xff
- 144:	3904a3e0 	strb	w0, [sp, #296]
- 148:	9104a3e0 	add	x0, sp, #0x128
- 14c:	97ffffad 	bl	0 <send_nonce>
- 150:	97ffffbf 	bl	4c <get_cipher>
- 154:	12001c00 	and	w0, w0, #0xff
- 158:	3908a3e0 	strb	w0, [sp, #552]
- 15c:	97ffffb5 	bl	30 <get_mac>
- 160:	12001c00 	and	w0, w0, #0xff
- 164:	390ca3e0 	strb	w0, [sp, #808]
- 168:	9108a3e0 	add	x0, sp, #0x228
- 16c:	f9400be1 	ldr	x1, [sp, #16]
- 170:	97ffffcb 	bl	9c <mac>
- 174:	12001c00 	and	w0, w0, #0xff
- 178:	3910a3e0 	strb	w0, [sp, #1064]
- 17c:	910ca3e1 	add	x1, sp, #0x328
- 180:	9110a3e0 	add	x0, sp, #0x428
- 184:	97ffffcc 	bl	b4 <compare_mac>
- 188:	7100001f 	cmp	w0, #0x0
- 18c:	54000521 	b.ne	230 <passport+0x144>  // b.any
- 190:	911ca3e3 	add	x3, sp, #0x728
- 194:	9118a3e2 	add	x2, sp, #0x628
- 198:	9114a3e1 	add	x1, sp, #0x528
- 19c:	9108a3e0 	add	x0, sp, #0x228
- 1a0:	aa0303e4 	mov	x4, x3
- 1a4:	aa0203e3 	mov	x3, x2
- 1a8:	aa0103e2 	mov	x2, x1
- 1ac:	f9400fe1 	ldr	x1, [sp, #24]
- 1b0:	97ffffb2 	bl	78 <sdec>
- 1b4:	7100001f 	cmp	w0, #0x0
- 1b8:	54000380 	b.eq	228 <passport+0x13c>  // b.none
- 1bc:	9104a3e1 	add	x1, sp, #0x128
- 1c0:	9118a3e0 	add	x0, sp, #0x628
- 1c4:	97ffffc2 	bl	cc <compare_nonces>
- 1c8:	7100001f 	cmp	w0, #0x0
- 1cc:	540002a1 	b.ne	220 <passport+0x134>  // b.any
- 1d0:	97ffffc5 	bl	e4 <get_nonce>
- 1d4:	12001c00 	and	w0, w0, #0xff
- 1d8:	3920a3e0 	strb	w0, [sp, #2088]
- 1dc:	9124a3e3 	add	x3, sp, #0x928
- 1e0:	9120a3e2 	add	x2, sp, #0x828
- 1e4:	9114a3e1 	add	x1, sp, #0x528
- 1e8:	9104a3e0 	add	x0, sp, #0x128
- 1ec:	aa0303e4 	mov	x4, x3
- 1f0:	f9400fe3 	ldr	x3, [sp, #24]
- 1f4:	97ffff98 	bl	54 <senc>
- 1f8:	9124a3e0 	add	x0, sp, #0x928
- 1fc:	f9400be1 	ldr	x1, [sp, #16]
- 200:	97ffffa7 	bl	9c <mac>
- 204:	12001c00 	and	w0, w0, #0xff
- 208:	3928a3e0 	strb	w0, [sp, #2600]
- 20c:	9124a3e0 	add	x0, sp, #0x928
- 210:	97ffff8a 	bl	38 <send_cipher>
- 214:	9128a3e0 	add	x0, sp, #0xa28
- 218:	97ffff81 	bl	1c <send_mac>
- 21c:	14000007 	b	238 <passport+0x14c>
+00000000000000fc <passport>:
+  fc:	d128c3ff 	sub	sp, sp, #0xa30
+ 100:	a9007bfd 	stp	x29, x30, [sp]
+ 104:	910003fd 	mov	x29, sp
+ 108:	f9000fe0 	str	x0, [sp, #24]
+ 10c:	f9000be1 	str	x1, [sp, #16]
+ 110:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+ 114:	f9400000 	ldr	x0, [x0]
+ 118:	f9400001 	ldr	x1, [x0]
+ 11c:	f90517e1 	str	x1, [sp, #2600]
+ 120:	d2800001 	mov	x1, #0x0                   	// #0
+ 124:	97ffffbc 	bl	14 <get_challenge>
+ 128:	12001c00 	and	w0, w0, #0xff
+ 12c:	3900a3e0 	strb	w0, [sp, #40]
+ 130:	9100a3e2 	add	x2, sp, #0x28
+ 134:	90000000 	adrp	x0, 0 <send_nonce>
+ 138:	91000001 	add	x1, x0, #0x0
+ 13c:	aa0203e0 	mov	x0, x2
+ 140:	94000000 	bl	0 <strcmp>
+ 144:	7100001f 	cmp	w0, #0x0
+ 148:	54000741 	b.ne	230 <passport+0x134>  // b.any
+ 14c:	97ffffea 	bl	f4 <get_nonce>
+ 150:	12001c00 	and	w0, w0, #0xff
+ 154:	3904a3e0 	strb	w0, [sp, #296]
+ 158:	9104a3e0 	add	x0, sp, #0x128
+ 15c:	97ffffa9 	bl	0 <send_nonce>
+ 160:	97ffffbc 	bl	50 <get_cipher>
+ 164:	12001c00 	and	w0, w0, #0xff
+ 168:	3908a3e0 	strb	w0, [sp, #552]
+ 16c:	97ffffb2 	bl	34 <get_mac>
+ 170:	12001c00 	and	w0, w0, #0xff
+ 174:	390ca3e0 	strb	w0, [sp, #808]
+ 178:	9108a3e0 	add	x0, sp, #0x228
+ 17c:	f9400be1 	ldr	x1, [sp, #16]
+ 180:	97ffffcb 	bl	ac <mac>
+ 184:	12001c00 	and	w0, w0, #0xff
+ 188:	3910a3e0 	strb	w0, [sp, #1064]
+ 18c:	910ca3e1 	add	x1, sp, #0x328
+ 190:	9110a3e0 	add	x0, sp, #0x428
+ 194:	97ffffcc 	bl	c4 <compare_mac>
+ 198:	7100001f 	cmp	w0, #0x0
+ 19c:	54000461 	b.ne	228 <passport+0x12c>  // b.any
+ 1a0:	911ca3e3 	add	x3, sp, #0x728
+ 1a4:	9118a3e2 	add	x2, sp, #0x628
+ 1a8:	9114a3e1 	add	x1, sp, #0x528
+ 1ac:	9108a3e0 	add	x0, sp, #0x228
+ 1b0:	aa0303e4 	mov	x4, x3
+ 1b4:	aa0203e3 	mov	x3, x2
+ 1b8:	aa0103e2 	mov	x2, x1
+ 1bc:	f9400fe1 	ldr	x1, [sp, #24]
+ 1c0:	97ffffb2 	bl	88 <sdec>
+ 1c4:	7100001f 	cmp	w0, #0x0
+ 1c8:	540002c0 	b.eq	220 <passport+0x124>  // b.none
+ 1cc:	9104a3e1 	add	x1, sp, #0x128
+ 1d0:	9118a3e0 	add	x0, sp, #0x628
+ 1d4:	97ffffc2 	bl	dc <compare_nonces>
+ 1d8:	7100001f 	cmp	w0, #0x0
+ 1dc:	540001e1 	b.ne	218 <passport+0x11c>  // b.any
+ 1e0:	97ffffc5 	bl	f4 <get_nonce>
+ 1e4:	12001c00 	and	w0, w0, #0xff
+ 1e8:	3920a3e0 	strb	w0, [sp, #2088]
+ 1ec:	9124a3e3 	add	x3, sp, #0x928
+ 1f0:	9120a3e2 	add	x2, sp, #0x828
+ 1f4:	9114a3e1 	add	x1, sp, #0x528
+ 1f8:	9104a3e0 	add	x0, sp, #0x128
+ 1fc:	aa0303e4 	mov	x4, x3
+ 200:	f9400fe3 	ldr	x3, [sp, #24]
+ 204:	97ffff95 	bl	58 <senc>
+ 208:	9124a3e0 	add	x0, sp, #0x928
+ 20c:	f9400be1 	ldr	x1, [sp, #16]
+ 210:	97ffff83 	bl	1c <send_mac>
+ 214:	14000007 	b	230 <passport+0x134>
+ 218:	52800000 	mov	w0, #0x0                   	// #0
+ 21c:	14000006 	b	234 <passport+0x138>
  220:	52800000 	mov	w0, #0x0                   	// #0
- 224:	14000006 	b	23c <passport+0x150>
+ 224:	14000004 	b	234 <passport+0x138>
  228:	52800000 	mov	w0, #0x0                   	// #0
- 22c:	14000004 	b	23c <passport+0x150>
- 230:	52800000 	mov	w0, #0x0                   	// #0
- 234:	14000002 	b	23c <passport+0x150>
- 238:	14000002 	b	240 <passport+0x154>
- 23c:	2a0003e1 	mov	w1, w0
- 240:	90000000 	adrp	x0, 0 <__stack_chk_guard>
- 244:	f9400000 	ldr	x0, [x0]
- 248:	f94597e2 	ldr	x2, [sp, #2856]
- 24c:	f9400003 	ldr	x3, [x0]
- 250:	eb030042 	subs	x2, x2, x3
- 254:	d2800003 	mov	x3, #0x0                   	// #0
- 258:	54000040 	b.eq	260 <passport+0x174>  // b.none
- 25c:	94000000 	bl	0 <__stack_chk_fail>
- 260:	2a0103e0 	mov	w0, w1
- 264:	a9407bfd 	ldp	x29, x30, [sp]
- 268:	912cc3ff 	add	sp, sp, #0xb30
- 26c:	d65f03c0 	ret
+ 22c:	14000002 	b	234 <passport+0x138>
+ 230:	14000002 	b	238 <passport+0x13c>
+ 234:	2a0003e1 	mov	w1, w0
+ 238:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+ 23c:	f9400000 	ldr	x0, [x0]
+ 240:	f94517e2 	ldr	x2, [sp, #2600]
+ 244:	f9400003 	ldr	x3, [x0]
+ 248:	eb030042 	subs	x2, x2, x3
+ 24c:	d2800003 	mov	x3, #0x0                   	// #0
+ 250:	54000040 	b.eq	258 <passport+0x15c>  // b.none
+ 254:	94000000 	bl	0 <__stack_chk_fail>
+ 258:	2a0103e0 	mov	w0, w1
+ 25c:	a9407bfd 	ldp	x29, x30, [sp]
+ 260:	9128c3ff 	add	sp, sp, #0xa30
+ 264:	d65f03c0 	ret
 
-0000000000000270 <main>:
- 270:	d10883ff 	sub	sp, sp, #0x220
- 274:	a9007bfd 	stp	x29, x30, [sp]
- 278:	910003fd 	mov	x29, sp
- 27c:	90000000 	adrp	x0, 0 <__stack_chk_guard>
- 280:	f9400000 	ldr	x0, [x0]
- 284:	f9400001 	ldr	x1, [x0]
- 288:	f9010fe1 	str	x1, [sp, #536]
- 28c:	d2800001 	mov	x1, #0x0                   	// #0
- 290:	910463e1 	add	x1, sp, #0x118
- 294:	910063e0 	add	x0, sp, #0x18
- 298:	94000000 	bl	ec <passport>
- 29c:	52800000 	mov	w0, #0x0                   	// #0
- 2a0:	2a0003e1 	mov	w1, w0
- 2a4:	90000000 	adrp	x0, 0 <__stack_chk_guard>
- 2a8:	f9400000 	ldr	x0, [x0]
- 2ac:	f9410fe2 	ldr	x2, [sp, #536]
- 2b0:	f9400003 	ldr	x3, [x0]
- 2b4:	eb030042 	subs	x2, x2, x3
- 2b8:	d2800003 	mov	x3, #0x0                   	// #0
- 2bc:	54000040 	b.eq	2c4 <main+0x54>  // b.none
- 2c0:	94000000 	bl	0 <__stack_chk_fail>
- 2c4:	2a0103e0 	mov	w0, w1
- 2c8:	a9407bfd 	ldp	x29, x30, [sp]
- 2cc:	910883ff 	add	sp, sp, #0x220
- 2d0:	d65f03c0 	ret
+0000000000000268 <main>:
+ 268:	d10883ff 	sub	sp, sp, #0x220
+ 26c:	a9007bfd 	stp	x29, x30, [sp]
+ 270:	910003fd 	mov	x29, sp
+ 274:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+ 278:	f9400000 	ldr	x0, [x0]
+ 27c:	f9400001 	ldr	x1, [x0]
+ 280:	f9010fe1 	str	x1, [sp, #536]
+ 284:	d2800001 	mov	x1, #0x0                   	// #0
+ 288:	910463e1 	add	x1, sp, #0x118
+ 28c:	910063e0 	add	x0, sp, #0x18
+ 290:	94000000 	bl	fc <passport>
+ 294:	52800000 	mov	w0, #0x0                   	// #0
+ 298:	2a0003e1 	mov	w1, w0
+ 29c:	90000000 	adrp	x0, 0 <__stack_chk_guard>
+ 2a0:	f9400000 	ldr	x0, [x0]
+ 2a4:	f9410fe2 	ldr	x2, [sp, #536]
+ 2a8:	f9400003 	ldr	x3, [x0]
+ 2ac:	eb030042 	subs	x2, x2, x3
+ 2b0:	d2800003 	mov	x3, #0x0                   	// #0
+ 2b4:	54000040 	b.eq	2bc <main+0x54>  // b.none
+ 2b8:	94000000 	bl	0 <__stack_chk_fail>
+ 2bc:	2a0103e0 	mov	w0, w1
+ 2c0:	a9407bfd 	ldp	x29, x30, [sp]
+ 2c4:	910883ff 	add	sp, sp, #0x220
+ 2c8:	d65f03c0 	ret

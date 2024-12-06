@@ -12,3 +12,4 @@ senc
 mac
 send_cipher
 __stack_chk_fail
+send_mac

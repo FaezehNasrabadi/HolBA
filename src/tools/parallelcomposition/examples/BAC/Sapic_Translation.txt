@@ -1,369 +1,345 @@
-out(att,'252');
+out(att,'240');
 let SP_EL0_5=Minus(SP_EL0_sy,'2608') in 
-out(att,'256');
+out(att,'244');
 out(att,Minus(SP_EL0_sy,'2600'));
 out(att,SP_EL0_5);
-out(att,'260');
-out(att,'264');
+out(att,'248');
+out(att,'252');
 out(att,Minus(SP_EL0_sy,'2584'));
-out(att,'268');
+out(att,'256');
 out(att,Minus(SP_EL0_sy,'2592'));
-out(att,'272');
+out(att,'260');
 let R0_55='0' in 
-out(att,'276');
+out(att,'264');
 out(att,'0');
-out(att,'280');
+out(att,'268');
 out(att,R0_64);
-out(att,'284');
+out(att,'272');
 out(att,Minus(SP_EL0_sy,'8'));
-out(att,'288');
+out(att,'276');
 let R1_89='0' in 
 in(att,a_92);
-out(att,'296');
-out(att,'300');
+out(att,'284');
+out(att,'288');
 out(att,Minus(SP_EL0_sy,'2568'));
-out(att,'304');
+out(att,'292');
 let R2_111=Minus(SP_EL0_sy,'2568') in 
-out(att,'308');
+out(att,'296');
 let R0_114='0' in 
-out(att,'312');
+out(att,'300');
 let R1_117='0' in 
-out(att,'316');
+out(att,'304');
 let check_121=compare(a_92,challenge) in 
-out(att,'324');
+out(att,'312');
 let ProcState_Z_129=Equal(LowCast(check_121,'32'),'0') in 
-let R3_sy=sy_R3_1212 in 
+let R3_sy=sy_R3_1104 in 
 let R1*_132='0' in 
 if Not(ProcState_Z_129) then 
-let R30*_135='336' in 
-out(att,'328');
+let R30*_135='324' in 
+out(att,'316');
 if LowCast(check_121,'32')='0' then 
 new ~144_nonce;
 let RAND_NUM_143=~144_nonce in 
-out(att,'336');
-out(att,'340');
+out(att,'324');
+out(att,'328');
 out(att,Minus(SP_EL0_sy,'2312'));
-out(att,'344');
+out(att,'332');
 let R0_163=Minus(SP_EL0_sy,'2312') in 
 out(att,RAND_NUM_143);
 in(att,a_168);
-out(att,'356');
-out(att,'360');
+out(att,'344');
+out(att,'348');
 out(att,Minus(SP_EL0_sy,'2056'));
 let pars12_184=pars12(a_168) in 
-out(att,'368');
-out(att,'372');
+out(att,'356');
+out(att,'360');
 out(att,Minus(SP_EL0_sy,'1800'));
-out(att,'376');
+out(att,'364');
 let R0_203=Minus(SP_EL0_sy,'2056') in 
-out(att,'380');
+out(att,'368');
 out(att,Minus(SP_EL0_sy,'2592'));
 let mac_216=mac(pars12_184,km) in 
-out(att,'388');
-out(att,'392');
+out(att,'376');
+out(att,'380');
 out(att,Minus(SP_EL0_sy,'1544'));
-out(att,'396');
+out(att,'384');
 let R1_235=Minus(SP_EL0_sy,'1800') in 
-out(att,'400');
+out(att,'388');
 let R0_240=Minus(SP_EL0_sy,'1544') in 
 let cmpmac_242=compare_mac(pars22(a_168),mac_216) in 
-out(att,'408');
+out(att,'396');
 let ProcState_Z_250=Equal(LowCast(cmpmac_242,'32'),'0') in 
-out(att,'412');
+out(att,'400');
 if LowCast(cmpmac_242,'32')='0' then 
-out(att,'416');
+out(att,'404');
 let R3_259=Minus(SP_EL0_sy,'776') in 
-out(att,'420');
+out(att,'408');
 let R2_264=Minus(SP_EL0_sy,'1032') in 
-out(att,'424');
+out(att,'412');
 let R1_269=Minus(SP_EL0_sy,'1288') in 
-out(att,'428');
+out(att,'416');
 let R0_274=Minus(SP_EL0_sy,'2056') in 
+out(att,'420');
+out(att,'424');
+out(att,'428');
 out(att,'432');
-out(att,'436');
+out(att,Minus(SP_EL0_sy,'2584'));
+let Dec_293=dec(pars12_184,ke) in 
+let Pars13_296=pars13(Dec_293) in 
+let Pars23_297=pars23(Dec_293) in 
 out(att,'440');
+let ProcState_Z_303=Equal(LowCast(Dec_293,'32'),'0') in 
 out(att,'444');
-out(att,Minus(SP_EL0_sy,'2584'));
-let pars12_293=pars12(a_168) in 
+if LowCast(Dec_293,'32')='0' then 
+out(att,'532');
+let R0_310='0' in 
+0
+else out(att,'448');
+let R1_315=Minus(SP_EL0_sy,'2312') in 
 out(att,'452');
-let ProcState_Z_299=Equal(LowCast(pars12_293,'32'),'0') in 
-out(att,'456');
-if LowCast(pars12_293,'32')='0' then 
-out(att,'544');
-let R0_306='0' in 
-0
-else out(att,'460');
-let R1_311=Minus(SP_EL0_sy,'2312') in 
+let R0_320=Minus(SP_EL0_sy,'1032') in 
+let cmpnonce_322=compare_nonces(Pars23_297,RAND_NUM_143) in 
+out(att,'460');
+let ProcState_Z_330=Equal(LowCast(cmpnonce_322,'32'),'0') in 
 out(att,'464');
-let R0_316=Minus(SP_EL0_sy,'1032') in 
-let cmpnonce_318=compare_nonces(key_sy,RAND_NUM_143) in 
+if LowCast(cmpnonce_322,'32')='0' then 
+new ~337_nonce;
+let RAND_NUM_336=~337_nonce in 
 out(att,'472');
-let ProcState_Z_326=Equal(LowCast(cmpnonce_318,'32'),'0') in 
 out(att,'476');
-if LowCast(cmpnonce_318,'32')='0' then 
-new ~333_nonce;
-let RAND_NUM_332=~333_nonce in 
-out(att,'484');
-out(att,'488');
 out(att,Minus(SP_EL0_sy,'520'));
+out(att,'480');
+let R3_356=Minus(SP_EL0_sy,'264') in 
+out(att,'484');
+let R2_361=Minus(SP_EL0_sy,'520') in 
+out(att,'488');
+let R1_366=Minus(SP_EL0_sy,'1288') in 
 out(att,'492');
-let R3_352=Minus(SP_EL0_sy,'264') in 
+let R0_371=Minus(SP_EL0_sy,'2312') in 
 out(att,'496');
-let R2_357=Minus(SP_EL0_sy,'520') in 
 out(att,'500');
-let R1_362=Minus(SP_EL0_sy,'1288') in 
-out(att,'504');
-let R0_367=Minus(SP_EL0_sy,'2312') in 
-out(att,'508');
-out(att,'512');
 out(att,Minus(SP_EL0_sy,'2584'));
-let Conc_382=conc3(key_sy,RAND_NUM_332,Crypto_sy) in 
-let Enc_385=enc(Conc_382,ke) in 
-out(att,Enc_385);
-out(att,'520');
-let R0_391=Minus(SP_EL0_sy,'264') in 
-out(att,'524');
+let Conc_386=conc3(Pars23_297,RAND_NUM_336,Pars13_296) in 
+let Enc_389=enc(Conc_386,ke) in 
+out(att,Enc_389);
+out(att,'508');
+let R0_395=Minus(SP_EL0_sy,'264') in 
+out(att,'512');
 out(att,Minus(SP_EL0_sy,'2592'));
-out(att,'528');
-out(att,'28');
-let SP_EL0_410=Minus(SP_EL0_sy,'2624') in 
-out(att,'32');
-out(att,Minus(SP_EL0_sy,'2616'));
-out(att,'36');
-out(att,SP_EL0_410);
-out(att,'40');
-out(att,'44');
-let SP_EL0_443=Minus(SP_EL0_sy,'2608') in 
-out(att,'48')
-else out(att,'536');
-let R0_448='0' in 
+let mac_408=mac(Enc_389,km) in 
+out(att,mac_408)
+else out(att,'524');
+let R0_412='0' in 
 0
-else out(att,'552');
-let R0_451='0' in 
+else out(att,'540');
+let R0_415='0' in 
 0
-else let R0*_452='0' in 
+else let R0*_416='0' in 
 out(att,'0');
 out(att,Minus(SP_EL0_sy,'8'));
-out(att,R0*_459);
-let ProcState_C*_476=LessOrEqual(R3*_475,R2*_468) in 
-let ProcState_N*_477=SignedLessThan(Minus(R2*_468,R3*_475),'0') in 
-let ProcState_V*_478=Equal(SignedLessThan(Minus(R2*_468,R3*_475),'0'),SignedLessOrEqual(R3*_475,R2*_468)) in 
-let ProcState_Z*_479=Equal(R2*_468,R3*_475) in 
-let R2*_480=Minus(R2*_468,R3*_475) in 
-let R3*_481='0' in 
-if Not(ProcState_Z*_479) then 
-let R0*_484='0' in 
+out(att,R0*_423);
+let ProcState_Z*_443=Equal(R2*_432,R3*_439) in 
+let R2*_444=Minus(R2*_432,R3*_439) in 
+let R3*_445='0' in 
+if Not(ProcState_Z*_443) then 
+let R0*_448='0' in 
 out(att,SP_EL0_5);
 out(att,Minus(SP_EL0_sy,'2600'));
-let SP_EL0*_503=Plus(SP_EL0_sy,'0') in 
-out(att,'328');
+let SP_EL0*_467=Plus(SP_EL0_sy,'0') in 
+out(att,'316');
 if LowCast(check_121,'32')='0' then 
-new ~512_nonce;
-let RAND_NUM_511=~512_nonce in 
-out(att,'336');
-out(att,'340');
+new ~476_nonce;
+let RAND_NUM_475=~476_nonce in 
+out(att,'324');
+out(att,'328');
 out(att,Minus(SP_EL0_sy,'2312'));
+out(att,'332');
+let R0_495=Minus(SP_EL0_sy,'2312') in 
+out(att,RAND_NUM_475);
+in(att,a_500);
 out(att,'344');
-let R0_531=Minus(SP_EL0_sy,'2312') in 
-out(att,RAND_NUM_511);
-in(att,a_536);
+out(att,'348');
+out(att,Minus(SP_EL0_sy,'2056'));
+let pars12_516=pars12(a_500) in 
 out(att,'356');
 out(att,'360');
-out(att,Minus(SP_EL0_sy,'2056'));
-let pars12_552=pars12(a_536) in 
-out(att,'368');
-out(att,'372');
 out(att,Minus(SP_EL0_sy,'1800'));
+out(att,'364');
+let R0_535=Minus(SP_EL0_sy,'2056') in 
+out(att,'368');
+out(att,Minus(SP_EL0_sy,'2592'));
+let mac_548=mac(pars12_516,km) in 
 out(att,'376');
-let R0_571=Minus(SP_EL0_sy,'2056') in 
 out(att,'380');
-out(att,Minus(SP_EL0_sy,'2592'));
-let mac_584=mac(pars12_552,km) in 
-out(att,'388');
-out(att,'392');
 out(att,Minus(SP_EL0_sy,'1544'));
+out(att,'384');
+let R1_567=Minus(SP_EL0_sy,'1800') in 
+out(att,'388');
+let R0_572=Minus(SP_EL0_sy,'1544') in 
+let cmpmac_574=compare_mac(pars22(a_500),mac_548) in 
 out(att,'396');
-let R1_603=Minus(SP_EL0_sy,'1800') in 
+let ProcState_Z_582=Equal(LowCast(cmpmac_574,'32'),'0') in 
 out(att,'400');
-let R0_608=Minus(SP_EL0_sy,'1544') in 
-let cmpmac_610=compare_mac(pars22(a_536),mac_584) in 
+if LowCast(cmpmac_574,'32')='0' then 
+out(att,'404');
+let R3_591=Minus(SP_EL0_sy,'776') in 
 out(att,'408');
-let ProcState_Z_618=Equal(LowCast(cmpmac_610,'32'),'0') in 
+let R2_596=Minus(SP_EL0_sy,'1032') in 
 out(att,'412');
-if LowCast(cmpmac_610,'32')='0' then 
+let R1_601=Minus(SP_EL0_sy,'1288') in 
 out(att,'416');
-let R3_627=Minus(SP_EL0_sy,'776') in 
+let R0_606=Minus(SP_EL0_sy,'2056') in 
 out(att,'420');
-let R2_632=Minus(SP_EL0_sy,'1032') in 
 out(att,'424');
-let R1_637=Minus(SP_EL0_sy,'1288') in 
 out(att,'428');
-let R0_642=Minus(SP_EL0_sy,'2056') in 
 out(att,'432');
-out(att,'436');
+out(att,Minus(SP_EL0_sy,'2584'));
+let Dec_625=dec(pars12_516,ke) in 
+let Pars13_628=pars13(Dec_625) in 
+let Pars23_629=pars23(Dec_625) in 
 out(att,'440');
+let ProcState_Z_635=Equal(LowCast(Dec_625,'32'),'0') in 
 out(att,'444');
-out(att,Minus(SP_EL0_sy,'2584'));
-let pars12_661=pars12(a_536) in 
+if LowCast(Dec_625,'32')='0' then 
+out(att,'532');
+let R0_642='0' in 
+0
+else out(att,'448');
+let R1_647=Minus(SP_EL0_sy,'2312') in 
 out(att,'452');
-let ProcState_Z_667=Equal(LowCast(pars12_661,'32'),'0') in 
-out(att,'456');
-if LowCast(pars12_661,'32')='0' then 
-out(att,'544');
-let R0_674='0' in 
-0
-else out(att,'460');
-let R1_679=Minus(SP_EL0_sy,'2312') in 
+let R0_652=Minus(SP_EL0_sy,'1032') in 
+let cmpnonce_654=compare_nonces(Pars23_629,RAND_NUM_475) in 
+out(att,'460');
+let ProcState_Z_662=Equal(LowCast(cmpnonce_654,'32'),'0') in 
 out(att,'464');
-let R0_684=Minus(SP_EL0_sy,'1032') in 
-let cmpnonce_686=compare_nonces(key_sy,RAND_NUM_511) in 
+if LowCast(cmpnonce_654,'32')='0' then 
+new ~669_nonce;
+let RAND_NUM_668=~669_nonce in 
 out(att,'472');
-let ProcState_Z_694=Equal(LowCast(cmpnonce_686,'32'),'0') in 
 out(att,'476');
-if LowCast(cmpnonce_686,'32')='0' then 
-new ~701_nonce;
-let RAND_NUM_700=~701_nonce in 
-out(att,'484');
-out(att,'488');
 out(att,Minus(SP_EL0_sy,'520'));
+out(att,'480');
+let R3_688=Minus(SP_EL0_sy,'264') in 
+out(att,'484');
+let R2_693=Minus(SP_EL0_sy,'520') in 
+out(att,'488');
+let R1_698=Minus(SP_EL0_sy,'1288') in 
 out(att,'492');
-let R3_720=Minus(SP_EL0_sy,'264') in 
+let R0_703=Minus(SP_EL0_sy,'2312') in 
 out(att,'496');
-let R2_725=Minus(SP_EL0_sy,'520') in 
 out(att,'500');
-let R1_730=Minus(SP_EL0_sy,'1288') in 
-out(att,'504');
-let R0_735=Minus(SP_EL0_sy,'2312') in 
-out(att,'508');
-out(att,'512');
 out(att,Minus(SP_EL0_sy,'2584'));
-let Conc_750=conc3(key_sy,RAND_NUM_700,Crypto_sy) in 
-let Enc_753=enc(Conc_750,ke) in 
-out(att,Enc_753);
-out(att,'520');
-let R0_759=Minus(SP_EL0_sy,'264') in 
-out(att,'524');
+let Conc_718=conc3(Pars23_629,RAND_NUM_668,Pars13_628) in 
+let Enc_721=enc(Conc_718,ke) in 
+out(att,Enc_721);
+out(att,'508');
+let R0_727=Minus(SP_EL0_sy,'264') in 
+out(att,'512');
 out(att,Minus(SP_EL0_sy,'2592'));
-out(att,'528');
-out(att,'28');
-let SP_EL0_778=Minus(SP_EL0_sy,'2624') in 
-out(att,'32');
-out(att,Minus(SP_EL0_sy,'2616'));
-out(att,'36');
-out(att,SP_EL0_778);
-out(att,'40');
-out(att,'44');
-let SP_EL0_811=Minus(SP_EL0_sy,'2608') in 
-out(att,'48')
-else out(att,'536');
-let R0_816='0' in 
+let mac_740=mac(Enc_721,km) in 
+out(att,mac_740)
+else out(att,'524');
+let R0_744='0' in 
 0
-else out(att,'552');
-let R0_819='0' in 
+else out(att,'540');
+let R0_747='0' in 
 0
-else let R30*_820='600' in 
-out(att,'328');
+else let R30*_748='588' in 
+out(att,'316');
 if LowCast(check_121,'32')='0' then 
-new ~829_nonce;
-let RAND_NUM_828=~829_nonce in 
-out(att,'336');
-out(att,'340');
+new ~757_nonce;
+let RAND_NUM_756=~757_nonce in 
+out(att,'324');
+out(att,'328');
 out(att,Minus(SP_EL0_sy,'2312'));
+out(att,'332');
+let R0_776=Minus(SP_EL0_sy,'2312') in 
+out(att,RAND_NUM_756);
+in(att,a_781);
 out(att,'344');
-let R0_848=Minus(SP_EL0_sy,'2312') in 
-out(att,RAND_NUM_828);
-in(att,a_853);
+out(att,'348');
+out(att,Minus(SP_EL0_sy,'2056'));
+let pars12_797=pars12(a_781) in 
 out(att,'356');
 out(att,'360');
-out(att,Minus(SP_EL0_sy,'2056'));
-let pars12_869=pars12(a_853) in 
-out(att,'368');
-out(att,'372');
 out(att,Minus(SP_EL0_sy,'1800'));
+out(att,'364');
+let R0_816=Minus(SP_EL0_sy,'2056') in 
+out(att,'368');
+out(att,Minus(SP_EL0_sy,'2592'));
+let mac_829=mac(pars12_797,km) in 
 out(att,'376');
-let R0_888=Minus(SP_EL0_sy,'2056') in 
 out(att,'380');
-out(att,Minus(SP_EL0_sy,'2592'));
-let mac_901=mac(pars12_869,km) in 
-out(att,'388');
-out(att,'392');
 out(att,Minus(SP_EL0_sy,'1544'));
+out(att,'384');
+let R1_848=Minus(SP_EL0_sy,'1800') in 
+out(att,'388');
+let R0_853=Minus(SP_EL0_sy,'1544') in 
+let cmpmac_855=compare_mac(pars22(a_781),mac_829) in 
 out(att,'396');
-let R1_920=Minus(SP_EL0_sy,'1800') in 
+let ProcState_Z_863=Equal(LowCast(cmpmac_855,'32'),'0') in 
 out(att,'400');
-let R0_925=Minus(SP_EL0_sy,'1544') in 
-let cmpmac_927=compare_mac(pars22(a_853),mac_901) in 
+if LowCast(cmpmac_855,'32')='0' then 
+out(att,'404');
+let R3_872=Minus(SP_EL0_sy,'776') in 
 out(att,'408');
-let ProcState_Z_935=Equal(LowCast(cmpmac_927,'32'),'0') in 
+let R2_877=Minus(SP_EL0_sy,'1032') in 
 out(att,'412');
-if LowCast(cmpmac_927,'32')='0' then 
+let R1_882=Minus(SP_EL0_sy,'1288') in 
 out(att,'416');
-let R3_944=Minus(SP_EL0_sy,'776') in 
+let R0_887=Minus(SP_EL0_sy,'2056') in 
 out(att,'420');
-let R2_949=Minus(SP_EL0_sy,'1032') in 
 out(att,'424');
-let R1_954=Minus(SP_EL0_sy,'1288') in 
 out(att,'428');
-let R0_959=Minus(SP_EL0_sy,'2056') in 
 out(att,'432');
-out(att,'436');
+out(att,Minus(SP_EL0_sy,'2584'));
+let Dec_906=dec(pars12_797,ke) in 
+let Pars13_909=pars13(Dec_906) in 
+let Pars23_910=pars23(Dec_906) in 
 out(att,'440');
+let ProcState_Z_916=Equal(LowCast(Dec_906,'32'),'0') in 
 out(att,'444');
-out(att,Minus(SP_EL0_sy,'2584'));
-let pars12_978=pars12(a_853) in 
+if LowCast(Dec_906,'32')='0' then 
+out(att,'532');
+let R0_923='0' in 
+0
+else out(att,'448');
+let R1_928=Minus(SP_EL0_sy,'2312') in 
 out(att,'452');
-let ProcState_Z_984=Equal(LowCast(pars12_978,'32'),'0') in 
-out(att,'456');
-if LowCast(pars12_978,'32')='0' then 
-out(att,'544');
-let R0_991='0' in 
-0
-else out(att,'460');
-let R1_996=Minus(SP_EL0_sy,'2312') in 
+let R0_933=Minus(SP_EL0_sy,'1032') in 
+let cmpnonce_935=compare_nonces(Pars23_910,RAND_NUM_756) in 
+out(att,'460');
+let ProcState_Z_943=Equal(LowCast(cmpnonce_935,'32'),'0') in 
 out(att,'464');
-let R0_1001=Minus(SP_EL0_sy,'1032') in 
-let cmpnonce_1003=compare_nonces(key_sy,RAND_NUM_828) in 
+if LowCast(cmpnonce_935,'32')='0' then 
+new ~950_nonce;
+let RAND_NUM_949=~950_nonce in 
 out(att,'472');
-let ProcState_Z_1011=Equal(LowCast(cmpnonce_1003,'32'),'0') in 
 out(att,'476');
-if LowCast(cmpnonce_1003,'32')='0' then 
-new ~1018_nonce;
-let RAND_NUM_1017=~1018_nonce in 
-out(att,'484');
-out(att,'488');
 out(att,Minus(SP_EL0_sy,'520'));
+out(att,'480');
+let R3_969=Minus(SP_EL0_sy,'264') in 
+out(att,'484');
+let R2_974=Minus(SP_EL0_sy,'520') in 
+out(att,'488');
+let R1_979=Minus(SP_EL0_sy,'1288') in 
 out(att,'492');
-let R3_1037=Minus(SP_EL0_sy,'264') in 
+let R0_984=Minus(SP_EL0_sy,'2312') in 
 out(att,'496');
-let R2_1042=Minus(SP_EL0_sy,'520') in 
 out(att,'500');
-let R1_1047=Minus(SP_EL0_sy,'1288') in 
-out(att,'504');
-let R0_1052=Minus(SP_EL0_sy,'2312') in 
-out(att,'508');
-out(att,'512');
 out(att,Minus(SP_EL0_sy,'2584'));
-let Conc_1067=conc3(key_sy,RAND_NUM_1017,Crypto_sy) in 
-let Enc_1070=enc(Conc_1067,ke) in 
-out(att,Enc_1070);
-out(att,'520');
-let R0_1076=Minus(SP_EL0_sy,'264') in 
-out(att,'524');
+let Conc_999=conc3(Pars23_910,RAND_NUM_949,Pars13_909) in 
+let Enc_1002=enc(Conc_999,ke) in 
+out(att,Enc_1002);
+out(att,'508');
+let R0_1008=Minus(SP_EL0_sy,'264') in 
+out(att,'512');
 out(att,Minus(SP_EL0_sy,'2592'));
-out(att,'528');
-out(att,'28');
-let SP_EL0_1095=Minus(SP_EL0_sy,'2624') in 
-out(att,'32');
-out(att,Minus(SP_EL0_sy,'2616'));
-out(att,'36');
-out(att,SP_EL0_1095);
-out(att,'40');
-out(att,'44');
-let SP_EL0_1128=Minus(SP_EL0_sy,'2608') in 
-out(att,'48')
-else out(att,'536');
-let R0_1133='0' in 
+let mac_1021=mac(Enc_1002,km) in 
+out(att,mac_1021)
+else out(att,'524');
+let R0_1025='0' in 
 0
-else out(att,'552');
-let R0_1136='0' in 
+else out(att,'540');
+let R0_1028='0' in 
 0

@@ -30,7 +30,7 @@ static char get_cipher(void) {
 
 // Encryption and Decryption functions
 static void senc(char *val1, char *val2, char *val3, char *val4, char *val5) {
-send_cipher(val5); 
+
 }
 
 static int sdec(char *val1, char *val2, char *val3, char *val4, char *val5) {

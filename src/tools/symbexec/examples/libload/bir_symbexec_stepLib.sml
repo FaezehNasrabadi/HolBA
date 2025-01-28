@@ -157,17 +157,17 @@ local
       (* val _ = print "\n Cnd : ";	 *)
       (* val _ = print (term_to_string cnd); *)
       (* val _ = print "\n"; *)
-    in
+     in
 	if ((bir_bool_expSyntax.is_bir_exp_true cnd) orelse (bir_bool_expSyntax.is_bir_exp_true be))
-	then [((SYST_update_pc tgt1) o (SYST_update_pred ((tgt_true)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt1_exp tgt_true)) syst]
+	then [((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp)) syst]
 	else if ((bir_bool_expSyntax.is_bir_exp_false cnd) orelse (bir_bool_expSyntax.is_bir_exp_false be))
-	then [((SYST_update_pc tgt2) o (SYST_update_pred ((tgt_false)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt2_exp tgt_false)) syst]
+	then [((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp)) syst]
 	else
 	    state_branch_simp
 		"cjmp"
 		cnd
-		((SYST_update_pc tgt1) o (SYST_update_pred ((tgt_true)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt1_exp tgt_true))
-		((SYST_update_pc tgt2) o (SYST_update_pred ((tgt_false)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt2_exp tgt_false))
+		((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp))
+		((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp))
 		syst
     end
     ) handle state_exec_try_cjmp_exn => NONE

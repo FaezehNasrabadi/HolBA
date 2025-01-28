@@ -71,8 +71,8 @@ val mem_bounds =
         
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
-val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry;
-(* val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry; *)
+(* val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry; *)
+val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry;
 
 val bl_dict_org    = gen_block_dict prog_tm;
 val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
@@ -200,8 +200,13 @@ val valtr =  tree_with_value tree sort_vals;
      
 val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
+
+val purged_tree = (purge_tree valtr);
+
+val _ = print ("built a purged tree");
+val _ = print "\n";
     
-val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
+val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
     
 val _ = print ("built sapic_process");
 val _ = print "\n";

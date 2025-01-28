@@ -138,8 +138,17 @@ local
       val tgt2    = fst (List.nth (vs, 2));
       val be      = if (is_BExp_Den cnd) then (bir_symbexec_funcLib.symbval_bexp (bir_symbexec_stateLib.get_state_symbv "CJmp" (dest_BExp_Den cnd) syst)) else cnd;
 
-      val tgt1_exp = (bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt1;
-      val tgt2_exp = (bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt2;
+      val tgt1_exp = if (is_BL_Address tgt1)
+		     then ((bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt1)
+		     else if (is_BL_Label tgt1)
+		     then (bir_expSyntax.mk_BExp_Den (bir_envSyntax.mk_BVar ((dest_BL_Label tgt1), “BType_Imm Bit64”)))
+		     else raise ERR "couldn't get tgt1_exp" (term_to_string tgt1);
+			 
+      val tgt2_exp = if (is_BL_Address tgt2)
+		     then ((bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt2)
+		     else if (is_BL_Label tgt2)
+		     then (bir_expSyntax.mk_BExp_Den (bir_envSyntax.mk_BVar ((dest_BL_Label tgt2), “BType_Imm Bit64”)))
+		     else raise ERR "couldn't get tgt2_exp" (term_to_string tgt2);
 	  
       val tgt_true = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("tgt_true", bir_valuesSyntax.BType_Bool_tm));
       val tgt_false = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("tgt_false", bir_valuesSyntax.BType_Bool_tm));
@@ -150,19 +159,19 @@ local
       (* val _ = print "\n"; *)
     in
 	if ((bir_bool_expSyntax.is_bir_exp_true cnd) orelse (bir_bool_expSyntax.is_bir_exp_true be))
-	then [((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp)) syst]
+	then [((SYST_update_pc tgt1) o (SYST_update_pred ((tgt_true)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt1_exp tgt_true)) syst]
 	else if ((bir_bool_expSyntax.is_bir_exp_false cnd) orelse (bir_bool_expSyntax.is_bir_exp_false be))
-	then [((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp)) syst]
+	then [((SYST_update_pc tgt2) o (SYST_update_pred ((tgt_false)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt2_exp tgt_false)) syst]
 	else
 	    state_branch_simp
 		"cjmp"
 		cnd
-		((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp))
-		((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp))
+		((SYST_update_pc tgt1) o (SYST_update_pred ((tgt_true)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt1_exp tgt_true))
+		((SYST_update_pc tgt2) o (SYST_update_pred ((tgt_false)::(SYST_get_pred syst))) o (bir_symbexec_funcLib.update_symbval tgt2_exp tgt_false))
 		syst
     end
-    )
-      handle HOL_ERR _ => NONE;
+    ) handle state_exec_try_cjmp_exn => NONE
+           | e => raise wrap_exn ("state_exec_try_cjmp_label::") e;
 
   fun exist_in_prog tgts ex_tgts =
       let

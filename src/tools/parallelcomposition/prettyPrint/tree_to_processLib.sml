@@ -131,9 +131,12 @@ fun sbir_tree_sapic_process sort_vals tree =
 	VLeaf => ProcessNull_tm
       | VBranch ((a,b),lstr,rstr)  => (* mk_ProcessComb((mk_CondEq ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
       (* mk_ProcessComb (NDC_tm,(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) *)
-	if (is_BExp_Den b) then
 	let
-	     val be =  bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b));
+	    val _ = print ((term_to_string a)^" , "^(term_to_string b)^"\n");
+	in
+	    if (is_BExp_Den b) then
+	let
+	     val be =  (bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b))) handle _ => b;
 	 in
 	     if (is_BExp_BinPred be) then
 		 let 
@@ -146,9 +149,12 @@ fun sbir_tree_sapic_process sort_vals tree =
 	     else
 		  mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 	 end
-	else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr)) 
+	    else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+	end
       | VNode ((a,b),str)  =>  (
 	let
+	 
+	    (* val _ = print ((term_to_string a)^" , "^(term_to_string b)^"\n"); *)
 	    val (name,bir_type) = dest_BVar a;
 	    val namestr = stringSyntax.fromHOLstring name;
 	in
@@ -227,12 +233,17 @@ fun sbir_tree_sapic_process sort_vals tree =
 		    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 		 end*) then (sbir_tree_sapic_process sort_vals str)
 	    (* else if (String.isSuffix "observe_exp" namestr) *)
-	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
+	    else if ((String.isSuffix "tgt_true" namestr) orelse (String.isSuffix "tgt_false" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
-end)
+	end)
+			      (*   handle _ => raise ERR "sbir_tree_sapic_process" ("cannot do it "^(case tree of
+												       VLeaf => "Leaf"
+												     | VBranch ((a,b),lstr,rstr)  =>  ((term_to_string a)^" , "^(term_to_string b))
+												     | VNode ((a,b),str)  =>  ((term_to_string a)^" , "^(term_to_string b))
+										 ));
 			 
-(* 
+
 
  val exp = ``
 	       (BExp_Store

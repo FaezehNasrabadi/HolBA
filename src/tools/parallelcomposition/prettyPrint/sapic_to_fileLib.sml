@@ -211,7 +211,7 @@ else if (is_ProcessCall comb) then
 fun Vars_of_combinator rset comb =
     if (is_Parallel comb) then rset
     else if (is_NDC comb) then rset
-    else if (is_Cond comb) then (Vars_of_fact rset (dest_Cond comb))
+    else if (is_Cond comb) then (Vars_of_sapicterm rset (dest_Cond comb))
     else if (is_CondEq comb) then Redblackset.union((Vars_of_sapicterm rset ((fst o dest_CondEq) comb)),(Vars_of_sapicterm rset ((snd o dest_CondEq) comb)))
     else if (is_Let comb) then
 	let

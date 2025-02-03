@@ -29,7 +29,13 @@ open tree_to_processLib;
 open sapic_to_fileLib;
 open bir_symbexec_loopLib;
 open bir_inst_liftingHelpersLib;
+open gcc_supportLib;
+open bir_obs_modelTheory;
+open bir_obs_modelLib;
 
+ val ERR      = Feedback.mk_HOL_ERR "WhatsApp_session_builder_process_pre_key_bundle"
+ val wrap_exn = Feedback.wrap_exn   "WhatsApp_session_builder_process_pre_key_bundle"
+		
 fun update_n_dict_ ([], n_dict) = n_dict
     | update_n_dict_ (((lbl_tm)::todo), n_dict) =
 	  let
@@ -51,12 +57,51 @@ fun update_n_dict_ ([], n_dict) = n_dict
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
       (DB.fetch "WhatsApp_session_builder_process_pre_key_bundle" "WhatsApp_session_builder_process_pre_key_bundle_thm");
+
+
+val prog_range       = ((Arbnum.fromInt 0x00000000000450c), (Arbnum.fromInt 0x000000001b7ba37));
+
+val entry = Arbnum.fromInt 0x00000000000450c;
     
-val bl_dict_    = gen_block_dict prog_tm;
-val prog_lbl_tms_ = get_block_dict_keys bl_dict_;
+fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x0000000, x);
 
-val prog_vars = gen_vars_of_prog prog_tm;
+val stack_pointer_portion = Arbnum.fromHexString "0x0";    
 
+val mem_bounds =
+      let
+        val (mem_base, mem_len) = prog_range;
+	val mem_max = Arbnum.+ (mem_base, mem_len);
+	val mem_end = (Arbnum.- (Arbnum.- (mem_max, stack_pointer_portion), Arbnum.fromInt 16));
+	val (sp_start, sp_end) = (Arbnum.- (mem_max, stack_pointer_portion),
+				  Arbnum.- (mem_max, Arbnum.fromInt 16));
+      in
+	if Arbnum.< (Arbnum.+ (mem_base,stack_pointer_portion), Arbnum.- (mem_max,stack_pointer_portion)) then
+          pairSyntax.mk_pair
+	    (pairSyntax.mk_pair
+		 (wordsSyntax.mk_wordi (embexp_params_cacheable mem_base, 64),
+		  wordsSyntax.mk_wordi (embexp_params_cacheable mem_end, 64)),
+	     pairSyntax.mk_pair
+		 (wordsSyntax.mk_wordi (embexp_params_cacheable sp_start, 64),
+		  wordsSyntax.mk_wordi (embexp_params_cacheable sp_end, 64)))
+	else
+	  raise ERR "scamv_phase_add_obs" "the experiment memory is not properly set"
+      end;
+        
+fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
+
+val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry;
+(* val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry; *)
+
+val bl_dict_org    = gen_block_dict prog_tm;
+val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
+val n_dict_org = bir_cfgLib.cfg_build_node_dict bl_dict_org prog_lbl_tms_org;   
+    
+val bl_dict_spec    = gen_block_dict prog_w_obs;
+val prog_lbl_tms_spec = get_block_dict_keys bl_dict_spec;
+val n_dict_spec = bir_cfgLib.cfg_build_node_dict bl_dict_spec prog_lbl_tms_spec; 
+    
+val prog_vars = (gen_vars_of_prog prog_w_obs) handle e => raise wrap_exn "prog_vars" e;
+    
 val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
 
 val prog_vars = adv_mem::prog_vars;
@@ -72,30 +117,32 @@ val prog_vars = op_mem::prog_vars;
 val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
 
 val prog_vars = crypto::prog_vars;
-    
-val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
 
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;
-      
+    
 val lbl_tm = ``BL_Address (Imm64 0xEE5DD4w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 0xEE5FCCw)``];
+val stop_lbl_tms = [``BL_Address (Imm64 0xEE5FCCw)``,“BL_Address (Imm64 0xEE5F8Cw)”,“BL_Address (Imm64 0xEE5FA8w)”,“BL_Address (Imm64 0xEE5FB0w)”,“BL_Address (Imm64 0xEE5F80w)”];
+
+    
+val g1 = cfg_create "toy" [lbl_tm] n_dict_org bl_dict_org;
+
+val n_dict_org = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
+    
+    
+val adr_dict = (bir_symbexec_PreprocessLib.fun_addresses_dict n_dict_org) handle e => raise wrap_exn "adr_dict" e;
+
     
 val syst = init_state lbl_tm prog_vars;
 
 val pred_conjs = [``bir_exp_true``];
     
-val syst = state_add_preds "init_pred" pred_conjs syst;
+val init_syst = state_add_preds "init_pred" pred_conjs syst;
 
 val _ = print "initial state created.\n\n";
 
 val cfb = false;
-
-val g1 = cfg_create "toy" [lbl_tm] n_dict bl_dict_;
-
-val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
     
-val systs = symb_exec_to_stop (abpfun cfb) n_dict bl_dict_ [syst] stop_lbl_tms adr_dict [];
+val systs = symb_exec_to_stop (abpfun cfb) n_dict_org bl_dict_spec [init_syst] stop_lbl_tms adr_dict [];
 val _ = print "\n\n";
 val _ = print "finished exploration of all paths.\n\n";
 val _ = print ("number of stopped symbolic execution states: " ^ (Int.toString (length systs)));

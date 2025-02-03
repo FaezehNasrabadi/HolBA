@@ -170,8 +170,9 @@ local
 		((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp))
 		syst
     end
-    ) handle state_exec_try_cjmp_exn => NONE
-           | e => raise wrap_exn ("state_exec_try_cjmp_label::") e;
+    ) handle HOL_ERR _ => NONE;
+      (*handle state_exec_try_cjmp_exn => NONE
+           | e => raise wrap_exn ("state_exec_try_cjmp_label::") e;*)
 
   fun exist_in_prog tgts ex_tgts =
       let
@@ -196,7 +197,7 @@ fun add_tgt_equ tgt be =
     in
 	pred
     end;
-    (*
+    
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var n_dict lbl_tm est syst =
@@ -270,8 +271,8 @@ in (* local *)
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;
 end (* local *)
-     *)
-
+     
+(*
 val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var est syst =
@@ -296,14 +297,17 @@ val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
                   print ("state_exec_try_jmp_exp_var::no const: " ^
                          (term_to_string bvalo) ^ " ;; " ^ 
                          (term_to_string be_tgt) ^ "\n");
-                  raise state_exec_try_jmp_exp_var_exn);(*ERR "state_exec_try_jmp_exp_var"
-                    ("target value is no const: " ^ (term_to_string bvalo)));*)
+                  raise state_exec_try_jmp_exp_var_exn);
+    (*
+ERR "state_exec_try_jmp_exp_var"
+                    ("target value is no const: " ^ (term_to_string bvalo)));
+*)
     in
       [SYST_update_pc tgt syst]
     end
-    )
-    handle state_exec_try_jmp_exp_var_exn => NONE
-         | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;
+    ) handle HOL_ERR _ => NONE;
+   (* handle state_exec_try_jmp_exp_var_exn => NONE
+         | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;*)
 
   open bir_cfgLib;
 
@@ -342,7 +346,7 @@ in (* local *)
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;;
 end (* local *)
-    
+    *)
 local
     open bir_block_collectionLib;
 

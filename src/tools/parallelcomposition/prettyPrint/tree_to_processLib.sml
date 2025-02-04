@@ -25,6 +25,8 @@ local
     open sbir_treeLib;
 in
 
+fun ignore_num name = (stringSyntax.fromMLstring o implode o snd o (bir_auxiliaryLib.list_split_pred #"_") o explode) name;
+
 fun sapic_term_to_var str =
     let
 	val namestr = stringSyntax.fromMLstring str;
@@ -178,6 +180,8 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    then (mk_ProcessAction (Rep_tm,(sbir_tree_sapic_process sort_vals str)))
 	    else if (String.isSuffix "Adv" namestr)
 	    then (mk_ProcessAction ((mk_ChIn (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
+	    else if (String.isSuffix "Channel" namestr)
+	    then (mk_ProcessAction ((mk_ChIn (mk_some(mk_TVar(mk_Var((ignore_num namestr),“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
 	    else if (is_BExp_Store b)

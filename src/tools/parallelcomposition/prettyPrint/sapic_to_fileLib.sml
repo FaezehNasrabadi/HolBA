@@ -21,14 +21,17 @@ val N = “Name FreshName "49_OTP"”*)
 fun name_to_string N =
     let
 	val (tag,str) = dest_Name N;
+	val name = 	if (List.exists (fn x => x = #"_") ((explode o stringSyntax.fromHOLstring) str))
+			then bir_symbexec_treeLib.rev_name (stringSyntax.fromHOLstring str)
+			else (stringSyntax.fromHOLstring str);
     in
 	if (is_FreshName tag)
-	then ("~" ^ (stringSyntax.fromHOLstring str))
+	then ("~" ^ name)
 	else if (is_PubName tag)
-	then ("'"  ^ (stringSyntax.fromHOLstring str) ^ "'") 
-        (* then ("c"  ^ (stringSyntax.fromHOLstring str)) *)
+	then ("'"  ^ name ^ "'") 
+        (* then ("c"  ^ name) *)
 	else if (is_NodeName tag)
-	then ("#" ^ (stringSyntax.fromHOLstring str))
+	then ("#" ^ name)
 	else raise ERR "name_to_string" ("Don't know Sapic Name: " ^ (term_to_string N))
     end;
 

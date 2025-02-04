@@ -1722,9 +1722,9 @@ fun Random_Number syst =
 
 	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RAND_NUM", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
-	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("nonce", “BType_Imm Bit64”)); (* generate a fresh name *)
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("Emph", “BType_Imm Bit64”)); (* generate a fresh name *)
 
-	val bv_key = ``BVar "Nonce" (BType_Imm Bit64)``;
+	val bv_key = ``BVar "Crypto" (BType_Imm Bit64)``;
 
 	val syst =  update_envvar bv_key Fr_vn syst;
 
@@ -1848,18 +1848,13 @@ fun DH_key vn syst =
  fun session_key syst =
     let
 
-	val env  = (SYST_get_env  syst);
+	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RKChannel", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
+
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RK", “BType_Imm Bit64”)); (* generate a fresh name *)
+
+	val syst = update_key Fr_vn vn syst;
 	    
-	val key = find_bv_val ("encypt::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``;
-
-	val c2 = ``BVar "0x02" (BType_Imm Bit64)``;
-		     
-	val (C_bv, C_be) = HMac2 key c2;    	    	
-
-	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
-
-	val syst = update_key C_be Fr_CK syst;
+	val syst = add_knowledge_r0 vn syst;  (*send to channel *)
 
     in
 	syst

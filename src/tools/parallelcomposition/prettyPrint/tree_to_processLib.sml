@@ -147,12 +147,12 @@ fun sbir_tree_sapic_process sort_vals tree =
 		 in
 		     if (is_BIExp_Equal bop)
 		     then mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term subexp1)),(fst(bir_exp_to_sapic_term subexp2)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
-		     else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+		     else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 		 end
 	     else
-		  mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+		  mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 	 end
-	    else mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+	    else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term b)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 	end
       | VNode ((a,b),str)  =>  (
 	let
@@ -166,13 +166,33 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    else if ((String.isSuffix "comp_true_cnd" namestr) orelse (String.isSuffix "cjmp_true_cnd" namestr))
 	    then
 		let
+		(* val _ = print ((term_to_string a)^" , "^(term_to_string b)^"\n"); *)
+		in
+		    if (is_BExp_Den b) then
+			let
+			    val be =  (bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b))) handle _ => b;
+			in
+			    if (is_BExp_BinPred be) then
+				let 
+				    val (bop, subexp1, subexp2) = (dest_BExp_BinPred) be;	
+				in
+				    if (is_BIExp_Equal bop)
+				    then mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term subexp1)),(fst(bir_exp_to_sapic_term subexp2)))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm))
+				    else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm))
+				end
+			    else
+				mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm))
+			end
+		    else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term b)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm))
+		end
+	    (*let
 		    val be = (bir_exp_symbvar_to_symbval sort_vals b);
 		    val _ = print "\n";
 		    val _ = print (term_to_string be);
 		    val _ = print "\n";
 		in
 		    mk_ProcessComb ((mk_Cond (fst(bir_exp_to_sapic_term be))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm))
-		end
+		end*)
 	    else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) )
 	    then  (mk_ProcessAction ((mk_New ((sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),((mk_Con o sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))))
 	    else if ((String.isSuffix "K" namestr) orelse (String.isSuffix "Kr" namestr))

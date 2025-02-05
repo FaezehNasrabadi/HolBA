@@ -27,7 +27,7 @@ local
 
   val bv_countw = bir_envSyntax.mk_BVar_string ("countw", ``(BType_Imm Bit64)``);
   fun state_exec_assign (bv, be) syst =
-    if identical bv bv_countw andalso bir_expSyntax.is_BExp_IfThenElse be then
+    if (*identical bv bv_countw andalso*) bir_expSyntax.is_BExp_IfThenElse be then
       let
         val (cnd, be1, be2) = bir_expSyntax.dest_BExp_IfThenElse be;
       in

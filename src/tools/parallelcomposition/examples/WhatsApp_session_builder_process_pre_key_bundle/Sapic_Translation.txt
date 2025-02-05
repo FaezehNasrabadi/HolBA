@@ -1,240 +1,109 @@
-let SP_EL0_5=Minus(SP_EL0_sy,'160') in 
-let R29_32=Minus(SP_EL0_sy,'16') in 
-let R8_36='28270592' in 
-if Equal(R8_132,'0') then 
-out(att,'15621660');
-if SignedLessThan(LowCast(R0_149,'32'),'0') then 
-out(att,'15622088')
-else out(att,'15621680');
-if Equal(LowCast(R0_149,'32'),'0') then 
-out(att,'15622020')
-else out(att,'15621684');
-if Equal(R25_200,'0') then 
-out(att,'15622032')
-else out(att,'15621692');
-let R0_271=Minus(SP_EL0_sy,'152') in 
-if SignedLessThan(LowCast(R0_271,'32'),'0') then 
-out(att,'15622060')
-else out(att,'15621720');
-let tmp_R1_302=Plus(R26_295,'8') in 
-let R21_317=Plus(R21_248,'8') in 
-if Equal(LowCast(R0_271,'32'),'0') then 
-out(att,'15622068')
-else out(att,'15621756');
-if SignedLessThan(LowCast(R0_271,'32'),'0') then 
-out(att,'15622088')
-else out(att,'15621760');
-let R1_382=Minus(SP_EL0_sy,'112') in 
-in(RKChannel,RK_385);
-let R0_386=RKChannel_384 in 
-out(att,RKChannel_384);
-if SignedLessThan(LowCast(R0_386,'32'),'0') then 
+in(RK,RKi_3);
+if SignedLessThan(LowCast(RKi_3,'32'),'0') then 
 out(att,'15622060')
 else out(att,'15621776');
-let R1_411=Minus(SP_EL0_sy,'120') in 
-new ~Emph_414;
-let RAND_NUM_413=~Emph_414 in 
-if SignedLessThan(LowCast(RAND_NUM_413,'32'),'0') then 
+let R1_27=Plus(SP_EL0_sy,'40') in 
+new ~Emph_30;
+let RAND_NUM_29=~Emph_30 in 
+if SignedLessThan(LowCast(RAND_NUM_29,'32'),'0') then 
 out(att,'15622060')
 else out(att,'15621792');
-if Equal(R23_239,'0') then 
+if Equal(R23_sy,'0') then 
 out(att,'15621804');
-let R1_455=Minus(SP_EL0_sy,'128') in 
-if SignedLessThan(LowCast(R0_450,'32'),'0') then 
+let R1_71=Plus(SP_EL0_sy,'32') in 
+let hkdf_73=hkdf(RKi_3,RAND_NUM_29) in 
+if SignedLessThan(LowCast(hkdf_73,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621828');
-let R0_493=Minus(SP_EL0_sy,'136') in 
-if SignedLessThan(LowCast(R0_493,'32'),'0') then 
+let R0_110=Plus(SP_EL0_sy,'24') in 
+let CKi_115=pars12(hkdf_73) in 
+if SignedLessThan(LowCast(CKi_115,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621856');
-if Equal(LowCast(R8_527,'32'),'0') then 
+if Equal(LowCast(R8_145,'32'),'0') then 
 out(att,'15621880');
-if SignedLessThan(LowCast(R27_544,'32'),'0') then 
+let RKiNext_186=pars22(hkdf_73) in 
+if SignedLessThan(LowCast(RKiNext_186,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621904');
-let R8_582=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_588=Equal(R23_239,'0') in 
-let R1_591=IfThenElse(ProcState_Z_588,R8_582,'0') in 
-let R1_644=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_639,'32'),'0') then 
+let R8_201=Plus(SP_EL0_sy,'20') in 
+let ProcState_Z_207=Equal(R23_sy,'0') in 
+let R1_210=IfThenElse(ProcState_Z_207,R8_201,'0') in 
+let R1_263=Plus(SP_EL0_sy,'16') in 
+if SignedLessThan(LowCast(R0_258,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621956');
-if SignedLessThan(LowCast(R0_720,'32'),'0') then 
+out(CK,CKi_115);
+out(RK,RKiNext_186);
+if SignedLessThan(LowCast(R0_340,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15622000')
 else out(att,'15621868');
-if SignedLessThan(LowCast(R25_518,'32'),'0') then 
+if SignedLessThan(LowCast(R25_136,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621880');
-if SignedLessThan(LowCast(R27_779,'32'),'0') then 
+let RKiNext_424=pars22(hkdf_73) in 
+if SignedLessThan(LowCast(RKiNext_424,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621904');
-let R8_817=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_823=Equal(R23_239,'0') in 
-let R1_826=IfThenElse(ProcState_Z_823,R8_817,'0') in 
-let R1_879=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_874,'32'),'0') then 
+let R8_439=Plus(SP_EL0_sy,'20') in 
+let ProcState_Z_445=Equal(R23_sy,'0') in 
+let R1_448=IfThenElse(ProcState_Z_445,R8_439,'0') in 
+let R1_501=Plus(SP_EL0_sy,'16') in 
+if SignedLessThan(LowCast(R0_496,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621956');
-if SignedLessThan(LowCast(R0_955,'32'),'0') then 
+out(CK,CKi_115);
+out(RK,RKiNext_424);
+if SignedLessThan(LowCast(R0_578,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15622000')
 else out(att,'15621796');
-let R1_1037=Minus(SP_EL0_sy,'128') in 
-if SignedLessThan(LowCast(R0_1032,'32'),'0') then 
+let R1_661=Plus(SP_EL0_sy,'32') in 
+let hkdf_663=hkdf(RKi_3,RAND_NUM_29) in 
+if SignedLessThan(LowCast(hkdf_663,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621828');
-let R0_1075=Minus(SP_EL0_sy,'136') in 
-if SignedLessThan(LowCast(R0_1075,'32'),'0') then 
+let R0_700=Plus(SP_EL0_sy,'24') in 
+let CKi_705=pars12(hkdf_663) in 
+if SignedLessThan(LowCast(CKi_705,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621856');
-if Equal(LowCast(R8_1109,'32'),'0') then 
+if Equal(LowCast(R8_735,'32'),'0') then 
 out(att,'15621880');
-if SignedLessThan(LowCast(R27_1126,'32'),'0') then 
+let RKiNext_776=pars22(hkdf_663) in 
+if SignedLessThan(LowCast(RKiNext_776,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621904');
-let R8_1164=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_1170=Equal(R23_239,'0') in 
-let R1_1173=IfThenElse(ProcState_Z_1170,R8_1164,'0') in 
-let R1_1226=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_1221,'32'),'0') then 
+let R8_791=Plus(SP_EL0_sy,'20') in 
+let ProcState_Z_797=Equal(R23_sy,'0') in 
+let R1_800=IfThenElse(ProcState_Z_797,R8_791,'0') in 
+let R1_853=Plus(SP_EL0_sy,'16') in 
+if SignedLessThan(LowCast(R0_848,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621956');
-if SignedLessThan(LowCast(R0_1302,'32'),'0') then 
+out(CK,CKi_705);
+out(RK,RKiNext_776);
+if SignedLessThan(LowCast(R0_930,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15622000')
 else out(att,'15621868');
-if SignedLessThan(LowCast(R25_1100,'32'),'0') then 
+if SignedLessThan(LowCast(R25_726,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621880');
-if SignedLessThan(LowCast(R27_1361,'32'),'0') then 
+let RKiNext_1014=pars22(hkdf_663) in 
+if SignedLessThan(LowCast(RKiNext_1014,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621904');
-let R8_1399=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_1405=Equal(R23_239,'0') in 
-let R1_1408=IfThenElse(ProcState_Z_1405,R8_1399,'0') in 
-let R1_1461=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_1456,'32'),'0') then 
+let R8_1029=Plus(SP_EL0_sy,'20') in 
+let ProcState_Z_1035=Equal(R23_sy,'0') in 
+let R1_1038=IfThenElse(ProcState_Z_1035,R8_1029,'0') in 
+let R1_1091=Plus(SP_EL0_sy,'16') in 
+if SignedLessThan(LowCast(R0_1086,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15621956');
-if SignedLessThan(LowCast(R0_1537,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15622000')
-else out(att,'15621656');
-if SignedLessThan(LowCast(R0_1597,'32'),'0') then 
-out(att,'15622088')
-else out(att,'15621680');
-if Equal(LowCast(R0_1597,'32'),'0') then 
-out(att,'15622020')
-else out(att,'15621684');
-if Equal(R25_1648,'0') then 
-out(att,'15622032')
-else out(att,'15621692');
-let R0_1719=Minus(SP_EL0_sy,'152') in 
-if SignedLessThan(LowCast(R0_1719,'32'),'0') then 
-out(att,'15622060')
-else out(att,'15621720');
-let tmp_R1_1750=Plus(R26_1743,'8') in 
-let R21_1765=Plus(R21_1696,'8') in 
-if Equal(LowCast(R0_1719,'32'),'0') then 
-out(att,'15622068')
-else out(att,'15621756');
-if SignedLessThan(LowCast(R0_1719,'32'),'0') then 
-out(att,'15622088')
-else out(att,'15621760');
-let R1_1830=Minus(SP_EL0_sy,'112') in 
-in(RKChannel,RK_1833);
-let R0_1834=RKChannel_1832 in 
-out(att,RKChannel_1832);
-if SignedLessThan(LowCast(R0_1834,'32'),'0') then 
-out(att,'15622060')
-else out(att,'15621776');
-let R1_1859=Minus(SP_EL0_sy,'120') in 
-new ~Emph_1862;
-let RAND_NUM_1861=~Emph_1862 in 
-if SignedLessThan(LowCast(RAND_NUM_1861,'32'),'0') then 
-out(att,'15622060')
-else out(att,'15621792');
-if Equal(R23_1687,'0') then 
-out(att,'15621804');
-let R1_1903=Minus(SP_EL0_sy,'128') in 
-if SignedLessThan(LowCast(R0_1898,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621828');
-let R0_1941=Minus(SP_EL0_sy,'136') in 
-if SignedLessThan(LowCast(R0_1941,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621856');
-if Equal(LowCast(R8_1975,'32'),'0') then 
-out(att,'15621880');
-if SignedLessThan(LowCast(R27_1992,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621904');
-let R8_2030=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_2036=Equal(R23_1687,'0') in 
-let R1_2039=IfThenElse(ProcState_Z_2036,R8_2030,'0') in 
-let R1_2092=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_2087,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621956');
-if SignedLessThan(LowCast(R0_2168,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15622000')
-else out(att,'15621868');
-if SignedLessThan(LowCast(R25_1966,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621880');
-if SignedLessThan(LowCast(R27_2227,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621904');
-let R8_2265=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_2271=Equal(R23_1687,'0') in 
-let R1_2274=IfThenElse(ProcState_Z_2271,R8_2265,'0') in 
-let R1_2327=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_2322,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621956');
-if SignedLessThan(LowCast(R0_2403,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15622000')
-else out(att,'15621796');
-let R1_2485=Minus(SP_EL0_sy,'128') in 
-if SignedLessThan(LowCast(R0_2480,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621828');
-let R0_2523=Minus(SP_EL0_sy,'136') in 
-if SignedLessThan(LowCast(R0_2523,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621856');
-if Equal(LowCast(R8_2557,'32'),'0') then 
-out(att,'15621880');
-if SignedLessThan(LowCast(R27_2574,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621904');
-let R8_2612=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_2618=Equal(R23_1687,'0') in 
-let R1_2621=IfThenElse(ProcState_Z_2618,R8_2612,'0') in 
-let R1_2674=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_2669,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621956');
-if SignedLessThan(LowCast(R0_2750,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15622000')
-else out(att,'15621868');
-if SignedLessThan(LowCast(R25_2548,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621880');
-if SignedLessThan(LowCast(R27_2809,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621904');
-let R8_2847=Minus(SP_EL0_sy,'140') in 
-let ProcState_Z_2853=Equal(R23_1687,'0') in 
-let R1_2856=IfThenElse(ProcState_Z_2853,R8_2847,'0') in 
-let R1_2909=Minus(SP_EL0_sy,'144') in 
-if SignedLessThan(LowCast(R0_2904,'32'),'0') then 
-out(att,'15622012')
-else out(att,'15621956');
-if SignedLessThan(LowCast(R0_2985,'32'),'0') then 
+out(CK,CKi_705);
+out(RK,RKiNext_1014);
+if SignedLessThan(LowCast(R0_1168,'32'),'0') then 
 out(att,'15622012')
 else out(att,'15622000')

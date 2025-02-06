@@ -1362,7 +1362,7 @@ fun Parse2 syst =
 	    
 	val (P_bv, P_be) = Pars22 kdf; (* Parse input *)
 	    
-	val Fr_par = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RKiNext", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	val Fr_par = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("rkiNext", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
 	val bv_key = ``BVar "Crypto" (BType_Imm Bit64)``;
 
@@ -1529,7 +1529,7 @@ fun Parse1 syst =
 	    
 	val (P_bv, P_be) = Pars12 kdf; (* Parse input *)
 	    
-	val Fr_par = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKi", “BType_Imm Bit64”)); (* generate a fresh variable *)
+	val Fr_par = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("cki", “BType_Imm Bit64”)); (* generate a fresh variable *)
 
 	val bv_key = ``BVar "key" (BType_Imm Bit64)``;
 
@@ -1860,7 +1860,7 @@ fun DH_key vn syst =
 
 	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RK_IChannel", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 
-	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("RKi", “BType_Imm Bit64”)); (* generate a fresh name *)
+	val Fr_vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("rki", “BType_Imm Bit64”)); (* generate a fresh name *)
 
 	val bv_key = ``BVar "key" (BType_Imm Bit64)``;
 

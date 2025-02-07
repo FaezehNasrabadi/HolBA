@@ -187,7 +187,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var((ignore_num namestr),“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else if ((String.isSuffix "event_true_cnd" namestr) orelse (String.isSuffix "event1" namestr) orelse (String.isSuffix "event2" namestr) orelse (String.isSuffix "event3" namestr) orelse (String.isSuffix "event_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_Event (mk_Fact(TermFact_tm,(listSyntax.mk_list ([(fst(bir_exp_to_sapic_term b))],SapicTerm_t_ty))))),(sbir_tree_sapic_process sort_vals str)))
-	    else if (is_BExp_Store b)
+	   (* else if (is_BExp_Store b)
 	    then let
 		    val (mem,adr,en,value) = dest_BExp_Store b;
 		    val P = if ((is_BExp_Den adr) andalso (String.isSuffix "_a" ((stringSyntax.fromHOLstring o fst o dest_BVar o dest_BExp_Den) adr)))
@@ -226,7 +226,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 				end*)
 		in
 		    P
-		end
+		end*)
 	    else if (is_BExp_Cast b)
 		(*let
 		    val (castt, subexp, sz) = (dest_BExp_Cast) b;

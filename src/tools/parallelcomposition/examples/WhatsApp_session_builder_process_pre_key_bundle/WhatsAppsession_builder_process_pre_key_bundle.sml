@@ -119,9 +119,9 @@ val crypto = “BVar "Crypto" (BType_Imm Bit64)”;
 val prog_vars = crypto::prog_vars;
 
     
-val lbl_tm = ``BL_Address (Imm64 0xEE5E88w)``;
+val lbl_tm = ``BL_Address (Imm64 0xEE5DD4w)``;
 
-val stop_lbl_tms = [``BL_Address (Imm64 0xEE5FCCw)``,“BL_Address (Imm64 0xEE5F8Cw)”,“BL_Address (Imm64 0xEE5FA8w)”,“BL_Address (Imm64 0xEE5FB0w)”,“BL_Address (Imm64 0xEE5F80w)”];
+val stop_lbl_tms = [``BL_Address (Imm64 0xEE5EDCw)``,“BL_Address (Imm64 0xEE5F8Cw)”,“BL_Address (Imm64 0xEE5FA8w)”,“BL_Address (Imm64 0xEE5FB0w)”,“BL_Address (Imm64 0xEE5F80w)”,“BL_Address (Imm64 0xEE5FCCw)”,“BL_Address (Imm64 0xEE5FC8w)”];
 
     
 val g1 = cfg_create "toy" [lbl_tm] n_dict_org bl_dict_org;
@@ -187,15 +187,19 @@ val valtr =  tree_with_value tree sort_vals;
 val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
-
-val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
+    
+(* val purged_tree = (purge_tree valtr); *)
+(* val _ = print ("built sapic_process"); *)
+(* val _ = print "\n"; *)
+    
+val sapic_process = sbir_tree_sapic_process sort_vals valtr;
     
 val _ = print ("built sapic_process");
 val _ = print "\n";
 
-
-val refined_process = refine_process sapic_process;
 (*
+val refined_process = refine_process sapic_process;
+
 val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
     
 val process_with_live_vars = process_live_vars rset refined_process;
@@ -203,7 +207,7 @@ val _ = print ("built a refined process with live variables");
 val _ = print "\n";
 *)
 	
-val _ =  ( write_sapic_to_file o process_to_string) refined_process;
+val _ =  ( write_sapic_to_file o process_to_string) sapic_process;
      
 val _ = print ("wrote into file");
 val _ = print "\n";

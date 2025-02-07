@@ -1,65 +1,188 @@
-in(RK,rki_3);
-let R1_27=Plus(SP_EL0_sy,'40') in 
-new ~Emph_30;
-let RAND_NUM_29=~Emph_30 in 
-if R23_sy='0' then 
+let SP_EL0_5=Minus(SP_EL0_sy,'160') in 
+let MEM_27=Store(Store(MEM_sy,R28_sy,Plus(SP_EL0_5,'64')),R27_sy,Plus(SP_EL0_5,'72')) in 
+let MEM_44=Store(Store(MEM_27,R26_sy,Plus(SP_EL0_5,'80')),R25_sy,Plus(SP_EL0_5,'88')) in 
+let MEM_61=Store(Store(MEM_44,R24_sy,Plus(SP_EL0_5,'96')),R23_sy,Plus(SP_EL0_5,'104')) in 
+let MEM_78=Store(Store(MEM_61,R22_sy,Plus(SP_EL0_5,'112')),R21_sy,Plus(SP_EL0_5,'120')) in 
+let MEM_95=Store(Store(MEM_78,R20_sy,Plus(SP_EL0_5,'128')),R19_sy,Plus(SP_EL0_5,'136')) in 
+let MEM_116=Store(Store(MEM_95,R29_sy,Plus(SP_EL0_5,'144')),R30_sy,Plus(SP_EL0_5,'152')) in 
+let R29_121=Minus(SP_EL0_sy,'16') in 
+let R1_sy=sy_R1_1303 in 
+let R0_sy=sy_R0_1305 in 
+let R8_133='28270592' in 
+let R8_142=Load(MEM_116,'28273592') in 
+let R8_151=Load(MEM_116,R8_142) in 
+let MEM_164=Store(MEM_116,R8_151,Plus(SP_EL0_5,'56')) in 
+let MEM_181=Store(Store(MEM_164,'0',Plus(SP_EL0_5,'40')),'0',Plus(SP_EL0_5,'48')) in 
+let MEM_198=Store(Store(MEM_181,'0',Plus(SP_EL0_5,'24')),'0',Plus(SP_EL0_5,'32')) in 
+let MEM_211=Store(MEM_198,'0',Plus(SP_EL0_5,'16')) in 
+let R9_220=Load(MEM_211,Plus(R0_sy,'16')) in 
+let R8_229=Load(MEM_211,Plus(R9_220,'96')) in 
+if R8_229='0' then 
+out(att,'15621660');
+let R0_246=Load(MEM_211,R0_sy) in 
+let R1_251=Load(MEM_211,Plus(R0_sy,'8')) in 
+let R2_260=Load(MEM_211,Plus(R1_sy,'64')) in 
+in(att,R0_246);
+in(att,R1_251);
+in(att,R2_260);
+let Ver_265=verify3(R0_246,R2_260,R1_251) in 
+if LowCast(Ver_265,'32')='0' then 
+out(att,'15622020');
+let R21_286='0' in 
+let R22_289='4294966286' in 
+0
+else out(att,'15621684');
+let R25_298=Load(MEM_211,Plus(R1_sy,'48')) in 
+if R25_298='0' then 
+out(att,'15622032');
+let R0_315=Load(MEM_211,Plus(R0_sy,'16')) in 
+let R2_318='26546176' in 
+let R2_321='26547955' in 
+let R21_325='0' in 
+let R22_328='4294966294' in 
+0
+else out(att,'15621692');
+let R23_337=Load(MEM_211,Plus(R1_sy,'32')) in 
+let R21_346=Load(MEM_211,Plus(R1_sy,'56')) in 
+let R24_351=Load(MEM_211,Plus(R1_sy,'64')) in 
+let MEM_364=Store(MEM_211,'0',Plus(SP_EL0_5,'8')) in 
+let R0_369=Minus(SP_EL0_sy,'152') in 
+in(att,R0_369);
+in(att,R25_298);
+let R26_395=Load(MEM_364,Plus(SP_EL0_5,'8')) in 
+let tmp_R1_402=Plus(R26_395,'8') in 
+let R2_407=Load(MEM_364,R26_395) in 
+let R4_416=Load(MEM_364,R21_346) in 
+let R21_417=Plus(R21_346,'8') in 
+in(att,R24_351);
+in(att,tmp_R1_402);
+in(att,R2_407);
+in(att,R21_417);
+in(att,R4_416);
+let Ver_433=verify5(R24_351,R4_416,R21_417,R2_407,tmp_R1_402) in 
+if LowCast(Ver_433,'32')='0' then 
+out(att,'15622068');
+let R0_453=Load(MEM_364,Plus(R0_sy,'16')) in 
+let R2_456='26546176' in 
+let R2_459='26547922' in 
+let R22_463='4294966294' in 
+0
+else out(att,'15621756');
+let R0_480=Load(MEM_364,R0_sy) in 
+let R2_485=Load(MEM_364,Plus(R0_sy,'8')) in 
+let R1_490=Minus(SP_EL0_sy,'112') in 
+in(ADevice,R0_480);
+in(ADevice,R1_490);
+in(ADevice,R2_485);
+let R0_514=Load(MEM_364,Plus(R0_sy,'16')) in 
+let R1_519=Minus(SP_EL0_sy,'120') in 
+new ~KeyPair_522;
+let RAND_NUM_521=~KeyPair_522 in 
+if R23_337='0' then 
 out(att,'15621804');
-let R1_71=Plus(SP_EL0_sy,'32') in 
-let hkdf_73=hkdf(rki_3,RAND_NUM_29) in 
-let R0_110=Plus(SP_EL0_sy,'24') in 
-let cki_115=pars12(hkdf_73) in 
-if LowCast(R8_145,'32')='0' then 
-out(att,'15621880');
-let rkiNext_186=pars22(hkdf_73) in 
-let R8_201=Plus(SP_EL0_sy,'20') in 
-let ProcState_Z_207=Equal(R23_sy,'0') in 
-if R23_sy='0' then 
-let R1_211='0' in 
-let R1_265=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_115);
-out(RK,rkiNext_186)
-else let R1_433=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_115);
-out(RK,rkiNext_186)
-else out(att,'15621868');
-let rkiNext_594=pars22(hkdf_73) in 
-let R8_609=Plus(SP_EL0_sy,'20') in 
-let ProcState_Z_615=Equal(R23_sy,'0') in 
-if R23_sy='0' then 
-let R1_619='0' in 
-let R1_673=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_115);
-out(RK,rkiNext_594)
-else let R1_841=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_115);
-out(RK,rkiNext_594)
+let R24_549=Load(MEM_364,Plus(R1_sy,'64')) in 
+let R0_558=Load(MEM_364,R0_sy) in 
+let R1_563=Minus(SP_EL0_sy,'128') in 
+in(AID,R0_558);
+in(AID,R1_563);
+let R21_578=Load(MEM_364,Plus(SP_EL0_5,'32')) in 
+let R26_599=Load(MEM_364,Plus(SP_EL0_5,'40')) in 
+let R0_604=Minus(SP_EL0_sy,'136') in 
+let MasterSecret_625=ecdh7(R0_604,R25_298,R23_337,R4_416,R21_417,R26_599,R21_578) in 
+out(X3DH,MasterSecret_625)
 else out(att,'15621796');
-let R1_1001=Plus(SP_EL0_sy,'32') in 
-let hkdf_1003=hkdf(rki_3,RAND_NUM_29) in 
-let R0_1040=Plus(SP_EL0_sy,'24') in 
-let cki_1045=pars12(hkdf_1003) in 
-if LowCast(R8_1075,'32')='0' then 
-out(att,'15621880');
-let rkiNext_1116=pars22(hkdf_1003) in 
-let R8_1131=Plus(SP_EL0_sy,'20') in 
-let ProcState_Z_1137=Equal(R23_sy,'0') in 
-if R23_sy='0' then 
-let R1_1141='0' in 
-let R1_1195=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_1045);
-out(RK,rkiNext_1116)
-else let R1_1363=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_1045);
-out(RK,rkiNext_1116)
-else out(att,'15621868');
-let rkiNext_1524=pars22(hkdf_1003) in 
-let R8_1539=Plus(SP_EL0_sy,'20') in 
-let ProcState_Z_1545=Equal(R23_sy,'0') in 
-if R23_sy='0' then 
-let R1_1549='0' in 
-let R1_1603=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_1045);
-out(RK,rkiNext_1524)
-else let R1_1771=Plus(SP_EL0_sy,'16') in 
-out(CK,cki_1045);
-out(RK,rkiNext_1524)
+let MEM_648=Store(MEM_364,LowCast(R8_635,'32'),Plus(SP_EL0_5,'20')) in 
+let R24_657=Load(MEM_648,Plus(R1_sy,'64')) in 
+let R0_666=Load(MEM_648,R0_sy) in 
+let R1_671=Minus(SP_EL0_sy,'128') in 
+in(AID,R0_666);
+in(AID,R1_671);
+let R21_686=Load(MEM_648,Plus(SP_EL0_5,'32')) in 
+let R26_707=Load(MEM_648,Plus(SP_EL0_5,'40')) in 
+let R0_712=Minus(SP_EL0_sy,'136') in 
+let MasterSecret_733=ecdh7(R0_712,R25_298,R23_337,R4_416,R21_417,R26_707,R21_686) in 
+out(X3DH,MasterSecret_733)
+else out(att,'15621656');
+let R0_744=Load(MEM_211,R0_sy) in 
+let R1_749=Load(MEM_211,Plus(R0_sy,'8')) in 
+let R2_758=Load(MEM_211,Plus(R1_sy,'64')) in 
+in(att,R0_744);
+in(att,R1_749);
+in(att,R2_758);
+let Ver_763=verify3(R0_744,R2_758,R1_749) in 
+if LowCast(Ver_763,'32')='0' then 
+out(att,'15622020');
+let R21_784='0' in 
+let R22_787='4294966286' in 
+0
+else out(att,'15621684');
+let R25_796=Load(MEM_211,Plus(R1_sy,'48')) in 
+if R25_796='0' then 
+out(att,'15622032');
+let R0_813=Load(MEM_211,Plus(R0_sy,'16')) in 
+let R2_816='26546176' in 
+let R2_819='26547955' in 
+let R21_823='0' in 
+let R22_826='4294966294' in 
+0
+else out(att,'15621692');
+let R23_835=Load(MEM_211,Plus(R1_sy,'32')) in 
+let R21_844=Load(MEM_211,Plus(R1_sy,'56')) in 
+let R24_849=Load(MEM_211,Plus(R1_sy,'64')) in 
+let MEM_862=Store(MEM_211,'0',Plus(SP_EL0_5,'8')) in 
+let R0_867=Minus(SP_EL0_sy,'152') in 
+in(att,R0_867);
+in(att,R25_796);
+let R26_893=Load(MEM_862,Plus(SP_EL0_5,'8')) in 
+let tmp_R1_900=Plus(R26_893,'8') in 
+let R2_905=Load(MEM_862,R26_893) in 
+let R4_914=Load(MEM_862,R21_844) in 
+let R21_915=Plus(R21_844,'8') in 
+in(att,R24_849);
+in(att,tmp_R1_900);
+in(att,R2_905);
+in(att,R21_915);
+in(att,R4_914);
+let Ver_931=verify5(R24_849,R4_914,R21_915,R2_905,tmp_R1_900) in 
+if LowCast(Ver_931,'32')='0' then 
+out(att,'15622068');
+let R0_951=Load(MEM_862,Plus(R0_sy,'16')) in 
+let R2_954='26546176' in 
+let R2_957='26547922' in 
+let R22_961='4294966294' in 
+0
+else out(att,'15621756');
+let R0_978=Load(MEM_862,R0_sy) in 
+let R2_983=Load(MEM_862,Plus(R0_sy,'8')) in 
+let R1_988=Minus(SP_EL0_sy,'112') in 
+in(ADevice,R0_978);
+in(ADevice,R1_988);
+in(ADevice,R2_983);
+let R0_1012=Load(MEM_862,Plus(R0_sy,'16')) in 
+let R1_1017=Minus(SP_EL0_sy,'120') in 
+new ~KeyPair_1020;
+let RAND_NUM_1019=~KeyPair_1020 in 
+if R23_835='0' then 
+out(att,'15621804');
+let R24_1047=Load(MEM_862,Plus(R1_sy,'64')) in 
+let R0_1056=Load(MEM_862,R0_sy) in 
+let R1_1061=Minus(SP_EL0_sy,'128') in 
+in(AID,R0_1056);
+in(AID,R1_1061);
+let R21_1076=Load(MEM_862,Plus(SP_EL0_5,'32')) in 
+let R26_1097=Load(MEM_862,Plus(SP_EL0_5,'40')) in 
+let R0_1102=Minus(SP_EL0_sy,'136') in 
+let MasterSecret_1123=ecdh7(R0_1102,R25_796,R23_835,R4_914,R21_915,R26_1097,R21_1076) in 
+out(X3DH,MasterSecret_1123)
+else out(att,'15621796');
+let MEM_1146=Store(MEM_862,LowCast(R8_1133,'32'),Plus(SP_EL0_5,'20')) in 
+let R24_1155=Load(MEM_1146,Plus(R1_sy,'64')) in 
+let R0_1164=Load(MEM_1146,R0_sy) in 
+let R1_1169=Minus(SP_EL0_sy,'128') in 
+in(AID,R0_1164);
+in(AID,R1_1169);
+let R21_1184=Load(MEM_1146,Plus(SP_EL0_5,'32')) in 
+let R26_1205=Load(MEM_1146,Plus(SP_EL0_5,'40')) in 
+let R0_1210=Minus(SP_EL0_sy,'136') in 
+let MasterSecret_1231=ecdh7(R0_1210,R25_796,R23_835,R4_914,R21_915,R26_1205,R21_1184) in 
+out(X3DH,MasterSecret_1231)

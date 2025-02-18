@@ -16,7 +16,7 @@ val (_, _, _, prog_tm) =
   
 val prog_range       =  ((Arbnum.fromInt 0x0), (Arbnum.fromInt 0x2D1));
 
-val entry = Arbnum.fromInt 0;
+val entry = Arbnum.fromInt 0x0;
     
 fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x0000000, x);
 

@@ -32,7 +32,9 @@ open bir_inst_liftingHelpersLib;
 open gcc_supportLib;
 open bir_obs_modelTheory;
 open bir_obs_modelLib;
-
+open bir_program_labelsSyntax;
+open wordsSyntax;
+     
  val ERR      = Feedback.mk_HOL_ERR "WhatsApp_session_builder_process_pre_key_bundle"
  val wrap_exn = Feedback.wrap_exn   "WhatsApp_session_builder_process_pre_key_bundle"
 		
@@ -57,11 +59,10 @@ fun update_n_dict_ ([], n_dict) = n_dict
 val (_, _, _, prog_tm) =
   (dest_bir_is_lifted_prog o concl)
       (DB.fetch "WhatsApp_session_builder_process_pre_key_bundle" "WhatsApp_session_builder_process_pre_key_bundle_thm");
-
-
+    
 val prog_range       = ((Arbnum.fromInt 0x00000000000450c), (Arbnum.fromInt 0x000000001b7ba37));
 
-val entry = Arbnum.fromInt 0x00000000000450c;
+val entry = Arbnum.fromInt 0x0000000000ee5e1c;
     
 fun embexp_params_cacheable x = Arbnum.+ (Arbnum.fromInt 0x0000000, x);
 
@@ -89,10 +90,13 @@ val mem_bounds =
         
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
-val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry;
-(* val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry; *)
+(* val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry; *)
+val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry;
 
 val bl_dict_org    = gen_block_dict prog_tm;
+
+    (* Redblackmap.find (bl_dict_org, ``BL_Address (Imm64 0xEE5E1Cw)``) *)
+    
 val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
 val n_dict_org = bir_cfgLib.cfg_build_node_dict bl_dict_org prog_lbl_tms_org;   
     

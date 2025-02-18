@@ -193,7 +193,7 @@ val _ = print "\n";
 
     
 val purged_tree = (purge_tree valtr);
-val _ = print ("built sapic_process");
+val _ = print ("built purged_tree");
 val _ = print "\n";
     
 val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;

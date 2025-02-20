@@ -241,7 +241,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 		 end*) then (sbir_tree_sapic_process sort_vals str)
 	    (* else if (String.isSuffix "observe_exp" namestr) *)
 	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
-	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
+	    then (sbir_tree_sapic_process sort_vals str)(* then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str))) *)
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 	end)
 			      (*   handle _ => raise ERR "sbir_tree_sapic_process" ("cannot do it "^(case tree of

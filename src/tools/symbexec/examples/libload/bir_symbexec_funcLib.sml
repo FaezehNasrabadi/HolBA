@@ -1,6 +1,6 @@
 structure bir_symbexec_funcLib =
 struct
-val bir_symbexec_step_execstep_spec = ref true;
+val bir_symbexec_step_execstep_spec = ref false;
 local
     
     open bir_symbexec_stateLib;

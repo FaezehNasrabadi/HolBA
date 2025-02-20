@@ -1,0 +1,43 @@
+========================================================================================================================================================
+==Test successful: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+========================================================================================================================================================
+finished exploration of all paths.
+
+number of stopped symbolic execution states: 775
+
+number of "assert failed" paths found: 515
+number of "no assert failed" paths found: 260
+Get predlists
+./scripts/run-test.sh: line 25: printf: 60.034974813461304: invalid number
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+== Time so far:  60 sec. ==
+===========================
+./scripts/run-test.sh: line 25: printf: 90.05763649940491: invalid number
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+== Time so far:  90 sec. ==
+===========================
+Get refined predlists
+Get tree
+Get vals_list
+./scripts/run-test.sh: line 25: printf: 120.108877658844: invalid number
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+== Time so far: 120 sec. ==
+===========================
+Get sort_vals
+./scripts/run-test.sh: line 25: printf: 150.18777537345886: invalid number
+===========================
+== Test running: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+== Time so far: 150 sec. ==
+===========================
+built a symbolic tree with value
+built purged_tree
+built sapic_process
+wrote into file
+./scripts/run-test.sh: line 57: printf: 156.48338508605957: invalid number
+============================
+== Test successful: src/tools/parallelcomposition/examples/WhatsApp_curve_generate_key_pair/WhatsAppsession_curve_generate_key_pair.exe ==
+== Elapsed time: 156 sec. ==
+============================

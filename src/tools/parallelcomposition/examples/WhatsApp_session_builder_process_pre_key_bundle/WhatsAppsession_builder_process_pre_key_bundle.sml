@@ -90,8 +90,8 @@ val mem_bounds =
         
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
-(* val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry; *)
-val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry;
+val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry;
+(* val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry; *)
 
 val bl_dict_org    = gen_block_dict prog_tm;
 

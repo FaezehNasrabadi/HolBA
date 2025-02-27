@@ -216,7 +216,9 @@ open bir_cfgLib;
           val dest_list_ignore_type = fst o dest_list;
           fun extract_stmts_from_lbl lbl =
               let open bir_programSyntax;
-                  val block = Redblackmap.find (bl_dict, lbl)
+                  val block = Redblackmap.find (bl_dict, lbl) handle e => “<|bb_label := ^lbl;
+		  bb_statements := ([] :bir_val_t bir_stmt_basic_t list );
+		  bb_last_statement := BStmt_Halt (BExp_Const (Imm32 (0w :word32)))|>”
                   val (_, statements, _) = dest_bir_block block;
                   (* statements is a HOL list of BIR statements *)
               in statements end;
@@ -234,14 +236,18 @@ open bir_cfgLib;
                     NONE
 	      in successor end;
 
-          val first_block = Redblackmap.find (bl_dict, branch)
+          val first_block = Redblackmap.find (bl_dict, branch) handle e => “<|bb_label := ^branch;
+		  bb_statements := ([] :bir_val_t bir_stmt_basic_t list );
+		  bb_last_statement := BStmt_Halt (BExp_Const (Imm32 (0w :word32)))|>”
 
           fun collect_blocks 0 block = [block]
             | collect_blocks n block =
               case get_bir_successors block of
                   NONE => [block]
                 | SOME lbl =>
-                  let val b = Redblackmap.find (bl_dict, lbl)
+                  let val b = Redblackmap.find (bl_dict, lbl) handle e => “<|bb_label := ^lbl;
+		  bb_statements := ([] :bir_val_t bir_stmt_basic_t list );
+		  bb_last_statement := BStmt_Halt (BExp_Const (Imm32 (0w :word32)))|>”
                   in
                     block :: collect_blocks (n-1) b
                   end;
@@ -631,8 +637,10 @@ open bir_cfgLib;
 	      let
 		fun problem exp msg = problem_gen "extract_blocks::get_block_from_dict" exp msg;
 	      in
-		Redblackmap.find (bl_dict, baddr)
-		handle e => problem baddr "block not found with label: "
+		  Redblackmap.find (bl_dict, baddr)
+		  handle e => “<|bb_label := ^baddr;
+		  bb_statements := ([] :bir_val_t bir_stmt_basic_t list );
+		  bb_last_statement := BStmt_Halt (BExp_Const (Imm32 (0w :word32)))|>”
 	      end
 	  val shadow_block_fun = (mk_shadow_block o (snd o dest_eq o concl o EVAL))
 	  fun fix_jmp_back bb =
@@ -754,11 +762,25 @@ open bir_cfgLib;
 
  fun branch_instrumentation obs_fun prog entry depth =
      let (* build the dictionaries using the library under test *)
-       open bir_programSyntax listSyntax;
-	     val bl_dict = gen_block_dict prog;
-       val blocks = fst (dest_list (dest_BirProgram prog));
+	 open bir_programSyntax listSyntax bir_program_labelsSyntax;
+	 val bl_dict = gen_block_dict prog;
+	 val blocks = fst (dest_list (dest_BirProgram prog));
 
-       fun map_pair f (x,y) = (f x, f y);
+	 fun splitAtElement (_, []) = []
+	   | splitAtElement (x, h::t) =
+	     let
+		 val (lbl,_,_) = dest_bir_block h;
+		 val addr = ((dest_word_literal o snd o gen_dest_Imm o dest_BL_Address) lbl);
+	     in
+		 if addr = x then
+		     (h::t) 
+		 else
+		     splitAtElement (x, t)
+	     end
+
+	 val entry_block_list = splitAtElement (entry, blocks);
+	     
+	 fun map_pair f (x,y) = (f x, f y);
 
        fun get_targets block =
            let val (bbl, _, bbes) = dest_bir_block block
@@ -778,7 +800,7 @@ open bir_cfgLib;
        fun get_block_label block =
            let val (lbl,_,_) = dest_bir_block block
            in (rand o concl) (EVAL lbl) end;
-       val targets = List.map get_block_label (List.filter block_filter blocks);
+       val targets = List.map get_block_label (List.filter block_filter entry_block_list);
        val (target, pred_target) =
 	   (* NOTE: now we target the first conditional branch *)
 	   case targets of

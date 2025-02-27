@@ -27,7 +27,7 @@ local
 
   val bv_countw = bir_envSyntax.mk_BVar_string ("countw", ``(BType_Imm Bit64)``);
   fun state_exec_assign (bv, be) syst =
-    if identical bv bv_countw andalso bir_expSyntax.is_BExp_IfThenElse be then
+    if (*identical bv bv_countw andalso*) bir_expSyntax.is_BExp_IfThenElse be then
       let
         val (cnd, be1, be2) = bir_expSyntax.dest_BExp_IfThenElse be;
       in
@@ -138,24 +138,41 @@ local
       val tgt2    = fst (List.nth (vs, 2));
       val be      = if (is_BExp_Den cnd) then (bir_symbexec_funcLib.symbval_bexp (bir_symbexec_stateLib.get_state_symbv "CJmp" (dest_BExp_Den cnd) syst)) else cnd;
 
+      val tgt1_exp = if (is_BL_Address tgt1)
+		     then ((bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt1)
+		     else if (is_BL_Label tgt1)
+		     then (bir_expSyntax.mk_BExp_Den (bir_envSyntax.mk_BVar ((dest_BL_Label tgt1), “BType_Imm Bit64”)))
+		     else raise ERR "couldn't get tgt1_exp" (term_to_string tgt1);
+			 
+      val tgt2_exp = if (is_BL_Address tgt2)
+		     then ((bir_expSyntax.mk_BExp_Const o dest_BL_Address) tgt2)
+		     else if (is_BL_Label tgt2)
+		     then (bir_expSyntax.mk_BExp_Den (bir_envSyntax.mk_BVar ((dest_BL_Label tgt2), “BType_Imm Bit64”)))
+		     else raise ERR "couldn't get tgt2_exp" (term_to_string tgt2);
+	  
+      val tgt_true = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("tgt_true", bir_valuesSyntax.BType_Bool_tm));
+      val tgt_false = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("tgt_false", bir_valuesSyntax.BType_Bool_tm));
       (* val _ = print "\n Be : "; *)
       (* val _ = print (term_to_string be); *)
       (* val _ = print "\n Cnd : ";	 *)
       (* val _ = print (term_to_string cnd); *)
       (* val _ = print "\n"; *)
-    in
-	if ((bir_bool_expSyntax.is_bir_exp_true cnd) orelse (bir_bool_expSyntax.is_bir_exp_true be)) then [SYST_update_pc tgt1 syst]
-	else if ((bir_bool_expSyntax.is_bir_exp_false cnd) orelse (bir_bool_expSyntax.is_bir_exp_false be)) then [SYST_update_pc tgt2 syst]
+     in
+	if ((bir_bool_expSyntax.is_bir_exp_true cnd) orelse (bir_bool_expSyntax.is_bir_exp_true be))
+	then [((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp)) syst]
+	else if ((bir_bool_expSyntax.is_bir_exp_false cnd) orelse (bir_bool_expSyntax.is_bir_exp_false be))
+	then [((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp)) syst]
 	else
 	    state_branch_simp
 		"cjmp"
 		cnd
-		(SYST_update_pc tgt1)
-		(SYST_update_pc tgt2)
+		((SYST_update_pc tgt1) o (state_insert_symbval_from_be tgt_true tgt1_exp) o (state_add_pred "tgt_true_cnd" tgt1_exp))
+		((SYST_update_pc tgt2) o (state_insert_symbval_from_be tgt_false tgt2_exp) o (state_add_pred "tgt_false_cnd" tgt2_exp))
 		syst
     end
-    )
-      handle HOL_ERR _ => NONE;
+    ) handle HOL_ERR _ => NONE;
+      (*handle state_exec_try_cjmp_exn => NONE
+           | e => raise wrap_exn ("state_exec_try_cjmp_label::") e;*)
 
   fun exist_in_prog tgts ex_tgts =
       let
@@ -180,7 +197,7 @@ fun add_tgt_equ tgt be =
     in
 	pred
     end;
-    (*
+    
   val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var n_dict lbl_tm est syst =
@@ -254,8 +271,8 @@ in (* local *)
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;
 end (* local *)
-     *)
-
+     
+(*
 val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
   exception state_exec_try_jmp_exp_var_exn;
   fun state_exec_try_jmp_exp_var est syst =
@@ -280,14 +297,17 @@ val jmp_exp_var_match_tm = ``BStmt_Jmp (BLE_Exp x)``;
                   print ("state_exec_try_jmp_exp_var::no const: " ^
                          (term_to_string bvalo) ^ " ;; " ^ 
                          (term_to_string be_tgt) ^ "\n");
-                  raise state_exec_try_jmp_exp_var_exn);(*ERR "state_exec_try_jmp_exp_var"
-                    ("target value is no const: " ^ (term_to_string bvalo)));*)
+                  raise state_exec_try_jmp_exp_var_exn);
+    (*
+ERR "state_exec_try_jmp_exp_var"
+                    ("target value is no const: " ^ (term_to_string bvalo)));
+*)
     in
       [SYST_update_pc tgt syst]
     end
-    )
-    handle state_exec_try_jmp_exp_var_exn => NONE
-         | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;
+    ) handle HOL_ERR _ => NONE;
+   (* handle state_exec_try_jmp_exp_var_exn => NONE
+         | e => raise wrap_exn ("state_exec_try_jmp_exp_var::") e;*)
 
   open bir_cfgLib;
 
@@ -326,7 +346,7 @@ in (* local *)
    handle e =>
      raise wrap_exn (term_to_string lbl_tm) e;;
 end (* local *)
-    
+    *)
 local
     open bir_block_collectionLib;
 
@@ -603,7 +623,7 @@ fun symb_exec_loop_block abpfun n_dict bl_dict adr_dict syst =
 		let
 		    val pc_type = bir_symbexec_oracleLib.fun_oracle adr_dict lbl_tm syst;
 
-		    val _ = if false then () else
+		    val _ = if true then () else
 			    print_term (lbl_tm);
 		    val _ = if true then () else
 			    print ("pc_type: " ^ (pc_type) ^ "\n");

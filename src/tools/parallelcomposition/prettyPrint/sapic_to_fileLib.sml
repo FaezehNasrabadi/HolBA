@@ -21,14 +21,17 @@ val N = “Name FreshName "49_OTP"”*)
 fun name_to_string N =
     let
 	val (tag,str) = dest_Name N;
+	val name = 	if (List.exists (fn x => x = #"_") ((explode o stringSyntax.fromHOLstring) str))
+			then bir_symbexec_treeLib.rev_name (stringSyntax.fromHOLstring str)
+			else (stringSyntax.fromHOLstring str);
     in
 	if (is_FreshName tag)
-	then ("~" ^ (stringSyntax.fromHOLstring str))
+	then ("~" ^ name)
 	else if (is_PubName tag)
-	then ("'"  ^ (stringSyntax.fromHOLstring str) ^ "'") 
-        (* then ("c"  ^ (stringSyntax.fromHOLstring str)) *)
+	then ("'"  ^ name ^ "'") 
+        (* then ("c"  ^ name) *)
 	else if (is_NodeName tag)
-	then ("#" ^ (stringSyntax.fromHOLstring str))
+	then ("#" ^ name)
 	else raise ERR "name_to_string" ("Don't know Sapic Name: " ^ (term_to_string N))
     end;
 
@@ -211,7 +214,7 @@ else if (is_ProcessCall comb) then
 fun Vars_of_combinator rset comb =
     if (is_Parallel comb) then rset
     else if (is_NDC comb) then rset
-    else if (is_Cond comb) then (Vars_of_fact rset (dest_Cond comb))
+    else if (is_Cond comb) then (Vars_of_sapicterm rset (dest_Cond comb))
     else if (is_CondEq comb) then Redblackset.union((Vars_of_sapicterm rset ((fst o dest_CondEq) comb)),(Vars_of_sapicterm rset ((snd o dest_CondEq) comb)))
     else if (is_Let comb) then
 	let

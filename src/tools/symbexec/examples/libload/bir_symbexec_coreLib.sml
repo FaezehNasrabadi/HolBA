@@ -23,11 +23,11 @@ local
 
   fun subst_fun env vals (bev, (e, vars)) =
     let
-      val bv_ofvals = find_bv_val "subst_fun" env bev;
+      val bv_ofvals = (find_bv_val "subst_fun" env bev) handle _ => bev;
 
       val (exp, vars') =
         let
-          val symbv = find_bv_val "subst_fun" vals bv_ofvals;
+          val symbv = (find_bv_val "subst_fun" vals bv_ofvals) handle _ => (SymbValBE (bv_ofvals,symbvalbe_dep_empty));
           val expo = case symbv of
                        SymbValBE (x, _) => SOME x
                      | _ => NONE;

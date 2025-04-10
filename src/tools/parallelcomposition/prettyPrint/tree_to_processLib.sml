@@ -1,6 +1,8 @@
 structure tree_to_processLib =
 struct
 
+val simplification = ref false;
+
 local
 
     open HolKernel Parse
@@ -144,6 +146,11 @@ fun sbir_tree_sapic_process sort_vals tree =
 	let
 	    (* val _ = print ((term_to_string a)^" , "^(term_to_string b)^"\n"); *)
 
+	    (* val _ = if (!simplification) *)
+	    (* 	    then 	print ("True\n") *)
+	    (* 	    else print ("False\n") *)
+	
+		
 	    val be =  ( if (is_BExp_Den b)
 			then bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b))
 			else b ) handle _ => b;
@@ -171,7 +178,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    val (name,bir_type) = dest_BVar a;
 	    val namestr = stringSyntax.fromHOLstring name;
 	in
-	    if ((String.isSuffix "assert_true_cnd" namestr) orelse(String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr)  orelse (String.isSuffix "ProcState_V" namestr) orelse (String.isSuffix "ProcState_N" namestr) orelse (String.isSuffix "ProcState_C" namestr) orelse (String.isSuffix "ProcState_V*" namestr) orelse (String.isSuffix "ProcState_N*" namestr) orelse (String.isSuffix "ProcState_C*" namestr) orelse (String.isSuffix "RepEnd" namestr) orelse (String.isSuffix "R30" namestr) orelse (String.isSuffix "observe_exp" namestr))
+	    if ((String.isSuffix "assert_true_cnd" namestr) orelse(String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr)  orelse (String.isSuffix "ProcState_V" namestr) orelse (String.isSuffix "ProcState_N" namestr) orelse (String.isSuffix "ProcState_C" namestr) orelse (String.isSuffix "ProcState_V*" namestr) orelse (String.isSuffix "ProcState_N*" namestr) orelse (String.isSuffix "ProcState_C*" namestr) orelse (String.isSuffix "RepEnd" namestr) orelse (String.isSuffix "R30" namestr))
 	    then (sbir_tree_sapic_process sort_vals str)
 	    else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) )
 	    then  (mk_ProcessAction ((mk_New ((sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),((mk_Con o sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))))
@@ -239,7 +246,10 @@ fun sbir_tree_sapic_process sort_vals tree =
 			end
 		    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 		 end*) then (sbir_tree_sapic_process sort_vals str)
-	    (* else if (String.isSuffix "observe_exp" namestr) *)
+	    else if (String.isSuffix "observe_exp" namestr)
+	    then (if (not (!simplification))
+		    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
+		    else (sbir_tree_sapic_process sort_vals str))	
 	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))

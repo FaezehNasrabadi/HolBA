@@ -25,7 +25,7 @@ open translate_to_sapicLib;
 open messagesTheory;
 open messagesSyntax;
 open tree_to_processLib;
-open  sapic_to_fileLib;
+open sapic_to_fileLib;
 open bir_symbexec_loopLib;
 open bossLib;
 open PPBackEnd;
@@ -71,8 +71,13 @@ val mem_bounds =
         
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
-(* val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry; *)
-val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry;
+val speculation = false;
+
+val obs_id = if speculation = true
+	     then "cache_speculation"
+	     else "mem_address_pc";
+
+val prog_w_obs = (#add_obs (get_obs_model obs_id)) mem_bounds (proginst_fun prog_tm) entry;
 
 val bl_dict_org    = gen_block_dict prog_tm;
 val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
@@ -82,16 +87,6 @@ val bl_dict_spec    = gen_block_dict prog_w_obs;
 val prog_lbl_tms_spec = get_block_dict_keys bl_dict_spec;
 val n_dict_spec = bir_cfgLib.cfg_build_node_dict bl_dict_spec prog_lbl_tms_spec;
 
- (*   
-open binariesCfgVizLib;
-open binariesDefsLib;
-val g1 = cfg_create "toy" [lbl_tm] n_dict_org bl_dict_spec;
-val _ = print "Display cfg.\n";
-open bir_cfg_vizLib;
-val ns = List.map (valOf o (lookup_block_dict (#CFGG_node_dict g1))) (#CFGG_nodes g1);
-val _ = bir_cfg_vizLib.cfg_display_graph_ns ns;
-  *)
-    
 val prog_vars = gen_vars_of_prog prog_w_obs;
     
 val adv_mem = “BVar "Adv_MEM" (BType_Mem Bit64 Bit8)”;
@@ -159,24 +154,6 @@ val predlists = List.map (fn syst => ((rev o SYST_get_pred) syst))
 val _ = print "Get predlists";
 val _ = print "\n";
 
-(*
-fun get_observe_exp syst =
-    let
-	val obs_list = SYST_get_obss syst;
-	val exp_list = List.map (fn (id_tm, cnd_tm, exps_tm, ofun_tm) => List.@(exps_tm,[])) obs_list;
-    in
-	List.concat exp_list
-    end
-    
-val obsexplists = List.map (fn syst => (rev o get_observe_exp) syst)
-                         systs_noassertfailed;	    
-   
-val _ = print "Get observe exp lists";
-val _ = print "\n";
-    
-val lists = predlists@obsexplists;
-*)
-
 val lists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
 val _ = print "Get refined lists";    
 val _ = print "\n";
@@ -201,12 +178,19 @@ val valtr =  tree_with_value tree sort_vals;
 val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
-val purged_tree = (purge_tree valtr);
+val full = true;
 
-val _ = print ("built a purged tree");
-val _ = print "\n";
-    
-val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
+val sapic_process =  if full = false then
+			 let
+			     val _ = simplification := true;
+			     val purged_tree = (purge_tree valtr);
+
+			     val _ = print ("built a purged tree");
+			     val _ = print "\n";
+			 in
+			     sbir_tree_sapic_process sort_vals purged_tree
+			 end
+		     else sbir_tree_sapic_process sort_vals valtr;
     
 val _ = print ("built sapic_process");
 val _ = print "\n";

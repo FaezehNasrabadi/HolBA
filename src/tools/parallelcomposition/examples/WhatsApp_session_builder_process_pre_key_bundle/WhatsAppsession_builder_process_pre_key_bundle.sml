@@ -90,12 +90,15 @@ val mem_bounds =
         
 fun proginst_fun prog = inst [Type`:'observation_type` |-> Type`:bir_val_t`] prog;
 
-val prog_w_obs = (#add_obs (get_obs_model "mem_address_pc")) mem_bounds (proginst_fun prog_tm) entry;
-(* val prog_w_obs = (#add_obs (get_obs_model "cache_speculation")) mem_bounds (proginst_fun prog_tm) entry; *)
+val speculation = true;
+
+val obs_id = if speculation = true
+	     then "cache_speculation"
+	     else "mem_address_pc";
+
+val prog_w_obs = (#add_obs (get_obs_model obs_id)) mem_bounds (proginst_fun prog_tm) entry;
 
 val bl_dict_org    = gen_block_dict prog_tm;
-
-    (* Redblackmap.find (bl_dict_org, ``BL_Address (Imm64 0xEE5E1Cw)``) *)
     
 val prog_lbl_tms_org = get_block_dict_keys bl_dict_org;
 val n_dict_org = bir_cfgLib.cfg_build_node_dict bl_dict_org prog_lbl_tms_org;   
@@ -169,7 +172,7 @@ val _ = print "\n";
 val predlists_refined = List.map (fn lst => bir_symbexec_sortLib.removeDuplicates lst) predlists;
 val _ = print "Get refined predlists";    
 val _ = print "\n";
-(* val _ = printTermList predlists_refined; *)
+
     
 val tree = predlist_to_tree predlists_refined;
 
@@ -192,26 +195,43 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
     
-val purged_tree = (purge_tree valtr);
-val _ = print ("built purged_tree");
-val _ = print "\n";
-    
-val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
-    
-val _ = print ("built sapic_process");
-val _ = print "\n";
+val full = true;
 
+val _ = if full = false then
+	    let
+		val _ = simplification := true;
+		    
+		val purged_tree = (purge_tree valtr);
 
-val refined_process = refine_process sapic_process;
+		val _ = print ("built a purged tree\n");
 
-val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
+		val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
+
+		val _ = print ("built sapic_process\n");
+
+		val refined_process = refine_process sapic_process;
+
+		val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
+		    
+		val process_with_live_vars = process_live_vars rset refined_process;
+		    
+		val _ = print ("built a refined process with live variables\n");
+
+		val _ =  ( write_sapic_to_file o process_to_string) refined_process;	    
+	    in
+		print ("wrote into file\n")
+	    end
+	else
+	    let
+		val sapic_process = sbir_tree_sapic_process sort_vals valtr;
+
+		val _ = print ("built sapic_process\n");
+
+		val _ =  ( write_sapic_to_file o process_to_string) sapic_process;
+	    in
+		print ("wrote into file\n")
+	    end;
+		
     
-val process_with_live_vars = process_live_vars rset refined_process;
-val _ = print ("built a refined process with live variables");
-val _ = print "\n";
-	
-val _ =  ( write_sapic_to_file o process_to_string) refined_process;
-     
-val _ = print ("wrote into file");
-val _ = print "\n";
+
 

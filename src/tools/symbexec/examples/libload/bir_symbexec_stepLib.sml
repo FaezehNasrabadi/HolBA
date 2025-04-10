@@ -1,7 +1,7 @@
 structure bir_symbexec_stepLib =
 struct
 
-val bir_symbexec_step_execstep_spec = ref true;
+val bir_symbexec_step_execstep_spec = ref false;
     
 local
   open bir_symbexec_stateLib;
@@ -413,7 +413,6 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 			if (lib_type = "C_Lib") then () else
 			print ("Lib type: " ^ (lib_type) ^ "\n");
   
-(* For WireGuard case-study *)
 		val systs = if (lib_type = "HMAC_send") then [bir_symbexec_funcLib.HMAC_Send syst]
 			    else if (lib_type = "HMAC_receive") then [bir_symbexec_funcLib.HMAC_Receive syst]
 			    else if (lib_type = "NewKey") then [bir_symbexec_funcLib.new_key syst]
@@ -438,32 +437,6 @@ fun symb_exec_library_block abpfun n_dict bl_dict adr_dict syst =
 			    else if (lib_type = "Fail") then [SYST_update_status BST_AssumptionViolated_tm syst]
 			    else if ((lib_type = "event1") orelse (lib_type = "event2") orelse (lib_type = "event3")) then (bir_symbexec_funcLib.Event lib_type syst)
 			    else [syst];
-(*
-(* For other case-studies *)
-		val systs = if (lib_type = "HMAC_send") then [bir_symbexec_funcLib.HMAC_Send syst]
-			    else if (lib_type = "HMAC_receive") then [bir_symbexec_funcLib.HMAC_Receive syst]
-			    else if (lib_type = "NewKey") then [bir_symbexec_funcLib.new_key syst]
-			    else if (lib_type = "SKey") then [bir_symbexec_funcLib.session_key syst]
-			    else if (lib_type = "Encryption") then [bir_symbexec_funcLib.Encryption syst]
-			    else if (lib_type = "Decryption") then [bir_symbexec_funcLib.Decryption syst]
-			    else if (lib_type = "Signature") then [bir_symbexec_funcLib.Signature syst]
-			    else if (lib_type = "Verify") then bir_symbexec_funcLib.Verify syst
-			    else if (lib_type = "MEMcpy") then [bir_symbexec_funcLib.New_memcpy syst]
-			    else if (lib_type = "LoadFile") then [bir_symbexec_funcLib.Load_file syst]
-			    else if (lib_type = "OTP") then [bir_symbexec_funcLib.One_Time_Pad syst]
-			    else if (lib_type = "RNG") then [bir_symbexec_funcLib.Random_Number syst]
-			    else if (lib_type = "XOR") then [bir_symbexec_funcLib.Xor syst]
-			    else if (lib_type = "kdfPtoS") then [bir_symbexec_funcLib.KDF syst]
-			    else if (lib_type = "kdfStoP") then [bir_symbexec_funcLib.KDF syst]
-			    else if (lib_type = "concat") then [bir_symbexec_funcLib.Concat syst]
-			    else if (lib_type = "Concat1") then [bir_symbexec_funcLib.Concat1 syst]
-			    else if (lib_type = "Concat2") then [bir_symbexec_funcLib.Concat2 syst]
-			    else if (lib_type = "Pars1") then [bir_symbexec_funcLib.Parse1 syst]
-			    else if (lib_type = "Pars2") then [bir_symbexec_funcLib.Parse2 syst]
-			    else if (lib_type = "compare") then (bir_symbexec_funcLib.Compare syst)
-			    else if (lib_type = "Fail") then [SYST_update_status BST_AssumptionViolated_tm syst]
-			    else if ((lib_type = "event1") orelse (lib_type = "event2") orelse (lib_type = "event3")) then (bir_symbexec_funcLib.Event lib_type syst)
-			    else [syst];*)
 		   
 		val systs = if ((not o List.null o fst o listSyntax.dest_list) bl_stmts)
 			    then

@@ -3,6 +3,8 @@ struct
 
 val simplification = ref false;
 
+val cryptography = ref false;
+    
 local
 
     open HolKernel Parse
@@ -179,7 +181,9 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    val namestr = stringSyntax.fromHOLstring name;
 	in
 	    if ((String.isSuffix "assert_true_cnd" namestr) orelse(String.isSuffix "T" namestr) orelse (String.isSuffix "init_pred" namestr) orelse (String.isSuffix "assert_false_cnd" namestr) orelse (String.isSuffix "cjmp_false_cnd" namestr)  orelse (String.isSuffix "ProcState_V" namestr) orelse (String.isSuffix "ProcState_N" namestr) orelse (String.isSuffix "ProcState_C" namestr) orelse (String.isSuffix "ProcState_V*" namestr) orelse (String.isSuffix "ProcState_N*" namestr) orelse (String.isSuffix "ProcState_C*" namestr) orelse (String.isSuffix "RepEnd" namestr) orelse (String.isSuffix "R30" namestr))
-	    then (sbir_tree_sapic_process sort_vals str)
+	    then (if (not (!simplification))
+		    then (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
+		    else (sbir_tree_sapic_process sort_vals str))
 	    else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) )
 	    then  (mk_ProcessAction ((mk_New ((sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),((mk_Con o sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))))
 	    else if ((String.isSuffix "K" namestr) orelse (String.isSuffix "Kr" namestr))
@@ -252,6 +256,9 @@ fun sbir_tree_sapic_process sort_vals tree =
 		    else (sbir_tree_sapic_process sort_vals str))	
 	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
+	    else if (((is_BExp_Load b) orelse (is_BExp_Store b)) andalso (!cryptography))
+	    then
+		(sbir_tree_sapic_process sort_vals str)
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 	end)
 			      (*   handle _ => raise ERR "sbir_tree_sapic_process" ("cannot do it "^(case tree of

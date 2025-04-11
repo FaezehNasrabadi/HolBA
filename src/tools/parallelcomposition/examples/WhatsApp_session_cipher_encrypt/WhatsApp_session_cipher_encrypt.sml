@@ -166,7 +166,7 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
-val crypto_calls = true;
+val crypto_calls = false;
     
 val full = false;
 

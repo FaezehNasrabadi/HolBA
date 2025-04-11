@@ -139,6 +139,10 @@ fun tail_of tree = case tree of
 			VLeaf => raise ERR "tail_of" ("it is leaf")
 		      | VBranch ((a,b),lstr,rstr)  =>  raise ERR "tail_of" ("it is branch")
 		      | VNode ((a,b),str)  =>  str
+
+fun is_leaf tree = case tree of
+			VLeaf => true
+		      | _ =>  false					       
 					       
 fun sbir_tree_sapic_process sort_vals tree =
     case tree of
@@ -156,8 +160,37 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    val be =  ( if (is_BExp_Den b)
 			then bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b))
 			else b ) handle _ => b;
-	in	
-	    if (is_BExp_BinPred be) then
+	in
+	    if (((is_BExp_BinExp be) orelse
+		      (is_BExp_BinPred be) orelse
+		      (is_BExp_MemEq be) orelse
+		      (is_BExp_Cast be) orelse
+		      (is_BExp_Const be) orelse
+		      (is_BExp_MemConst be) orelse
+		      (is_BExp_Den be) orelse
+		      (is_BExp_IfThenElse be) orelse
+		      (is_BExp_Load be) orelse
+		      (is_BExp_Store be) orelse
+		      (is_BExp_UnaryExp be)
+		     ) andalso (!cryptography))
+	    then if (is_leaf lstr) then	(sbir_tree_sapic_process sort_vals rstr)
+		else if  (is_leaf rstr) then (sbir_tree_sapic_process sort_vals lstr)
+		else if (is_BExp_BinPred be) then
+		let 
+		    val (bop, subexp1, subexp2) = (dest_BExp_BinPred) be;	
+		in
+		    if (is_BIExp_Equal bop)
+		    then mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term subexp1)),(fst(bir_exp_to_sapic_term subexp2)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+		    else if ((is_BIExp_SignedLessThan bop) andalso (identical subexp2 ``BExp_Const (Imm32 0w)``))
+		    then ( if ((String.isSuffix "tgt_true_cnd" ((fst o dest_BVar_string o fst o head_of) rstr)) orelse (String.isSuffix "tgt_false_cnd" ((fst o dest_BVar_string o fst o head_of) rstr)))
+			   then (sbir_tree_sapic_process sort_vals (tail_of rstr))
+			   else  (sbir_tree_sapic_process sort_vals rstr)
+			 ) handle _ => (sbir_tree_sapic_process sort_vals rstr)
+		    else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+		end
+	    else
+		mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
+	    else if (is_BExp_BinPred be) then
 		let 
 		    val (bop, subexp1, subexp2) = (dest_BExp_BinPred) be;	
 		in
@@ -184,7 +217,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    then (if (not (!simplification))
 		    then (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 		    else (sbir_tree_sapic_process sort_vals str))
-	    else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) )
+	    else if ((String.isSuffix "Key" namestr) orelse (String.isSuffix "iv" namestr) orelse (String.isSuffix "pkP" namestr) orelse (String.isSuffix "skS" namestr) orelse (String.isSuffix "RAND_NUM" namestr) orelse  (String.isSuffix "MSG" namestr)  orelse  (String.isSuffix "MASTER_KEY" namestr)  orelse (String.isSuffix "OTP" namestr) orelse (String.isSuffix "SKey" namestr)  orelse (String.isSuffix "Epriv_i" namestr)  orelse (String.isSuffix "Epriv_r" namestr) orelse (String.isSuffix "sid_i" namestr)  orelse (String.isSuffix "sid_r" namestr) )
 	    then  (mk_ProcessAction ((mk_New ((sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),((mk_Con o sapic_term_to_name o fst o bir_exp_to_sapic_term) b)),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))))
 	    else if ((String.isSuffix "K" namestr) orelse (String.isSuffix "Kr" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
@@ -256,9 +289,19 @@ fun sbir_tree_sapic_process sort_vals tree =
 		    else (sbir_tree_sapic_process sort_vals str))	
 	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
-	    else if (((is_BExp_Load b) orelse (is_BExp_Store b)) andalso (!cryptography))
-	    then
-		(sbir_tree_sapic_process sort_vals str)
+	    else if (((is_BExp_BinExp b) orelse
+		      (is_BExp_BinPred b) orelse
+		      (is_BExp_MemEq b) orelse
+		      (is_BExp_Cast b) orelse
+		      (is_BExp_Const b) orelse
+		      (is_BExp_MemConst b) orelse
+		      (is_BExp_Den b) orelse
+		      (is_BExp_IfThenElse b) orelse
+		      (is_BExp_Load b) orelse
+		      (is_BExp_Store b) orelse
+		      (is_BExp_UnaryExp b)
+		     ) andalso (!cryptography))
+	    then(sbir_tree_sapic_process sort_vals str)
 	    else (mk_ProcessComb(mk_Let ((fst(bir_exp_to_sapic_term (mk_BExp_Den a))),(fst(bir_exp_to_sapic_term b))),(sbir_tree_sapic_process sort_vals str),(ProcessNull_tm)))
 	end)
 			      (*   handle _ => raise ERR "sbir_tree_sapic_process" ("cannot do it "^(case tree of

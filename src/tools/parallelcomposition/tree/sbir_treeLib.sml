@@ -134,7 +134,7 @@ fun find_be_val vals_list bv =
 	(* val symbv = ((snd o Option.valOf) find_val) handle _ => raise ERR "find_be_val" ("cannot find symbolic value for "^(term_to_string bv)^"\n"); *)
 	val (bv_str, _) = bir_envSyntax.dest_BVar_string bv;
 	val fr = get_bvar_fresh (bir_envSyntax.mk_BVar_string (bv_str, “BType_Bool”)); (* generate a fresh variable *)
-	val symbv = ((snd o Option.valOf) find_val) handle _ => SymbValBE (fr, Redblackset.empty Term.compare) ;
+	val symbv = ((snd o Option.valOf) find_val); (* handle _ => SymbValBE (fr, Redblackset.empty Term.compare) ; *)
 	val exp =
 	    case symbv of
 		SymbValBE (x, _) => x
@@ -151,7 +151,7 @@ datatype 'a valtree = VLeaf | VNode of ('a * 'a) * 'a valtree | VBranch of ('a *
 fun tree_with_value tr sort_vals =
     case tr of
 	Leaf => VLeaf
-      | Node (bv, subtr) => VNode ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr sort_vals))
+      | Node (bv, subtr) => ((VNode ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr sort_vals))) handle _ => (tree_with_value subtr sort_vals))
       | Branch (bv, subtr1, subtr2) => VBranch ((bv,(find_be_val sort_vals bv)), (tree_with_value subtr1 sort_vals), (tree_with_value subtr2 sort_vals))
 
 

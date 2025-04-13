@@ -1,0 +1,372 @@
+in(att,a_60);
+in(X3DH,CKe_101);
+if R1_sy='0' then 
+if R0_112='0' then 
+if R0_122='0' then 
+if R0_134='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_613,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_4489,'32'))='1' then 
+if R0_4510='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_4989,'32'))='1' then 
+0
+else if R0_8874='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_9353,'32'))='1' then 
+0
+else if R8_13229='0' then 
+if R0_13239='0' then 
+if R0_13251='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_13730,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_17606,'32'))='1' then 
+if R0_17627='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_18106,'32'))='1' then 
+0
+else if R0_21991='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_22470,'32'))='1' then 
+0
+else let CKe_26350=pars1(hkdf(Root_sy,Ephemeral_sy)) in 
+let RKe_26351=pars2(hkdf(Root_sy,Ephemeral_sy)) in 
+out(X3DH,CKe_26350);
+new ~ephemeral_secret_39472;
+let SKey_39471=~ephemeral_secret_39472 in 
+let CKe_52600=pars1(hkdf(RKe_26351,SKey_39471)) in 
+let RKe_52601=pars2(hkdf(RKe_26351,SKey_39471)) in 
+out(X3DH,CKe_52600);
+if R8_78829='0' then 
+if R0_78836='0' then 
+if R28_52605='0' then 
+if R0_78847='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_79326,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_80292,'32'))='1' then 
+if R0_80308='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_80787,'32'))='1' then 
+0
+else if R0_81757='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_82236,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_83202,'32'))='1' then 
+if R28_52605='0' then 
+if R0_83222='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_83701,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_84667,'32'))='1' then 
+if R0_84683='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_85162,'32'))='1' then 
+0
+else if R0_86132='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_86611,'32'))='1' then 
+0
+else if R28_52605='0' then 
+if R0_87585='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_88064,'32'))='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_89030,'32'))='1' then 
+if R0_89046='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_89525,'32'))='1' then 
+0
+else if R0_90495='0' then 
+0
+else if LessOrEqual('2',LowCast(R8_90974,'32'))='1' then 
+0
+else if R0_91970='0' then 
+if R28_52605='0' then 
+if R0_91981='0' then 
+if LessOrEqual(LowCast(R8_92051,'32'),LowCast(R28_92054,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_92059,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_92054,'32'),LowCast(R8_92051,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_92456,'32'))='1' then 
+if LessOrEqual(LowCast(R8_92536,'32'),LowCast(R28_92539,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_92544,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_92539,'32'),LowCast(R8_92536,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_93009,'32'),LowCast(R28_93012,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_93017,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_93012,'32'),LowCast(R8_93009,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_93414,'32'))='1' then 
+if R0_93430='0' then 
+if LessOrEqual(LowCast(R8_93500,'32'),LowCast(R28_93503,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_93508,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_93503,'32'),LowCast(R8_93500,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_93905,'32'))='1' then 
+if LessOrEqual(LowCast(R8_93985,'32'),LowCast(R28_93988,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_93993,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_93988,'32'),LowCast(R8_93985,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_94458,'32'),LowCast(R28_94461,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_94466,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_94461,'32'),LowCast(R8_94458,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R0_94867='0' then 
+if LessOrEqual(LowCast(R8_94937,'32'),LowCast(R28_94940,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_94945,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_94940,'32'),LowCast(R8_94937,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_95342,'32'))='1' then 
+if LessOrEqual(LowCast(R8_95422,'32'),LowCast(R28_95425,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_95430,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_95425,'32'),LowCast(R8_95422,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_95895,'32'),LowCast(R28_95898,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_95903,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_95898,'32'),LowCast(R8_95895,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_96300,'32'))='1' then 
+if R28_52605='0' then 
+if R0_96320='0' then 
+if LessOrEqual(LowCast(R8_96390,'32'),LowCast(R28_96393,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_96398,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_96393,'32'),LowCast(R8_96390,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_96795,'32'))='1' then 
+if LessOrEqual(LowCast(R8_96875,'32'),LowCast(R28_96878,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_96883,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_96878,'32'),LowCast(R8_96875,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_97348,'32'),LowCast(R28_97351,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_97356,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_97351,'32'),LowCast(R8_97348,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_97753,'32'))='1' then 
+if R0_97769='0' then 
+if LessOrEqual(LowCast(R8_97839,'32'),LowCast(R28_97842,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_97847,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_97842,'32'),LowCast(R8_97839,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_98244,'32'))='1' then 
+if LessOrEqual(LowCast(R8_98324,'32'),LowCast(R28_98327,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_98332,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_98327,'32'),LowCast(R8_98324,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_98797,'32'),LowCast(R28_98800,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_98805,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_98800,'32'),LowCast(R8_98797,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R0_99206='0' then 
+if LessOrEqual(LowCast(R8_99276,'32'),LowCast(R28_99279,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_99284,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_99279,'32'),LowCast(R8_99276,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_99681,'32'))='1' then 
+if LessOrEqual(LowCast(R8_99761,'32'),LowCast(R28_99764,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_99769,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_99764,'32'),LowCast(R8_99761,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_100234,'32'),LowCast(R28_100237,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_100242,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_100237,'32'),LowCast(R8_100234,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R28_52605='0' then 
+if R0_100647='0' then 
+if LessOrEqual(LowCast(R8_100717,'32'),LowCast(R28_100720,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_100725,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_100720,'32'),LowCast(R8_100717,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_101122,'32'))='1' then 
+if LessOrEqual(LowCast(R8_101202,'32'),LowCast(R28_101205,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_101210,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_101205,'32'),LowCast(R8_101202,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_101675,'32'),LowCast(R28_101678,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_101683,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_101678,'32'),LowCast(R8_101675,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_102080,'32'))='1' then 
+if R0_102096='0' then 
+if LessOrEqual(LowCast(R8_102166,'32'),LowCast(R28_102169,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_102174,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_102169,'32'),LowCast(R8_102166,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_102571,'32'))='1' then 
+if LessOrEqual(LowCast(R8_102651,'32'),LowCast(R28_102654,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_102659,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_102654,'32'),LowCast(R8_102651,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_103124,'32'),LowCast(R28_103127,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_103132,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_103127,'32'),LowCast(R8_103124,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R0_103533='0' then 
+if LessOrEqual(LowCast(R8_103603,'32'),LowCast(R28_103606,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_103611,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_103606,'32'),LowCast(R8_103603,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_104008,'32'))='1' then 
+if LessOrEqual(LowCast(R8_104088,'32'),LowCast(R28_104091,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_104096,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_104091,'32'),LowCast(R8_104088,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_104561,'32'),LowCast(R28_104564,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_104569,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_104564,'32'),LowCast(R8_104561,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R0_104980='0' then 
+if R0_104992='0' then 
+if LessOrEqual(LowCast(R8_105062,'32'),LowCast(R28_105065,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_105070,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_105065,'32'),LowCast(R8_105062,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_105467,'32'))='1' then 
+if LessOrEqual(LowCast(R8_105547,'32'),LowCast(R28_105550,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_105555,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_105550,'32'),LowCast(R8_105547,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_106020,'32'),LowCast(R28_106023,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_106028,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_106023,'32'),LowCast(R8_106020,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_109311,'32'))='1' then 
+if R0_109332='0' then 
+if LessOrEqual(LowCast(R8_109402,'32'),LowCast(R28_109405,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_109410,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_109405,'32'),LowCast(R8_109402,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_109807,'32'))='1' then 
+if LessOrEqual(LowCast(R8_109887,'32'),LowCast(R28_109890,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_109895,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_109890,'32'),LowCast(R8_109887,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_110360,'32'),LowCast(R28_110363,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_110368,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_110363,'32'),LowCast(R8_110360,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if R0_113660='0' then 
+if LessOrEqual(LowCast(R8_113730,'32'),LowCast(R28_113733,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_113738,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_113733,'32'),LowCast(R8_113730,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual('2',LowCast(R8_114135,'32'))='1' then 
+if LessOrEqual(LowCast(R8_114215,'32'),LowCast(R28_114218,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_114223,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_114218,'32'),LowCast(R8_114215,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0
+else if LessOrEqual(LowCast(R8_114688,'32'),LowCast(R28_114691,'32'))='1' then 
+if LessOrEqual('2001',LowCast(R9_114696,'32'))='1' then 
+0
+else if LessOrEqual(LowCast(R28_114691,'32'),LowCast(R8_114688,'32'))='1' then 
+0
+else if LowCast(R1_sy,'32')='1' then 
+0

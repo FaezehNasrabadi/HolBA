@@ -80,22 +80,19 @@ val prog_vars = ephemeral::prog_vars;
 val root = “BVar "Root" (BType_Imm Bit64)”;
 
 val prog_vars = root::prog_vars;
-
-
-    
     
 val n_dict = bir_cfgLib.cfg_build_node_dict bl_dict_ prog_lbl_tms_;
-
-    
-val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict bl_dict_ prog_lbl_tms_;    
-
     
 val lbl_tm = ``BL_Address (Imm64 0xEE65F8w)``;
     
 val g1 = cfg_create "toy1" [lbl_tm] n_dict bl_dict_;
 
 val n_dict = update_n_dict_ ((#CFGG_nodes g1),(#CFGG_node_dict g1));
-	     
+
+   
+val adr_dict = bir_symbexec_PreprocessLib.fun_addresses_dict  n_dict;    
+
+    
 val stop_lbl_tms = [
     ``BL_Address (Imm64 0xEE672cw)``,
       ``BL_Address (Imm64 0xEE6AE4w)``,
@@ -166,24 +163,64 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
-val sapic_process = sbir_tree_sapic_process sort_vals (purge_tree valtr);
+val crypto_calls = true;
     
-val _ = print ("built sapic_process");
-val _ = print "\n";
+val full = false;
 
+val _ = if full then
+	    let
+		val sapic_process = sbir_tree_sapic_process sort_vals valtr;
 
-val refined_process = refine_process sapic_process;
+		val _ = print ("built sapic_process\n");
 
-val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
+		val _ =  ( write_sapic_to_file o process_to_string) sapic_process;
+	    in
+		print ("wrote into file\n")
+	    end
+	else if crypto_calls then
+	    let
+		val _ = cryptography := true;
+		    
+		val _ = simplification := true;
+
+		val purged_tree = (purge_tree valtr);
+
+		val _ = print ("built a purged tree\n");
+
+		val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
+
+		val _ = print ("built sapic_process\n");
+
+		val refined_process = refine_process sapic_process;
+
+		val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
+		    
+		val process_with_live_vars = process_live_vars rset refined_process;
+		    
+		val _ = print ("built a refined process with live variables\n");
+
+		val _ =  ( write_sapic_to_file o process_to_string) refined_process;	    
+	    in
+		print ("wrote into file\n")
+	    end
+	else
+	    let
+		val _ = cryptography := false;
+
+		val _ = simplification := true;
+
+		val purged_tree = (purge_tree valtr);
+
+		val _ = print ("built a purged tree\n");
+
+		val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
+
+		val _ = print ("built sapic_process\n");
+
+		val _ =  ( write_sapic_to_file o process_to_string) sapic_process; 
+	    in
+		print ("wrote into file\n")
+	    end;
     
-val process_with_live_vars = process_live_vars rset refined_process;
-val _ = print ("built a refined process with live variables");
-val _ = print "\n";
 
-	
-val _ =  ( write_sapic_to_file o process_to_string) process_with_live_vars;
-     
-     
-val _ = print ("wrote into file");
-val _ = print "\n";
 

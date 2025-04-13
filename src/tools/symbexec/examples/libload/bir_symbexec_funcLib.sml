@@ -164,7 +164,7 @@ fun Encrypt2 input1 input2 =
 fun Send input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (send
+		     (Send
 			  ( ^input1)
 			  ( ^input2))``;
 
@@ -175,7 +175,7 @@ fun Send input1 input2 =
 fun Receive input1 input2 =
     let
 	val stmt = ``BStmt_Assign (BVar "R0" (BType_Imm Bit64))
-		     (receive
+		     (Receive
 			  ( ^input1)
 			  ( ^input2))``;
 
@@ -1746,25 +1746,20 @@ fun DH_key vn syst =
 
 
  fun session_key syst =
-     let
+    let
 
-	 val be_adv = find_adv_name syst;
-
-	val Fn_b = bir_envSyntax.mk_BVar_string ("P", “BType_Imm Bit64”); 
-
-	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("MASTER_KEY", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
-
-	val ch = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("X3DH_IChannel", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
-	
-	val fr_bv = Fr ch;
-
-	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval vn fr_bv) syst;
+	val env  = (SYST_get_env  syst);
 	    
-	val syst = update_symbval vn ch syst;
+	val key = find_bv_val ("encypt::bv in env not found")
+                              env ``BVar "key" (BType_Imm Bit64)``;
 
-	val (E_bv, E_be) = MsgNewSession be_adv Fn_b vn;
+	val c2 = ``BVar "0x02" (BType_Imm Bit64)``;
+		     
+	val (C_bv, C_be) = HMac2 key c2;    	    	
 
-	val syst = state_add_path "event1" E_be syst
+	val Fr_CK = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKeNext", “BType_Imm Bit64”));
+
+	val syst = update_key C_be Fr_CK syst;
 
     in
 	syst
@@ -3029,28 +3024,24 @@ fun Signature syst =
 
 fun HMAC_Send syst =
     let
-	val syst = new_key syst;
 
 	val env  = (SYST_get_env  syst);
-
-	val key = find_bv_val ("HMAC_Send::bv in env not found")
-                              env ``BVar "key" (BType_Imm Bit64)``;
-		  
-	val sid = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("sid_i", “BType_Imm Bit64”)); (* generate a fresh iv *)
-
-	val Fr_v = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("sid_i", “BType_Imm Bit64”)); (* generate a fresh name *)
 	    
-	val syst = update_with_fresh_name Fr_v sid syst;
+	val key = find_bv_val ("encypt::bv in env not found")
+                              env ``BVar "key" (BType_Imm Bit64)``;
+	    
+	val ch = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("X3DH_OChannel", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
+	
+	val fr_bv = Fr ch;
 
-	val (H_bv, H_be) = HMac2 key sid; (* encrypt with iv *)
-
-	val Fr_Hash = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("HMAC", “BType_Imm Bit64”))); (* generate a fresh variable *)
-
-	val syst = store_op_mem_r0 H_be Fr_Hash syst; (* update syst *)
+	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval key fr_bv) syst;
+	    
+	val syst = update_symbval key ch syst;
 
     in
 	syst
     end;
+
 
 fun KeyDF1 syst =
     let
@@ -3083,6 +3074,8 @@ fun KeyDF1 syst =
 	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval P2_be fr_bv) syst;
 	    
 	val syst = update_symbval P2_be Fr_root syst;
+
+	val syst = HMAC_Send syst;
 
     in
 	syst
@@ -3321,26 +3314,29 @@ fun Load_file syst =
 
 fun Load_file syst =
     let
-	    
-	val be_adv = find_adv_name syst;
-
 	val Fr_CK = (get_bvar_fresh (bir_envSyntax.mk_BVar_string ("CKe", “BType_Imm Bit64”))); (* generate a fresh variable *)
-
+	    
+	val ch = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("X3DH_IChannel", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
 	
-	val bv_mem = find_bv_val ("Load_file::bv in env not found") (SYST_get_env syst) “BVar "MEM" (BType_Mem Bit64 Bit8)”;
+	val fr_bv = Fr ch;
+
+	val syst = (SYST_update_pred ((fr_bv)::(SYST_get_pred syst)) o update_symbval Fr_CK fr_bv) syst;
+	    
+	val syst = update_symbval Fr_CK ch syst;
+
+	val bv_mem = find_bv_val ("New_memcpy::bv in env not found") (SYST_get_env syst) “BVar "MEM" (BType_Mem Bit64 Bit8)”;
 
 	val endi = “BEnd_LittleEndian”;
 
 	val Vtype = “Bit64”;
 		    
-	val C_be = (mk_BExp_Load (mk_BExp_Den(bv_mem), mk_BExp_Den(be_adv), endi, Vtype));    
+	val C_be = (mk_BExp_Load (mk_BExp_Den(bv_mem), mk_BExp_Den(ch), endi, Vtype));    
 
 	val syst = update_key C_be Fr_CK syst;
 
     in
 	syst
     end;
-
 (*
 _session_cipher_encrypt
 
@@ -3441,7 +3437,7 @@ fun HMAC_Receive syst =
 	val env  = (SYST_get_env  syst);
 	    
 	val key = find_bv_val ("encypt::bv in env not found")
-                              env ``BVar "Crypto" (BType_Imm Bit64)``;
+                              env ``BVar "key" (BType_Imm Bit64)``;
 	    
 	val be_adv = find_adv_name syst;
 
@@ -3638,7 +3634,7 @@ fun Load_file syst =
 WhatsApp_session_builder_process_pre_key_bundle
 
 
-fun session_key syst =
+ fun session_key syst =
     let
 
 	val vn = get_bvar_fresh (bir_envSyntax.mk_BVar_string ("SKey", “BType_Imm Bit64”)); (* generate a fresh variable *)	    	
@@ -3658,7 +3654,6 @@ fun session_key syst =
     in
 	syst
     end;
- 
  
 WhatsApp_decryptPreKeyCiphertextData
 

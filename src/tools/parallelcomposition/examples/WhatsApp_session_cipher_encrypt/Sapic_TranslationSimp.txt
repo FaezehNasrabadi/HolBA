@@ -1,4 +1,3 @@
-in(att,a_3);
 let R22_9=Load(MEM_sy,Plus(SP_EL0_sy,'64')) in 
 let R23_12=Load(MEM_sy,Plus(R22_9,'16')) in 
 if R23_12='0' then 

@@ -1,5 +1,4 @@
 let init_pred_0='1' in 
-in(att,a_3);
 let assert_true_cnd_7=Equal(And(SP_EL0_sy,'7'),'0') in 
 let R22_9=Load(MEM_sy,Plus(SP_EL0_sy,'64')) in 
 let assert_true_cnd_10=Equal(And(R22_9,'7'),'0') in 

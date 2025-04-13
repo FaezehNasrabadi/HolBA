@@ -1,4 +1,3 @@
-in(att,a_3);
 if R23_12='0' then 
 0
 else if R24_19='0' then 

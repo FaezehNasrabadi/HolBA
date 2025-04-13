@@ -14,7 +14,7 @@ builtins: dest-pairing, dest-symmetric-encryption
 
 functions: hash2/2, hkdf/2, pars1/1, pars2/1, hash/1, session/1
 
-heuristic: s
+heuristic: p
 
 
 let SessionCipherEncrypt(sidA,sidB,Alice) =

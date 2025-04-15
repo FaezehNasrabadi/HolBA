@@ -161,7 +161,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 			then bir_symbexec_funcLib.symbval_bexp (bir_symbexec_treeLib.find_be_val sort_vals (dest_BExp_Den b))
 			else b ) handle _ => b;
 	in
-	    if (((is_BExp_BinExp be) orelse
+	    (*if (((is_BExp_BinExp be) orelse
 		      (is_BExp_BinPred be) orelse
 		      (is_BExp_MemEq be) orelse
 		      (is_BExp_Cast be) orelse
@@ -190,7 +190,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 		end
 	    else
 		mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
-	    else if (is_BExp_BinPred be) then
+	    else *) if (is_BExp_BinPred be) then
 		let 
 		    val (bop, subexp1, subexp2) = (dest_BExp_BinPred) be;	
 		in

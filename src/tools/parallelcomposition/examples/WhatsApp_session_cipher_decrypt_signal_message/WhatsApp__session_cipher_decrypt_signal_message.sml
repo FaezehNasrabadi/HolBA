@@ -163,7 +163,7 @@ val _ = print ("built a symbolic tree with value");
 val _ = print "\n";
 
 
-val crypto_calls = false;
+val crypto_calls = true;
     
 val full = false;
 
@@ -183,21 +183,11 @@ val _ = if full then
 		    
 		val _ = simplification := true;
 
-		val purged_tree = (purge_tree valtr);
-
-		val _ = print ("built a purged tree\n");
-
-		val sapic_process = sbir_tree_sapic_process sort_vals purged_tree;
+		val sapic_process = sbir_tree_sapic_process sort_vals valtr;
 
 		val _ = print ("built sapic_process\n");
 
 		val refined_process = refine_process sapic_process;
-
-		val rset = ((Redblackset.empty Term.compare): term Redblackset.set);
-		    
-		val process_with_live_vars = process_live_vars rset refined_process;
-		    
-		val _ = print ("built a refined process with live variables\n");
 
 		val _ =  ( write_sapic_to_file o process_to_string) refined_process;	    
 	    in

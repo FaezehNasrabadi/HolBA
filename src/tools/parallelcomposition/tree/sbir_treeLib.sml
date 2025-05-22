@@ -251,11 +251,11 @@ fun purge_tree tr =
 		end*)
 	else VNode ((bv,be), (purge_tree subtr))
       | VBranch ((bv,be), subtr1, subtr2) =>
-	if (identical be “BExp_Const (Imm1 1w)”)
+	(*if (identical be “BExp_Const (Imm1 1w)”)
 	then (purge_tree subtr1)
 	else if (identical be “BExp_Const (Imm1 0w)”)
 	then (purge_tree subtr2)
-	else VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))
+	else*) VBranch ((bv,be), (purge_tree subtr1), (purge_tree subtr2))
 	     
 
 

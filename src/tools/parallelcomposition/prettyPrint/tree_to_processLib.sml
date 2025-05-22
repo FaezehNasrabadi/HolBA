@@ -196,11 +196,11 @@ fun sbir_tree_sapic_process sort_vals tree =
 		in
 		    if (is_BIExp_Equal bop)
 		    then mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term subexp1)),(fst(bir_exp_to_sapic_term subexp2)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
-		    else if ((is_BIExp_SignedLessThan bop) andalso (identical subexp2 ``BExp_Const (Imm32 0w)``))
+		    (*else if ((is_BIExp_SignedLessThan bop) andalso (identical subexp2 ``BExp_Const (Imm32 0w)``))
 		    then ( if ((String.isSuffix "tgt_true_cnd" ((fst o dest_BVar_string o fst o head_of) rstr)) orelse (String.isSuffix "tgt_false_cnd" ((fst o dest_BVar_string o fst o head_of) rstr)))
 			   then (sbir_tree_sapic_process sort_vals (tail_of rstr))
 			   else  (sbir_tree_sapic_process sort_vals rstr)
-			 ) handle _ => (sbir_tree_sapic_process sort_vals rstr)
+			 ) handle _ => (sbir_tree_sapic_process sort_vals rstr)*)
 		    else mk_ProcessComb ((mk_CondEq ((fst(bir_exp_to_sapic_term be)),(fst(bir_exp_to_sapic_term ``BExp_Const (Imm1 1w)``)))),(sbir_tree_sapic_process sort_vals lstr),(sbir_tree_sapic_process sort_vals rstr))
 		end
 	    else
@@ -287,7 +287,7 @@ fun sbir_tree_sapic_process sort_vals tree =
 	    then (if (not (!simplification))
 		    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 		    else (sbir_tree_sapic_process sort_vals str))	
-	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr))
+	    else if ((String.isSuffix "tgt_true_cnd" namestr) orelse (String.isSuffix "tgt_false_cnd" namestr) orelse (String.isSuffix "observe_cnd" namestr))
 	    then (mk_ProcessAction ((mk_ChOut (mk_some(mk_TVar(mk_Var(“"att"”,“0:int”))),(fst(bir_exp_to_sapic_term b)))),(sbir_tree_sapic_process sort_vals str)))
 	    else if (((is_BExp_BinExp b) orelse
 		      (is_BExp_BinPred b) orelse

@@ -496,7 +496,7 @@ val sapic_K_transition_def = Define `
 
               
 (* In rule *)
-val sapic_in_transition_def = Define `
+val sapic_in_with_c_transition_def = Define `
                                      sapic_in_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
 (∃Ps P t x R R'.
    (Pold = (BAG_UNION Ps {|ProcessAction (ChIn (SOME t) (TVar x)) P|})) /\
@@ -509,7 +509,19 @@ val sapic_in_transition_def = Define `
    (Sb = Sb') /\
    (Al = Al'))`;   
 
-              
+val sapic_in_without_c_transition_def = Define `
+                                     sapic_in_without_c_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =
+(∃Ps P t x R R'.
+   (Pold = (BAG_UNION Ps {|ProcessAction (ChIn (NONE) (TVar x)) P|})) /\
+   (Pnew = (BAG_UNION Ps {|(process_substvar x (substitution_to_term Sb R') P)|})) /\
+   (Ev = []) /\
+   (is_ground_term (substitution_to_term Sb R')) /\
+   (t = (substitution_to_term Sb R)) /\
+   (Ns = Ns') /\
+   (St = St') /\
+   (Sb = Sb') /\
+   (Al = Al'))`;
+                
 (* Out rule *)
 val sapic_out_transition_def = Define `
                                       sapic_out_transition (Config (Ns,St,Pold,Sb,Al)) Ev (Config (Ns',St',Pnew,Sb',Al')) =

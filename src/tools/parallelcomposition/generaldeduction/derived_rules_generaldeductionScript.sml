@@ -346,8 +346,7 @@ val associativity_generaldeduction_thm = store_thm(
         Cases_on ‘P'’ >- (
           Cases_on ‘P'''’ >-(
             rw[] >>
-            FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[prSum_def] >>
-            metis_tac[prSum_prSumRev]
+            FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[prSumRev_def]
             ) >>
           Cases_on ‘x’ >- (
             FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[sum_case_def] >>
@@ -392,8 +391,7 @@ val associativity_generaldeduction_thm = store_thm(
       Cases_on ‘P'’ >- (
         Cases_on ‘P'''’ >-(
           rw[] >>
-          FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[prSum_def] >>
-          metis_tac[prSum_prSumRev]
+          FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[prSumRev_def]
           ) >>
         Cases_on ‘x’ >- (
           FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[sum_case_def] >>

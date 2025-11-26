@@ -18,12 +18,18 @@ val _ = new_theory "interleavinggeneraldeduction";
 Inductive binterl:
 [~nil:]
   (binterl [] [] []) /\
+[~none:]
+  (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t1' = (NONE::t1)) /\ (t2' = (NONE::t2)) /\ (t' = (NONE::t))) ==> (binterl t1' t2' t')) /\
 [~combinenone:]
   (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t' = (NONE::t))) ==> (binterl t1 t2 t')) /\
 [~left:]
   (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t1' = (SOME (INL e1)::t1)) /\ (t' = (SOME (INL (INL e1))::t))) ==> (binterl t1' t2 t')) /\
 [~right:]                                                                        
   (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t2' = (SOME (INL e2)::t2)) /\ (t' = (SOME (INR (INL e2))::t))) ==> (binterl t1 t2' t')) /\
+[~leftN:]
+  (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t1' = (SOME (INL e1)::t1)) /\ (t2' = (NONE::t2)) /\ (t' = (SOME (INL (INL e1))::t))) ==> (binterl t1' t2' t')) /\
+[~rightN:]                                                                        
+  (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t1' = (NONE::t1)) /\ (t2' = (SOME (INL e2)::t2)) /\ (t' = (SOME (INR (INL e2))::t))) ==> (binterl t1' t2' t')) /\
 [~syncR:]                                                                        
   (((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) t) /\ (t1' = (SOME (INR e)::t1)) /\ (t2' = (SOME (INR e)::t2)) /\ (t' = (SOME (INR (INR e))::t))) ==> (binterl t1' t2' t')) /\
 [~syncL:]                                                                        
@@ -36,6 +42,8 @@ Inductive binterl:
   ((binterl (SOME (INR e)::(t1:('event1 + 'eventS) option list)) (SOME (INR e)::(t2:('event2 + 'eventS) option list)) (SOME (INL (INR e))::t)) ==> (binterl t1 t2 t)) /\
 [~movesSR:]                                                                        
   ((binterl (SOME (INR e)::(t1:('event1 + 'eventS) option list)) (SOME (INR e)::(t2:('event2 + 'eventS) option list)) (SOME (INR (INR e))::t)) ==> (binterl t1 t2 t)) /\
+[~moveF:]
+  (((binterl t1 t2 t) ∧ (binterl [h1] [h2] [h])) ==> (binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t))) /\
 [~movecombinenone:]                                                                        
   ((binterl (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list) (NONE::t)) ==> (binterl t1 t2 t))
 End
@@ -193,8 +201,54 @@ val binterl_moveAL = new_axiom ("binterl_moveAL",
                                   (∃t1'. (t1 = SOME (INL e1)::t1'))``);
                                   
 
+val binterl_moveALN = new_axiom ("binterl_moveALN",
+                               ``∀e1.
+                                     binterl [SOME (INL e1)] [NONE] [SOME (INL (INL e1))] =
+                                  (binterl [] [] [])``);
+
+val binterl_moveSLN = new_axiom ("binterl_moveSLN",
+                               ``∀e2.
+                                     binterl [NONE] [SOME (INR e2)] [SOME (INL (INR e2))] =
+                                  (binterl [] [] [])``);
+
+val binterl_moveSRN = new_axiom ("binterl_moveSRN",
+                                 ``∀e2.                                  
+                                      binterl [NONE] [SOME (INR e2)] [SOME (INR (INR e2))] =
+                                    (binterl [] [] [])``);
+
+val binterl_moveARN = new_axiom ("binterl_moveARN",
+                               ``∀e2.
+binterl [NONE] [SOME (INL e2)] [SOME (INR (INL e2))] =
+                                  (binterl [] [] [])``);
+
+val binterl_moveNONE = new_axiom ("binterl_moveNONE",
+                                ``∀e t t1 t2.
+                                     binterl t1 t2 (NONE::t) ⇒
+                                   (∃t1' t2'. (t1 = NONE::t1') ∧(t2 = NONE::t2'))``);
+
+val binterl_moveNAR = new_axiom ("binterl_moveNAR",
+                                 ``∀e2 t t1 t2.
+                                       binterl t1 t2 (SOME (INR (INL e2))::t) ⇒
+                                    (∃t1' t2'. (t2 = SOME (INL e2)::t2') ∧ (t1 = NONE::t1'))``);
+
+val binterl_moveNAL = new_axiom ("binterl_moveNAL",
+                               ``∀e1 t t1 t2.
+                                     binterl t1 t2 (SOME (INL (INL e1))::t) ⇒
+                                  (∃t1' t2'. (t1 = SOME (INL e1)::t1') ∧ (t2 = NONE::t2'))``);
+
+val TranRelSnocRev = new_axiom ("TranRelSnocRev",
+                                ``∀(MTrn:(('event1 + 'event3) + ('event2 + 'event3), ('pred1 + 'pred2), 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+                                
+val TranRelSnocBack = new_axiom ("TranRelSnocBack",
+                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+
+val binterl_NotEmpty = new_axiom ("binterl_NotEmpty",
+                                  ``∀t1 t2. binterl t1 t2 (h::t) ⇒ (∃h1 t1' h2 t2'. (t1 = (h1::t1'))∧(t2 = (h2::t2')))``);
 
 
+                                   
+val binterl_Conj = new_axiom ("binterl_Conj",
+                              ``∀h1 t1 h2 t2 h t. (binterl ((h1::t1):('event1 + 'eventS) option list) ((h2::t2):('event2 + 'eventS) option list) (h::t)) ⇒ ((binterl t1 t2 t) ∧ (binterl [h1] [h2] [h]))``);
 
 val binterl_moveAR =
 new_axiom ("binterl_moveAR",

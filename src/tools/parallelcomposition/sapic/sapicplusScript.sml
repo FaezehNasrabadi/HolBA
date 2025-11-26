@@ -630,9 +630,6 @@ val _ = Datatype `sapic_position_configuration_t =
 Pconfig (Process_t # real # sapic_renaming_t # sapic_name_renaming_t)
         `;
 
-val PConfigEq = new_axiom ("PConfigEq",
-                           ``∀p r re nre p' r' re' nre'. (Pconfig (p,r,re,nre) = Pconfig (p',r',re',nre')) ⇒ ((r = r')∧(p = p')∧(re = re')∧(nre = nre'))``);                
-
 
 (* Replication rule *)
 val sapic_position_replication_transition_def = Define `
@@ -830,10 +827,7 @@ val traces_of_sapic_def  = Define`
 
 val _ = Datatype `sapic_plus_position_configuration_t =
 Pconfig_plus (Process_t # real # sapic_renaming_t # sapic_name_renaming_t)
-             `;
-
-val PConfigEq_plus = new_axiom ("PConfigEq_plus",
-                                ``∀p r re nre p' r' re' nre'. (Pconfig_plus (p,r,re,nre) = Pconfig_plus (p',r',re',nre')) ⇒ ((r = r')∧(p = p')∧(re = re')∧(nre = nre'))``);                
+             `;              
 
 
 (* Replication rule *)

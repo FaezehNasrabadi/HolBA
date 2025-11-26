@@ -72,10 +72,7 @@ val TranRelConfigEq = new_axiom ("TranRelConfigEq",
                                  ``∀(MTrn:('cevent, 'cstate) mctrel) s s'. (MTrn s [] s') ⇒ ((s = s'))``);
                                  
 val TranRelSnoc = new_axiom ("TranRelSnoc",
-                             ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
-
-val TranRelSnocRev = new_axiom ("TranRelSnocRev",
-                             ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. (MTrn s (e::t) s'') ⇒ ((MTrn s t s') ∧ (MTrn s' [e] s''))``);                             
+                             ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);                         
 
 val IMAGEOUT = new_axiom ("IMAGEOUT",
                           ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);

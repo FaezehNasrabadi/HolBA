@@ -75,7 +75,10 @@ val TranRelSnoc = new_axiom ("TranRelSnoc",
                              ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);
 
 val TranRelSnocRev = new_axiom ("TranRelSnocRev",
-                             ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. (MTrn s (e::t) s'') ⇒ ((MTrn s t s') ∧ (MTrn s' [e] s''))``);                             
+                                ``∀(MTrn:(('event1 + 'event3) + ('event2 + 'event3), ('pred1 + 'pred2), 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+                                
+val TranRelSnocBack = new_axiom ("TranRelSnocBack",
+                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
 
 val IMAGEOUT = new_axiom ("IMAGEOUT",
                           ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);

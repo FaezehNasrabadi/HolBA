@@ -64,11 +64,7 @@ new_axiom ("TranRelSnocRevNone",
              ⇒ (∃(P'':('pred1+'pred2) set). (∀(Ded1:('pred1) tded) (Ded2:('pred2) tded) phi. ((composeDed Ded1 Ded2) P'' phi) ∧ P'=P''∪{phi})  ∧
                                             (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
                                             (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')))``);
-val TranRelSnocRev = new_axiom ("TranRelSnocRev",
-                                ``∀(MTrn:(('event1 + 'event3) + ('event2 + 'event3), ('pred1 + 'pred2), 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
-                                
-val TranRelSnocBack = new_axiom ("TranRelSnocBack",
-                             ``∀(MTrn:('event, 'pred, 'state , 'symb ) mtrel) v p s v' p' s' v'' p'' s'' t e. (MTrn (v,p,s) (e::t) (v'',p'',s'')) ⇒ ((MTrn (v,p,s) t (v',p',s')) ∧ (MTrn (v',p',s') [e] (v'',p'',s'')))``);
+
                              
                                                                         
 (* Binary interleaving of traces *)
@@ -103,12 +99,7 @@ End
 
 val binterl_Empty = new_axiom ("binterl_Empty",
                                ``∀t1 t2. binterl t1 t2 [] ⇒ ((t1 = []) ∧(t2 = []))``);
-
-                               
-val binterl_moveSL = new_axiom ("binterl_moveNONE",
-                                ``∀e t t1 t2.
-                                     binterl t1 t2 (NONE::t) ⇒
-                                   (∃t1' t2'. (t1 = NONE::t1') ∧(t2 = NONE::t2'))``);                               
+                              
 
 val binterl_moveSL = new_axiom ("binterl_moveSL",
                                 ``∀e t t1 t2.

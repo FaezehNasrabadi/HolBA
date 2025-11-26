@@ -172,9 +172,6 @@ val Rev_prSum = store_thm
                     GEN_TAC >>
                     metis_tac[pred_sum_map_INJ]
                 );
-
-
-
   
 val binterl_Empty = new_axiom ("binterl_Empty",
                                ``∀t1 t2. binterl t1 t2 [] ⇒ ((t1 = []) ∧(t2 = []))``);
@@ -200,23 +197,10 @@ val binterl_moveAL = new_axiom ("binterl_moveAL",
 
 
 val binterl_moveAR =
-store_thm ("binterl_moveAR",
+new_axiom ("binterl_moveAR",
            ``∀e2 (t:(('event1 + 'eventS) + 'event2 + 'eventS) option list) (t1:('event1 + 'eventS) option list) (t2:('event2 + 'eventS) option list).
                  binterl t1 t2 (SOME (INR (INL e2))::t) ⇒
-              (∃t2'. (t2 = SOME (INL e2)::t2'))``,
-                                               rpt strip_tac >>
-              IMP_RES_TAC binterl_cases >| [rw[],rw[],rw[],rw[],rw[],rw[],rw[],cheat,cheat,cheat,cheat] >-(
-               FULL_SIMP_TAC (srw_ss()) [listTheory.CONS_11, listTheory.NOT_CONS_NIL] THEN
-               PAT_X_ASSUM ``!e. A`` (ASSUME_TAC o (Q.SPECL [‘e’]))  >>
-               PAT_X_ASSUM ``!e. A`` (ASSUME_TAC o (Q.SPECL [‘e’]))  >>
-               PAT_X_ASSUM ``!e. A`` (ASSUME_TAC o (Q.SPECL [‘e2’]))  >>
-               PAT_X_ASSUM ``!e. A`` (ASSUME_TAC o (Q.SPECL [‘e1’]))  >>
-               cheat
-               )
-          );
-
-
-
+              (∃t2'. (t2 = SOME (INL e2)::t2'))``);
 
  
 val OUTR_INL_FUN_thm = new_axiom("OUTR_INL_FUN", ``         

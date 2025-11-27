@@ -4,7 +4,7 @@ open pred_setTheory;
 open sigma_algebraTheory;
 open listTheory;
 open tautLib;
-open interleavingcombineTheory;
+open interleavinggeneraldeductionTheory;
 open parallelcompositioncombinedeductionTheory;
 val _ = new_theory "derived_rules_combinededuction";
 
@@ -20,7 +20,27 @@ Define`
 }
 `;
 
+val DedRelAll = new_axiom ("DedRelAll",
+                          ``∀(ded1:(('pred1,'symb) predOne) tded) (ded2:(('pred2,'symb) predTwo) tded) (MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 phi.
+                            ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
+                          (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')) ∧
+                          (combineAllDed ded1 ded2 P'' phi))
+                             ⇒
+                             ((MTrn1 (Sym,IMAGE OUTL P,S1) (t1) (Sym',IMAGE OUTL P'' ∪ {OUTL phi},S1')) ∧
+                              (MTrn2 (Sym,IMAGE OUTR P,S2) (t2) (Sym',IMAGE OUTR P'' ∪ {OUTR phi},S2')))``);
 
+val TranRelSnocRevNoneAll =
+new_axiom ("TranRelSnocRevNoneAll",
+           ``
+                ∀(MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' t1 t2.
+                  ((MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P',S1')) ∧ (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P',S2')))
+                  ⇒ (∃(P'':((('pred1,'symb) predOne)+(('pred2,'symb) predTwo)) set). (∀(Ded1:(('pred1,'symb) predOne) tded) (Ded2:(('pred2,'symb) predTwo) tded) phi.
+                                                                                        (combineAllDed Ded1 Ded2 P'' phi) ∧ P'=P''∪{phi}) ∧
+                                                                                     (MTrn1 (Sym,IMAGE OUTL P,S1) t1 (Sym',IMAGE OUTL P'',S1')) ∧
+                                                                                     (MTrn2 (Sym,IMAGE OUTR P,S2) t2 (Sym',IMAGE OUTR P'',S2')))``);
+                                                                        
+
+                              
 val binterleave_trace_comp_to_decomp_combinededuction_thm = store_thm(
   "binterleave_trace_comp_to_decomp_combinededuction",
   ``∀t Sym P S1 S2 Sym' P' S1' S2' (MTrn1:('event1 + 'eventS, (('pred1,'symb) predOne), 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, (('pred2,'symb) predTwo), 'state2, 'symb) mtrel) (ded1:(('pred1,'symb) predOne) tded) (ded2:(('pred2,'symb) predTwo) tded).
@@ -164,7 +184,7 @@ val binterleave_trace_decomp_to_comp_combinededuction_thm = store_thm(
        RES_TAC) >>
      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symbolicParlComp_def] >>
      rpt strip_tac >>
-     IMP_RES_TAC TranRelSnocRevNone>>
+     IMP_RES_TAC TranRelSnocRevNoneAll >>
      IMP_RES_TAC binterl_movecombinenone >>
      PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2 Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P''`,`S1'`,`S2'`,`MTrn1`,`MTrn2`,`Ded1`,`Ded2`])) >>
      RES_TAC >>

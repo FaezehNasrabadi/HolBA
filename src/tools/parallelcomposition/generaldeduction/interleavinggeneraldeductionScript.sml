@@ -264,7 +264,7 @@ val OUTR_INL_FUN_thm = new_axiom("OUTR_INL_FUN", ``
 val OUTL_INR_FUN_thm = new_axiom("OUTL_INR_FUN", ``      
 ∀x n.
  OUTL (INR x) = n x``);
-
+                              
 val DedRelINL = new_axiom ("DedRelINL",
                           ``∀(ded1:('pred1) tded) (MTrn1:('event1 + 'eventS, 'pred1, 'state1, 'symb) mtrel) (MTrn2:('event2 + 'eventS, 'pred2, 'state2, 'symb) mtrel) Sym P S1 S2 Sym' P' S1' S2' P'' t1 t2 x.
                             (

@@ -4,8 +4,9 @@ open pred_setTheory;
 open sigma_algebraTheory;
 open listTheory;
 open tautLib;
-open interleavingdeductionTheory;
+open interleavinggeneraldeductionTheory;
 open parallelcompositiondeductionTheory;
+
 
 val _ = new_theory "derived_rules_deduction";
 
@@ -48,10 +49,10 @@ val binterleave_trace_comp_to_decomp_deduction_thm = store_thm(
       Q.EXISTS_TAC `t2` >>
       Cases_on `phi` >- (
         FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[]>>
-        IMP_RES_TAC composeDed_def>>
+        IMP_RES_TAC parallelcompositiongeneraldeductionTheory.composeDed_def>>
         metis_tac[DedRelINL,binterl_combinenone]) >>
       FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[] >>
-      IMP_RES_TAC composeDed_def>>
+       IMP_RES_TAC parallelcompositiongeneraldeductionTheory.composeDed_def>>
       metis_tac[DedRelINR,binterl_combinenone]
       )   >>
      Cases_on `x` >-(
@@ -168,14 +169,14 @@ val binterleave_trace_decomp_to_comp_deduction_thm = store_thm(
        RES_TAC) >>
      FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss) [symbolicParlComp_def] >>
      rpt strip_tac >>
-     IMP_RES_TAC TranRelSnocRevNone>>
+     IMP_RES_TAC TranRelSnocRevNoneComp >>
      IMP_RES_TAC binterl_movecombinenone >>
      PAT_X_ASSUM ``!Sym P S1 S2 Sym' P' S1' S2' MTrn1 MTrn2 Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Sym`,`P`,`S1`,`S2`,`Sym'`,`P''`,`S1'`,`S2'`,`MTrn1`,`MTrn2`,`Ded1`,`Ded2`])) >>
      RES_TAC >>
      Q.EXISTS_TAC `P''` >>
      PAT_X_ASSUM ``!Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Ded1`,`Ded2`]))  >>
      PAT_X_ASSUM ``!Ded1 Ded2. A`` (ASSUME_TAC o (Q.SPECL [`Ded1`,`Ded2`]))  >>
-     rw[]
+     rw[] 
   );
 
  

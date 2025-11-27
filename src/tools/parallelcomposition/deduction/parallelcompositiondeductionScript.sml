@@ -1,41 +1,9 @@
 open HolKernel Parse boolLib bossLib;
 open sumTheory;
 open pred_setTheory;
+open parallelcompositiongeneraldeductionTheory;
 
 val _ = new_theory "parallelcompositiondeduction";
-
-    
-(* transition relation *)
-val _ = Parse.type_abbrev("trel", ``:(('symb set) # ('pred set) # 'state) -> ('event option) -> (('symb set) # ('pred set) # 'state) -> bool``);    
-
-    
-(* deduction relation *)    
-val _ = Parse.type_abbrev("tded", ``:('pred set) -> 'pred -> bool``);
-
-                               
-
-(* compose deduction relation *)
-val _ = Parse.type_abbrev("ctded", ``:('pred1) tded -> ('pred2) tded -> ('pred1 + 'pred2) tded``);
-
-val composeDed_def =
-Define`
-      (composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INL (F1:'pred1)) = (ded1 (IMAGE OUTL P3) F1)) ∧
-(composeDed (ded1:('pred1) tded) (ded2:('pred2) tded) (P3:('pred1 + 'pred2) set) (INR (F2:'pred2)) = (ded2 (IMAGE OUTR P3) F2))
-`;
-
-(* multi transitions relation *)
-val _ = Parse.type_abbrev("mtrel", ``:(('symb set) # ('pred set) # 'state) -> (('event option) list) -> (('symb set) # ('pred set) # 'state) -> bool``);
-
-(* multi transitions system *)    
-val _ = Parse.type_abbrev("multransys", ``:(( 'symb, 'pred, 'state, 'event ) mtrel # ('pred) tded)``);
-
-
-(* compose multi transition relation *)
-val _ = Parse.type_abbrev("cmtrel", ``:('symb, 'pred1, 'state1, 'event1 + 'eventS) mtrel ->
-  ('symb, 'pred2, 'state2, 'event2 + 'eventS) mtrel -> 
-  ('symb, 'pred1 + 'pred2, 'state1 # 'state2, (('event1+'eventS) + ('event2 +'eventS))) mtrel``);
-  
-
 
 val symbolicParlComp_def =
 Define  `

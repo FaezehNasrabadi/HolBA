@@ -5,7 +5,9 @@ open listTheory;
 open parallelcompositionconcreteTheory;
 open pairTheory wordsTheory;
 open quantHeuristicsTheory;
+open Drule;
 
+     
 val _ = new_theory "interleavingconcrete";
 
 val traces_def =
@@ -43,7 +45,9 @@ End
 Definition binterleave_ts:
   binterleave_ts (ts1:('cevent1 + 'ceventS) list set) (ts2:('cevent2 + 'ceventS) list set) = {t| ∃t1 t2. (t1 ∈ ts1) ∧ (t2 ∈ ts2) ∧ (binterl t1 t2 t)}
 End
-        
+
+ 
+  
 val binterl_Empty = new_axiom ("binterl_Empty",
                                ``∀t1 t2. binterl t1 t2 [] ⇒ ((t1 = []) ∧(t2 = []))``);
 
@@ -74,9 +78,19 @@ val TranRelConfigEq = new_axiom ("TranRelConfigEq",
 val TranRelSnoc = new_axiom ("TranRelSnoc",
                              ``∀(MTrn:('cevent, 'cstate) mctrel) s s' s'' t e. ((MTrn s t s') ∧ (MTrn s' [e] s'')) ⇒ (MTrn s (e::t) s'')``);                         
 
-val IMAGEOUT = new_axiom ("IMAGEOUT",
-                          ``∀P P'. ((IMAGE OUTR P = IMAGE OUTR P') ∧ (IMAGE OUTL P = IMAGE OUTL P')) ⇒ (P = P')``);
+val SUM_PREIMAGE_CHAR = store_thm
+                        ("SUM_PREIMAGE_CHAR",
+                         ``!P P' : ('a + 'b) set.
+                                   (PREIMAGE INL P = PREIMAGE INL P') /\
+                                   (PREIMAGE INR P = PREIMAGE INR P')
+                                   ==> P = P'``,
+                                             REPEAT GEN_TAC THEN STRIP_TAC THEN
+                         FULL_SIMP_TAC (list_ss++pred_setSimps.PRED_SET_ss++boolSimps.LIFT_COND_ss++boolSimps.EQUIV_EXTRACT_ss)[EXTENSION] THEN
+                         GEN_TAC THEN
+                         Cases_on `x` THEN
+                         rw[]);
 
+                         
 val TranRelSnocRevAsyncL =
 new_axiom ("TranRelSnocRevAsyncL",
            ``∀(MTrn1:('cevent1 + 'ceventS, 'cstate1) mctrel) (MTrn2:('cevent2 + 'ceventS, 'cstate2) mctrel) S1 S2 S1' S2' t1 t2 e.
